@@ -1,0 +1,79 @@
+{
+ "framing": "phone",
+ "throttle": 6,
+ "runs": 2,
+ "rows": [
+  {
+   "scene": "01",
+   "side": "original",
+   "median": 11.9,
+   "p95": 16.8,
+   "worst": 34.4,
+   "over16": 5.4,
+   "over33": 0.7,
+   "draw": 5.74,
+   "drawP95": 8.3,
+   "errors": false
+  },
+  {
+   "scene": "01",
+   "side": "frame-a",
+   "median": 11.7,
+   "p95": 16.3,
+   "worst": 35.3,
+   "over16": 4,
+   "over33": 0.7,
+   "draw": 4.97,
+   "drawP95": 7.2,
+   "errors": false
+  },
+  {
+   "scene": "01",
+   "side": "frame-a-canvas",
+   "median": 14.4,
+   "p95": 30.8,
+   "worst": 49.5,
+   "over16": 21.1,
+   "over33": 1.7,
+   "draw": 12.01,
+   "drawP95": 17.2,
+   "errors": false
+  },
+  {
+   "scene": "02",
+   "side": "original",
+   "median": 13,
+   "p95": 22.8,
+   "worst": 35.2,
+   "over16": 17.6,
+   "over33": 2.2,
+   "draw": 6.39,
+   "drawP95": 9.3,
+   "errors": false
+  },
+  {
+   "scene": "02",
+   "side": "frame-a",
+   "median": 9.9,
+   "p95": 13.7,
+   "worst": 33.3,
+   "over16": 0.9,
+   "over33": 0,
+   "draw": 3.95,
+   "drawP95": 6,
+   "errors": false
+  },
+  {
+   "scene": "02",
+   "side": "frame-a-canvas",
+   "median": 13.4,
+   "p95": 28.6,
+   "worst": 100.8,
+   "over16": 14,
+   "over33": 1.3,
+   "draw": 10.97,
+   "drawP95": 15.5,
+   "errors": false
+  }
+ ]
+}

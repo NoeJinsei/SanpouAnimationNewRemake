@@ -1,0 +1,115 @@
+{
+ "framing": "phone",
+ "throttle": 4,
+ "runs": 3,
+ "rows": [
+  {
+   "scene": "01",
+   "side": "original",
+   "median": 5.7,
+   "p95": 7.7,
+   "worst": 17.6,
+   "over16": 0.1,
+   "over33": 0,
+   "draw": 2.7,
+   "drawP95": 3.5,
+   "errors": false
+  },
+  {
+   "scene": "01",
+   "side": "frame-a",
+   "median": 7.1,
+   "p95": 9.4,
+   "worst": 17.3,
+   "over16": 0.2,
+   "over33": 0,
+   "draw": 2.15,
+   "drawP95": 2.6,
+   "errors": false
+  },
+  {
+   "scene": "01",
+   "side": "frame-a-canvas",
+   "median": 6.4,
+   "p95": 9.5,
+   "worst": 76.8,
+   "over16": 0.2,
+   "over33": 0.1,
+   "draw": 5.62,
+   "drawP95": 7.4,
+   "errors": false
+  },
+  {
+   "scene": "02",
+   "side": "original",
+   "median": 6.6,
+   "p95": 8.5,
+   "worst": 17.2,
+   "over16": 0.1,
+   "over33": 0,
+   "draw": 2.8,
+   "drawP95": 3.8,
+   "errors": false
+  },
+  {
+   "scene": "02",
+   "side": "frame-a",
+   "median": 5.9,
+   "p95": 9.7,
+   "worst": 17.4,
+   "over16": 0.1,
+   "over33": 0,
+   "draw": 2.19,
+   "drawP95": 3,
+   "errors": false
+  },
+  {
+   "scene": "02",
+   "side": "frame-a-canvas",
+   "median": 8.1,
+   "p95": 11.2,
+   "worst": 80.8,
+   "over16": 0.3,
+   "over33": 0.1,
+   "draw": 6.64,
+   "drawP95": 9.2,
+   "errors": false
+  },
+  {
+   "scene": "03",
+   "side": "original",
+   "median": 6.4,
+   "p95": 9.4,
+   "worst": 59.6,
+   "over16": 0.7,
+   "over33": 0.1,
+   "draw": 2.85,
+   "drawP95": 4.2,
+   "errors": false
+  },
+  {
+   "scene": "03",
+   "side": "frame-a",
+   "median": 5.6,
+   "p95": 10.7,
+   "worst": 53,
+   "over16": 0.4,
+   "over33": 0.2,
+   "draw": 2.41,
+   "drawP95": 3.5,
+   "errors": false
+  },
+  {
+   "scene": "03",
+   "side": "frame-a-canvas",
+   "median": 7.9,
+   "p95": 14.1,
+   "worst": 79.4,
+   "over16": 3.1,
+   "over33": 0.4,
+   "draw": 6.25,
+   "drawP95": 11.4,
+   "errors": false
+  }
+ ]
+}

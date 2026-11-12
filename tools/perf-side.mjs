@@ -23,7 +23,11 @@ await page.goto(`${BASE}/viewer/frame.html?side=${encodeURIComponent(side)}&fram
 await page.waitForFunction(() => window.heroFrame && (window.heroFrame.seek || window.heroFrame.error), null, { timeout: 30000 });
 if (await page.evaluate(() => !!window.heroFrame.error)) { console.log("side did not start:", await page.evaluate(() => window.heroFrame.error)); await browser.close(); process.exit(1); }
 await page.evaluate(() => document.fonts.ready);
-const gpu = await page.evaluate(() => { try { const c = document.createElement("canvas").getContext("webgl"); const e = c.getExtension("WEBGL_debug_renderer_info"); return e ? c.getParameter(e.UNMASKED_RENDERER_WEBGL) : "unknown"; } catch (e) { return "none"; } });
+// which GPU draws: asked on a throw-away page, so the probe's WebGL context is gone before anything is timed
+// (left on the measured page, its clean-up shows up as one 100 ms frame whenever the garbage collector runs)
+const probe = await ctx.newPage();
+const gpu = await probe.evaluate(() => { try { const c = document.createElement("canvas").getContext("webgl"); const e = c.getExtension("WEBGL_debug_renderer_info"); return e ? c.getParameter(e.UNMASKED_RENDERER_WEBGL) : "unknown"; } catch (e) { return "none"; } });
+await probe.close();
 // warm up (first calls compile the scene functions), then slow the processor down
 await page.evaluate(([a, b]) => { for (let t = a; t < b; t += 400) window.heroFrame.seek(t); window.heroFrame.seek(a); }, [from, to]);
 const cdp = await ctx.newCDPSession(page);
