@@ -1,7 +1,72 @@
 {
   "note": "Renderers the viewer can show. kind dom = the original engine (JourneyPort); kind canvas = window.HeroCanvas. Paths are relative to this folder.",
   "sides": [
-    { "id": "original", "label": "Original", "detail": "the site today (commit 72862b6)", "kind": "dom", "base": "original/js/", "scripts": ["hero-flag.js", "hero-port-a.js", "hero-port-b.js"], "glue": "hero-glue.js" },
-    { "id": "remake", "label": "Remake", "detail": "work in progress", "kind": "dom", "base": "remake/js/", "scripts": ["hero-flag.js", "hero-port-a.js", "hero-port-b.js"], "glue": "hero-glue.js" }
+    {
+      "id": "original",
+      "label": "Original",
+      "detail": "the site today (commit 72862b6)",
+      "kind": "dom",
+      "base": "original/js/",
+      "scripts": [
+        "hero-flag.js",
+        "hero-port-a.js",
+        "hero-port-b.js"
+      ],
+      "glue": "hero-glue.js"
+    },
+    {
+      "id": "remake",
+      "label": "Remake",
+      "detail": "work in progress",
+      "kind": "dom",
+      "base": "remake/js/",
+      "scripts": [
+        "hero-flag.js",
+        "hero-port-a.js",
+        "hero-port-b.js"
+      ],
+      "glue": "hero-glue.js"
+    },
+    {
+      "id": "original-canvas",
+      "label": "Original on canvas",
+      "detail": "the same art, drawn by the canvas engine",
+      "kind": "canvas",
+      "base": "",
+      "scripts": [
+        "original/js/hero-flag.js",
+        "original/js/hero-port-a.js",
+        "original/js/hero-port-b.js",
+        "engine/vcanvas.js",
+        "engine/boot-canvas.js"
+      ]
+    },
+    {
+      "id": "frame-a",
+      "label": "Style frame",
+      "detail": "scene 01 look study (SVG)",
+      "kind": "dom",
+      "base": "samples/frame-a/js/",
+      "scripts": [
+        "hero-flag.js",
+        "hero-port-a.js",
+        "hero-port-b.js"
+      ],
+      "glue": "hero-glue.js"
+    },
+    {
+      "id": "frame-a-canvas",
+      "label": "Style frame on canvas",
+      "detail": "the same look study, drawn by the canvas engine",
+      "kind": "canvas",
+      "base": "",
+      "scripts": [
+        "samples/frame-a/js/hero-flag.js",
+        "samples/frame-a/js/hero-port-a.js",
+        "samples/frame-a/js/hero-port-b.js",
+        "engine/vcanvas.js",
+        "engine/boot-canvas.js"
+      ]
+    }
   ]
 }

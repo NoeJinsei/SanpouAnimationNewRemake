@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VCanvas layer cache test</title>
+<link rel="icon" href="data:,">
+<style>
+  body { margin: 16px; font: 14px/1.5 system-ui, sans-serif; color: #1d2d47; background: #f4f7fa; }
+  canvas { width: 480px; height: 270px; border: 1px solid #c9d3de; margin-right: 8px; background: #fff; }
+  pre { background: #fff; border: 1px solid #c9d3de; padding: 12px; }
+</style>
+</head>
+<body>
+<h1>data-cache layer test</h1>
+<p>The same tree is painted twice: once plain, once with the busy group marked
+<code>data-cache="busy" data-box="0 0 900 640"</code>, at a whole-pixel position. The timing shows what the cache saves.
+<br>Equality: shapes, positions and edges come out the same; channel values may still differ by a few levels, because
+(1) translucent shapes composited inside the bitmap and then over the background round differently from compositing
+them one by one (source-over is associative, 8-bit rounding is not), (2) gradient dithering depends on the surface, and
+(3) Chrome's software rasteriser anti-aliases text on a transparent surface differently. The test passes when no channel
+differs by more than 3 on a GPU browser (see the numbers). <code>?nograd=1</code> removes the gradient,
+<code>?blur=1</code> also paints a blurred, multiplied cached group on the right (visual check only).</p>
+<canvas id="plain"></canvas><canvas id="cached"></canvas>
+<pre id="out">running...</pre>
+<script src="vcanvas.js"></script>
+<script>
+(function () {
+  "use strict";
+  function h(t, a, c) { return { t: t, a: a || {}, c: c || [] }; }
+  // a busy group: 600 shapes of every kind, opaque and translucent, with a gradient defined inside it
+  function busy(extra) {
+    var kids = [h("defs", {}, [h("linearGradient", { id: "tg", x1: "0", y1: "0", x2: "0", y2: "1" }, [
+      h("stop", { offset: "0", "stop-color": "#58abe0" }), h("stop", { offset: "1", "stop-color": "rgba(253,238,229,0.6)" })])])];
+    kids.push(h("rect", { x: "0", y: "0", width: "900", height: "640", rx: "24", fill: /nograd=1/.test(location.search) ? "#cfe3f3" : "url(#tg)" }));
+    for (var i = 0; i < 600; i++) {
+      var x = (i * 37) % 800 + 20, y = (i * 53) % 580 + 30, k = i % 5;  // everything stays inside data-box
+      if (k === 0) kids.push(h("rect", { x: String(x), y: String(y), width: "24", height: "16", rx: "3", fill: "#2e4159" }));
+      else if (k === 1) kids.push(h("circle", { cx: String(x), cy: String(y), r: "9", fill: "rgba(225,99,71,0.6)", stroke: "#f7f9fb", "stroke-width": "1.5" }));
+      else if (k === 2) kids.push(h("path", { d: "M" + x + "," + y + " q12,-18 24,0 t24,0", fill: "none", stroke: "#1d2d47", "stroke-width": "2", "stroke-linecap": "round" }));
+      else if (k === 3) kids.push(h("line", { x1: String(x), y1: String(y), x2: String(x + 30), y2: String(y + 8), stroke: "rgba(16,31,54,0.5)", "stroke-width": "2", "stroke-dasharray": "5 3" }));
+      else kids.push(h("text", { x: String(x), y: String(y), "font-family": "sans-serif", "font-size": "12", "font-weight": "700", fill: "#101F36" }, ["A" + i]));
+    }
+    return h("g", Object.assign({ transform: "translate(160, 120)" }, extra || {}), kids);
+  }
+  function tree(extra) {
+    return h("div", { style: "position:absolute;inset:0px;background:#eaf5fc;overflow:hidden;" }, [
+      h("div", { style: "position:absolute;inset:0px;background:linear-gradient(to bottom, #58abe0 0%, #c2e4f6 64%, #fdeee5 100%);" }),
+      h("svg", { width: "1920", height: "1080", viewBox: "0 0 1920 1080", style: "position:absolute;inset:0px;" }, [
+        busy(extra),
+        h("circle", { cx: "1500", cy: "300", r: "120", fill: "#ffd24d" })])]);
+  }
+  function canvasFor(id, res) {
+    var c = document.getElementById(id); c.width = 1920 * res; c.height = 1080 * res; return c.getContext("2d");
+  }
+  function paint(ctx, t, res) { ctx.setTransform(res, 0, 0, res, 0, 0); VCanvas.render(ctx, t, { width: 1920, height: 1080, res: res }); }
+  function time(ctx, t, res) {
+    paint(ctx, t, res); ctx.getImageData(0, 0, 1, 1);
+    var n = 40, t0 = performance.now();
+    for (var i = 0; i < n; i++) paint(ctx, t, res);
+    ctx.getImageData(0, 0, 1, 1);
+    return (performance.now() - t0) / n;
+  }
+  var lines = [], result = { ok: true, runs: [] };
+  [1, 2].forEach(function (res) {
+    var a = canvasFor("plain", res), b = canvasFor("cached", res);
+    var plainTree = tree(), cachedTree = tree({ "data-cache": "busy", "data-box": "0 0 900 640" });
+    paint(a, plainTree, res); paint(b, cachedTree, res);
+    var pa = a.getImageData(0, 0, a.canvas.width, a.canvas.height).data, pb = b.getImageData(0, 0, b.canvas.width, b.canvas.height).data;
+    var diff = 0, maxd = 0, big = 0, at = null;
+    for (var i = 0; i < pa.length; i++) { var d = Math.abs(pa[i] - pb[i]); if (d) { diff++; if (d > maxd) maxd = d; if (d > 2) { big++; if (!at) at = [(i >> 2) % a.canvas.width, ((i >> 2) / a.canvas.width) | 0]; } } }
+    result.firstBig = at; result.big = (result.big || 0) + big;
+    var tp = time(a, plainTree, res), tc = time(b, cachedTree, res), st = VCanvas.stats();
+    result.runs.push({ res: res, differingChannels: diff, maxChannelDelta: maxd, plainMs: +tp.toFixed(2), cachedMs: +tc.toFixed(2), cacheHits: st.cacheHits, cacheMisses: st.cacheMisses });
+    if (maxd > 3) result.ok = false;
+    lines.push("res " + res + ": " + (diff ? diff + " of " + pa.length + " channel values differ, max delta " + maxd + ", " + big + " by more than 2" : "pixel-identical") +
+      "; plain " + tp.toFixed(2) + " ms/frame, cached " + tc.toFixed(2) + " ms/frame (" + (tp / tc).toFixed(1) + "x)");
+  });
+  if (/blur=1/.test(location.search)) {
+    var bctx = canvasFor("cached", 1);
+    paint(bctx, tree({ "data-cache": "busy-blur", "data-box": "0 0 900 640", "data-blur": "6", style: "mix-blend-mode:multiply" }), 1);
+    lines.push("blurred + multiply group painted on the right (visual check)");
+  }
+  document.getElementById("out").textContent = lines.join("\n");
+  window.testResult = result;
+})();
+</script>
+</body>
+</html>
