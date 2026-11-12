@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>hero frame</title>
+<!-- One side of the viewer: the site's own hero markup and stylesheet around one renderer.
+     ?side=<id in ../sides.json>   which renderer (original, remake, a sample)
+     ?framing=stage|site           stage: the bare 1920x1080 picture; site: the hero as the site lays it out
+     ?player=clock|glue            clock: the scrub-able player (player.js); glue: the site's real player -->
+<link rel="stylesheet" href="../vendor/fonts/fonts.css">
+<link rel="stylesheet" href="../original/site/site.css">
+<style>
+  html, body { margin: 0 !important; padding: 0 !important; overflow: hidden; background: #fff; }
+  html.vf-stage #sanpou-journey { display: block !important; height: 100vh !important; min-height: 0 !important; }
+  html.vf-stage :is(.hc-scrim, .hc-scrim-sign, .hc-content, .hc-bottom) { display: none !important; }
+  /* the clock player sets the controls' state directly; the site's transitions would lag behind a scrub */
+  html.vf-clock #sanpou-journey, html.vf-clock #sanpou-journey * { transition: none !important; }
+  #vfError { position: fixed; inset: 0; z-index: 99; display: none; padding: 32px; background: #fff; color: #b3261e;
+    font: 16px/1.7 "Noto Sans JP", sans-serif; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<div id="mount"></div>
+<div id="vfError" role="alert"></div>
+<script src="timeline.js"></script>
+<script src="player.js"></script>
+<script>
+(function () {
+  var q = new URLSearchParams(location.search);
+  var sideId = q.get("side") || "original", framing = q.get("framing") === "site" ? "site" : "stage", mode = q.get("player") === "glue" ? "glue" : "clock";
+  var html = document.documentElement;
+  html.classList.add(framing === "stage" ? "vf-stage" : "vf-site");
+  if (mode === "clock") html.classList.add("vf-clock");
+  function fail(e) { var b = document.getElementById("vfError"); b.style.display = "block"; b.textContent = "Could not start this side (" + sideId + ").\n" + (e && e.stack || e); window.heroFrame = { error: String(e) }; tell("hero-frame-error"); }
+  function tell(type) { try { parent.postMessage({ type: type, side: sideId }, location.origin); } catch (e) {} }
+  function load(src) { return new Promise(function (ok, no) { var s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = function () { no(new Error("script not found: " + src)); }; document.body.appendChild(s); }); }
+  function text(url) { return fetch(url).then(function (r) { if (!r.ok) throw new Error(url + " -> " + r.status); return r.text(); }); }
+  window.addEventListener("error", function (e) { if (!window.heroFrame) fail(e.error || e.message); });
+
+  Promise.all([text("../sides.json").then(JSON.parse), text("../original/site/hero-section.html")]).then(function (r) {
+    var side = r[0].sides.filter(function (s) { return s.id === sideId; })[0];
+    if (!side) throw new Error("no side \"" + sideId + "\" in sides.json");
+    // the hero section exactly as the site has it, without its script tags (loaded below, per side)
+    document.getElementById("mount").innerHTML = r[1].replace(/<script[^>]*><\/script>\s*/g, "");
+    var chain = Promise.resolve();
+    side.scripts.forEach(function (s) { chain = chain.then(function () { return load("../" + side.base + s); }); });
+    return chain.then(function () {
+      var host = document.getElementById("sanpou-journey"), fit = document.getElementById("sjxFit"), stage = document.getElementById("sjxStage");
+      if (mode === "glue") {
+        if (!side.glue) throw new Error("this side has no site player (glue)");
+        return load("../" + side.base + side.glue).then(function () { window.heroFrame = { side: side, live: true, heroHeight: function () { return host.getBoundingClientRect().height; } }; });
+      }
+      var ready = Promise.resolve();
+      if (document.fonts && document.fonts.ready) ready = document.fonts.load('700 20px "Noto Sans JP"', "三豊運輸関東新潟").catch(function () {});
+      if (side.kind === "canvas" && window.HeroCanvas && window.HeroCanvas.ready) ready = Promise.all([ready, window.HeroCanvas.ready]);
+      return ready.then(function () {
+        var adapter;
+        if (side.kind === "canvas") { if (!window.HeroCanvas) throw new Error("the side's scripts did not define window.HeroCanvas"); adapter = HeroPlayer.CanvasAdapter(window.HeroCanvas, fit, stage); }
+        else { if (!window.JourneyPort) throw new Error("the side's scripts did not define window.JourneyPort"); adapter = HeroPlayer.DomAdapter(window.JourneyPort, fit, stage); }
+        var p = HeroPlayer.create({ adapter: adapter, host: host, fit: fit });
+        window.heroFrame = { side: side, kind: p.kind, seek: p.seek, cost: p.cost, nodeCount: p.nodeCount, heroHeight: p.heroHeight, refit: p.refit };
+      });
+    });
+  }).then(function () { tell("hero-frame-ready"); }, fail);
+})();
+</script>
+</body>
+</html>

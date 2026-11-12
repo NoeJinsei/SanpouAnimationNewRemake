@@ -1,0 +1,9 @@
+Unchanged copies from C:\Users\RTX4070TI\Desktop\sanpou-site-v2 (branch main, commit 72862b68bb8ba71187ae344e038e761b4a3911f4), copied 2026-11-13.
+Never edit these files: they are the "original game" every remake frame is judged against.
+
+  js/hero-flag.js, js/hero-port-a.js, js/hero-port-b.js, js/hero-glue.js   <- public_html/assets/js/
+  css/40-hero.css                                                          <- css-src/40-hero.css
+  site/site.css                                                            <- public_html/assets/css/site.css
+  site/hero-section.html                                                   <- public_html/index.html, lines 117-152 (the shared:hero block)
+
+Check that nothing changed:  cd original && sha256sum -c SHA256SUMS

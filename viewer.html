@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>三豊運輸 hero: original and remake</title>
+<!-- The side-by-side viewer. Serve this folder over http (python -m http.server 8791 --bind 127.0.0.1) and
+     open http://127.0.0.1:8791/viewer.html. Both pictures are drawn for the same moment on the site clock
+     (viewer/timeline.js), so anything that differs between them is the remake's doing. -->
+<link rel="stylesheet" href="vendor/fonts/fonts.css">
+<style>
+  /* A screening room: neutral grey around the pictures so their colours read true; one accent, the
+     artwork's own vermilion, kept for the playhead and the driven part of the road. */
+  :root { --surround: #2b2d30; --deck: #1d1f21; --line: #3c3f43; --ink: #ecebe7; --dim: #a5a59f; --verm: #e16347; --hit: 36px; }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body { display: grid; grid-template-rows: auto 1fr auto; overflow: hidden; background: var(--surround); color: var(--ink);
+    font: 14px/1.5 "Noto Sans JP", system-ui, sans-serif; font-variant-numeric: tabular-nums; }
+  button, select, input { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+  #top { display: flex; align-items: center; gap: 20px; padding: 10px 16px; background: var(--deck); border-bottom: 1px solid var(--line); }
+  #top h1 { margin: 0; font-size: 15px; font-weight: 700; letter-spacing: .04em; white-space: nowrap; }
+  #top p { margin: 0; color: var(--dim); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #top .sp { flex: 1; }
+  .seg { display: flex; flex: none; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+  .seg button { min-height: var(--hit); padding: 0 12px; border: 0; border-left: 1px solid var(--line); background: none; color: var(--dim); white-space: nowrap; }
+  .seg button:first-child { border-left: 0; }
+  .seg button[aria-pressed="true"] { background: var(--ink); color: var(--deck); font-weight: 700; }
+  .seg button:focus-visible { outline-offset: -3px; }
+
+  #area { position: relative; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; }
+  .scaler { position: absolute; left: 0; top: 0; overflow: hidden; transform-origin: 0 0; background: #cfe6f5; box-shadow: 0 0 0 1px rgba(0, 0, 0, .5); }
+  .scaler iframe { display: block; border: 0; pointer-events: none; }
+  .cap { position: absolute; top: 0; display: flex; align-items: center; gap: 10px; height: 44px; min-width: 0; white-space: nowrap; }
+  .cap select { min-height: 30px; padding: 0 26px 0 8px; border: 1px solid var(--line); border-radius: 4px; background: var(--deck); font-weight: 700; }
+  .cap .detail { color: var(--dim); font-size: 13px; overflow: hidden; text-overflow: ellipsis; }
+  .cap .cost { margin-left: auto; color: var(--dim); font-size: 13px; }
+  .cap .err { color: #ff9d8a; }
+  #wipe { position: absolute; top: 0; width: 2px; margin-left: -1px; background: var(--ink); pointer-events: none; }
+  #wipe::after { content: ""; position: absolute; left: 50%; top: 50%; width: 28px; height: 28px; margin: -14px 0 0 -14px; border-radius: 50%; background: var(--ink);
+    box-shadow: inset 0 0 0 9px var(--ink), inset 0 0 0 11px var(--deck); }
+  body[data-layout="wipe"] #area { cursor: ew-resize; }
+  body[data-layout="swap"] #area { cursor: pointer; }
+  #wait { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); color: var(--dim); }
+
+  #deck { padding: 10px 16px 14px; background: var(--deck); border-top: 1px solid var(--line); user-select: none; -webkit-user-select: none; }
+  #deck .row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .ib { display: inline-flex; align-items: center; justify-content: center; width: var(--hit); height: var(--hit); padding: 0; border: 1px solid var(--line); border-radius: 4px; background: none; }
+  .ib svg { width: 18px; height: 18px; fill: currentColor; }
+  #play { width: 52px; background: var(--ink); color: var(--deck); border-color: var(--ink); }
+  .chk { display: inline-flex; align-items: center; gap: 8px; min-height: var(--hit); color: var(--dim); }
+  .chk input { width: 16px; height: 16px; accent-color: var(--verm); }
+  #read { margin-left: auto; text-align: right; white-space: nowrap; }
+  #read b { font-size: 18px; font-weight: 700; }
+  #read span { color: var(--dim); margin-left: 12px; }
+  .keys { color: var(--dim); font-size: 12px; margin: 6px 0 0; }
+
+  /* the scrub bar is the site's own scene index, stretched to the whole clock: a road bed whose driven
+     part is the dashed vermilion centre line */
+  #scenes { display: flex; margin-top: 12px; }
+  #scenes button { display: block; min-width: 0; min-height: 30px; padding: 0 0 0 8px; border: 0; border-left: 1px solid var(--line); background: none; color: var(--dim); text-align: left;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 13px; }
+  #scenes button b { margin-right: 6px; font-weight: 700; }
+  #scenes button[aria-current="true"] { color: var(--ink); }
+  #track { position: relative; height: 28px; cursor: pointer; touch-action: none; }
+  #track .bed { position: absolute; left: 0; right: 0; top: 9px; height: 10px; background: rgba(255, 255, 255, .13); }
+  #track .in { position: absolute; top: 9px; height: 10px; background: rgba(255, 255, 255, .13); }
+  #track .tick { position: absolute; top: 3px; width: 1px; height: 22px; background: var(--line); }
+  #track .driven { position: absolute; left: 0; top: 12px; height: 4px; background: repeating-linear-gradient(90deg, var(--verm) 0 10px, rgba(225, 99, 71, 0) 10px 17px); }
+  #track .head { position: absolute; top: 0; width: 2px; height: 28px; margin-left: -1px; background: var(--verm); }
+  #track .head::after { content: ""; position: absolute; left: -4px; top: -2px; border: 5px solid transparent; border-top-color: var(--verm); }
+  @media (max-width: 900px) { #top p, .keys, .cap .detail { display: none; } }
+</style>
+</head>
+<body data-layout="split">
+<header id="top">
+  <h1>三豊運輸 hero</h1>
+  <p>The original and the remake, drawn for the same moment.</p>
+  <span class="sp"></span>
+  <div class="seg" id="framing" role="group" aria-label="Framing">
+    <button type="button" data-v="full">Full picture</button>
+    <button type="button" data-v="desktop">Desktop site</button>
+    <button type="button" data-v="phone">Phone</button>
+  </div>
+  <div class="seg" id="layout" role="group" aria-label="Compare">
+    <button type="button" data-v="split">Side by side</button>
+    <button type="button" data-v="wipe">Wipe</button>
+    <button type="button" data-v="swap">Swap</button>
+  </div>
+</header>
+
+<main id="area">
+  <div class="cap" id="capA"><select id="selA" aria-label="Left picture"></select><span class="detail"></span><span class="cost"></span></div>
+  <div class="cap" id="capB"><select id="selB" aria-label="Right picture"></select><span class="detail"></span><span class="cost"></span></div>
+  <div class="scaler" id="scA"><iframe id="frA" title="Left picture" tabindex="-1"></iframe></div>
+  <div class="scaler" id="scB"><iframe id="frB" title="Right picture" tabindex="-1"></iframe></div>
+  <div id="wipe" hidden></div>
+  <div id="wait">Loading the pictures…</div>
+</main>
+
+<footer id="deck">
+  <div class="row">
+    <button type="button" class="ib" id="play" aria-label="Play"></button>
+    <button type="button" class="ib" id="stepB" aria-label="Back one frame"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h2v14H7zM19 5v14l-9-7z"/></svg></button>
+    <button type="button" class="ib" id="stepF" aria-label="Forward one frame"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5h2v14h-2zM5 5l9 7-9 7z"/></svg></button>
+    <div class="seg" id="speed" role="group" aria-label="Speed">
+      <button type="button" data-v="0.25">¼ speed</button>
+      <button type="button" data-v="0.5">½ speed</button>
+      <button type="button" data-v="1">Full speed</button>
+    </div>
+    <label class="chk"><input type="checkbox" id="loopScene"> Repeat this scene</label>
+    <div id="read" aria-live="off"><b id="readT">0.00 s</b><span id="readS"></span></div>
+  </div>
+  <div id="scenes"></div>
+  <div id="track" role="slider" tabindex="0" aria-label="Time on the site clock" aria-valuemin="0" aria-valuemax="45.8" aria-valuenow="0">
+    <div class="bed"></div><div class="driven"></div><div class="head"></div>
+  </div>
+  <p class="keys">Space: play or pause. Left and right arrows: one frame (with Shift, half a second). 1 to 5: jump to a scene. X: swap pictures.</p>
+</footer>
+
+<script src="viewer/timeline.js"></script>
+<script>
+(function () {
+  "use strict";
+  var TL = window.HeroTimeline, $ = function (id) { return document.getElementById(id); };
+  var FRAMINGS = { full: { w: 1920, h: 1080, framing: "stage" }, desktop: { w: 1440, h: 900, framing: "site" }, phone: { w: 390, h: 844, framing: "site" } };
+  var ICON_PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg>';
+  var ICON_PAUSE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>';
+  var st = { a: "original", b: "remake", framing: "full", layout: "split", t: 0, playing: false, speed: 1, loopScene: false, split: 0.5, swap: "b" };
+
+  // the address keeps the view, so a link (or a screenshot script) opens the same picture
+  (function () {
+    var q = new URLSearchParams(location.hash.slice(1));
+    ["a", "b"].forEach(function (k) { if (q.get(k)) st[k] = q.get(k); });
+    if (FRAMINGS[q.get("framing")]) st.framing = q.get("framing");
+    if (/^(split|wipe|swap)$/.test(q.get("layout") || "")) st.layout = q.get("layout");
+    if (q.get("t") != null && isFinite(+q.get("t"))) st.t = Math.max(0, Math.min(TL.TOTAL, +q.get("t")));
+    if (q.get("swap") === "a") st.swap = "a";
+  })();
+  function keep() { history.replaceState(null, "", "#a=" + encodeURIComponent(st.a) + "&b=" + encodeURIComponent(st.b) + "&framing=" + st.framing + "&layout=" + st.layout + "&t=" + Math.round(st.t) + (st.layout === "swap" ? "&swap=" + st.swap : "")); }
+
+  var slot = {
+    a: { sc: $("scA"), fr: $("frA"), cap: $("capA"), sel: $("selA"), api: null, hvis: 1080, ema: 0, err: "" },
+    b: { sc: $("scB"), fr: $("frB"), cap: $("capB"), sel: $("selB"), api: null, hvis: 1080, ema: 0, err: "" }
+  };
+  var sides = [], area = $("area"), wipe = $("wipe"), geo = { a: null, b: null };
+
+  /* ------------------------------------------------------------------ pictures */
+  function sideOf(id) { for (var i = 0; i < sides.length; i++) if (sides[i].id === id) return sides[i]; return null; }
+  function loadFrame(k) {
+    var s = slot[k], f = FRAMINGS[st.framing];
+    s.api = null; s.err = ""; s.ema = 0; s.hvis = f.framing === "stage" ? f.h : Math.min(f.h, 720);
+    s.fr.style.width = f.w + "px"; s.fr.style.height = f.h + "px";
+    s.fr.src = "viewer/frame.html?side=" + encodeURIComponent(st[k]) + "&framing=" + f.framing;
+    var side = sideOf(st[k]); s.cap.querySelector(".detail").textContent = side ? side.detail || "" : "";
+    $("wait").hidden = false;
+  }
+  function loadFrames() { loadFrame("a"); loadFrame("b"); place(); }
+  window.addEventListener("message", function (e) {
+    if (e.origin !== location.origin || !e.data) return;
+    ["a", "b"].forEach(function (k) {
+      var s = slot[k]; if (e.source !== s.fr.contentWindow) return;
+      if (e.data.type === "hero-frame-ready") {
+        s.api = s.fr.contentWindow.heroFrame;
+        if (FRAMINGS[st.framing].framing === "site") s.hvis = Math.round(s.api.heroHeight());
+        place(); draw(); caps();
+      } else if (e.data.type === "hero-frame-error") { s.err = (s.fr.contentWindow.heroFrame || {}).error || "could not start"; caps(); }
+      if ((slot.a.api || slot.a.err) && (slot.b.api || slot.b.err)) $("wait").hidden = true;
+    });
+  });
+
+  // where the two pictures sit: side by side, or stacked (wipe: the right picture is cut at the line; swap: one shows)
+  function place() {
+    var W = area.clientWidth, H = area.clientHeight, pad = 16, capH = 44, f = FRAMINGS[st.framing];
+    var stacked = st.layout !== "split", colW = stacked ? W - pad * 2 : (W - pad * 3) / 2, availH = H - capH - pad;
+    ["a", "b"].forEach(function (k, i) {
+      var s = slot[k], k0 = Math.max(0.05, Math.min(colW / f.w, availH / s.hvis, 1));
+      var colX = stacked ? pad : pad + i * (colW + pad);
+      var x = colX + (colW - f.w * k0) / 2, y = capH + (availH - s.hvis * k0) / 2;
+      s.sc.style.width = f.w + "px"; s.sc.style.height = s.hvis + "px";
+      s.sc.style.transform = "translate(" + x + "px, " + y + "px) scale(" + k0 + ")";
+      geo[k] = { x: x, y: y, w: f.w * k0, h: s.hvis * k0, k: k0 };
+      var hide = st.layout === "swap" && st.swap !== k;
+      s.sc.style.visibility = hide ? "hidden" : ""; s.cap.style.visibility = hide ? "hidden" : "";
+      s.cap.style.left = (stacked ? (st.layout === "wipe" && i ? x + f.w * k0 / 2 + 8 : x) : colX) + "px";
+      s.cap.style.width = (stacked ? (st.layout === "wipe" ? f.w * k0 / 2 - 8 : f.w * k0) : colW) + "px";
+    });
+    var g = geo.b, cut = st.layout === "wipe";
+    slot.b.sc.style.clipPath = cut ? "inset(0 0 0 " + (st.split * FRAMINGS[st.framing].w) + "px)" : "";
+    wipe.hidden = !cut;
+    if (cut) { wipe.style.left = (g.x + st.split * g.w) + "px"; wipe.style.top = g.y + "px"; wipe.style.height = g.h + "px"; }
+    document.body.setAttribute("data-layout", st.layout);
+  }
+  if (window.ResizeObserver) new ResizeObserver(place).observe(area); else window.addEventListener("resize", place);
+
+  function caps() {
+    ["a", "b"].forEach(function (k) {
+      var s = slot[k], c = s.cap.querySelector(".cost");
+      c.classList.toggle("err", !!s.err);
+      c.textContent = s.err ? "Error: " + s.err : s.api ? s.ema.toFixed(2) + " ms to draw · " + (s.api.kind === "canvas" ? "canvas" : s.api.nodeCount().toLocaleString("en") + " nodes") : "";
+    });
+  }
+
+  /* --------------------------------------------------------------------- clock */
+  var nDraw = 0;
+  function draw() {
+    ["a", "b"].forEach(function (k) { var s = slot[k]; if (!s.api) return; var c = s.api.seek(st.t); s.ema = s.ema ? s.ema * 0.9 + c * 0.1 : c; });
+    var state = TL.stateAt(st.t), pc = (st.t / TL.TOTAL * 100) + "%";
+    head.style.left = pc; driven.style.width = pc;
+    $("readT").textContent = (st.t / 1000).toFixed(2) + " s";
+    $("readS").textContent = TL.describe(state);
+    track.setAttribute("aria-valuenow", (st.t / 1000).toFixed(2));
+    track.setAttribute("aria-valuetext", (st.t / 1000).toFixed(1) + " seconds, " + TL.describe(state));
+    sceneBtns.forEach(function (b, i) { b.setAttribute("aria-current", i === state.idx ? "true" : "false"); });
+    if (!st.playing || ++nDraw % 12 === 0) caps();
+  }
+  var prev = 0, raf = 0;
+  function tick(ts) {
+    raf = 0; if (!st.playing) return;
+    var dt = prev ? Math.min(100, ts - prev) : 0; prev = ts;
+    var t = st.t + dt * st.speed;
+    if (st.loopScene) { var i = TL.stopAt(st.t), a = TL.START[i], b = a + TL.STOPS[i].dwell; if (t >= b) t = a + (t - b) % (b - a); }
+    else if (t >= TL.TOTAL) t = t % TL.TOTAL;
+    st.t = t; draw();
+    raf = requestAnimationFrame(tick);
+  }
+  function setPlay(on) {
+    st.playing = on; $("play").innerHTML = on ? ICON_PAUSE : ICON_PLAY; $("play").setAttribute("aria-label", on ? "Pause" : "Play");
+    if (on) { prev = 0; if (!raf) raf = requestAnimationFrame(tick); } else { if (raf) { cancelAnimationFrame(raf); raf = 0; } caps(); keep(); }
+  }
+  function seek(ms, quiet) { st.t = Math.max(0, Math.min(TL.TOTAL, ms)); draw(); if (!quiet && !st.playing) keep(); }
+
+  /* ------------------------------------------------------------------ controls */
+  var track = $("track"), head = track.querySelector(".head"), driven = track.querySelector(".driven"), sceneBtns = [];
+  TL.STOPS.forEach(function (s, i) {
+    var b = document.createElement("button"); b.type = "button"; b.style.flex = s.dwell + " 0 0"; b.innerHTML = "<b>" + s.no + "</b>" + s.jp;
+    b.title = "Jump to " + s.no + " " + s.jp; b.addEventListener("click", function () { seek(TL.START[i]); });
+    $("scenes").appendChild(b); sceneBtns.push(b);
+    // the lighter part of each scene's bed is its entrance motion; the rest is the hold
+    var band = document.createElement("div"); band.className = "in";
+    band.style.left = (TL.START[i] / TL.TOTAL * 100) + "%"; band.style.width = (TL.enterMs(i) / TL.TOTAL * 100) + "%";
+    track.insertBefore(band, driven);
+    if (i) { var tk = document.createElement("div"); tk.className = "tick"; tk.style.left = (TL.START[i] / TL.TOTAL * 100) + "%"; track.insertBefore(tk, driven); }
+  });
+  function scrub(e) { var r = track.getBoundingClientRect(); seek((e.clientX - r.left) / r.width * TL.TOTAL, true); }
+  track.addEventListener("pointerdown", function (e) { track.setPointerCapture(e.pointerId); scrub(e); });
+  track.addEventListener("pointermove", function (e) { if (track.hasPointerCapture(e.pointerId)) scrub(e); });
+  track.addEventListener("pointerup", function () { if (!st.playing) keep(); });
+
+  function seg(id, key, onChange, parse) {
+    var btns = Array.prototype.slice.call($(id).querySelectorAll("button"));
+    function mark() { btns.forEach(function (b) { b.setAttribute("aria-pressed", String(parse(b.getAttribute("data-v")) === st[key])); }); }
+    btns.forEach(function (b) { b.addEventListener("click", function () { st[key] = parse(b.getAttribute("data-v")); mark(); onChange(); }); });
+    mark(); return mark;
+  }
+  var str = function (v) { return v; };
+  seg("framing", "framing", function () { loadFrames(); keep(); }, str);
+  var markLayout = seg("layout", "layout", function () { place(); keep(); }, str);
+  seg("speed", "speed", function () {}, Number);
+  $("loopScene").addEventListener("change", function () { st.loopScene = this.checked; });
+  $("play").addEventListener("click", function () { setPlay(!st.playing); });
+  var STEP = 1000 / 60;
+  $("stepB").addEventListener("click", function () { setPlay(false); seek(st.t - STEP); });
+  $("stepF").addEventListener("click", function () { setPlay(false); seek(st.t + STEP); });
+
+  function swap() { st.swap = st.swap === "a" ? "b" : "a"; place(); keep(); }
+  function wipeTo(e) { var g = geo.b; if (!g) return; st.split = Math.max(0, Math.min(1, (e.clientX - area.getBoundingClientRect().left - g.x) / g.w)); place(); }
+  area.addEventListener("pointerdown", function (e) {
+    if (e.target.closest(".cap")) return;
+    if (st.layout === "wipe") { area.setPointerCapture(e.pointerId); wipeTo(e); }
+    else if (st.layout === "swap") swap();
+  });
+  area.addEventListener("pointermove", function (e) { if (st.layout === "wipe" && area.hasPointerCapture(e.pointerId)) wipeTo(e); });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.target.tagName === "SELECT" || e.target.tagName === "INPUT" || e.ctrlKey || e.metaKey || e.altKey) return;
+    var k = e.key;
+    if (k === " ") { if (e.target.tagName === "BUTTON") return; e.preventDefault(); setPlay(!st.playing); }
+    else if (k === "ArrowLeft" || k === "ArrowRight") { e.preventDefault(); setPlay(false); seek(st.t + (k === "ArrowLeft" ? -1 : 1) * (e.shiftKey ? 500 : STEP)); }
+    else if (k >= "1" && k <= "5") seek(TL.START[+k - 1]);
+    else if (k === "x" || k === "X") { if (st.layout !== "swap") { st.layout = "swap"; markLayout(); } swap(); }
+  });
+
+  /* --------------------------------------------------------------------- start */
+  fetch("sides.json").then(function (r) { return r.json(); }).then(function (conf) {
+    sides = conf.sides;
+    ["a", "b"].forEach(function (k) {
+      var s = slot[k];
+      if (!sideOf(st[k])) st[k] = sides[k === "a" ? 0 : Math.min(1, sides.length - 1)].id;
+      sides.forEach(function (sd) { var o = document.createElement("option"); o.value = sd.id; o.textContent = sd.label; s.sel.appendChild(o); });
+      s.sel.value = st[k];
+      s.sel.addEventListener("change", function () { st[k] = s.sel.value; loadFrame(k); place(); keep(); });
+    });
+    setPlay(false); loadFrames(); draw();
+  }, function (e) { $("wait").textContent = "Could not read sides.json: " + e; });
+
+  // for screenshot / check scripts
+  window.viewer = {
+    seek: function (ms) { setPlay(false); seek(ms); },
+    ready: function () { return !!(slot.a.api && slot.b.api); },
+    costs: function () { return { a: slot.a.ema, b: slot.b.ema }; },
+    state: st, timeline: TL
+  };
+})();
+</script>
+</body>
+</html>

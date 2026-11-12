@@ -1,0 +1,86 @@
+# Sanpou hero animation — REMAKE project
+
+Read this file and `REFERENCES.md` (same folder) before doing anything. Written 2026-11-13 at the end of the
+prep session (Opus 5.5) as the handoff to the build sessions (Fable 5.2).
+
+## What the owner wants
+
+A **remake** of the website's hero animation, in the sense of game remakes (Resident Evil, Final Fantasy):
+same game, same story and scenes, much better graphics and features. The current animation is the "original
+game"; this project builds the remake.
+
+- **Keep exactly:** the five scenes and their order (01 入荷 receiving, 02 積込 loading, 03 輸送 expressway,
+  04 配送ネットワーク map, 05 地域とともに finale), camera path and timing, layout, every background building
+  and its place, how the trucks move, the other elements, the daylight setting.
+- **Raise:** the graphics quality of every element (buildings, roads, sky, clouds, trucks, signs, map),
+  lighting and atmosphere, detail, secondary motion, and smoothness — to the level of the Motion reference
+  film (see `REFERENCES.md`), in Kurzgesagt-style flat vector, fitting a Japanese logistics company.
+- **Avoid** what the reference does badly: inconsistent colours between scenes, oddly shaped buildings,
+  dark cyber palettes.
+- Never change scenes, story, copy or facts without asking the owner first.
+
+## Hard boundaries
+
+- **Do not touch the website** (`C:\Users\RTX4070TI\Desktop\sanpou-site-v2`) — read it only. The remake is
+  integrated into the site only after it is fully finished and approved, as a separate task.
+- Website wording / polish is a **separate task** too; not part of this project.
+- Before installing ANY new skill, plugin or library: run the `skill-inspector` skill (`skillspector scan
+  <folder> --no-llm`) and show the owner the verdict first. Ask before adding libraries (e.g. GSAP, PixiJS).
+- Save every link or resource the owner gives into `REFERENCES.md`.
+
+## The original game (source of truth, read-only)
+
+In `C:\Users\RTX4070TI\Desktop\sanpou-site-v2` (git, branch `main`, commit `72862b6`):
+
+- `public_html/assets/js/hero-port-b.js` — all scene art and motion. Remotion-style: every scene is a pure
+  function of the frame (`sceneWorld(frame, t)` = scenes 01–02, `sceneTransit(frame)` = 03,
+  `sceneNetwork(frame, t)` = 04–05), drawn with `h(tag, props, ...children)` virtual nodes and a positional diff
+  patcher (conditional `null`s shift positions — keep node lists stable). One `DAY` palette object holds every
+  colour. `truckMotion()` gives trucks spring pitch from acceleration. Timings in `T_WORLD`, `T_TRANSIT`,
+  `T_NETWORK`. Exposed as `window.JourneyPort` (`_scenes`, `mount`, `renderMaster`).
+- `hero-port-a.js` — map data (`JRMAP`). `hero-flag.js` — sets `JX_CLEAN_HERO`. `hero-glue.js` — the
+  player: scene stops, camera, crossfade between two stages, 30fps fallback, input hold, road progress truck.
+- `css-src/40-hero.css` — hero overlay (navy copy on a pale-sky wash; never a dark scrim over daylight).
+- History of decisions: `docs/superpowers/plans/2026-11-09-hero-animation-polish.md`,
+  `docs/superpowers/plans/2026-11-10-hero-daylight-revamp.md`, `docs/qa-shots/`.
+- Gotchas: SVG ids must be unique per scene (two stages coexist during the dissolve); `FujiMountain` and the
+  finale's lane loop use a local variable `L` (the palette is `DAY`); scenes must render in < ~1 ms/frame today.
+
+## Plan for the first build session
+
+1. `git init` this folder. Copy the original hero files into `original/` (unchanged) and start `remake/`
+   from a copy.
+2. Build a **side-by-side viewer** (`viewer.html`): original left, remake right, same frame, scrub bar,
+   play, scene jump, 1920×1080 and phone framing. Every change is judged here against the original.
+3. Bring the owner a **renderer decision** with real sample frames before building scenes:
+   - stay SVG/DOM (easy to put back on the site; soft light, blur and glow are limited), or
+   - Canvas/WebGL (higher ceiling, closer to the Motion film; more work to integrate, needs a library check).
+4. Then remake **one scene at a time** (01 → 05): style frame first, owner OK, then motion, then verify.
+
+## Quality bar (from the Motion film, measured)
+
+Smooth every-frame motion (target 60 fps on the site), camera moves eased in and out with long soft landings,
+scene changes as one continuous move with the cut hidden at peak speed, the world never fully frozen (low
+ambient motion), light shafts / layered clouds / depth, purposeful detail, one route line threading through
+the scenes. Details and numbers: `REFERENCES.md`.
+
+## How to verify (works on this machine)
+
+- Playwright from `C:/Users/RTX4070TI/Desktop/Logistics-Website-Animation/journey/verify/` via
+  `createRequire(...)`; if the bundled Chromium won't start, use `{ channel: 'chrome' }`.
+- Serve with `python -m http.server <port> --bind 127.0.0.1` and use `http://127.0.0.1` (bare `localhost`
+  fails over IPv6). Pages without `<meta charset="utf-8">` garble 三豊運輸.
+- `ffmpeg` is installed (WinGet); use it to measure smoothness (frame diffs, duplicate frames) of recordings.
+- Check every pass: all scenes, 0 console errors, 390px phone, reduced motion, rapid scene clicks,
+  render cost per frame, before/after shots.
+
+## Tools available
+
+frontend-design, oil-ui (update check off), unslop, ui-ux-pro-max, lemo-opuscar (its style-frame method),
+webapp-testing, `watch` (claude-video: Gemini engine has a key; Google returned 503 "high demand" on
+2026-11-13 — retry, or use `--engine local`).
+
+## Working with the owner
+
+Plain words, short answers, no jargon. Show sample frames, don't describe them. Ask before choosing between
+directions. One commit per pass in this folder's own git repo, with before/after evidence.

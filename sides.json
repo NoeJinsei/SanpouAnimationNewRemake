@@ -1,0 +1,7 @@
+{
+  "note": "Renderers the viewer can show. kind dom = the original engine (JourneyPort); kind canvas = window.HeroCanvas. Paths are relative to this folder.",
+  "sides": [
+    { "id": "original", "label": "Original", "detail": "the site today (commit 72862b6)", "kind": "dom", "base": "original/js/", "scripts": ["hero-flag.js", "hero-port-a.js", "hero-port-b.js"], "glue": "hero-glue.js" },
+    { "id": "remake", "label": "Remake", "detail": "work in progress", "kind": "dom", "base": "remake/js/", "scripts": ["hero-flag.js", "hero-port-a.js", "hero-port-b.js"], "glue": "hero-glue.js" }
+  ]
+}
