@@ -1,0 +1,486 @@
+{
+ "frame": "ORIGINAL scene 01 (入荷 / receiving) settled hold = JourneyPort._scenes.world(185, t) with t starting at 185/30 = 6.1667 s and advancing in real seconds (hero-glue.js line 49). Source: C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js, sceneWorld lines 1244-1388. Stage 1920x1080, origin top-left. Camera cam = T_WORLD.camRecvX = -200 (constant for frames 0-200, line 1250). Every parallax group is translate(-cam*factor, 0), so SCREEN x = world x + 200*factor; y is never shifted. GROUND line y = 880 (line 1146). All boxes below are SCREEN px as x, y, w, h (x2/y2 given where useful), computed by running the unchanged file in Node with a fake window (hero-flag.js sets JX_CLEAN_HERO=true, hero-port-a.js gives JRMAP) and walking the returned {t,a,c} tree with transform composition; then confirmed against a Chromium render of the same frame (0 console errors). The tree has 1248 virtual nodes; scene function cost about 1.07 ms/frame in Node (no DOM). Only 21 attributes change with ambient time at the hold (sun glow r, 7 cloud translates + 1 cloud edge opacity, 4 bird translates + 4 wing paths, tower beacon opacity, body bob of trucks 1-3); everything else is static. Player facts: entrance plays frames 0->185 at ENTER_RATE 1.2 (36 frames/s, about 5.14 s), AUTO_DWELL[0] = 7000 ms from scene start, so in autoplay the hold lasts about 1.9 s before scene 02's entrance (frames 185->391). Desktop crop centre FOCUS_X[0] = 780; phones blend to CAM_M[0] (x 840->1030, y 660->680, zoom 1.10->1.18) - that is player camera, not scene art. Scratch files (scripts + evidence), all under C:/Users/RTX4070TI/AppData/Local/Temp/claude/24aa387b0dcfb2d5/ebc51bcd-98dd-479d-bbf9-f61a2010e7ba/scratchpad/scene01/ : walk.cjs (tree walker), report.cjs, chor.cjs, extra.cjs, shoot.mjs (render), tree_f185_d99.txt (every node with its screen box), report.txt, chor.txt, extra.txt, orig_f185_t6.17.png (reference render of the hold), plus crops orig_f185_t6.17_900-690-480-270.png, orig_f185_t6.17_1440-0-480-900.png, orig_f185_t6.17_0-420-960-480.png, orig_f0_0-640-1100-330.png, orig_f95_600-640-800-330.png, orig_f112_600-640-800-330.png. Nothing was written inside the project or the site.",
+ "layers": [
+  {
+   "order": 1,
+   "name": "Root div background",
+   "parallax": "none (screen-fixed)",
+   "note": "#eaf5fc, fully covered by the sky gradient. Line 1292."
+  },
+  {
+   "order": 2,
+   "name": "Sky gradient div (DAY.sky)",
+   "parallax": "none (screen-fixed)",
+   "note": "Line 1293."
+  },
+  {
+   "order": 3,
+   "name": "Two radial washes div (warm sun wash top-right + cool shade bottom-left)",
+   "parallax": "none (screen-fixed)",
+   "note": "One div, two radial-gradients. Line 1294."
+  },
+  {
+   "order": 4,
+   "name": "SVG: sun (SkySun)",
+   "parallax": "0 (screen-fixed, first thing painted in the SVG)",
+   "note": "Behind hill, skylines, clouds and tower. Lines 1303, 646-665."
+  },
+  {
+   "order": 5,
+   "name": "SVG: hill band",
+   "parallax": "0.12 (shift +24 px)",
+   "note": "Lines 1304-1306."
+  },
+  {
+   "order": 6,
+   "name": "SVG: deep skyline (palest tier)",
+   "parallax": "0.18 (shift +36 px)",
+   "note": "Lines 1307-1319."
+  },
+  {
+   "order": 7,
+   "name": "SVG: haze band 0 (wHaze0)",
+   "parallax": "none (screen-fixed rect)",
+   "note": "Over hill + deep skyline. Line 1320."
+  },
+  {
+   "order": 8,
+   "name": "SVG: far layer - in this order: 7 clouds, 4 birds, far skyline, roof beacon posts, Tokyo Tower",
+   "parallax": "0.32 (shift +64 px)",
+   "note": "Clouds are in front of the sun and behind far buildings and the tower. Lines 1321-1327."
+  },
+  {
+   "order": 9,
+   "name": "SVG: haze band 1 (wHaze1)",
+   "parallax": "none (screen-fixed rect)",
+   "note": "Over far layer (tower base, far buildings). Line 1328."
+  },
+  {
+   "order": 10,
+   "name": "SVG: mid layer - mid skyline, then utility poles + wires",
+   "parallax": "0.52 (shift +104 px)",
+   "note": "Mid buildings hide the lower part of Tokyo Tower. Lines 1329-1332."
+  },
+  {
+   "order": 11,
+   "name": "SVG: haze band 2 (wHaze2)",
+   "parallax": "none (screen-fixed rect)",
+   "note": "Over mid layer. Line 1333."
+  },
+  {
+   "order": 12,
+   "name": "SVG: main world layer - in this order: pavement, pavement lines, kerb, road, road lines, road-edge band, 11 streetlights, vending pair, (particles: disabled), supplier building, warehouse, trucks 2 and 3, truck 1, inbound-parcel clip group, 3 loading-parcel clip groups",
+   "parallax": "1.0 (shift +200 px)",
+   "note": "Lines 1334-1374. Supplier building is painted over streetlights; truck 1 over supplier and streetlights."
+  },
+  {
+   "order": 13,
+   "name": "SVG: foreground fence band + posts",
+   "parallax": "1.07 (shift +214 px, moves faster than the world)",
+   "note": "Lines 1375-1378."
+  },
+  {
+   "order": 14,
+   "name": "HTML: scene-title wrapper div and caption wrapper div",
+   "parallax": "none",
+   "note": "Both EMPTY (SceneTitle / SceneCaption return null under JX_CLEAN_HERO). Lines 1380-1384."
+  },
+  {
+   "order": 15,
+   "name": "HTML: vignette div",
+   "parallax": "none (screen-fixed, topmost)",
+   "note": "opacity 0.26. Lines 1386, 764-767."
+  }
+ ],
+ "elements": [
+  {
+   "name": "Sky gradient",
+   "layer": "2 sky div",
+   "screenBox": "0, 0, 1920, 1080 (visible above the ground line y 880)",
+   "look": "Vertical linear gradient, 5 stops: 0% (y0), 38% (y410.4), 64% (y691.2), 84% (y907.2), 100% (y1080). Clear blue at top fading to very pale blue, with a faint peach at the very bottom (hidden by ground).",
+   "colours": "#58abe0 -> #8fc9ec -> #c2e4f6 -> #e8f5fc -> #fdeee5; root behind it #eaf5fc",
+   "sourceLines": "155, 1292-1293"
+  },
+  {
+   "name": "Radial wash 1 - warm sun wash",
+   "layer": "3 washes div",
+   "screenBox": "ellipse centre (1766.4, 75.6), radii 729.6 x 345.6; colour reaches 0 at 70% = 510.7 x 241.9",
+   "look": "Soft warm glow in the top-right corner around the sun.",
+   "colours": "rgba(255,240,200,0.46) at centre -> rgba(255,240,200,0) at 70%",
+   "sourceLines": "1294"
+  },
+  {
+   "name": "Radial wash 2 - cool lower-left shade",
+   "layer": "3 washes div",
+   "screenBox": "ellipse centre (153.6, 1080), radii 1075.2 x 432; reaches 0 at 72% = 774 x 311 (so it rises only to about y 769)",
+   "look": "Very faint navy shade in the bottom-left; almost entirely covered by the SVG ground and buildings (shows only in sky gaps between buildings at lower left).",
+   "colours": "rgba(22,41,63,0.085) -> 0",
+   "sourceLines": "1294"
+  },
+  {
+   "name": "Sun",
+   "layer": "4 sun (factor 0)",
+   "screenBox": "centre (1772, 104). Glow circle r 242.1 at hold start (range 239.2-247.0): box 1529.9, -138.1, 484.3, 484.3 (clipped by stage). Halo r 58.24: 1713.8, 45.8, 116.5, 116.5. Disc r 40.56: 1731.4, 63.4, 81.1, 81.1.",
+   "look": "4 circles: big soft radial glow, pale halo, flat yellow disc, thin white ring on the disc edge (2 px). No rays. IMPORTANT: cloud #4 is painted in front of it and at the hold covers the disc's lower-left (cloud lobe centre (1718.9, 123.9) r 58.1 contains the sun centre; second lobe centre (1808.2, 145.1) r 43.5), so the sun reads as half-veiled behind a cloud. Tower antenna (x 1624) stays clear of it.",
+   "colours": "glow gradient wSun rgb(255,224,130) alpha 0.50 @0, 0.225 @35%, 0.06 @70%, 0 @100%; halo rgba(255,236,170,0.32); disc #ffd24d; ring rgba(255,255,255,0.55)",
+   "sourceLines": "646-665, 177-183, 1300, 1302-1303"
+  },
+  {
+   "name": "Hill band",
+   "layer": "5 hill (0.12)",
+   "screenBox": "path from screen x -276 to 5224, base y 880. Ridge y at screen x: 0->825.5, 240->799.2, 480->787.2, 720->783.0, 960->779.5, 1200->769.7, 1440->748.3, 1680->733.5, 1780->732.3 (highest on screen), 1920->734.4. Height above ground 54.5 px (left) to 147.7 px (right).",
+   "look": "One smooth rolling hill silhouette (3 cubic curves), flat fill, no detail. Mostly hidden behind the skyline tiers; shows only in gaps.",
+   "colours": "#dbe8f3",
+   "sourceLines": "1304-1306"
+  },
+  {
+   "name": "Deep skyline - shared look",
+   "layer": "6 deep (0.18)",
+   "screenBox": "12 buildings on screen (#0-#11), all standing on y 880; #12 and #13 are drawn but off-screen right (1966.., 2140..); #14 not drawn",
+   "look": "Flat pale rectangle, 4 px lighter strip on the top edge, grid of semi-transparent white windows starting 11 px in from the left and 14 px down (window = 0.42 x 0.44 of the grid cell). No caps, no roof units.",
+   "colours": "body #cbdaea, top strip #dbe6f2, windows rgba(255,255,255,0.45)",
+   "sourceLines": "1288, 1307-1319, 444-458"
+  },
+  {
+   "name": "Deep skyline buildings (each: screen x-range, w, h, top y, cols x rows, window size)",
+   "layer": "6 deep (0.18)",
+   "screenBox": "#0: -44..108, w152, h433, top 447, 4x7, 13.9x25.3 | #1: 130..226, w96, h343, top 537, 2x6, 16.0x23.0 | #2: 256..460, w204, h394, top 486, 5x7, 15.5x22.9 | #3: 476..600, w124, h309, top 571, 3x5, 14.6x24.6 | #4: 634..802, w168, h450, top 430, 4x8, 15.5x23.1 | #5: 824..932, w108, h364, top 516, 3x6, 12.3x24.5 | #6: 962..1114, w152, h433, top 447, 4x7 | #7: 1130..1226, w96, h343, top 537, 2x6 | #8: 1260..1464, w204, h394, top 486, 5x7 | #9: 1486..1610, w124, h309, top 571, 3x5 | #10: 1640..1808, w168, h450, top 430, 4x8 | #11: 1824..1932, w108, h364, top 516, 3x6 (cut by right edge)",
+   "look": "Pattern of 6 widths/heights repeats (#6-#11 repeat #0-#5). Visibility notes: #3 fully hidden behind the supplier building; #4's top 24 px (y 430-454) shows above the supplier roof slab between x 634 and 720.8; #2 and #5 show only slivers beside the supplier.",
+   "colours": "as shared look",
+   "sourceLines": "1288, 1307-1319"
+  },
+  {
+   "name": "Haze band 0",
+   "layer": "7 haze0",
+   "screenBox": "0, 410, 1920, 470 (y 410-880)",
+   "look": "Vertical gradient of pale blue haze rising from the ground line: alpha 0 at y 410, 0.33 at y 739, 0.60 at y 880. Lightens the hill and deep skyline towards the ground.",
+   "colours": "rgb(232,243,251)",
+   "sourceLines": "185-190, 1299, 1320"
+  },
+  {
+   "name": "Cloud - shared look",
+   "layer": "8 far (0.32)",
+   "screenBox": "box = (left, anchorY - 0.272w, w, 0.374w); cloud height unit hgt = 0.34w",
+   "look": "Puffy flat-bottom cloud: 4 white lobes (centres at 0.20w/-0.16hgt r 0.30hgt; 0.44w/-0.36hgt r 0.44hgt; 0.67w/-0.20hgt r 0.33hgt; 0.84w/-0.06hgt r 0.22hgt) over a white pill base (y -0.14hgt, height 0.44hgt, fully rounded); then the same shapes again in pale blue-white nudged right/down (lobe r x0.95, offset +0.05r, +0.17r) so a white sunlit crescent stays on top of every lobe; then a soft blue shade on the bottom 30% of the base. Group opacity 0.8832 x edge.",
+   "colours": "lit #ffffff, body #eef5fb, underside shade rgba(176,206,232,0.45)",
+   "sourceLines": "693-708, 1291, 1322"
+  },
+  {
+   "name": "Clouds at t = 185/30 (all drift right 4.5 px/s)",
+   "layer": "8 far (0.32)",
+   "screenBox": "#0: 197.0, -14.9, 280.9, 105.1 (anchor y 61.5), opacity 0.587 (still fading in; full 0.883 after 14.9 s) | #1: 449.3, 153.8, 351.8, 131.6 (anchor y 249.5) | #2: 833.5, 43.4, 372.6, 139.4 (anchor y 144.7) | #3: 1183.7, 30.4, 308.2, 115.3 (anchor y 114.2) | #4: 1548.1, 65.9, 388.1, 145.1 (anchor y 171.4) - overlaps the sun and sits behind the tower antenna | #5: 1897.7, 106.0, 433.7, 162.2 (anchor y 224.0) - only the left 22 px of its base pill is on screen (about x 1898-1920, y 203-268) | #6: 2207.9, -20.7, 408.3, 152.7 - OFF-SCREEN",
+   "look": "6 clouds touch the screen (5 clearly). #1-#5 at opacity 0.883.",
+   "colours": "as shared look",
+   "sourceLines": "1291, 1322"
+  },
+  {
+   "name": "Birds (4)",
+   "layer": "8 far (0.32), painted after clouds, before far buildings",
+   "screenBox": "at t = 185/30: #0 (2051.3, 178.3) OFF-SCREEN right, wingspan 17.1 | #1 (1667.0, 255.8) wingspan 13.8 | #2 (1254.7, 186.4) wingspan 15.9 | #3 (284.2, 238.9) wingspan 15.8. Flight band y about 170-265.",
+   "look": "Tiny two-arc 'm' glyphs (path M-7,0 Q-3.5,(-3.2-flap) 0,0 Q3.5,(-3.2-flap) 7,0), scale 0.985-1.219, 1.7 px round stroke, 50% opacity. 3 on screen at the hold.",
+   "colours": "stroke #2e4159, opacity 0.5",
+   "sourceLines": "711-723, 1323"
+  },
+  {
+   "name": "Far skyline - shared look",
+   "layer": "8 far (0.32)",
+   "screenBox": "11 buildings on screen (#0-#10); #11 (1946..2056) and #12 (2096..2218) drawn but off-screen; #13-#15 not drawn",
+   "look": "CityBuilding detail 0: flat facade, grid of plain windows (no frames, never warm): window x = x+10+c*px+(px-cw)/2, y = top+16+r*py+(py-ch)/2, cw = 0.52px, ch = 0.5py; every window has a lighter reflection over its top 42%; darker shade strip on the left 14% of the facade; 3 px light rim on the right edge; parapet cap rect (x-2, top-7, w+4, 9, rx 2). No roof box / mast at this tier.",
+   "colours": "facades DAY.far [0 #8ba2c7, 1 #95abce, 2 #7f97bd], cap #7288ab, glass #c6ddf1, cool #dbeaf6, lit #eef7fe, reflection rgba(255,255,255,0.4), shade rgba(22,41,63,0.1), rim rgba(255,255,255,0.3)",
+   "sourceLines": "1289, 1324, 594-644"
+  },
+  {
+   "name": "Far skyline buildings (each: screen x-range, w, h, top y, facade index, window grid, lit/cool/plain counts)",
+   "layer": "8 far (0.32)",
+   "screenBox": "#0: -16..106, w122, h374, top 506, face 0, 3x7, 5/0/16 | #1: 134..312, w178, h291, top 589, face 1, 5x5, 6/3/16 | #2: 352..448, w96, h416, top 464, face 2, 2x8, 3/0/13 | #3: 468..620, w152, h323, top 557, face 0, 4x6, 3/2/19 | #4: 666..864, w198, h351, top 529, face 1, 5x7, 7/10/18 | #5: 896..1006, w110, h265, top 615, face 2, 3x5, 4/1/10 | #6: 1034..1156, w122, h374, top 506, face 0, 3x7, 7/1/13 | #7: 1196..1374, w178, h291, top 589, face 1, 5x5, 5/1/19 | #8: 1394..1490, w96, h416, top 464, face 2, 2x8, 5/1/10 | #9: 1536..1688, w152, h323, top 557, face 0, 4x6, 1/1/22 | #10: 1720..1918, w198, h351, top 529, face 1, 5x7, 4/7/24",
+   "look": "Facade index = building index mod 3, so neighbours always differ. Fully hidden behind the supplier building: #2, #3, #4. Partly hidden by mid buildings and the truck elsewhere.",
+   "colours": "as shared look",
+   "sourceLines": "1289, 1324"
+  },
+  {
+   "name": "Roof beacon posts on far buildings taller than 340",
+   "layer": "8 far (0.32)",
+   "screenBox": "3 x 7 px post centred on the roof, y top-7..top: far#0 x 43.5 (y 499-506), far#2 x 398.5 (457-464), far#4 x 763.5 (522-529), far#6 x 1093.5 (499-506), far#8 x 1440.5 (457-464), far#10 x 1817.5 (522-529); two more off-screen",
+   "look": "Tiny dark notch in the middle of the parapet cap. The red lamp circle above it (r 2.4) has opacity 0 and is NOT visible.",
+   "colours": "post #33425C (lamp #e16347 at opacity 0)",
+   "sourceLines": "667-672, 1325"
+  },
+  {
+   "name": "Tokyo Tower",
+   "layer": "8 far (0.32), last in the group (in front of clouds, birds and far buildings; behind haze 1 and all mid buildings)",
+   "screenBox": "centre x 1624 (world 1560), base y 880, height 770, tip y 110. Full box 1484.9, 107.8, 278.1, 772.2. Foot span 1486.9..1761.1 (foot plates 1484.9..1550.5 and 1697.5..1763.1, y 873.8-880). Main deck 1554.7..1693.3, y 624.4-665.9. Body top y 375.7. Needle base y 216.3.",
+   "look": "Open red-and-white lattice tower, group opacity 0.95. Top to bottom: blinking beacon dot r 2.2 at the tip; grey needle y 110-216 (4.3 px wide at base); striped mast: red y 216-253, white y 253-289, red y 289-362 (10.8-14.6 px wide); two small grey platforms (30.8 x 5.8 at y 361.8 and 40 x 6.2 at y 369.5); tapering mid body y 375.7-624.4 (half-width 12.7 -> 46.2) with 7 X-braced bays and horizontals, WHITE between y 495.0 and 574.6, red elsewhere (edge stroke 5.67, braces 3.62, horizontals 4.34); deck railing (9 posts, rail at y 617.4, x 1560-1688); main deck 138.6 x 41.6 in 3 bands (light top 13.3, grey middle 19.1 with 12 dark windows 6.2 x 12.5, darker bottom 9.1); splayed legs y 666-880 (half-width 52.4 -> 137.1, edge stroke 7.08) with X-bracing and an arch between them (apex y 733.7, feet at x 1548.5 and 1699.5, stroke 6.38); red foot plates. VISIBLE at the hold: everything above about y 595; the left part of the deck (x 1555-1606); the left leg between x 1540 and 1606 (behind the vending machines and wires); the right foot between x 1738 and 1768. Hidden: the rest of the lower section behind mid buildings #6, #7, #8.",
+   "colours": "red #e4553b, white #f2f6fa, grey #9aa6b4, light grey #ccd5df, deck windows #3a4757, deck bottom band #8d99a8, beacon #ffb3a0",
+   "sourceLines": "460-587, 1302, 1326"
+  },
+  {
+   "name": "Haze band 1",
+   "layer": "9 haze1",
+   "screenBox": "0, 450, 1920, 430 (y 450-880)",
+   "look": "Same haze gradient: alpha 0 at y 450, 0.231 at y 751, 0.42 at y 880. Fades far buildings and the tower's lower half.",
+   "colours": "rgb(232,243,251)",
+   "sourceLines": "185-190, 1299, 1328"
+  },
+  {
+   "name": "Mid skyline - shared look",
+   "layer": "10 mid (0.52)",
+   "screenBox": "9 buildings touch the screen (#0-#8); #9 (2078..2226) drawn but off-screen; #10-#13 not drawn",
+   "look": "CityBuilding detail 1 (stronger blue, reads in front): facade, every window with a dark frame 1.6 px larger all round, glass panes with a reflection on the top 42%, a few warm (lit yellow) panes, left shade strip 14%, 3 px right rim, parapet cap (x-2, top-7, w+4, 9). Even-index buildings carry a roof box 20 x 12 at (x+0.3w, top-19); index%3==2 carry a thin mast 3.4 x 27 at (x+0.68w, top-34).",
+   "colours": "facades DAY.mid [0 #5f7ba8, 1 #6a86b2, 2 #54719e, 3 #5e88a8], cap/roof units #465e84, frame rgba(22,41,63,0.22), glass #c6ddf1, cool #dbeaf6, lit #eef7fe, warm #ffd98f, reflection rgba(255,255,255,0.4)",
+   "sourceLines": "1290, 1330, 594-644"
+  },
+  {
+   "name": "Mid skyline buildings (each: screen x-range, w, h, top y, facade index, grid, warm panes as row/col from top-left, roof units)",
+   "layer": "10 mid (0.52)",
+   "screenBox": "#0: 24..212, w188, h222, top 658, face 0, 6x5, warm none, roof box x 80.4-100.4 y 639-651 | #1: 254..386, w132, h278, top 602, face 1, 4x7, warm none, no roof units | #2: 452..676, w224, h176, top 704, face 2, 8x4, warm r0c1, box at x 519.2 y 685, mast at x 604.3 y 670 | #3: 706..854, w148, h250, top 630, face 3, 5x6, warm r2c2 r4c2 r5c1 | #4: 940..1052, w112, h199, top 681, face 0, 3x5, warm r1c2, box at x 973.6 y 662 | #5: 1104..1310, w206, h260, top 620, face 1, 7x6, warm r1c6 r2c5 r5c1, mast at x 1244.1 y 586-613 | #6: 1352..1540, w188, h222, top 658, face 2, 6x5, warm r1c3, box at x 1408.4 y 639 | #7: 1606..1738, w132, h278, top 602, face 3, 4x7, warm none | #8: 1768..1992, w224, h176, top 704, face 0, 8x4, warm r1c4 r2c2 r2c4, box at x 1835.2 y 685 (mast at x 1920.3 is off the edge)",
+   "look": "Visibility: #2 and #3 fully hidden behind the supplier building; #1 shows only a ~24 px sliver (x 254-278) left of the supplier wall; #4 and #5 have their lower part behind the truck (truck box x 960-1204 from y 738); #7 hides the tower deck's right side.",
+   "colours": "as shared look",
+   "sourceLines": "1290, 1330"
+  },
+  {
+   "name": "Utility poles (電柱) and wires",
+   "layer": "10 mid (0.52), painted after mid buildings",
+   "screenBox": "12 poles at world -120 + 360i; on screen centres x 344, 704, 1064, 1424, 1784 (pole #0 centre is at x -16: only its crossarm tip up to x 6 and its wires enter the frame). Each pole y 704-880 (height 176).",
+   "look": "Concrete pole tapering from 9 px wide at the base to 5.2 px at the top; top crossarm 44 x 3.6 at y 718; lower arm 30 x 3.2 at y 738; 4 insulator pins (y 713-717) at -20, -7, +7, +20 from centre; even poles (#0, #2, #4) carry a transformer can 11 x 18 at (x+4, y 756-774), odd poles (#1, #3, #5) a small box 6 x 5 at (x+3, y 764-769); yellow marker band 7 x 10 at y 806-816 (55% opacity). Wires between neighbouring poles: 4 thin lines (1.3 px) from the pins at y 713 sagging 8/9/10/11 px at mid-span, plus one thicker cable (2.6 px) from y 744 sagging 15 px. Visibility: poles at 344 and 704 are hidden behind the supplier building; the pole at 1064 shows only above the truck roof (y 704-738); poles at 1424 and 1784 fully visible (1424 sits right behind streetlight #3).",
+   "colours": "pole and fittings #56688a, band #d8c35a @0.55, wires rgba(40,56,84,0.42)",
+   "sourceLines": "1187-1214, 1331"
+  },
+  {
+   "name": "Haze band 2",
+   "layer": "11 haze2",
+   "screenBox": "0, 580, 1920, 300 (y 580-880)",
+   "look": "Same haze gradient, weakest: alpha 0 at y 580, 0.121 at y 790, 0.22 at y 880. Over mid buildings and poles.",
+   "colours": "rgb(232,243,251)",
+   "sourceLines": "185-190, 1299, 1333"
+  },
+  {
+   "name": "Pavement, kerb, road and markings",
+   "layer": "12 main (1.0)",
+   "screenBox": "all full width (screen x -200..5400): pavement y 880-896 (16) | pavement highlight line y 883 (2 px) | yellow tactile dashed line y 889 (3 px, dash 14 gap 3, dashes start at x 4 + 17n) | kerb y 896-902 (6) | road y 902-986 (84) | road edge lines y 907 and y 981 (2.5 px, solid) | centre lane dashes y 944 (4 px, dash 26 gap 32, dashes at x 32 + 58n) | dark road-edge band y 986-1180 (visible 986-1080, lower part covered by the fence band from y 1022)",
+   "look": "Flat horizontal bands: light grey pavement with a faint yellow dashed tactile strip, slightly darker kerb, dark asphalt with two faint white edge lines and a brighter dashed centre line, then a darker band below the road.",
+   "colours": "pavement #c4c9cf, highlight rgba(245,236,234,0.16), tactile rgba(226,196,74,0.55), kerb #9aa3ad, road #3a4149, edge lines rgba(255,255,255,0.28), centre dashes rgba(255,255,255,0.6), road-edge band #2b313a",
+   "sourceLines": "1335-1343"
+  },
+  {
+   "name": "Streetlights (daytime, off)",
+   "layer": "12 main (1.0), painted before vending machines, supplier and truck",
+   "screenBox": "world x -180 + 470i. On screen: #0 pole x 16-24, arm to x 70, head x 60-79 | #1 pole 486-494, head 530-549 (FULLY HIDDEN behind the supplier building) | #2 pole 956-964, head 1000-1019 (pole base behind the truck's rear corner; arm and head show above the truck roof, y 680-692) | #3 pole 1426-1434, head 1470-1489 | #4 pole 1896-1904, arm cut by the right edge. All y 680-880. #5-#10 off-screen.",
+   "look": "Pole 8 x 200 (rx 3), horizontal arm 54 x 7 at the top pointing right, lamp head 19 x 8 (rx 4) hanging at the arm end (y 684-692). No light, no glow.",
+   "colours": "pole and arm #7d93b0, head #5b6b82",
+   "sourceLines": "1181-1186, 1344"
+  },
+  {
+   "name": "Vending machine pair (自販機) - ON SCREEN at camera -200",
+   "layer": "12 main (1.0)",
+   "screenBox": "world x 1300 -> white unit 1500, 780, 54, 100; blue unit 1558, 780, 54, 100; shared ground shadow ellipse centre (1556, 883) rx 72 ry 6 (x 1484-1628)",
+   "look": "Two plain unbranded machines side by side on the pavement, in front of the tower's left leg. Each: body 54 x 100 (rx 3) with a 2 px trim outline; white display window 44 x 50 at (+5, +6); 3 shelves (thin line at +18, +33, +48) each holding 6 cans 4.4 x 8.6 (pitch 7) in a rotating 6-colour sequence (offset by row x2; blue unit starts 4 colours later); dark coin panel 30 x 9 at (+6, +60); slot 8 x 14 at (+40, +60); dark delivery bin 42 x 13 at (+6, +80).",
+   "colours": "white unit body #f1f4f7 trim #c9d3de; blue unit body #3f78b8 trim #2c5a8e; window #fbfdff; cans #e16347 #2a7f8c #f2c14e #7aa5d6 #e9e4d8 #5d8f4e; shelf rgba(22,41,63,0.18); panel rgba(22,41,63,0.65); slot rgba(22,41,63,0.35); bin rgba(10,20,36,0.75); shadow rgba(10,20,36,0.16)",
+   "sourceLines": "1215-1241, 1345"
+  },
+  {
+   "name": "Supplier building - body and roof",
+   "layer": "12 main (1.0)",
+   "screenBox": "placed at world x 80, scale 1.9: local (lx, ly) -> screen (280 + 1.9lx, 880 - 1.9(278 - ly)). Whole group box 230.6, 401.2, 744.8, 505.4. Ground shadow ellipse 230.6, 868.6, 744.8, 38. Main wall 280, 473.4, 646, 406.6. Upper fascia band 280, 473.4, 646, 98.8 with a divider line at y 572.2. Roof slab 262.9, 454.4, 680.2, 30.4. Roof unit left 348.4, 416.4, 125.4, 41.8 with a small stack 367.4, 401.2, 22.8, 19 on top. Roof unit right 720.8, 427.8, 159.6, 30.4.",
+   "look": "Two-storey blue-grey flat-roofed building with a 6.5 px darker outline and rounded corners (rx 9.5), a lighter band across the top fifth, a dark overhanging roof slab, and two dark rooftop equipment boxes (left one taller with a little stack).",
+   "colours": "wall #7e94b6, outline #42536e, fascia #93a8c4, divider rgba(16,31,54,0.5), roof slab #1C2840, roof units #33425C with #101F36 outline, stack #3D4D6B, shadow rgba(10,20,36,0.25)",
+   "sourceLines": "390-401, 1348"
+  },
+  {
+   "name": "Supplier building - sign plate",
+   "layer": "12 main (1.0)",
+   "screenBox": "plate 321.8, 500, 285, 41.8; bar 1: 337, 513.3, 163.4, 15.2; bar 2: 515.6, 513.3, 72.2, 15.2",
+   "look": "Pale rounded name plate on the fascia, upper left. NO lettering - two rounded placeholder bars stand in for text (unbranded supplier).",
+   "colours": "plate #e9f1f9 with rgba(22,41,63,0.3) outline; bars #68809f and #8ea4bf",
+   "sourceLines": "402-404"
+  },
+  {
+   "name": "Supplier building - windows (8)",
+   "layer": "12 main (1.0)",
+   "screenBox": "each frame 91.2 x 72.2, glass 79.8 x 60.8. Row 1 (frame y 589.3-661.5): x 319.9, 426.3 (WARM), 532.7, then right pair x 665.7, 772.1 (WARM). Row 2 (frame y 672.9-745.1): x 319.9, 426.3, 532.7 (all cool; nothing under the right pair - the dock is there).",
+   "look": "Dark-framed 4-pane windows: glass with a lighter top highlight (top 24.7 px), one vertical and one horizontal mullion. Exactly TWO are warm/lit yellow: row 1 second from left, and the right-most of the upper right pair. The other six are cool sky-reflecting glass.",
+   "colours": "frame #54698c, cool glass #cde2f4, warm glass #ffd98f, highlight rgba(255,255,255,0.45), mullions rgba(22,41,63,0.3) / rgba(22,41,63,0.22)",
+   "sourceLines": "405-427"
+  },
+  {
+   "name": "Supplier building - loading dock, awning, crates, side door",
+   "layer": "12 main (1.0)",
+   "screenBox": "dock door (closed) 671.4, 705.2, 190, 174.8 | awning 656.2, 686.2, 220.4, 20.9 with top lip 656.2, 676.7, 220.4, 11.4 | dock light bar 747.4, 693.8, 38, 9.5 | dock bumpers 679, 864.8, 19, 15.2 and 834.8, 864.8, 19, 15.2 | crate 1: 690.4, 819.2, 53.2, 57 with a vermilion band 713.2-719.7 | crate 2: 755, 834.4, 45.6, 41.8 | side door 565, 792.6, 57, 87.4 with handle 606.8, 830.6, 6.5, 15.2. Parcels launch from the dock point at screen (758.8, 838.2).",
+   "look": "On the right half of the ground floor: a wide flat grey-blue dock door with a dark outline, under a dark two-tone awning with a small pale light bar; two black bumper blocks at the door's bottom corners; in front of the door a white parcel-like crate with a vertical vermilion band and a smaller grey crate, both with dark outlines. Left of the dock, a small personnel door with a pale vertical handle. The dock door does not open in this scene.",
+   "colours": "dock door #6d829f outline rgba(16,31,54,0.6); awning #3A4A66, lip #44557A; light bar #c9d2dc; bumpers #1A2434; crate 1 #f7f9fb + #e16347 band, outline #101F36; crate 2 #C9CDD4, outline #101F36; side door #5b6d88 outline #3a4a64, handle rgba(245,236,234,0.4)",
+   "sourceLines": "428-439"
+  },
+  {
+   "name": "Truck 1 (Sanpou, parked) - position, shadows, wheels",
+   "layer": "12 main (1.0), painted over supplier and streetlights",
+   "screenBox": "Truck({x:760, y:914, scale:2}), faces RIGHT. Local (lx, ly) -> screen (960 + 2lx, 722 + 2ly). Rear of cargo box at x 960, front bumper at x 1312, tyres touch y 918. Whole box incl. shadows 936, 733.5, 408, 205.5. Shadows: 936, 911, 408, 28; inner 992, 914.8, 296, 18.4; three wheel contact shadows 60 x 12.8 at x 982, 1126, 1218 (y 916.6). Wheels: centres (1012, 896), (1156, 896), (1248, 896); tyre r 22, rim r 13.2, hub r 4.8.",
+   "look": "Three stacked soft ground shadows on the road. Three wheels (one front under the cab, two under the box... order from rear: 1012, 1156, 1248): dark tyre with a faint highlight arc on the upper-left, grey-blue rim, 5 short spokes, small hub. Wheels and shadows do not bob.",
+   "colours": "shadows rgba(10,20,36,0.2 / 0.22 / 0.3); tyre #101F36, highlight rgba(245,236,234,0.18), rim #3A475E, spokes #5A6D86, hub #76829B with #1A2434 ring",
+   "sourceLines": "274-290, 342-354, 1354, 1146 (TRUCK_PARK_1 = 760, T_SCALE = 2)"
+  },
+  {
+   "name": "Truck 1 - cargo box, livery, lettering",
+   "layer": "12 main (1.0)",
+   "screenBox": "box 960, 738, 244, 132 (y +-0.7 with idle bob) | top cap strip y 738-748 | top highlight line 964.8-1199.2 at y 740.8-744.4 | 9 panel ribs at x 980 + 25i (to 1180), y 746-838 | lower shade band 962.6, 822, 238.8, 45.4 | vermilion stripe 960, 844, 244, 12 | thin stripe 960, 860.8, 244, 3.6 | small vermilion bar 978, 762, 8, 30 | 'Sanpou' starts x 998, baseline y 782, 25 px | '三豊運輸' starts x 998, baseline y 806, 15 px | inner rear line x 967, rear edge line x 960 (y 750-866)",
+   "look": "White box body with a 5.2 px navy outline and rounded corners; faint vertical panel ribs; slightly darker lower third; a bold vermilion stripe near the bottom with a thinner fainter stripe under it. Lettering top-left of the side: a short vermilion vertical bar, then 'Sanpou' (weight 800, navy, letter-spacing 0.8 px) and below it '三豊運輸' (weight 700, 55% navy, letter-spacing 3 px). Font note: 'Sanpou' asks for Archivo with sans-serif fallback; no Archivo appears in original/site/site.css, original/css/40-hero.css or vendor/fonts/fonts.css, so it likely renders in the fallback sans (check the live page head).",
+   "colours": "box #f7f9fb, cap #f3f1ed, outline #101F36, ribs rgba(16,31,54,0.07), shade rgba(16,31,54,0.06), stripes #e16347 (thin one @0.55), text #101F36 and rgba(16,31,54,0.55)",
+   "sourceLines": "292-304"
+  },
+  {
+   "name": "Truck 1 - rear door (partly open ghost at exactly frame 185)",
+   "layer": "12 main (1.0)",
+   "screenBox": "door panel 947.7, 754, 12, 108 at group opacity 0.354; recess strip 963, 754, 6.4, 108",
+   "look": "Frame 185 is 13/16 of the way through the door-close (frames 172-188), so the hold freezes a faint, narrow dark door sliver sticking out behind the box plus a thin dark strip just inside the rear edge. Fully open (frames 80-172) it is a 34 x 108 dark panel at x 916-950 with a centre seam and two hinge lines, and an 18 px recess strip (x 963-981). Fully closed it is absent.",
+   "colours": "panel #1C2840 outline #101F36, seam rgba(245,236,234,0.22), recess #16243C @0.9",
+   "sourceLines": "280-286, 304-311, 1270-1273"
+  },
+  {
+   "name": "Truck 1 - chassis, cab and lights",
+   "layer": "12 main (1.0)",
+   "screenBox": "chassis rail 952, 870, 352, 18 | fuel tank 1056, 874, 52, 22 | under-bar 1040, 890, 88, 8 | mud flaps 980, 890, 14, 22 and 1180, 890, 14, 22 | air deflector 1204, 742, 48, 36 | cab body 1204, 770, 102, 100 | windshield 1256, 780, 40, 38 | side window 1216, 782, 32, 32 | door seam x 1252 (y 778-866) | door handle 1228, 826, 18, 5.2 | mirror 1268, 760, 9, 16 on an arm from (1260, 782) to (1272, 770) | grille 1292, 834, 14, 20 with 3 slats | front bumper 1200, 858, 112, 16 | headlight 1299, 836, 9, 14 | fog lamp circle centre (1292, 866) r 4.4 | cab marker 1260, 765, 10, 5.2 | roof marker 1212, 733, 12, 5.6 | tail lamp 959, 846, 5.2, 12 with glow ellipse 946, 844, 24, 16 | 4 amber side markers 10 x 7.2 at x 984, 1032, 1144, 1188 (y 875.2)",
+   "look": "Dark navy cab-over cab on the right with a curved air deflector above it, sloped windshield with a pale glint, square side window, door seam and handle, door mirror, small grille, lighter bumper, muted-red headlight and marker lenses, pale fog lamp. Dark chassis rail under box and cab with a rounded fuel tank, a bar and two mud flaps. Vermilion tail lamp with a soft glow at the rear. Four amber marker lenses along the rail.",
+   "colours": "cab #23344F outline #101F36; glass rgba(160,190,220,0.36 / 0.28), glint rgba(245,250,255,0.22); rail #1C2840; tank #3A4A66; bar #33425C; flaps #1A2434; grille #2A3850; bumper #41506B; lenses #b26858; fog lamp rgba(235,244,252,0.9); tail lamp #e16347 glow rgba(225,99,71,0.22); markers #f0a23c",
+   "sourceLines": "312-340"
+  },
+  {
+   "name": "Inbound parcels",
+   "layer": "12 main (1.0), clip group clipT1",
+   "screenBox": "NONE VISIBLE at frame 185 (clip group is present but empty)",
+   "look": "All three parcels finished at frames 116, 142 and 168. For reference when checking the entrance: parcel = 52 x 45.76 white box, white top flap, vermilion vertical tape and horizontal band, small address label bottom-right, 2.2 px navy outline, soft ground shadow.",
+   "colours": "#f7f9fb, #ffffff, #e16347, label #FFFFFF, outline #101F36, shadow rgba(10,20,36,0.32)",
+   "sourceLines": "359-387, 1149-1179, 1355-1362"
+  },
+  {
+   "name": "Warehouse and trucks 2-3",
+   "layer": "12 main (1.0)",
+   "screenBox": "OFF-SCREEN at camera -200. Warehouse: ground shadow starts at screen x 2097.9, roof slab at 2161, wall at 2180 (box 2097.9, 431.6, 1532.2, 473.1). Truck 2: 2969.7..3365.5. Truck 3: 3425.7..3821.5.",
+   "look": "In the DOM but not in view; must not be counted for scene 01.",
+   "sourceLines": "1349-1353, 778-861"
+  },
+  {
+   "name": "Foreground fence band and posts",
+   "layer": "13 fence (1.07)",
+   "screenBox": "band screen x -386..6094, y 1022-1080 (58 high) | posts 11 x 22 (rx 2), y 1010-1032, at screen x 214 + 180i: 214, 394, 574, 754, 934, 1114, 1294, 1474, 1654, 1834 (10 on screen; 30 in total)",
+   "look": "Flat grey band along the bottom of the frame with short post caps sticking 12 px above it at regular 180 px spacing. Sits over the dark road-edge band.",
+   "colours": "band #9aa1a8, posts #8b93a0",
+   "sourceLines": "1375-1378"
+  },
+  {
+   "name": "Vignette",
+   "layer": "15 vignette div",
+   "screenBox": "0, 0, 1920, 1080; ellipse centre (960, 496.8), radii 1497.6 x 734.4; clear inside 58% (868.6 x 426)",
+   "look": "Very light dark-navy edge darkening: nothing in the middle, about 0.12 effective alpha in the top corners and about 0.14 in the bottom corners (0.55 x layer opacity 0.26).",
+   "colours": "rgba(6,12,24,0.55) at the outer edge, layer opacity 0.26",
+   "sourceLines": "764-767, 1386"
+  }
+ ],
+ "ambientMotion": [
+  {
+   "what": "Clouds drift right and wrap",
+   "formula": "wx = (c.x + t*4.5) mod 2400; screen x = wx + 64. Speed 4.5 px/s for all 7; wrap period 533.3 s. Opacity = 0.92*0.96*edge, edge = min(wx/200, (2400-wx)/200, 1): a wrapped cloud reappears at screen x 64 at opacity 0 and fades in over its first 200 px (44.4 s); the fade-out side is off-screen (clouds leave the frame once wx > 1856). Base positions at t=0: x = i*342.86 + random('cl-x'+i)*130.3 -> 105.2, 357.5, 741.8, 1092.0, 1456.4, 1805.9, 2116.2; y = 50 + random('cl-y'+i)*210; w = 220 + random('cl-w'+i)*280 -> 280.9, 351.8, 372.6, 308.2, 388.1, 433.7, 408.3.",
+   "sourceLines": "1291, 1322"
+  },
+  {
+   "what": "Birds drift right, bob and flap",
+   "formula": "x = ((rx*2300 + t*(14 + rs*10)) mod 2580) - 140, screen x = x + 64 (speeds 21.38, 16.71, 19.77, 19.54 px/s; they cross the frame and are off-screen right for part of each ~120-155 s loop). y = 120 + ry*190 + 9*sin(0.7t + 2.2i) (+-9 px, period 8.98 s; mid heights 186.6, 253.7, 180.5, 247.9). Wing flap: arc control y = -3.2 - 3.4*sin(7t + 1.9i) (period 0.90 s), times scale s = 0.85 + rs*0.5.",
+   "sourceLines": "711-723, 1323"
+  },
+  {
+   "what": "Sun glow breathing",
+   "formula": "glow radius = 52*4.6 + (0.5 + 0.5*sin(0.55t))*52*0.15 = 239.2 .. 247.0 px, period 11.42 s (242.1 at t = 185/30). Halo, disc and ring are static.",
+   "sourceLines": "648-651"
+  },
+  {
+   "what": "Tokyo Tower tip beacon blink",
+   "formula": "circle opacity = 0.2 + 0.8*(0.5 + 0.5*sin(pi*t)) = 0.2 .. 1.0, period 2 s (0.80 at t = 185/30), multiplied by the tower group opacity 0.95.",
+   "sourceLines": "551, 585"
+  },
+  {
+   "what": "Truck 1 idle bob (body only)",
+   "formula": "body translate y (local units, x2 on screen) = run*sin(frame*1.15)*1.3 + (1-run)*(settleBob + 0.35*sin(1.4t)); at the hold run = 0 and settleBob = exp(-(185-62)/9)*... ~ 0, so y = 0.35*sin(1.4t) local = +-0.7 px on screen, period 4.49 s (+0.5 px at t = 185/30). Pitch is 0. Wheels and ground shadows do not move.",
+   "sourceLines": "1264-1269, 291, 1354"
+  },
+  {
+   "what": "Trucks 2 and 3 idle bob (off-screen, no visible effect in scene 01)",
+   "formula": "0.55*sin(1.3t + 1.9i) local units at scale 1.94",
+   "sourceLines": "1278, 1350-1353"
+  },
+  {
+   "what": "Everything else is frozen at the hold",
+   "formula": "Diffing world(185, t) against world(185, t+3.37) changes only 21 attributes: sun glow r; 7 cloud transforms (+ cloud #0 opacity while it fades in); 4 bird transforms and 4 wing paths; tower beacon opacity; the 3 truck body transforms. Buildings, windows, poles, wires, road, vending machines, supplier, hill, haze, sky and vignette have no motion. The player continues ambient time from the entrance without a jump (entrance uses t = frame/30, hold starts at 185/30), and carries the elapsed hold time into scene 02's entrance (ambOff).",
+   "sourceLines": "hero-glue.js 47-50, 242"
+  },
+  {
+   "what": "Player camera drift on narrow viewports only (outside the scene function)",
+   "formula": "Desktop: static crop centred on stage x 780. As the visible window narrows (mobT = clamp((1500 - boxW/scale)/880)), the crop blends toward CAM_M[0]: centre x 840 -> 1030, y 660 -> 680, zoom 1.10 -> 1.18 across the 7 s dwell with ease-in-out, exponentially smoothed (rate 2.6/s). Reduced motion: fixed at the midpoint.",
+   "sourceLines": "hero-glue.js 105-134"
+  }
+ ],
+ "choreography": [
+  {
+   "frames": "0-200 (whole scene)",
+   "what": "Camera fixed at x = -200. The pan to the warehouse only starts at frame 200 (panStart) and ends at 262. Entrance is played at 36 frames per second by the player (ENTER_RATE 1.2), so frames 0-185 take about 5.14 s."
+  },
+  {
+   "frames": "0-8",
+   "what": "Truck 1 waits at world x -400: its rear is at screen x -200 and its front bumper at screen x 152, so the cab already pokes into the left 152 px of the frame (confirmed in render). The weight model treats it as already driving: body shakes +-1.3 local units (sin(frame*1.15)), exhaust puffs visible (opacity up to 0.7), pitch 0."
+  },
+  {
+   "frames": "8-62 (truckIn)",
+   "what": "Truck drives in from the left and brakes: rear x (world) = -400 + 1160*easeOutCubic((f-8)/54). Screen rear x by frame: 8: -200, 12: 39, 16: 243, 20: 414, 24: 556, 28: 670, 32: 761, 36: 830, 40: 882, 44: 917, 48: 940, 52: 953, 56: 958, 62: 960. Enters at full speed (63 px/frame at f 9) and decelerates all the way. Nose dips under braking: pitch peaks at +1.25 deg at f 19 (rotation about local 92,80), 0.69 deg at f 40, 0.09 deg at f 62. Road shake fades as speed drops (run < 1 from about f 51, 0.03 at f 60). Wheels rotate with distance; two exhaust puffs cycle every 90 px and fade with speed."
+  },
+  {
+   "frames": "62-~95",
+   "what": "Truck parked at screen x 960. Settle bounce: exp(-(f-62)/9)*sin((f-62)/2.2)*3.4 local units (first swing about +2.2 local = 4.4 px down at f 64-66, then -1.2 at f 72, gone by about f 95); pitch rocks back slightly to -0.03 deg at f 70 then 0. Idle bob 0.35*sin(1.4t) continues underneath."
+  },
+  {
+   "frames": "62-80 (doorOpen)",
+   "what": "Rear door opens, linear 0 -> 1. The dark door panel grows out behind the box (screen width 14.7 px at f 66, 27 at f 70, 32.5 at f 74, 34 at f 80; final position x 916-950, y 754-862) and fades in; a dark recess strip appears just inside the rear edge (x 963-981)."
+  },
+  {
+   "frames": "82-116, 108-142, 134-168 (parcels)",
+   "what": "Three parcels, one every 26 frames, each lasting 34 frames (so the next starts 8 frames before the previous ends). Each parcel: 0-13% squashes in anticipation at the dock point (screen 758.8, 838.2) with its shadow on the dock; 13-56% flies an arc to the pavement at screen (914, 880) - bottom-centre peaks near y 795, tilts up to 2.5 deg, stretches 5%, shadow on the ground at 30%; 56-66% landing squash 12%; 66-76% small settle wobble; 76-100% hops up and right into the truck toward screen (1000, 860) and is clipped at the truck's rear edge x 960, so it vanishes into the box. Phase frames for parcel 1: 82-86.4, 86.4-101, 101-104.4, 104.4-107.8, 107.8-116 (add 26 and 52 for parcels 2 and 3). Door stays fully open throughout (80-172)."
+  },
+  {
+   "frames": "168-172",
+   "what": "Short beat: last parcel is inside, door still fully open, nothing moves except ambient."
+  },
+  {
+   "frames": "172-188 (doorClose)",
+   "what": "Rear door closes, linear 1 -> 0 (k = 0.75 at f 176, 0.5 at f 180, 0.25 at f 184, 0.1875 at f 185, 0 at f 188). The scene-01 hold stops at f 185, i.e. BEFORE the door has finished closing: the door is frozen as a 12 px wide sliver at 35% opacity for the whole hold. It only finishes closing in the first 3 frames of scene 02's entrance (185-188)."
+  },
+  {
+   "frames": "185 (hold)",
+   "what": "Truck parked at screen x 960-1312, door ghost as above, no parcels, exhaust invisible, pitch 0, only ambient motion runs. Ambient time continues from 185/30 s."
+  },
+  {
+   "frames": "after 185 (belongs to scene 02, for context only)",
+   "what": "188-286: truck 1 departs to the warehouse dock (ease in-out); 200-262: camera pans from -200 to 1900."
+  },
+  {
+   "frames": "8-192 (overlay timings that exist in code but draw nothing)",
+   "what": "Scene title fade-in (frames 8-42), receiving caption spring-in from frame 48 and its data ramp 78-192 are all computed but return null because JX_CLEAN_HERO is true; the site shows its own HTML copy instead."
+  }
+ ],
+ "disabledOrHidden": [
+  "SceneTitle ('JOURNEY 輸送のながれ', '01 / RECEIVING', heading 'お預かりした荷物を、ていねいに検品。', teal underline): returns null because hero-flag.js sets window.JX_CLEAN_HERO = true (hero-port-b.js 996-997, called at 1380). Only an empty wrapper div remains. Not visible.",
+  "SceneCaption 'INBOUND QUALITY / 全数検品で、まちがいなくお預かり。' at (1170, 172): returns null under the same flag (1012-1013, called at 1382-1384). Empty wrapper div only. Its float (cardBob = 5*sin(1.1t)) therefore has no visible effect.",
+  "KPI card, ring gauge and bar chart for receiving (KpiCard, RingGauge, BarChart, CONTENT.receivingCard): not called by sceneWorld at all; KpiCard also returns null under the flag (864-926). recvData is computed (1282) but unused.",
+  "FloatingParticles 'world-a' and 'world-b' (dust motes): the function's first statement is 'return null' (674-675), so both calls at 1346-1347 draw nothing.",
+  "Sun rays: SkySun builds a 12-ray path string and then returns null for it (652-660); the second pulse p2 is unused. The sun has no rays.",
+  "Roof beacon red lamps on tall far buildings: the circle is drawn with opacity 0 (671); only the 3 x 7 dark post is visible. Its time/phase arguments do nothing.",
+  "Truck exhaust puffs: two circles exist in the DOM with opacity 0.000 while the truck is parked (run = 0) (333-336). Visible only while the truck moves.",
+  "Truck rear door: a 35%-opacity ghost at exactly frame 185 (see elements); the door group is removed entirely when doorW <= 0.3 (closed) (305-311).",
+  "Inbound parcels: all three return null after frames 116 / 142 / 168; the clipT1 group is present but empty at the hold (1355-1362).",
+  "Loading parcels (6, scene 02) and their clip groups clipB0-2: empty until frame 308 (1363-1373).",
+  "Warehouse (Sanpou 物流センター sign, bays 01-03, shutters, light rays): in the DOM but off-screen at camera -200 (starts at screen x 2098 with its shadow, wall at 2180). Shutters closed, ray and interior glow at 0.",
+  "Trucks 2 and 3: in the DOM, off-screen (screen x 2969.7-3365.5 and 3425.7-3821.5).",
+  "Streetlight #1 (screen x 486-549): in the DOM but completely covered by the supplier building. Streetlights #5-#10 are off-screen right.",
+  "Utility poles at screen x 344 and 704: completely covered by the supplier building; pole #0's shaft is off-screen left (x -20.5..-11.5), poles #6-#11 off-screen right.",
+  "Buildings fully hidden behind the supplier building (must not be expected in a screenshot): mid #2 and #3, far #2, #3 and #4, deep #3. Mid #1 shows only a ~24 px sliver at x 254-278; deep #4 shows only its top 24 px (y 430-454, x 634-721) above the roof slab.",
+  "Lower part of Tokyo Tower: hidden behind mid buildings #6 (1352-1540), #7 (1606-1738) and #8 (1768-1992); only the left leg strip x 1540-1606 and the right foot x 1738-1768 show below the deck.",
+  "Cloud #6 (screen x 2207.9) and bird #0 (screen x 2051.3) are off-screen right at the start of the hold; cloud #5 shows only a 22 px sliver at the right edge.",
+  "Lamp light / glows: none. The DAY palette is 'lamps off' (comment at 151-153); streetlight heads have no glow element.",
+  "Radial wash 2 (cool lower-left shade) is almost fully covered by SVG scenery, and the hill band is visible only in gaps between buildings - present, but barely contributing.",
+  "Loading-scene caption 'FLEET & PAYLOAD' and title 2: only rendered from frame 292 / 268 and null under the flag anyway (1381, 1385)."
+ ]
+}

@@ -1,0 +1,408 @@
+{
+ "summary": "Read-only research of the hero's decision history. Nothing was modified in either repo; the only files written are historical copies in the scratchpad.\n\n**The remake's `original/` is the right baseline.** `C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js` and `hero-glue.js` are byte-identical to the site's files at commit 72862b6 (`diff -q` showed no difference).\n\n**Timeline**\n- **2026-06-14:** the Remotion film was ported to live SVG/JS as a night scene (predecessor repo `C:/Users/RTX4070TI/Desktop/Logistics-Website-Animation`, commit 2a5f310).\n- **2026-07-02/03:** night-to-day conversion and a Kurzgesagt-style city rebuild (e9e7341 to d24a12c). This is the \"original July daylight\" the owner later asked for.\n- **Between July and 2026-11-09:** the \"finished site\" was built in a cloud session whose history is not on this machine. Its result is the site baseline 695d110: a dusk sky over daytime-lit buildings, data cards hidden by `JX_CLEAN_HERO`, particles, sun rays and the map grid already off.\n- **2026-11-09:** polish pass, 5 audit fixes plus the road progress indicator (b562767 to 3dfc1ee).\n- **2026-11-10:** look-dev prototype A current / B blue hour / C night on branch `prototype/hero-lookdev`. The owner picked B, then asked for daylight like July. This landed as 84c715b (one `DAY` palette, copy overlay turned to navy on a pale wash) and 72862b6 (trucks with weight).\n\n**Why each switched-off item is off** (lines in `original/js/hero-port-b.js`)\n\n| Item | Lines | Off since | Reason | Documented? |\n|---|---|---|---|---|\n| Stars `opacity: 0` | 1733, 1758 | e9e7341, 2026-07-02 | Night-to-day conversion: \"stars removed\" | Yes |\n| Shooting star `if (true) return null` | 1760-1767 | e9e7341 | Same conversion | Yes |\n| RoofBeacon `opacity: 0` | 667-672 | 7d46947, 2026-07-02 | \"night rooftop pulse-beacons -> static vents\" | Yes |\n| Streetlight, bay, vending and tower glows, headlight beams | 1181-1186 and others | 7d46947, confirmed 2026-11-10 | \"Off by day\" in the daylight plan | Yes |\n| KpiCard, SceneTitle, SceneCaption, map legend, finale logo/tagline | 865, 997, 1013, 1135, 1895 | before 695d110 | SPEC §6 \"No data cards or numbers in the hero\"; the hidden strings include banned 「関東一円」 and unsupported figures | Yes |\n| FloatingParticles `return null` | 675 | before 695d110 (still on in July) | Not documented; probably brief item 4 \"faint ellipses/stripes read as noise\" and the rule \"No idle floating\" | No, inferred |\n| Sun rays computed then `return null` | 652-660, 1742-1750 | before 695d110 | Not documented; a9c712e only says the sun was \"rebuilt with gradient glow (no ring artifacts)\" | No, inferred |\n| Map background grid (emptied group) | 1725-1728 | before 695d110 (drawn in July) | Not documented; probably the same \"stripes read as noise\" item | No, inferred |\n\n**Later documents override earlier ones.** `docs/research/inventory.json` constraints[6] still says to keep the \"dark night-leaning sky\" and keep the port scripts byte-identical. The owner's daylight decision of 2026-11-10 and this remake supersede both.\n\n**Historical copies for comparison** are in `C:/Users/RTX4070TI/AppData/Local/Temp/claude/24aa387b0dcfb2d5/ebc51bcd-98dd-479d-bbf9-f61a2010e7ba/scratchpad/hist/`:\n- `port-b.baseline.js` (695d110)\n- `port-b.polish.js` (3dfc1ee)\n- `port-b.daylight.js` (84c715b)\n- `port-b.lookdev.js` (prototype B/C palettes)\n- `glue.baseline.js`\n- `40-hero.baseline.css`\n- `july-d24a12c-index.html`\n\nThe look-dev stills are only on the site's branch `prototype/hero-lookdev` under `lookdev/frames/sheet-s*.png`.",
+ "decisions": [
+  {
+   "topic": "Scope rule for every pass",
+   "decision": "Same five scenes, story, copy and timing. Only art quality, lighting, detail and motion may rise. Copy and figures are never changed without asking.",
+   "why": "Stated as a global constraint in both plans and in the brief ('Keep the same scenes and story').",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-09-hero-animation-polish.md:15; C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-10-hero-daylight-revamp.md:5,15; C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/ANIMATION-POLISH-BRIEF.md:22-23"
+  },
+  {
+   "topic": "Time of day: daylight",
+   "decision": "All scenes use one DAY palette taken from the July 2026 original: sky #58abe0 to #fdeee5, sun #ffd24d with a radial glow, July building and glass colours.",
+   "why": "The baseline was 'a dusk sky over daytime-lit buildings (a half-finished night->day conversion)'. The owner first picked look-dev B (blue hour), then asked for daylight like the July version.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-10-hero-daylight-revamp.md:11,34; commit 84c715b message; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js:151-175"
+  },
+  {
+   "topic": "One palette object",
+   "decision": "Every scene colour lives in the single DAY object, with three sky gradients (sky, skyT, skyN) from the same family.",
+   "why": "One coherent light across scenes. The look-dev verdict was that one coherent light reads better than the old mixed day/night art.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-10-hero-daylight-revamp.md:7; lookdev/README.md 'Verdict' on branch prototype/hero-lookdev (commit e2a4b2e); C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js:154-175"
+  },
+  {
+   "topic": "Detail and lighting grammar kept from the look-dev",
+   "decision": "Keep: haze between city tiers, shade and lit rim on buildings, sky-reflection glass with a few warm rooms, sunlit clouds with a shade cut to the cloud's own base, truck rim light, lower shade and amber marker lenses, utility poles with wires, an unbranded vending-machine pair, tactile paving, NEXCO-green expressway signs.",
+   "why": "The prototype settled 'the detail and lighting grammar, not the time of day'; these 'all read better than the old mixed art, and they carry over to daylight unchanged'.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-10-hero-daylight-revamp.md:35; lookdev/README.md (branch prototype/hero-lookdev, e2a4b2e); C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/SPEC.md:361-365"
+  },
+  {
+   "topic": "Night-only elements off by day",
+   "decision": "Stars, streetlight lamps, bay lamps, roof beacons, vending and tower glows and headlight beams are off. Streetlights are drawn as unlit poles; the truck has clear lamp housings and no beam.",
+   "why": "They are night-only elements in a daylight scene. The July conversion had already dropped them ('Night lamps/beacons dropped for daylight'; 'truck headlight beam, glow and ground light-pools removed').",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-10-hero-daylight-revamp.md:36; commit 84c715b; C:/Users/RTX4070TI/Desktop/Logistics-Website-Animation commits e9e7341 and 7d46947; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js:1181-1186"
+  },
+  {
+   "topic": "Stars and shooting star (switched off, not deleted)",
+   "decision": "Star circles are still generated but with opacity 0 (lines 1733, 1758). The shooting star is short-circuited with `if (true) return null` (1760-1767).",
+   "why": "Night-to-day conversion: 'night sky -> bright day sky ... stars removed'. They were zeroed rather than deleted, which keeps the node list stable for the positional patcher.",
+   "source": "C:/Users/RTX4070TI/Desktop/Logistics-Website-Animation commit e9e7341 (2026-07-02), found with git log -S; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js:1730-1734,1755-1767"
+  },
+  {
+   "topic": "RoofBeacon (switched off)",
+   "decision": "The red blinking lamp circle has opacity 0; only the small mast rect remains, as a static rooftop vent on far buildings taller than 340.",
+   "why": "'night rooftop pulse-beacons -> static vents' in the July deep art pass. The look-dev B/C variants turned aviation lights back on, but the daylight plan lists beacons as off.",
+   "source": "C:/Users/RTX4070TI/Desktop/Logistics-Website-Animation commit 7d46947; C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-10-hero-daylight-revamp.md:36; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js:667-672,1325"
+  },
+  {
+   "topic": "FloatingParticles (switched off)",
+   "decision": "The function returns null on its first line. It is still called in every scene (1346, 1347, 1492, 1735).",
+   "why": "Not documented anywhere readable. It was on in July (d24a12c) and already off in the site baseline 695d110. Closest documented reasons: brief old-problem 4 'faint ellipses/stripes read as noise' and the motion rule 'No idle floating'. Treat as inferred.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js:674-687; C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/ANIMATION-POLISH-BRIEF.md:36,39,47; scratchpad hist/port-b.baseline.js:609-610 and hist/july-d24a12c-index.html:1420"
+  },
+  {
+   "topic": "Sun rays (computed, then return null)",
+   "decision": "SkySun and the finale sun still build the 12 rotating spoke paths and then return null. The sun is a flat disc, a pale ring and a pulsing radial glow.",
+   "why": "Not documented. Already off in baseline 695d110. The nearest record is July commit a9c712e: 'sun rebuilt with gradient glow (no ring artifacts)'. Treat as inferred.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js:646-665,1737-1754; C:/Users/RTX4070TI/Desktop/Logistics-Website-Animation commit a9c712e"
+  },
+  {
+   "topic": "Map background grid (emptied)",
+   "decision": "The group at 1725-1728 is empty. In July it drew 13 vertical and 8 horizontal faint grid lines behind the map.",
+   "why": "Not documented. Emptied before baseline 695d110. Consistent with brief old-problem 4 'faint ellipses/stripes read as noise'. Treat as inferred.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js:1725-1728; scratchpad hist/july-d24a12c-index.html:2219-2222; C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/ANIMATION-POLISH-BRIEF.md:36"
+  },
+  {
+   "topic": "No data cards or numbers in the hero (JX_CLEAN_HERO)",
+   "decision": "hero-flag.js sets window.JX_CLEAN_HERO = true. That makes KpiCard (865), SceneTitle (997), SceneCaption (1013), the map legend (1135) and the finale logo/tagline/eyebrow block (1895) return null.",
+   "why": "SPEC §6: 'No data cards or numbers in the hero'. The hidden strings include the banned 「関東一円」 (lines 214, 1529) and figures the company never confirmed (99.8% 定時運行率, 全数検品). The brief's old problems 2, 3, 4 and 8 are all about cards covering trucks, clouds over cards and numbers counting from 0.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/SPEC.md:372; C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/QA.md:122-124; C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/REVIEW-PLAYBOOK.md:57-58; C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/DEPLOY-ja.md:78; C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/ANIMATION-POLISH-BRIEF.md:34-40"
+  },
+  {
+   "topic": "Copy lives in an HTML overlay, not in the art",
+   "decision": "H1, sub-copy, tag, two buttons, scene number/name/lead and the scene index are HTML over the stage, placed on the page container's edges. The art carries no headline text.",
+   "why": "Brief: 'Give the text its own calm area so it never covers the artwork.' Live text is also the measured norm on comparable Japanese logistics sites and is what screen readers get.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/ANIMATION-POLISH-BRIEF.md:26; C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/SPEC.md:62-63,373-382; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/site/hero-section.html:8-30"
+  },
+  {
+   "topic": "Overlay follows the light: navy copy on a pale-sky wash",
+   "decision": "A pale wash (rgb 238 246 251, .86 to 0) sits behind the copy column with navy text. A dark band sits under the controls with white text. The wash is masked out above the band. No text-shadow is used.",
+   "why": "'the dark scrim made the day scene look like dusk'. The mask stops the two from mixing 'into grey over the road'. Legibility comes from the scrim, not from text-shadow.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-10-hero-daylight-revamp.md:24,37; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/css/40-hero.css:1-12,28-41"
+  },
+  {
+   "topic": "Scene 1 framing",
+   "decision": "T_WORLD.camRecvX is -200 (was 0), so the opening framing sits about 200px further right. camLoadX stays 1900, so the 02 to 03 handoff frame is unchanged.",
+   "why": "The depot door, arriving truck and parcels sat under the scrim's dark core. Verified at 1440, 1920 (no void at world x<0) and 390. Fallback was -120 if 1920 showed a void; it was not needed.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-09-hero-animation-polish.md:42-51; commit 0a92dcd; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js:194"
+  },
+  {
+   "topic": "Scene 3 gantry sign phase",
+   "decision": "Both gantry tiles use wrap(scroll + 2030, GTILE) (was 600). Back and front must always share the same phase.",
+   "why": "The 新潟/前橋 board crossed the headline half-dimmed at the scrim edge. Phase 2030 parks it in the open right half through mid-dwell. If the two phases differ, the pillar detaches from its signboard.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-09-hero-animation-polish.md:24,31-40; commit b562767; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js:1508,1520"
+  },
+  {
+   "topic": "Scene 4 copy hand-off",
+   "decision": "On the map scene the title, sub and tag fade out in .3s (fade-in stays .55s) and the buttons stay. The copy returns when paused or when focus is inside it.",
+   "why": "The map needs the left of the picture. The fast fade means no half-transparent headline sits over the outgoing trucks during the .85s dissolve.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-09-hero-animation-polish.md:53-63; commit 73c2df9; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/css/40-hero.css:65-72"
+  },
+  {
+   "topic": "Signature: road progress indicator",
+   "decision": "The scene index is a road bed 6px high. The driven part fills with vermilion #e16347 dashes, and a 30x16 Sanpou truck (aria-hidden) rides the leading edge using transform only. The truck parks at the segment end when paused and is hidden in forced colours.",
+   "why": "The owner's own idea in the brief: the dashed road line as progress bar with a truck 'instead of dots'. Track width is cached so the per-frame update writes transform only.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/ANIMATION-POLISH-BRIEF.md:28-29; C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-09-hero-animation-polish.md:65-79; commit 7270500; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-glue.js:142-159,171-174; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/css/40-hero.css:104-116"
+  },
+  {
+   "topic": "One ease for hero UI",
+   "decision": "The stage crossfade and all overlay transitions use the project token cubic-bezier(.2,.6,.2,1). UI animates transform and opacity only, with no overshoot.",
+   "why": "Replaced a one-off curve so every hero transition shares one ease. The brief bans overshoot and idle floating on cards and buttons.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-09-hero-animation-polish.md:16,81-88; commit 3dfc1ee; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-glue.js:236"
+  },
+  {
+   "topic": "Trucks with weight",
+   "decision": "truckMotion() turns each truck's own acceleration into body pitch through a damped spring: about 1 degree, soft-limited to 1.6. Trucks squat on launch, dip on braking and settle once. Positions are unchanged. For the weight model only, a truck counts as already driving before it enters and after it leaves.",
+   "why": "'Trucks with weight' was the motion pass of the revamp. Largest pitch step is 0.21 degrees per half frame (no jumps).",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-10-hero-daylight-revamp.md:40-45; commit 72862b6; C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/qa-shots/2026-11-10-hero-motion/README.md:5-13; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js:255-272,1252-1259"
+  },
+  {
+   "topic": "Road shake and exhaust scale with speed",
+   "decision": "The road-vibration bob and exhaust puff opacity are multiplied by run (0 to 1 speed).",
+   "why": "Removes the pop when the main truck parked at the depot, where the bounce used to switch off in one frame. Largest on-screen bounce step fell from 2.58px to 1.47px.",
+   "source": "commit 72862b6; C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/qa-shots/2026-11-10-hero-motion/README.md:9-11; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js:333-336,1352"
+  },
+  {
+   "topic": "Sun position in scene 1",
+   "decision": "The sun sits at cx 1772, cy 104, clear of Tokyo Tower's antenna while scene 1 holds (tower at screen x about 1624).",
+   "why": "The sun overlapped the antenna before; moved in the daylight pass.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-10-hero-daylight-revamp.md:34; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js:1302-1303"
+  },
+  {
+   "topic": "Soft light via real radial gradients with per-scene ids",
+   "decision": "Sun glow and haze use SVG gradients with ids unique per scene (wSun, tSun, wHaze0..2, tHaze0..1, horizHaze).",
+   "why": "Two stages coexist during a dissolve, and a duplicate id would take over the other stage's url(#id) references. The look-dev had used stepped concentric ellipses to avoid ids; the final uses true gradients with unique ids.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-10-hero-daylight-revamp.md:17; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js:176-190; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-glue.js:231-234"
+  },
+  {
+   "topic": "Accent colour inside the art",
+   "decision": "The art accent is coral/vermilion #e16347 (truck stripe, parcel tape, map area and routes, progress dashes). The sun stays natural yellow. The site chrome stays navy and teal.",
+   "why": "July: gold 'read muddy on the day scene' and 'Per client: gold looked poor'; before that, teal read low-contrast on the navy map.",
+   "source": "C:/Users/RTX4070TI/Desktop/Logistics-Website-Animation commits 6c04a93 and 1fe5ed4; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js:142; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/css/40-hero.css:104-106"
+  },
+  {
+   "topic": "City buildings (July rebuild)",
+   "decision": "One CityBuilding component: saturated navy-blue facades clearly separated from the sky, solid parapet caps, right-edge depth shade, framed window grids with about 5% warm panes, rooftop units. Far tier is hazy (detail 0), mid tier rich (detail 1). Widths, heights and gaps follow designed rhythm cycles, not randomness.",
+   "why": "The owner asked for a Kurzgesagt-style city. Translucent roofs showed the sky through them. Seeds key on each building's stable original index because filtered-index seeds made roof boxes flicker while scrolling.",
+   "source": "C:/Users/RTX4070TI/Desktop/Logistics-Website-Animation commits c838756, c305127, d24a12c; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js:445-447,589-644"
+  },
+  {
+   "topic": "Mt Fuji design",
+   "decision": "Flat 2D: pastel-blue body, gently rounded broad crown, one large white snowcap with an irregular angular drip hem, no outlines. The cap shares the mountain's upper-slope path so its edges sit exactly on the slopes. The base is hidden behind the far city.",
+   "why": "Four iterations, the last two 'per the user's reference illustration'. A repeating hill band was replaced with one designed Fuji.",
+   "source": "C:/Users/RTX4070TI/Desktop/Logistics-Website-Animation commits 7d46947, e175bba, c838756, c305127, d24a12c; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js:725-762"
+  },
+  {
+   "topic": "Clouds",
+   "decision": "Puffy flat-bottom clouds (round lobes over a pill base, shade cut to the cloud's own base). They fade in and out at wrap edges and move at one uniform speed per scene.",
+   "why": "User-flagged in July: the 'rough horizontal shade bar' and clouds popping in. Uniform speed means spacing 'can never drift into overlaps'.",
+   "source": "C:/Users/RTX4070TI/Desktop/Logistics-Website-Animation commits e175bba, d24a12c; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js:689-709,1322"
+  },
+  {
+   "topic": "Scene structure and playback",
+   "decision": "Five stops, each with an entrance motion and then an end-of-scene idle (choreography held, ambient running). Auto-advance dwell is 7.0 / 7.6 / 7.2 / 6.0 / 18.0 s and entrances play at 1.2x. The final scene holds and loops its ambient; there is no auto-loop back to 01. A forward step plays the motion; a backward or non-adjacent jump dissolves to the idle.",
+   "why": "From the June predecessor: scene-stepper playback, end-of-scene idle and the split of map and commitment into five scenes.",
+   "source": "C:/Users/RTX4070TI/Desktop/Logistics-Website-Animation commits 3a6f33b, 1835f83, 33a52fe; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-glue.js:39-54,61,210-213,246-253"
+  },
+  {
+   "topic": "Seams between scenes",
+   "decision": "01 to 02 is one camera pan, with 01's ambient time carried into 02 so clouds do not jump. 02 to 03 is the master timeline's 18-frame slide. 03 to 04 is a .85s stage crossfade. 04 to 05 is the map receding inside one scene.",
+   "why": "Brief: 'Make scene changes feel like one smooth camera move', no dark dip. The glue cites POLISH_SPEC §8.2 and §8.3 for these seams.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/ANIMATION-POLISH-BRIEF.md:27,38,50-52; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-glue.js:43-54,218-243; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js:1905-1935"
+  },
+  {
+   "topic": "Phone and tablet camera",
+   "decision": "Desktop uses a static per-scene recentre (FOCUS_X). As the window narrows, each scene blends toward its own keyframed slow pan and punch-in (CAM_M, zoom 1.00 to 1.18), exponentially smoothed. The stage always covers the box.",
+   "why": "Art-directed framing so the action stays visible on narrow screens: 'no borders, no squashed ratio'.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-glue.js:99-134"
+  },
+  {
+   "topic": "Performance engineering in the player",
+   "decision": "Persistent layer slots per scene family, pre-building of the next scene in idle chunks of about 200 nodes starting 2s before a seam, a 160ms draw hold after any input, style writes only on change, and stopping the loop when off-screen or under the menu drawer.",
+   "why": "Rebuilding about 1100 nodes in one frame at seams caused hitches, and slow phones must answer input at once (r12 functional-001/002).",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-glue.js:7-15,62-98,131-134,277-283"
+  },
+  {
+   "topic": "30fps fallback",
+   "decision": "The player normally draws at up to 60Hz with fractional frames. It drops to a 30fps grid when smoothed render cost exceeds 15ms (leaves below 9ms) or the rAF average exceeds 22ms for 20 frames (leaves after 60 frames under 18ms).",
+   "why": "Frame pacing rule (§8.4) so slow devices stay even instead of stuttering.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-glue.js:58-60,190-202"
+  },
+  {
+   "topic": "DOM cost reductions in the art",
+   "decision": "Tokyo Tower lattice batched into about 16 path nodes (was about 140). Building windows batched into at most 5 paths per building. Off-screen buildings culled per frame in every tier.",
+   "why": "Scene 3 frame rate; the stage held about 2.8k nodes in July.",
+   "source": "C:/Users/RTX4070TI/Desktop/Logistics-Website-Animation commit c305127; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js:461-463,610-611,1307,1324,1330"
+  },
+  {
+   "topic": "Scene names and captions",
+   "decision": "01 入荷 / 02 積込 / 03 輸送 / 04 配送ネットワーク / 05 地域とともに. The five leads are full です・ます sentences (hero-glue.js META). Scene 05 was renamed from 「結び」.",
+   "why": "Wording pass of 2026-11-05: verbless place-plus-へ lines read as machine-made, and scene 04's lead stands alone when the headline fades.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/WORDING-CHANGES-2026-11.md:27-33; C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/BUILD-REPORT.md:108-109,200-201; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-glue.js:160-165"
+  },
+  {
+   "topic": "Fleet figure",
+   "decision": "32台 everywhere, including the hero sub-copy.",
+   "why": "The polish plan held 32台 'until the user answers the 51-vs-32 question'. The client's corrections (received 2026-11-09) changed every 51台 to 32台 and 約50名 to 約35名, so it is settled.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-09-hero-animation-polish.md:15; C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/feedback/README.md:8-10; C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/feedback/sanpou-feedback_2026-10-02-corrections.json"
+  },
+  {
+   "topic": "Method for the art revamp",
+   "decision": "Lemo-Opuscar's 'own style from a blank page' flow: style frames rendered from the real code, the owner chooses, one fix round. Kurzgesagt is a benchmark for grammar only.",
+   "why": "No library style is Kurzgesagt-like flat vector. The brief says 'grammar only, never copy designs/characters'.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/ANIMATION-POLISH-BRIEF.md:13-18; C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-10-hero-daylight-revamp.md:11"
+  }
+ ],
+ "rejected": [
+  {
+   "what": "Look-dev variant C: night (deep night sky, darker facades, more lit windows)",
+   "why": "The owner picked B over it, then chose daylight. The remake's references also list 'dark cyber palettes' as something to avoid.",
+   "source": "lookdev/README.md on branch prototype/hero-lookdev of C:/Users/RTX4070TI/Desktop/sanpou-site-v2 (commits 55fde1f, e2a4b2e); C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/REFERENCES.md"
+  },
+  {
+   "what": "Look-dev variant B: blue hour (twilight sky, lamps on, moon halo, stars, glow behind Tokyo Tower)",
+   "why": "The owner picked it first, then 'while it was being folded in, asked for a daylight setting like the original July 2026 version instead'. Only its detail grammar survived.",
+   "source": "lookdev/README.md 'Verdict' (e2a4b2e); C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-10-hero-daylight-revamp.md:11"
+  },
+  {
+   "what": "Variant A: the pre-revamp art (dark dusk sky with a moon-like disc over daytime-lit buildings)",
+   "why": "'a half-finished night->day conversion'; mixed day/night light read worse than one coherent light.",
+   "source": "commit 84c715b message; C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/qa-shots/2026-11-10-hero-daylight/README.md:5-10 and art-s1/s3/s5-july-now-new.png"
+  },
+  {
+   "what": "Dark scrim behind the copy over a daylight scene",
+   "why": "'the dark scrim made the day scene look like dusk'. The remake's CLAUDE.md repeats it: never a dark scrim over daylight.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-10-hero-daylight-revamp.md:24; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/CLAUDE.md"
+  },
+  {
+   "what": "Night elements in daylight: stars, shooting star, moon halo, streetlight/bay/vending/tower glows, headlight beams, ground light pools, blinking roof beacons",
+   "why": "Off by day; removed in the July conversion and again in the daylight revamp.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-10-hero-daylight-revamp.md:36; C:/Users/RTX4070TI/Desktop/Logistics-Website-Animation commits e9e7341, 7d46947"
+  },
+  {
+   "what": "KPI/data cards and count-up numbers in the hero (入庫品質 ring, 車両ラインナップ bars, 運行モニター with 99.8% 定時運行率, finale stat cards 50年 / 99.8% / 7 / 365日)",
+   "why": "SPEC: 'No data cards or numbers in the hero'. Cards covered trucks and clouds, numbers counted up from 0 on every visit, the same figure showed twice, and several figures were never confirmed by the company.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/SPEC.md:372; C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/ANIMATION-POLISH-BRIEF.md:34-40; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js:222-240,864-865"
+  },
+  {
+   "what": "In-art scene titles and captions (SceneTitle 'JOURNEY 輸送のながれ', SceneCaption lines such as 「関東一円から新潟へ、毎日定時で。」)",
+   "why": "Text over trucks, parcels and the warehouse; 「関東一円」 is banned; copy moved to the HTML overlay.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/research/copy-rules.md:3-14; C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/QA.md:122-124; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js:996-1013,1383-1385,1529"
+  },
+  {
+   "what": "Finale logo reveal with the tagline 「大切な荷物を、きょうも確実に。」 and an English eyebrow, plus the dark map legend box",
+   "why": "Hidden by JX_CLEAN_HERO with the cards. The catch is now the HTML H1; the logo must never be redrawn or restyled; English kicker labels were rejected in the design constraints.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js:1135,1895-1900; C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/research/inventory.json constraints[5]; C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/REVIEW-PLAYBOOK.md:59"
+  },
+  {
+   "what": "Floating dust particles drifting over every scene",
+   "why": "Switched off before the site baseline; reason not recorded. Likely 'faint ellipses/stripes read as noise' and 'No idle floating' (inferred).",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js:674-675; C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/ANIMATION-POLISH-BRIEF.md:36,47"
+  },
+  {
+   "what": "Rotating sun-ray spokes around the sun",
+   "why": "Switched off before the site baseline; reason not recorded. July notes mention 'ring artifacts' on the sun (inferred).",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js:652-660,1742-1750; C:/Users/RTX4070TI/Desktop/Logistics-Website-Animation commit a9c712e"
+  },
+  {
+   "what": "Faint grid lines behind the map scene and faint ground ellipses",
+   "why": "Read as noise. The grid group is emptied in the baseline; the look-dev notes 'the old faint ground ellipses removed'.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js:1725-1728; lookdev/README.md (prototype/hero-lookdev); C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/ANIMATION-POLISH-BRIEF.md:36"
+  },
+  {
+   "what": "Springy overshoot, idle floating loops on cards and buttons, mixed easings",
+   "why": "Listed as old problem 7. Rule: 'No idle floating, no overshoot on cards or buttons'.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/ANIMATION-POLISH-BRIEF.md:39,43-49"
+  },
+  {
+   "what": "Scene changes that dip to dark (slideshow cut), text switching before the picture moves, leftover objects from the previous scene",
+   "why": "Old problems 3, 5 and 6. The wanted sequence is old text out, camera glide with no dark dip, world settles, text in.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/ANIMATION-POLISH-BRIEF.md:35,37-38,50-52"
+  },
+  {
+   "what": "Orange accent on almost everything",
+   "why": "Old problem 9. Vermilion is kept for the truck stripe, parcels, map routes and progress dashes only.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/ANIMATION-POLISH-BRIEF.md:41"
+  },
+  {
+   "what": "Plain bars or dots as the scene progress indicator",
+   "why": "Replaced by the road with a travelling truck, the owner's signature idea.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/qa-shots/2026-11-09-hero-polish/README.md:11; C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/ANIMATION-POLISH-BRIEF.md:28-29"
+  },
+  {
+   "what": "One-off material curve cubic-bezier(.4,0,.2,1) for the dissolve",
+   "why": "Unified on the project ease cubic-bezier(.2,.6,.2,1).",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-09-hero-animation-polish.md:81-88; commit 3dfc1ee"
+  },
+  {
+   "what": "Scene 1 camera at camRecvX 0 and scene 3 gantry phase 600",
+   "why": "The action sat under the scrim core; the sign crossed the headline half-dimmed.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/qa-shots/2026-11-09-hero-polish/README.md:8-9"
+  },
+  {
+   "what": "Gold accent for the animation and map; teal accent on the navy map",
+   "why": "Gold 'read muddy on the day scene' and 'Per client: gold looked poor'. Teal 'read low-contrast on the navy map'. Coral replaced both.",
+   "source": "C:/Users/RTX4070TI/Desktop/Logistics-Website-Animation commits 6c04a93, 1fe5ed4"
+  },
+  {
+   "what": "Stray oncoming cars behind the scene 3 convoy",
+   "why": "One of six user-flagged issues in July; removed.",
+   "source": "C:/Users/RTX4070TI/Desktop/Logistics-Website-Animation commit e175bba"
+  },
+  {
+   "what": "Repeating hill band in scene 3; earlier Fuji versions (two-tone body with ridge lines, floating base, cap edges not on the slopes)",
+   "why": "Replaced by one designed Fuji matched to the user's reference illustration over four iterations.",
+   "source": "C:/Users/RTX4070TI/Desktop/Logistics-Website-Animation commits 7d46947, e175bba, c838756, c305127, d24a12c"
+  },
+  {
+   "what": "Translucent building roofs, see-through mini trucks (0.9 group opacity), near-invisible supplier building, hard-edged white ellipse halos, the triangle 'plane' that read as a red glitch",
+   "why": "All fixed in the July art passes: solid fills, a proper airliner, soft radial gradients.",
+   "source": "C:/Users/RTX4070TI/Desktop/Logistics-Website-Animation commits a9c712e, 7d46947, c305127"
+  },
+  {
+   "what": "Cloud with a rough horizontal shade bar or grey stripe; clouds popping in at wrap edges; clouds at different speeds",
+   "why": "User-flagged. Rebuilt as puffy flat-bottom clouds that fade at the edges and share one speed per scene so they never drift into overlaps.",
+   "source": "C:/Users/RTX4070TI/Desktop/Logistics-Website-Animation commits e175bba, d24a12c; lookdev/README.md"
+  },
+  {
+   "what": "Hero as a pre-rendered video loop (journey-loop.mp4/webm, 1.8 to 2.0MB)",
+   "why": "'the live #sanpou-journey hero is the constraint, and the video costs bandwidth'. A video hero with no poster is also a listed anti-pattern.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/research/inventory.json sample_v1_drop[5] and assets[9]; C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/SPEC.md:77"
+  },
+  {
+   "what": "Type-only hero with a giant statement (up to 172px) and the film pushed below",
+   "why": "0 of 23 SME and 1 of 22 mid-large reference sites use a type-only hero; they lead with a picture or animation and a 48 to 64px live catch.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/research/inventory.json sample_v1_drop[0]"
+  },
+  {
+   "what": "The wording 「関東一円」 and verbless place-name taglines (「3つの拠点から、新潟市まで。」, 「荷物の一日をアニメーションで描いています」)",
+   "why": "Owner: the 一円 wording 'doesn't make sense at all'. It reads as one yen and is vague about the area.",
+   "source": "C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/research/copy-rules.md:3-18"
+  },
+  {
+   "what": "Stepped concentric-ellipse glows (look-dev Glow helper) and StreetlightOld",
+   "why": "The look-dev used them to avoid SVG ids. The final uses true radial gradients with per-scene ids, and lamps are off by day.",
+   "source": "scratchpad hist/port-b.lookdev.js:202-206 versus C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js:176-183"
+  }
+ ],
+ "constraints": [
+  "Scenes, order, story, copy, facts and timing stay as they are; ask the owner before changing any of them (C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-10-hero-daylight-revamp.md:15; C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/CLAUDE.md).",
+  "Timing constants to preserve (C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js:191-204): FPS 30, 1920x1080, DURATION 900; TIMELINE worldDur 420 / transitDur 300 / networkDur 180 / slide 18f / fade 16f; T_WORLD, T_TRANSIT, T_NETWORK. Player (hero-glue.js:48-61): STOPS eFrom/eTo 0-185, 185-391, 391-475, 0-80, 80-174; AUTO_DWELL 7000/7600/7200/6000/18000 ms; ENTER_RATE 1.2; crossfade .85s.",
+  "No data cards, KPI numbers or count-ups in the hero (C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/SPEC.md:372). The strings hidden by JX_CLEAN_HERO must never show: 「関東一円」 (hero-port-b.js:214,1529), 99.8% 定時運行率, 全数検品, the in-art titles, the tagline and the map legend.",
+  "Fixed facts: 32台; 約35名; 3 bases 本社（板橋）・志木営業所・入間営業所 (never 志木センター倉庫); 創業 昭和50年（1975年）; area 関東1都6県 and 新潟市方面 only; company is 有限会社三豊運輸, never 株式会社 (C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/feedback/README.md:8-21; docs/REVIEW-PLAYBOOK.md:46-49).",
+  "Never use 「関東一円」 or 「関東全域」; the copy gate fails on them (C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/research/copy-rules.md:9-14; docs/QA.md:102-105).",
+  "Claims the client removed, so do not draw or imply them: refrigerated/frozen trucks, Gマーク, デジタコ/ドラレコ on every truck, 当日・緊急スポット便, 食品 cargo, and the paper slitter service ('Write nothing new about the slitter'). Paper cargo (rolls, ロールクランプ) stays (C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/feedback/README.md:10-28).",
+  "Overlay copy is fixed. H1 「関東1都6県と新潟市方面へ、」/「板橋からお届けします。」 (awaiting company approval, F-2); sub-copy and tag as in C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/site/hero-section.html:9-11; buttons 「事業内容を見る」 and 「お問い合わせ」; the five captions in hero-glue.js:160-165.",
+  "Imagery rules: no other carriers' branding, no readable number plates, no faces or stock people, no historical imagery; vending machines stay unbranded; the logo and Pマーク are never recoloured, cropped or redrawn (C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/REVIEW-PLAYBOOK.md:59,65-70; docs/SPEC.md:325).",
+  "Map scene: shows areas only, never distances; routes start at 本社（板橋）; 新潟県 is 新潟市方面 only (C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/REVIEW-PLAYBOOK.md:64; docs/research/inventory.json constraints).",
+  "Kurzgesagt is a benchmark for grammar only; never copy its designs or characters (C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/ANIMATION-POLISH-BRIEF.md:13).",
+  "Render budget for the current SVG renderer: under about 1 ms per frame; measured 0.44-0.95 ms (C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-10-hero-daylight-revamp.md:18; docs/qa-shots/2026-11-10-hero-daylight/README.md:15; docs/qa-shots/2026-11-10-hero-motion/README.md:13).",
+  "The player falls back to a 30fps grid when smoothed render cost exceeds 15 ms or the rAF average exceeds 22 ms for 20 frames; a heavier remake triggers this on slower machines (hero-glue.js:58-60,190-202).",
+  "Input first: no drawing for 160 ms after pointerdown, touchstart, keydown or wheel, and 120 ms after scroll. The loop stops when the hero is off-screen (IntersectionObserver threshold 0.04) or under the open menu drawer (hero-glue.js:62-68,277-283).",
+  "SVG ids must be unique per scene because two stages coexist during a dissolve (existing ids: wSun, tSun, wHaze0..2, tHaze0..1, horizHaze, haloSoft, sunGlow, clipT1, clipB0..2, sanpouBay*, sanpouRay, sanpouInterior). A hidden second copy of a scene steals url(#id) references (hero-glue.js:12-13,231-234).",
+  "Positional patcher: node lists must stay stable. Only constant nulls are allowed, with no frame-dependent node insertion; that is why switched-off items return opacity 0 or a constant null (C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-10-hero-daylight-revamp.md:26).",
+  "FujiMountain and the finale lane loop use a local variable L; the palette is DAY (C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-10-hero-daylight-revamp.md:27; hero-port-b.js:733).",
+  "GantryBack and GantryFront must use the identical wrap(scroll + P, GTILE) phase or the pillar detaches from its signboard (C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-09-hero-animation-polish.md:24).",
+  "At 1920x1080 the whole 1920px canvas is visible (scale 1): no void at world x<0 in scene 1 or at any edge (C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-09-hero-animation-polish.md:23).",
+  "Composition must respect the overlay: left copy column up to about 720px on the container edge, pale wash to about 66% width, dark band over the bottom of the frame. Scene 04 needs the left of the picture; scenes 02/03 get an extra wash under the copy at 1024px and wider so sign lettering does not fight the headline (C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/css/40-hero.css:28-72).",
+  "Copy contrast must be WCAG AA over every frame, measured not estimated. Last measured over 209 samples: headline 7.7:1, body 8.7:1, scene caption 5.1:1, outline button 11.6:1 at worst. The unfilled track needs 3:1 over any part of the art (C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-10-hero-daylight-revamp.md:19,24; docs/qa-shots/2026-11-10-hero-daylight/README.md:12-15).",
+  "Accessibility controls stay: pause button (WCAG 2.2.2) with label 一時停止/再生; five scene buttons with aria-current; arrow, Home and End keys per the APG tabs pattern; stage has role=img with the fixed aria-label and the art is aria-hidden; 44px hit areas (C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/SPEC.md:383; hero-glue.js:263-275; hero-section.html:4,22-29).",
+  "Reduced motion: one static correct frame (currently scene 05's idle via showStatic(4)), no autoplay, pause button hidden, camera fixed at mid-framing, road truck parked (hero-glue.js:112,122,276; C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/SPEC.md:157,383).",
+  "Forced colours: the track keeps its authored colours and the road truck is hidden. No JavaScript: the hero is a light #cfe6f5 block with navy copy, no scrim and no controls (C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/css/40-hero.css:116,124,168-177).",
+  "Phone (390px and down to 320px): copy at the top over the sky, controls at the bottom, sub-copy hidden, caption lead hidden under 1100px, H1 in two nowrap lines; the stage must cover the box at every width with the per-scene phone camera (40-hero.css:137-167; hero-glue.js:99-134).",
+  "Hero UI motion: transform and opacity only, no overshoot, ease cubic-bezier(.2,.6,.2,1). Character motion inside the illustration is allowed (C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-09-hero-animation-polish.md:16; docs/superpowers/plans/2026-11-10-hero-daylight-revamp.md:16).",
+  "Rapid scene clicks during a transition must settle on the last clicked scene with one truck, two stages and 0 console errors (C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/qa-shots/2026-11-09-hero-polish/README.md:15-18; docs/qa-shots/2026-11-10-hero-motion/README.md:11-13).",
+  "Site security rules that bind later integration: no third-party requests or CDN, no inline scripts, CSP script-src 'self'; style attributes set from script are allowed on index.html only; fonts are self-hosted; gradients are allowed only for the hero sky and scrim (C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/SPEC.md:111,423-448).",
+  "Integration gates (later task): hero-port-b.js is sha1-pinned in tools/check_hero.py, tools/prep_assets.py, SPEC §6 and QA.md; the four scripts load in the order flag, port-a, port-b, glue, parser-blocking; the hero DOM skeleton (tag, id, class) is fixed except inside .hc-title, .hc-tag and .hc-sub (C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/QA.md:80-91; docs/superpowers/plans/2026-11-10-hero-daylight-revamp.md:20).",
+  "Hero box: height clamp(560px, 80svh, 820px) on desktop; the 1920x1080 stage is cover-fitted (C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/css/40-hero.css:13-26; C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/SPEC.md:62)."
+ ],
+ "ownerTaste": [
+  "Wants the hero to 'look and move more professionally' while keeping 'the same scenes and story' (C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/ANIMATION-POLISH-BRIEF.md:22-23).",
+  "Text must have 'its own calm area so it never covers the artwork' (ANIMATION-POLISH-BRIEF.md:26).",
+  "Scene changes should 'feel like one smooth camera move'; dislikes every scene change dipping to dark like a slideshow (ANIMATION-POLISH-BRIEF.md:27,38).",
+  "Own signature idea: 'the orange dashed road line acts as the progress bar, with a truck moving along a route instead of dots' (ANIMATION-POLISH-BRIEF.md:28-29).",
+  "Dislikes, from the owner's list of old problems: text and tags on top of trucks or the warehouse; leftover objects from the previous scene; trucks passing under stat cards; clouds over cards; 'faint ellipses/stripes read as noise'; text switching before the picture moves; 'springy overshoot, idle floating loop, inconsistent easing'; numbers counting up from 0 on every visit; the same figure shown twice; 'Orange accent on almost everything' (ANIMATION-POLISH-BRIEF.md:31-41).",
+  "Chose daylight. Shown A current / B blue hour / C night, the owner picked B, then asked for daylight 'like the original July 2026 version' with a clear blue sky and yellow sun (C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-10-hero-daylight-revamp.md:11).",
+  "Style benchmark is Kurzgesagt flat vector, wanted since July ('Kurzgesagt-style city rebuild'); in November it is formalised as a benchmark for grammar only (C:/Users/RTX4070TI/Desktop/Logistics-Website-Animation commit c838756; ANIMATION-POLISH-BRIEF.md:13-14).",
+  "Gives reference illustrations and expects a close match. Fuji went through four versions to reach the reference: pastel-blue body, gently rounded peak, one large white snowcap with an irregular drip hem, no outlines, cap edges exactly on the slopes (Logistics-Website-Animation commits c305127, d24a12c).",
+  "Notices small visual faults and flags them: rough cloud shade bar, clouds popping in, hard cutoff border on the map, stray oncoming cars, see-through rooftops, flickering roof boxes, a plane that 'read as a red glitch' (Logistics-Website-Animation commits a9c712e, e175bba, c305127, d24a12c).",
+  "Colour: gold 'looked poor' and 'read muddy on the day scene'; coral/vermilion accent was accepted; the sun stays natural yellow (Logistics-Website-Animation commit 1fe5ed4).",
+  "Wording: on 「関東一円」, 'the 一円 wording here and on other sections doesn't make sense at all … check its wordings across the entire website for awkward or outright wrong wordings' (C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/research/copy-rules.md:3-5).",
+  "Approves in clear steps: approved fixing all five audit findings plus the road idea; chose between look-dev variants from real frames; wants one fix round per style frame (C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/superpowers/plans/2026-11-09-hero-animation-polish.md:11; docs/superpowers/plans/2026-11-10-hero-daylight-revamp.md:11).",
+  "For the remake: 'same game, same story and scenes, better graphics and features'. Wants the Motion film's quality but named its weaknesses: inconsistent colour between scenes, oddly shaped buildings, a dark cyber palette that does not fit Sanpou (C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/REFERENCES.md).",
+  "Site-wide taste that the hero sits inside: navy and teal brand, flat surfaces, no glass effects, no decorative shadows, no scroll reveals, restrained Japanese corporate look (C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/SPEC.md:110-114,153-157; docs/research/inventory.json constraints[5])."
+ ],
+ "openQuestions": [
+  "Why FloatingParticles, the sun-ray spokes and the map grid were switched off is not written in any readable document. They were turned off between July (d24a12c) and the site baseline (695d110), in a cloud session whose POLISH_SPEC.md and history are not on this machine. The remake's quality bar asks for light shafts and ambient motion, so ask the owner before bringing back particles or rays in any form.",
+  "The brief bans 'idle floating' while the remake's quality bar says the world should never be fully frozen. The ban reads as being about UI cards and buttons bobbing, since clouds, birds, the plane, route flow and truck idle are all kept. Confirm with the owner how much ambient motion is wanted.",
+  "Scene transitions: the remake brief says keep camera path and timing, but also asks for cuts hidden at peak camera speed. Today 02 to 03 is an 18-frame slide and 03 to 04 is a .85s crossfade. Whether those two seams may be redesigned is undecided.",
+  "Reduced-motion static frame (F-1 in C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/CLIENT-QUESTIONS-ja.md:387-393): scene 05 with Tokyo Tower, airport and airliner, or scene 03 (板橋 出口 sign)? The company has not answered; the docs say not to change it until they do.",
+  "Tokyo Tower in general: it is near none of the three bases and is cropped out of the site's still illustrations, yet it is a hero landmark in scenes 01 and 05. The remake brief says keep every building in place; the F-1 answer could change that.",
+  "The hero catch and sub-copy are still awaiting the company's approval (F-2, C:/Users/RTX4070TI/Desktop/sanpou-site-v2/docs/CLIENT-QUESTIONS-ja.md:395-399), so the left copy block's size may change.",
+  "Renderer choice (SVG/DOM versus Canvas/WebGL) is open. Facts that bear on it: the site allows no CDN and no inline scripts, the 30fps fallback keys off measured render cost, reduced-motion needs a static frame, and the stage is addressed by scene functions of the frame.",
+  "Target frame rate: the art is authored at 30 fps and the player renders fractional frames at up to 60Hz. No document says whether every ambient loop in the art is smooth at 60Hz.",
+  "A 'route line threading through the scenes' is in the remake's quality bar. Today the only shared thread is the vermilion road dash in the progress indicator and the map routes. Whether a new route line counts as a new story element needing owner approval is not settled.",
+  "Whether the dead code should be carried into the remake at all: KpiCard, charts, SceneTitle, SceneCaption, LogoReveal and the CONTENT strings (including 「関東一円」 and 99.8%). If dropped, the JX_CLEAN_HERO flag and the copy gate's exemption for port-b become unnecessary; if kept, the flag must still load first.",
+  "The hidden vignette (0.26 / 0.26 / 0.18 dark radial edge) and the two haloSoft ellipses in the map scene are still drawn. No document says whether the owner wants them in a daylight scene.",
+  "Easing mismatch in the docs: the brief names cubic-bezier(0.22,1,0.36,1) for arrivals, while the plans and code use cubic-bezier(.2,.6,.2,1). The code value is what shipped."
+ ]
+}

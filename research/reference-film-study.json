@@ -1,0 +1,495 @@
+{
+ "summary": "Studied the Motion reference film (clip.mp4, 1920x1080, 30 fps, 900 frames) frame by frame. Nothing was downloaded, installed or written outside the scratchpad; the site folder was only read (hero-port-b.js lines 154-175 DAY palette, 693-708 Cloud).\n\nWHERE THE MATERIAL IS (all under C:/Users/RTX4070TI/AppData/Local/Temp/claude/24aa387b0dcfb2d5/ebc51bcd-98dd-479d-bbf9-f61a2010e7ba/scratchpad/):\n- motion-frames/f_001..f_060.jpg : one frame per 0.5 s. NOTE the real timing: f_K is source frame 15*(K-1)+7, i.e. t = (K-1)*0.5 + 0.233 s (verified by matching f_001->n7, f_002->n22, f_005->n67, f_011->n157). So f_001 is 0.23 s, not 0.0 s.\n- motion-frames/x_NNNN.jpg : 100 extra frames named by exact frame number N (t = N/30), dense around every cut and fast move.\n- png/p_NNNN.png : 16 lossless frames by exact frame number (0, 45, 90, 112, 150, 210, 275, 304, 372, 480, 600, 650, 720, 790, 815, 870) used for all hex values.\n- crops/ : enlarged detail crops (z01_* castle, z90_* door, z150_* hall, z52_layers_* exploded layer stack, amb_* ambient-motion strips). sheets/ : contact sheets (sheet_a/b/c = f_ frames, x_sheet_0..4 = x_ frames with frame numbers).\n\nTHE LOOK IN ONE PARAGRAPH: only the first 3.9 s is daylight. That shot is pure flat vector: no grain, no texture, no vignette, no motion blur (flat patches measure stddev 0.0-0.2). Its richness comes from (1) one blue-violet value ramp of about 13 steps used for every surface, with cast shadows moving a surface exactly one step down the ramp along a single hard diagonal edge; (2) three fanned, hard-edged white light shafts at 7-14 % opacity that slowly pulse and sway; (3) towering cumulus built from circle unions with one offset periwinkle shadow copy; (4) six named depth planes (the film shows them itself at 25.5 s: SKY, CUMULUS, KEEP, MIDDLE RING, OUTER WALL + DOOR, ROUTE + TYPE) where whites tint toward the sky, darks lift, outlines thin from 2 px to 1 px and detail drops out with distance; (5) dark foreground rocks framing both bottom corners; (6) 4-band flat water with dashes, star sparkles and circle foam; (7) dense purposeful detail (rivets, seams, vents, chevrons, brass pipes, plaques); (8) constant low ambient motion. Only three things are soft: the sky gradient, a radial halo behind the subject, and small glows on the route line.\n\nWHAT IS MEASURED VS ESTIMATED: hex values, shaft geometry/opacity, timings, outline widths and hall parallax are measured from pixels. Cloud drift (~15 px/s) and the castle-shot zoom centre are estimates from landmark tracking. Font names are not identified (described by class only). Shaft z-order relative to clouds cannot be determined (white on white).\n\nAll of it is reproducible with plain SVG polygons, circles and two or three gradients; no blur filter is needed.",
+ "shots": [
+  {
+   "timeRange": "0.00-1.93 s (frames 0-57)",
+   "whatIsShown": "Establishing shot: white tiered castle on a stone base in the sea, big cumulus banks left and right, dark rocks in both bottom corners (left one with a red flag on a pole), birds, pale far spires behind the keep. Caption 'One ordinary account.' rises word by word between about 1.0 and 1.5 s.",
+   "camera": "Not a hold: a slow creeping push, scale 1.041 at 1.0 s, 1.070 at 1.5 s, 1.087 at 1.87 s (about 4 %/s), centred near x=840 so it already aims at the tiny door at about (723,750). Per-frame picture change is a constant 2.0-2.1.",
+   "lighting": "Daylight, key light from off-screen top-left. Three fanned white shafts cross sky and water. Smooth radial halo behind the keep. Shade sides of towers on the right; wall shadows fall down-right."
+  },
+  {
+   "timeRange": "1.93-2.57 s (frames 58-77)",
+   "whatIsShown": "Push into the outer wall toward a tiny door that leaks yellow-green light; a thin 1 px yellow-green locator ring (about 280 px wide at 2.33 s) marks the door. Rocks leave frame by 2.2 s. Last frame (x_0077) is wall + stone base only.",
+   "camera": "Accelerating zoom, per-frame change 11 -> 46 over 19 frames. Vector art stays razor sharp, no motion blur. Straight cut at peak speed between frame 77 and 78.",
+   "lighting": "Same daylight; at this scale the wall shading system is readable: parapet shadow strip, buttress cast-shadow wedges, broad 65 degree shadow bands, darker bottom band."
+  },
+  {
+   "timeRange": "2.60-3.43 s (frames 78-103)",
+   "whatIsShown": "Door close-up: riveted white panels, leaning pilaster, half-open door leaf with brass strap hinges, arch of voussoirs with red lamp, brass pipe with brackets, brass plaque 'uid=1000', vent slots, red chevron + blue dash pairs, dark plinth. Caption persists across the cut in the same screen position.",
+   "camera": "Continuation of the push, decelerating from 15 to under 1 over about 20 frames, then about 0.3 s near-still (only floating light motes move). Door sits at the same screen position as the tiny door before the cut.",
+   "lighting": "One hard diagonal shadow edge crosses the whole wall; every band it crosses drops exactly one ramp step. Door opening is a hard two-tone light: acid rim #D8F139, pale core #F6FEC0, flat spill trapezoid on the step."
+  },
+  {
+   "timeRange": "3.47-4.03 s (frames 104-121)",
+   "whatIsShown": "Second push into the door light until the pale yellow fills the frame; whole picture takes a yellow-green tint on the way (white wall reads greenish in f_008). Caption slides down out of frame at about 3.6 s.",
+   "camera": "Bell-shaped push (change 11 -> 29.5 -> 6), then 3 identical frames (118-120) of flat #F6FEC0.",
+   "lighting": "Full-frame flat colour flood used as the transition, no blur."
+  },
+  {
+   "timeRange": "4.07-6.17 s (frames 122-185)",
+   "whatIsShown": "Interior hall, side view: dark arcade with neon tube lights, brass rails, red chevrons, near-black foreground pillars passing, white stone arch with brass portcullis rising, two counterweights dropping under small gears. The flood colour shrinks as a two-tone disc (frames 122-125) into the glowing head of the route line, which then runs along a dark floor channel.",
+   "camera": "Lateral tracking shot to the right: starts moving at 12-14, peaks at 23 around 4.95 s, long ease-out of about 35 frames to 0.2 at 6.13 s. Three parallax planes measured at 4.2-4.33 s: back wall 29 px/frame, mid wall and arch 44, foreground pillars 66 (0.66 : 1 : 1.5).",
+   "lighting": "Dark indigo interior (55 % of pixels are #1B244F / #111733 / #0A0D20). Pale cyan shafts at about 10 % from each window, doubling where they overlap; lighter polygons on the floor where they land; soft yellow puddle around the route head."
+  },
+  {
+   "timeRange": "6.20-8.17 s (frames 186-245)",
+   "whatIsShown": "Vault mechanism: large brass gear ring with concentric steel and brass rings that counter-rotate, two small gears top right, tick marks, rivet rings, red squares and triangles. Route enters from the left (spark burst at 7.0 s), small indicators switch to acid green as it passes, rings align into a horizontal slot by 8.1 s.",
+   "camera": "Straight cut from a settled frame, but the new shot is already moving: slow push/drift at 12-14 that eases out for about 55 frames. A second diagonal light wedge sits on the left edge.",
+   "lighting": "Mid-slate wall #45548D with diagonal pale-blue shafts (about 13 %) crossing wall and brass alike; flat dark disc shadows offset down-right behind the small gears."
+  },
+  {
+   "timeRange": "8.20-9.97 s (frames 246-299)",
+   "whatIsShown": "Round tunnel in one-point perspective: nested ring frames, radial wall wedges in alternating values, brass pipes on the right, a lit window panel on the left throwing a translucent beam, red core lens at the vanishing point. Route line runs up the floor and climbs to the core. Caption 'A path to root.' rises 8.5-8.9 s, last word red italic.",
+   "camera": "Dolly forward in two pulses (peaks 17.5 at 8.3 s and 22.5 at 8.75 s), then a gentle drift of 6-9 to 9.5 s, settling at 2-3.",
+   "lighting": "Dark navy; depth comes from value steps between rings (nearer rings darker, far end lighter and bluer) and one translucent window beam."
+  },
+  {
+   "timeRange": "9.97-11.07 s (frames 299-332)",
+   "whatIsShown": "Core turns red -> white; one flash frame (frame 300, roughly 40 % white overlay); thin red rings expand and the tunnel fades to near-black, leaving a cream orb with red halo. Hold about 0.5 s.",
+   "camera": "Iris-style transition, then a deliberate hold (change 0.0-0.2 for about 15 frames).",
+   "lighting": "Near-black #0A0D1F with one glowing orb (#FFF0E5 core, red halo #A83533)."
+  },
+  {
+   "timeRange": "11.07-13.97 s (frames 332-419)",
+   "whatIsShown": "Pull-back from the orb to reveal the same castle redrawn as a blueprint: blue outlines, very dark translucent fills, faint grid. One bright route steps down from the orb to the ground, then hundreds of thin dim routes grow in, with small lit door markers.",
+   "camera": "Eased zoom-out, change about 10 for 1.2 s, soft landing by 12.3 s; then nearly static while routes grow.",
+   "lighting": "Dark cyber look: near-black background, blue line art, acid yellow-green lines with slight glow."
+  },
+  {
+   "timeRange": "13.97-17.93 s (frames 419-538)",
+   "whatIsShown": "Burst transition (one flash frame at 420, expanding ring, radial ticks) into the big serif number 948 filled with tiny door-shaped dots, underline, serif subtitle and small spaced monospace line; blueprint castle ghosted behind.",
+   "camera": "Static reading hold from 14.3 s (ambient change 0.2-0.4 from twinkling dots only).",
+   "lighting": "Near-black with acid outlines and a faint glow behind the digits."
+  },
+  {
+   "timeRange": "17.93-25.0 s (frames 538-750)",
+   "whatIsShown": "948 slides up and out; the underline becomes a horizontal route line with diamond nodes. Four step cards appear along it: Find (blueprint wall with lit doors + counter card), Validate (dashed sandbox box, check badge), Propose patches (diff card), Human review (queue card with pencil). At 24.0 s all four are shown small with arrows, then collapse into keyframe diamonds.",
+   "camera": "Four eased pans to the right along the line (19.9-20.3, 21.1-21.5, 22.8-23.1, 23.7-24.1 s), each bell-shaped with a soft landing, then a zoom-out.",
+   "lighting": "Flat dark UI, 85-87 % of pixels #0A0D1F; acid line with soft glow."
+  },
+  {
+   "timeRange": "25.0-27.37 s (frames 750-821)",
+   "whatIsShown": "Making-of view: editing timeline (blue, teal and one magenta clip, waveforms) and the opening castle shot exploded into six labelled planes in perspective: SKY, CUMULUS, KEEP, MIDDLE RING, OUTER WALL + DOOR, ROUTE + TYPE. Planes collapse into the flat composite by 27.0 s with the route drawn over the castle.",
+   "camera": "Fly-in 25.2-25.8 s (peak 15.8), hold, collapse 26.4-27.0 s.",
+   "lighting": "Dark UI; the only return of the daylight palette, as a thumbnail."
+  },
+  {
+   "timeRange": "27.37-30.0 s (frames 821-899)",
+   "whatIsShown": "A warm off-white panel wipes in from the right; four dots tumble into the Motion logo; 'Made with Motion - motion.so' and a source line. Fully static from 28.7 s.",
+   "camera": "Fast wipe (peak change 73.6 at 27.5 s), then hold.",
+   "lighting": "Beige #F5F2EC with soft grey and pale green blurred blobs; unrelated to the rest of the film."
+  }
+ ],
+ "techniques": [
+  {
+   "name": "Sky gradient + halo behind the subject",
+   "howItIsBuilt": "One vertical gradient, measured down the right edge of frame 0: #144EC4 held flat for the top 12 % (y 0-130), #1753C8 at 21 %, #1D60D1 at 31 %, #2C73DF at 42 %, #448BE7 at 52 %, #74B3F2 at 60 %, #83BDF7 at 65 %, #9BCBF4 at 70 %; the horizon (about 79 %) is hidden by the low cloud bank. Hue stays near 215-220 degrees, value roughly triples from zenith to horizon. On top, one smooth radial lightening centred behind the keep (about (960,300), radius 500-550 px): sky next to the keep is #5B8DE0 against #1852C6 at the same height 500 px away, which equals white at about 0.29 in the centre fading to 0. These two, plus the bottom fade of the low cloud bank, are the only smooth gradients in the shot.",
+   "howToReproduceInFlatVector": "Keep Sanpou's lighter daylight hues (DAY.sky, hero-port-b.js line 155) but copy the structure: hold the zenith colour flat for the top ~12 %, put most of the ramp in the middle, finish pale at the horizon. Add one radialGradient halo (white, about 0.3 centre alpha to 0, radius about a quarter of the frame width) behind the hero of each scene: warehouse roofline in 01/02, the expressway vanishing point in 03, the map centre in 04, Fuji/Tokyo in 05. Use identical sky stops in all five scenes (the film does not, see weaknesses). Cost: two gradients, no filter. Remember ids must be unique per scene.",
+   "whereSeen": "f_001.jpg, png/p_0000.png; exploded SKY plane in crops/z52_layers_left.jpg"
+  },
+  {
+   "name": "Exterior light shafts",
+   "howItIsBuilt": "Three wedge polygons, hard-edged (2-3 px anti-alias only), filled pure white at low opacity, normal blend: on sky #144EC4 becomes #3265CA (alpha 0.13); on water #1A8DBD becomes #379EC6 and #0E578C becomes #2D6C9B (alpha 0.127). At the top edge of frame 0 they span x 224-306 (82 px), 392-444 (52 px), 544-667 (123 px), with gaps of 86 and 100 px: three different widths, irregular spacing. They fan: edge angles run from 42 degrees (leftmost edge) to 27.5 degrees (rightmost edge) below horizontal and the extended edges meet near (-384,-543), a source off-screen up-left by about 0.2 frame widths and 0.5 frame heights. They widen as they travel and reach the water at lower right. They tint sky and water only; castle walls, stone base, foam and rocks are never tinted (stone base stays #ADBAD6/#73839E/#3F4B7B under the shaft path). They move: each shaft has its own opacity cycle, measured over the first 1.87 s as shaft 2: 0.136 -> 0.077 -> 0.128 -> 0.072 (period about 1.3 s), shaft 3: 0.136 -> 0.068 -> 0.128 (about 1.4 s), shaft 1: 0.14 -> 0.068 (about 3.2 s); and they sway slowly (shaft 1 drifts 24 px left, shaft 3's far edge 19 px right, widths 82->88, 52->56, 123->134 while the camera zooms 1.087).",
+   "howToReproduceInFlatVector": "Three SVG polygons from a point outside the frame on the sun side (the original puts the sun top right, so mirror the fan). Fill white, fill-opacity = 0.10 + 0.035*sin(2*pi*t/period + phase) with periods about 1.3, 1.4 and 3.2 s; rotate each wedge about the source by about plus or minus 0.5 degree on a slow sine. Draw them above sky, far skyline tiers, Fuji and distant road/sea, and below clouds, the warehouse, trucks and foreground. Because Sanpou's sky is paler than #144EC4, white at 13 % will barely read: either deepen the upper sky a little where the shafts sit or raise alpha to about 0.18-0.22, and judge in the viewer. On white or pale surfaces (warehouse wall, truck box) do what the film does: express the same light as shadow gaps, i.e. diagonal bands one ramp step darker, not as lighter bands. Three polygons, no filter, negligible render cost.",
+   "whereSeen": "f_001.jpg, x_0070.jpg (shaft on water lower right); measurements from png/p_0000.png and the first 60 frames"
+  },
+  {
+   "name": "Interior shafts, light pools and window beams",
+   "howItIsBuilt": "Same recipe indoors with a pale cyan fill at about 10 %: hall wall #121933 becomes #1F2E4B, frieze #1D264F becomes #273A65; where two shafts overlap the value steps again (#314B6C then #355480). Here shafts lie over the subject too: in the vault a pale blue shaft at about 13 % turns wall #45548D into #4D639E and brass #89672C into #867448, so bright materials get slightly greyer and dark ones lighter. Where a shaft lands on the floor there is a separate flat polygon one or two ramp steps lighter (#2A376E -> #46558C -> #5677AD). The tunnel window throws a single translucent parallelogram. Neon tubes are an 18 px pill: 5 px rim #7EBDF3, core #CBECFD, no blur.",
+   "howToReproduceInFlatVector": "For Sanpou this maps to the warehouse interior seen through dock doors and to under-canopy areas: 2-3 translucent parallelograms from skylights or door openings, pale warm-white or pale blue at 8-12 %, plus a flat lighter polygon on the floor where each lands. On the expressway use the same idea for light falling between gantries or sound barriers onto the road (a lighter road-colour polygon, not a glow).",
+   "whereSeen": "x_0124.jpg, f_012.jpg, x_0210.jpg, crops/z150_hall_arch.jpg, crops/z19_tunnel_window.jpg"
+  },
+  {
+   "name": "Cumulus cloud construction",
+   "howItIsBuilt": "Each cloud bank is a union of 15-25 circles (lobe radius about 60-110 px at 1080p), filled flat #FFFFFF, no outline. Shading is a duplicate of the same silhouette in periwinkle #AAC5EC drawn behind it and offset about +25 px right, +12 px down, so a 25-28 px shade strip shows on the side away from the light; where a front group overlaps a back group the back group's white is cut by the front group's shadow copy, which produces small periwinkle crescents inside the mass. Groups are stacked back to front as [shadow copy, white body] pairs, 2-3 groups per bank. A lower, nearer-horizon bank is tinted #DDE7F9 to #D8E5F8 with shade #B3CBEF and fades at the bottom through #D2E4F5 to #87C4E2 into the horizon haze. So: 2 flat steps per cloud (white + one shade), a third tint for the low bank, one bottom fade. The banks are tall (left bank spans y 130-700) and frame the subject left and right, leaving the centre sky clear. Motion: whole layer drifts roughly 15 px/s to the right (same direction the flags stream), estimated from landmark tracking; no shape morphing seen.",
+   "howToReproduceInFlatVector": "Replace the small 4-lobe flat-bottom Cloud (hero-port-b.js lines 693-708) with a CloudBank component: a fixed list of circles (seeded so it is stable frame to frame), drawn twice: once offset in the shade colour, once in white. For Sanpou's paler sky use white body + a shade about as dark as the sky at that height (DAY.cloudShade made solid, around #B8D2EC) so the cloud edge still reads, and give the low bank the sky-horizon tint with a linearGradient fade at its base. Stack 2-3 groups per bank. Drift the layer 10-20 px/s and add a very slow breathing of individual lobe radii (plus or minus 2 %) if more life is wanted. Keep the circle list constant so the positional diff patcher never shifts nodes. About 60-120 circles per scene; cache the group if the 1 ms budget is tight.",
+   "whereSeen": "f_001.jpg, crops/z01_cloud_inner_left.jpg, crops/z00_cloud_bank_right.jpg, crops/z52_layers_left.jpg"
+  },
+  {
+   "name": "Depth planes and atmospheric perspective",
+   "howItIsBuilt": "The film names its own planes at 25.5 s: SKY, CUMULUS, KEEP, MIDDLE RING, OUTER WALL + DOOR, ROUTE + TYPE; in practice there are more: sky, halo, far spire silhouettes, clouds (low tinted bank + white banks), keep, middle ring, second ring, outer wall, stone base, foam, water, foreground rocks, birds, caption. Measured progression from far to near: far spires are flat single tints with no outline or detail, #75A3E3 (farthest, almost sky), #8BB3ED, #A9C9F3; keep lit face #D2D9E5-#E1ECF9, roof #537AE3/#334D9B, outline 1 px #1B2C4B; middle ring lit #E4ECF3, outline 1 px #1E2F43; second ring lit #E9EEF6, outline about 1.5 px #212436; outer wall lit #F2F4F4-#F4F4F1, roof #3E65DF/#2245BB/#192F87, outline 2 px #12142F; foreground rocks #222A5A with #171D45 planes and 3 px #0E173C outline. Rules: lights tint toward the sky colour with distance, darks lift toward it, outline weight halves and lightens, small detail drops out, and the darkest and most saturated values exist only in the nearest planes. Foreground rocks have no light values at all and sit in both bottom corners as a frame.",
+   "howToReproduceInFlatVector": "Give every scene an explicit ordered plane list and one function tint(colour, depth) that mixes each plane's colours toward the sky colour at that height (far tier about 70-80 % sky, next 45 %, next 20 %, hero plane 0 %). Tokyo skyline: 3-4 tiers; farthest tier flat silhouette only, middle tier silhouette + roof caps, near tier with windows and 1 px outline. Warehouse and trucks are the hero plane with full contrast and 2 px outline. Add a foreground frame plane in the darkest ramp values: fence, lamp post, hedge or kerb in 01/02; sound-barrier posts and a gantry in 03; a tree line or railing in 05. This replaces the current haze-rectangle approach (DAY.haze, hazeK, line 159) with per-plane colour, which is cheaper and crisper.",
+   "whereSeen": "f_052.jpg, f_001.jpg, crops/z00_far_spires.jpg"
+  },
+  {
+   "name": "One value ramp and the one-step shadow rule",
+   "howItIsBuilt": "Every surface in the first 10 s takes a colour from one blue-violet ramp (hue about 225-230 degrees): #F4F4F1, #C6CFE6, #ADBAD6, #8D9DCA, #73839E, #45548D, #3F4B7B, #2A356E, #222A5A, #1B244F, #171D45, #111733, #0A0D20. A cast shadow moves the surface exactly one step down. In the door close-up one straight diagonal edge crosses four bands and each drops one step: #F4F4F1 -> #C6CFE6, #C6CFE6 -> #8C9DCA, #8C9DCA -> about #45548D, #45548D -> #222A5A. The channel ratios differ per step, so these are picked ramp colours, not a multiply layer. Volumes use three hard strips: tower cylinders are lit 60 % of width / #C6CFE6 22 % / core #8A9FC6 13 %; cone roofs are three facets #3E65DF / #2245BB / #192F87; brass is #C69949 with the lower third #89662B. Walls carry five shade elements: a shadow strip under the parapet, a parallelogram cast shadow to the right of each buttress, broad diagonal bands at about 65 degrees, a darker bottom band #8E9FCC, and 1 px lavender course lines.",
+   "howToReproduceInFlatVector": "Add a RAMP array next to DAY and a helper shade(colour, steps) that returns the next ramp entry; forbid ad-hoc rgba shadow overlays in new art. Warehouse wall: lit face, one-step band under the eaves/canopy, one diagonal cast-shadow polygon from the canopy or neighbouring building crossing wall, shutters and apron (each material stepping down once), darker plinth band. Truck box: lit top strip, main face, one-step lower band, underbody two steps down. Office and skyline blocks: lit face + one-step side face on the side away from the sun. Sanpou's warmer neutral whites can keep their hue; what matters is fixed steps and a single shadow direction for the whole film.",
+   "whereSeen": "x_0078.jpg, crops/z90_shadow_floor.jpg, crops/z01_wall_detail.jpg, x_0077.jpg"
+  },
+  {
+   "name": "Detail vocabulary",
+   "howItIsBuilt": "A small fixed kit, repeated: rivets (round dots about 10 px in close-up, slate blue, two at each panel corner); panel seams as thin navy lines in a staggered brick-bond layout (3 px in close-up, 1 px wide shot); vent slots (5-7 rounded vertical pills, slate #47548C); wayfinding pairs of a red chevron #E13B35 and a blue dash #2445B7; brass pipe built as light top #C99847 (16 px) + dark underside #8A662A (12 px) + 5 px navy line + a one-step shadow strip on the wall, with a bracket about every 535 px; brass plaque with monospace text, rivet heads, and a hard offset shadow about (+12,+12); red lamp with a white specular dot; strap hinges; arch voussoirs; crenellations; gears with rivets and a flat diagonal sheen band across the face; tick-mark rings; small red indicator squares. All flat, all in ramp/accent colours.",
+   "howToReproduceInFlatVector": "Build the equivalent kit for a Japanese logistics site and reuse it everywhere: dock numbers and bay signs, shutter slats, wall panel seams, downpipes and conduit (same 3-part pipe build), roof vents and AC units, wall lamps, bollards with stripe bands, wheel stops, pallet stacks, kerb reflectors; on trucks: door seams, hinges, marker lamps, mud flaps, wheel nuts, mirror arms; on the expressway: gantry signs, lamp poles, sound-barrier panel seams, lane reflectors, km posts. Keep each item 2-4 shapes. Use signage that means something (bay numbers, route numbers, the company name) rather than abstract chevrons.",
+   "whereSeen": "x_0078.jpg, crops/z90_pipe_plaque.jpg, crops/z90_door.jpg, x_0210.jpg, crops/z14_smallgears.jpg"
+  },
+  {
+   "name": "Outlines",
+   "howItIsBuilt": "Selective, not global. Architecture, props and rocks have a dark navy outline; sky, clouds, water, foam, far silhouettes and stone-base blocks have none. Weight in the wide shot: 2 px #12142F on the nearest wall and towers, about 1.5 px on the second ring, 1 px #1B2C4B-#1E2F43 on middle ring and keep, 3 px #0E173C on foreground rocks. Buttresses are outline-only shapes over the wall. Strokes scale with the art when the camera zooms (the same wall outline is about 8 px at 2.57 s; the door close-up uses 6 px outlines and 3 px seams), so weight is not constant between shots.",
+   "howToReproduceInFlatVector": "Outline only hero-plane objects (warehouse, trucks, signs, foreground frame) at 2 px in a dark navy from the ramp, 1 px on the next plane back, none on skyline tiers, clouds, Fuji, road surface or map land. Because the remake keeps the original camera path and SVG scales strokes with the group, decide per scene whether to use vector-effect non-scaling-stroke on the hero outlines so line weight stays even through the camera move.",
+   "whereSeen": "f_001.jpg, x_0077.jpg, x_0078.jpg"
+  },
+  {
+   "name": "Shadows",
+   "howItIsBuilt": "All shadows are hard-edged flat shapes in the next ramp colour, never blurred, never black: cast-shadow wedges beside buttresses, one long diagonal shadow edge across the door wall, a shadow strip under every parapet and under the pipe, a hard offset shadow under the plaque, flat dark discs offset down-right behind the small gears (about 30 % darker than the wall, larger than the gear), cloud shade as an offset copy. Shadows fall down and to the right throughout the daylight shot.",
+   "howToReproduceInFlatVector": "Trucks: a flat contact shadow one or two ramp steps darker than the road, as a parallelogram skewed in the single global shadow direction (keep truckMotion pitch; let the shadow stay on the ground). Buildings: one cast polygon each onto ground and onto the neighbouring face. Signs and gantries: thin offset shadow shapes. No feDropShadow, no blur.",
+   "whereSeen": "crops/z01_wall_detail.jpg, crops/z90_shadow_floor.jpg, crops/z14_smallgears.jpg"
+  },
+  {
+   "name": "Water, foam and sparkles",
+   "howItIsBuilt": "Four flat horizontal bands with hard edges, darker and taller toward the camera: a 12 px highlight strip #57C1E0 at the horizon, #1A8DBD (about 72 px), #0E578C (about 40 px), #0F4676 (the rest). The band boundaries are slowly undulating wavy paths. About 40 short horizontal dashes (1-2 px thick, 20-110 px long, a lighter tint of their band, grouped in twos and threes) drift and fade. Four-point star sparkles (a thin cross about 30 px with a trailing horizontal tick) scale and fade on and off in about 0.4 s. Foam is strings of white circles (#F0FAFE, 12-30 px) along the waterline of the base and the rocks, bobbing slightly. No reflections, no gradient.",
+   "howToReproduceInFlatVector": "Sanpou has no sea in the first scenes, but the recipe transfers directly to large flat grounds: the expressway and yard asphalt as 2-3 value bands (lighter far, darker near) with short lane-wear dashes; Tokyo Bay or a river in the skyline/finale scenes as the 4-band water with dashes and sparkles; star sparkles also work on glass facades and truck windscreens (2-3 at a time, 0.4 s each).",
+   "whereSeen": "f_001.jpg, x_0070.jpg, crops/amb_water_sparkle.jpg, crops/z01_rock_foam_right.jpg"
+  },
+  {
+   "name": "Foreground framing and parallax",
+   "howItIsBuilt": "Daylight shot: dark rocks fill both bottom corners (left about 450x380 px, right about 440x200 px) with the only large red accent (flag) on the left one; they leave frame first during the push. Hall: near-black pillars pass in front of everything, including the route line. Measured speeds in the hall at 4.2-4.33 s: back wall 29 px/frame, mid wall with the arch 44, foreground pillars 66, i.e. multipliers 0.66 : 1 : 1.5 around the subject plane.",
+   "howToReproduceInFlatVector": "Add a foreground plane to every Sanpou scene and move it at about 1.5x the subject plane during the existing camera moves, far skyline at about 0.66x, clouds slower still. Let foreground posts pass in front of trucks and of the route line in the expressway scene; that single overlap gives most of the depth.",
+   "whereSeen": "f_001.jpg, f_010.jpg, f_012.jpg, x_0124.jpg"
+  },
+  {
+   "name": "Glow and bloom",
+   "howItIsBuilt": "Light is drawn as hard two-tone shapes, not blur: the doorway is an acid rim #D8F139 about 30 px wide around a pale core #F6FEC0, with a flat trapezoid of spill on the step and a few floating motes. Soft falloff exists in only four places: the sky halo, the route head dot (about 22 px falloff from roughly 15 % to 0, plus a pale ellipse on the floor around it), the UI route line (about 14 px each side, 15 % to 0), and the red orb. The 'bloom' before the hall cut is a flat full-frame overlay of #F6FEC0 rising to 100 % in about 12 frames, held 3 frames.",
+   "howToReproduceInFlatVector": "Use two-tone flat shapes for lit openings (dock doors, office windows, headlamps if any) and reserve radialGradient for the sun halo and the route head. No feGaussianBlur anywhere, which also keeps the per-frame cost low. A flat white or pale-sky overlay ramp can hide a scene change the same way the film does, and it respects the rule of never putting a dark scrim over daylight.",
+   "whereSeen": "x_0078.jpg, crops/z90_door.jpg, x_0124.jpg, f_021.jpg"
+  },
+  {
+   "name": "The route line",
+   "howItIsBuilt": "One acid yellow-green line (#D8F139) appears in every shot from 2.3 s to 27 s and carries the story. In the castle it is only a 1 px locator ring and a lit door. In the hall it is a thin core in a dark floor channel with a brass rail under it, led by a pale dot about 20-24 px (#F6FDC6) with a short soft halo and a faint ellipse of light on the floor; pillars pass in front of it. In the vault it throws a spark burst on impact and switches small indicators on. In the tunnel it is a two-tone stroke about 20 px wide (pale #F6FFBA centre, acid edges) and the part of the floor it has passed stays painted in a muted olive #7D914F. In the blueprint the main route is a 4 px bright line and hundreds of secondary routes are 1-2 px and dim (#9CAE66). In the UI strip it is a 9 px core with soft glow, diamond nodes and a vertical playhead tick.",
+   "howToReproduceInFlatVector": "Give Sanpou one route line in one brand accent (the existing DAY.marker amber #f0a23c is the natural candidate; ask the owner) and thread it through all five scenes: a lane or kerb stripe the receiving truck follows in 01, the loading path in 02, the lane line on the expressway in 03, the network routes on the map in 04 (one bright primary + dim secondaries, exactly like the blueprint), and the final road in 05. Build: solid core, a 1-step lighter centre, a head dot with a small radialGradient, the travelled part left slightly tinted. Let foreground objects occlude it.",
+   "whereSeen": "x_0124.jpg, x_0210.jpg, f_019.jpg, f_025.jpg, f_040.jpg, f_055.jpg"
+  },
+  {
+   "name": "Hidden cuts and transitions",
+   "howItIsBuilt": "Five devices. (1) Zoom-match cut at 2.57/2.60 s: the camera accelerates for 19 frames toward a tiny door, cuts at maximum speed to a detailed drawing of the same door at the same screen position and in the same colours, then decelerates for about 20 frames; no dissolve, no blur. (2) Colour flood + iris at 3.9-4.2 s: the door light fills the frame, holds 3 frames, and in the next shot shrinks as a disc into the route head. (3) Cuts from rest into a shot that is already moving and easing out (6.20 s vault, 8.20 s tunnel). (4) One-frame white flash plus expanding rings (10.0 s and 14.0 s). (5) Caption text stays fixed across the first cut, tying the two shots together.",
+   "howToReproduceInFlatVector": "The remake must keep the original scene order and camera path, so use these only to hide the existing scene changes in hero-glue.js rather than to add shots: put each crossfade at the peak of the camera move, match the screen position and colour of one element across the change (the truck, the route line), and let the copy overlay persist across it.",
+   "whereSeen": "x_0077.jpg then x_0078.jpg; sheets/x_sheet_0.jpg and x_sheet_1.jpg"
+  },
+  {
+   "name": "Ambient motion",
+   "howItIsBuilt": "Nothing is ever fully still until the deliberate text holds. In the castle shot simultaneously: slow camera creep (4 %/s), shaft opacity cycles and sway, cloud drift, flags waving (shape morph with a darker fold #C22F27 sliding along the cloth), water band edges undulating, dashes drifting, sparkles popping, foam bobbing, birds. Indoors: counterweights, small gears, counter-rotating rings, motes near the door light, the route head.",
+   "howToReproduceInFlatVector": "Per Sanpou scene keep 5-7 independent slow loops with different periods so they never line up: shafts, cloud drift, a flag or banner on the warehouse, tree or hedge sway, a rotating roof vent, window sparkles, birds, heat-free subtle bob on parked trucks, distant traffic on the skyline expressway. All as pure functions of the frame, as the original engine requires.",
+   "whereSeen": "crops/amb_flag.jpg, crops/amb_water_sparkle.jpg, crops/amb_foam_right.jpg"
+  },
+  {
+   "name": "Typography",
+   "howItIsBuilt": "Illustration captions: a high-contrast transitional serif, white (#EBEDF1-#FFFFFF), about 96 px cap-to-descender at 1080p, centred near the bottom (baseline about y=1010), one word in italic or in red italic (#F64E38), with a soft navy shadow behind the glyphs for legibility over art. Words rise in one after another from a clip mask over about 0.4 s, after the camera has started to settle. UI part: a semi-bold grotesque sans for step titles (about 90 px), a small uppercase monospace with wide letter-spacing for secondary facts, and the serif again for the 948 subtitle. Font families were not identified.",
+   "howToReproduceInFlatVector": "Out of scope for the art (copy lives in the site overlay, css-src/40-hero.css: navy copy on a pale-sky wash). Only the timing idea carries over: bring each scene's copy in after the camera lands, and keep it steady across the scene change.",
+   "whereSeen": "crops/z04_caption.jpg, f_019.jpg, f_032.jpg, f_045.jpg"
+  },
+  {
+   "name": "Grain, texture, vignette",
+   "howItIsBuilt": "None. Flat patches measured on lossless frames have standard deviation 0.0-0.2 per channel (sky top, wall panel, hall floor, vault wall, UI background, corners and centre alike). No noise overlay, no paper texture, no vignette, no chromatic effects, no motion blur. Only the end card has soft blurred colour blobs.",
+   "howToReproduceInFlatVector": "Do not add grain or blur to chase quality; the reference gets its finish from value control, layering and detail. This also suits the SVG renderer and the 1 ms/frame budget.",
+   "whereSeen": "png/p_0000.png, png/p_0090.png, png/p_0150.png (stddev measurements)"
+  },
+  {
+   "name": "Illustration restyled as a diagram",
+   "howItIsBuilt": "The blueprint castle is the same set of paths as the painted one with fills switched to very dark translucent navy (#0D1437-#162159) and strokes to blueprint blue (about #334AAE, 2 px), over a faint grid; the route network is drawn on top. The same shapes later appear as a small icon on the step strip.",
+   "howToReproduceInFlatVector": "Useful for scene 04: draw the map and the depots from the same geometry as the illustrated scenes (same warehouse silhouette, same truck) with a style switch, so the map reads as the same world. For Sanpou use a light daylight map style (pale land, white roads, navy labels) rather than the near-black blueprint.",
+   "whereSeen": "f_025.jpg, crops/z25_blueprint.jpg, f_040.jpg"
+  },
+  {
+   "name": "Camera easing",
+   "howItIsBuilt": "Every move is bell-shaped with a long tail: first push 19 frames up, about 20 down; hall track peaks at 4.95 s and takes about 35 frames to land; vault drift eases out for about 55 frames; UI pans are 12-15 frames each with soft landings. Holds are either true stills for reading (10.5-11.0 s, 14.3-17.9 s) or slow creeps (the opening). Repeated frames exist only in deliberate holds.",
+   "howToReproduceInFlatVector": "Keep the original path and timing (T_WORLD etc.), but check each move's speed curve in the viewer with the same ffmpeg frame-difference method: it should rise and fall smoothly with the landing taking at least as long as the launch, and 'still' scenes should keep a 2-4 %/s creep or ambient loops.",
+   "whereSeen": "motion-x/diff.txt (per-frame change), sheets/x_sheet_0.jpg to x_sheet_4.jpg"
+  }
+ ],
+ "palette": [
+  {
+   "role": "sky top (zenith, flat top 12 %)",
+   "hex": "#144EC4",
+   "note": "frame 0, constant across the whole top row"
+  },
+  {
+   "role": "sky at 31 % height",
+   "hex": "#1D60D1"
+  },
+  {
+   "role": "sky at 42 % height",
+   "hex": "#2C73DF"
+  },
+  {
+   "role": "sky at 52 % height",
+   "hex": "#448BE7"
+  },
+  {
+   "role": "sky at 60-65 % height",
+   "hex": "#74B3F2",
+   "note": "to #83BDF7 at 65 %"
+  },
+  {
+   "role": "sky bottom (just above horizon, 70 %)",
+   "hex": "#9BCBF4"
+  },
+  {
+   "role": "horizon haze under the low cloud bank",
+   "hex": "#D2E4F5",
+   "note": "fades to #87C4E2 at the waterline"
+  },
+  {
+   "role": "sky inside the halo behind the subject",
+   "hex": "#5B8DE0",
+   "note": "same height away from the subject is #1852C6; about white 0.29"
+  },
+  {
+   "role": "light shaft over zenith sky",
+   "hex": "#3265CA",
+   "note": "white at 0.13 over #144EC4; opacity cycles 0.068-0.14"
+  },
+  {
+   "role": "cloud lit body",
+   "hex": "#FFFFFF"
+  },
+  {
+   "role": "cloud shade (offset copy and crescents)",
+   "hex": "#AAC5EC"
+  },
+  {
+   "role": "low/far cloud bank body",
+   "hex": "#DDE7F9",
+   "note": "down to #D8E5F8"
+  },
+  {
+   "role": "low/far cloud bank shade",
+   "hex": "#B3CBEF"
+  },
+  {
+   "role": "far silhouette, farthest",
+   "hex": "#75A3E3",
+   "note": "almost sky value, no outline"
+  },
+  {
+   "role": "far silhouette, middle",
+   "hex": "#8BB3ED"
+  },
+  {
+   "role": "far silhouette, nearest",
+   "hex": "#A9C9F3"
+  },
+  {
+   "role": "building lit face, nearest plane",
+   "hex": "#F4F4F1",
+   "note": "wide-shot walls read #F2F4F4; ramp step 0"
+  },
+  {
+   "role": "building lit face, second ring",
+   "hex": "#E9EEF6"
+  },
+  {
+   "role": "building lit face, middle ring",
+   "hex": "#E4ECF3"
+  },
+  {
+   "role": "building lit face, far keep",
+   "hex": "#D2D9E5",
+   "note": "to #E1ECF9; whites tint toward sky with distance"
+  },
+  {
+   "role": "shadow step 1 (cast shadow on white, tower mid strip)",
+   "hex": "#C6CFE6"
+  },
+  {
+   "role": "shadow step 2 (tower core shade, shadow on step 1)",
+   "hex": "#8D9DCA",
+   "note": "tower core measured #8A9FC6; wall bottom band #8E9FCC"
+  },
+  {
+   "role": "shadow step 3 / slate (vault wall, vent slots)",
+   "hex": "#45548D"
+  },
+  {
+   "role": "stone base light / mid / dark",
+   "hex": "#ADBAD6",
+   "note": "mid #73839E, dark #3F4B7B; flat polygons, no outline"
+  },
+  {
+   "role": "roof near: light facet",
+   "hex": "#3E65DF",
+   "note": "mid #2245BB, dark #192F87"
+  },
+  {
+   "role": "roof far (keep): light / dark",
+   "hex": "#537AE3",
+   "note": "dark #334D9B; contrast compressed with distance"
+  },
+  {
+   "role": "openings: far arches / gate interior",
+   "hex": "#5B6DA3",
+   "note": "gate interior #21295B"
+  },
+  {
+   "role": "outline, nearest plane (2 px)",
+   "hex": "#12142F"
+  },
+  {
+   "role": "outline, far planes (1 px)",
+   "hex": "#1B2C4B"
+  },
+  {
+   "role": "foreground dark, main",
+   "hex": "#222A5A",
+   "note": "rocks; darkest plane in the daylight shot"
+  },
+  {
+   "role": "foreground dark, shade planes",
+   "hex": "#171D45"
+  },
+  {
+   "role": "foreground lit facet",
+   "hex": "#46548C"
+  },
+  {
+   "role": "foreground outline (3 px)",
+   "hex": "#0E173C"
+  },
+  {
+   "role": "water: horizon highlight strip",
+   "hex": "#57C1E0"
+  },
+  {
+   "role": "water: upper band",
+   "hex": "#1A8DBD",
+   "note": "in a shaft #379EC6"
+  },
+  {
+   "role": "water: middle band",
+   "hex": "#0E578C",
+   "note": "in a shaft #2D6C9B"
+  },
+  {
+   "role": "water: near band",
+   "hex": "#0F4676"
+  },
+  {
+   "role": "foam",
+   "hex": "#F0FAFE"
+  },
+  {
+   "role": "red accent (flags, chevrons, lamps, markers)",
+   "hex": "#E13B35",
+   "note": "flag fold shade #C22F27"
+  },
+  {
+   "role": "blue signage dash",
+   "hex": "#2445B7"
+  },
+  {
+   "role": "brass light",
+   "hex": "#C69949",
+   "note": "highlight #E6CCA2"
+  },
+  {
+   "role": "brass shade",
+   "hex": "#89662B"
+  },
+  {
+   "role": "accent route line",
+   "hex": "#D8F139",
+   "note": "acid yellow-green; does not suit Sanpou, replace with brand accent"
+  },
+  {
+   "role": "accent line hot core / door light core",
+   "hex": "#F6FEC0"
+  },
+  {
+   "role": "accent line, already-travelled paint",
+   "hex": "#7D914F"
+  },
+  {
+   "role": "interior ramp (hall, tunnel)",
+   "hex": "#1B244F",
+   "note": "with #2A356E lighter, #111733 darker, #0A0D20 foreground pillars"
+  },
+  {
+   "role": "interior shaft result on dark wall",
+   "hex": "#1F2E4B",
+   "note": "pale cyan about 10 % over #121933"
+  },
+  {
+   "role": "neon tube core / rim",
+   "hex": "#CBECFD",
+   "note": "rim #7EBDF3, no blur"
+  },
+  {
+   "role": "dark UI background (10-27 s)",
+   "hex": "#0A0D1F",
+   "note": "64-87 % of the frame in those shots"
+  },
+  {
+   "role": "blueprint stroke",
+   "hex": "#334AAE",
+   "note": "fills #0D1437 to #162159"
+  },
+  {
+   "role": "orb core / red halo",
+   "hex": "#FFF0E5",
+   "note": "halo #A83533; caption red #F64E38"
+  },
+  {
+   "role": "timeline chips",
+   "hex": "#488EE6",
+   "note": "teal #38C4B2, magenta #E339CD"
+  },
+  {
+   "role": "end card background",
+   "hex": "#F5F2EC",
+   "note": "green blob #DBE5C9, grey blob #DDDBD7"
+  }
+ ],
+ "keyFrames": [
+  {
+   "path": "C:/Users/RTX4070TI/AppData/Local/Temp/claude/24aa387b0dcfb2d5/ebc51bcd-98dd-479d-bbf9-f61a2010e7ba/scratchpad/motion-frames/f_001.jpg",
+   "why": "The whole daylight recipe in one frame (t=0.23 s): sky gradient with flat zenith, three fanned shafts, halo behind the keep, cumulus banks framing the subject, four building planes with thinning outlines, dark rocks in both corners, 4-band water. This is the quality target for Sanpou scenes 01, 02 and 05."
+  },
+  {
+   "path": "C:/Users/RTX4070TI/AppData/Local/Temp/claude/24aa387b0dcfb2d5/ebc51bcd-98dd-479d-bbf9-f61a2010e7ba/scratchpad/motion-frames/f_052.jpg",
+   "why": "The film's own exploded layer stack with labels (SKY, CUMULUS, KEEP, MIDDLE RING, OUTER WALL + DOOR, ROUTE + TYPE). Shows exactly what is on each plane, including the bare sky gradient and the cloud layer alone. Enlargements: crops/z52_layers_left.jpg and crops/z52_layers_right.jpg in the same scratchpad."
+  },
+  {
+   "path": "C:/Users/RTX4070TI/AppData/Local/Temp/claude/24aa387b0dcfb2d5/ebc51bcd-98dd-479d-bbf9-f61a2010e7ba/scratchpad/motion-frames/x_0070.jpg",
+   "why": "Mid push (2.33 s) at a scale close to how a Sanpou warehouse fills the frame: wall shading system, buttress shadow wedges, roofs in three facets, signage decals, brass pipes, stone base in three flat values, foam circles, water dashes and star sparkles, shaft on the water, locator ring."
+  },
+  {
+   "path": "C:/Users/RTX4070TI/AppData/Local/Temp/claude/24aa387b0dcfb2d5/ebc51bcd-98dd-479d-bbf9-f61a2010e7ba/scratchpad/motion-frames/x_0077.jpg",
+   "why": "Last frame before the hidden cut (2.57 s, peak camera speed): proves there is no motion blur and that the art holds at extreme zoom; clearest view of how a wall is shaded (parapet strip, 65 degree bands, bottom band, course lines) with only two or three colours."
+  },
+  {
+   "path": "C:/Users/RTX4070TI/AppData/Local/Temp/claude/24aa387b0dcfb2d5/ebc51bcd-98dd-479d-bbf9-f61a2010e7ba/scratchpad/motion-frames/x_0078.jpg",
+   "why": "First frame after the cut (2.60 s). Best single reference for the one-step shadow rule (one diagonal edge, every band drops one ramp step) and for the detail kit: rivets, staggered seams, vents, chevron + dash, 3-part brass pipe, plaque with offset shadow, two-tone flat light. Compare with x_0077 to see how the cut is matched."
+  },
+  {
+   "path": "C:/Users/RTX4070TI/AppData/Local/Temp/claude/24aa387b0dcfb2d5/ebc51bcd-98dd-479d-bbf9-f61a2010e7ba/scratchpad/motion-frames/x_0124.jpg",
+   "why": "Hall at 4.13 s: translucent shafts overlapping (two opacity steps), floor light pools, neon tubes without blur, a near-black foreground pillar, and the transition disc shrinking into the route head. Reference for shafts over a dark surface and for the iris transition."
+  },
+  {
+   "path": "C:/Users/RTX4070TI/AppData/Local/Temp/claude/24aa387b0dcfb2d5/ebc51bcd-98dd-479d-bbf9-f61a2010e7ba/scratchpad/motion-frames/f_012.jpg",
+   "why": "Hall settled (5.73 s): three parallax planes readable at once, shaft crossing light and dark materials, route line in its channel with head dot and floor glow, brass detail, counterweights. Good model for the expressway scene's foreground posts and route line."
+  },
+  {
+   "path": "C:/Users/RTX4070TI/AppData/Local/Temp/claude/24aa387b0dcfb2d5/ebc51bcd-98dd-479d-bbf9-f61a2010e7ba/scratchpad/motion-frames/x_0210.jpg",
+   "why": "Vault at 7.0 s: densest purposeful detail (rivets, ticks, indicator squares), brass in two values with a flat sheen band, flat disc shadows behind gears, a shaft lying across the subject, and the route line's impact sparks and indicator lights. Reference for mechanical detail on trucks and dock equipment."
+  },
+  {
+   "path": "C:/Users/RTX4070TI/AppData/Local/Temp/claude/24aa387b0dcfb2d5/ebc51bcd-98dd-479d-bbf9-f61a2010e7ba/scratchpad/motion-frames/f_019.jpg",
+   "why": "Tunnel with caption (9.23 s): route line as a two-tone stroke with painted trail and head dot, depth from value steps only, a window beam as one translucent polygon, and the caption treatment (serif, red italic last word, soft shadow)."
+  },
+  {
+   "path": "C:/Users/RTX4070TI/AppData/Local/Temp/claude/24aa387b0dcfb2d5/ebc51bcd-98dd-479d-bbf9-f61a2010e7ba/scratchpad/motion-frames/f_025.jpg",
+   "why": "Blueprint castle (12.23 s): the same geometry restyled as line art with one bright primary route and many dim secondary routes. This is the pattern for Sanpou's network map (scene 04), and also the clearest example of the dark cyber palette to avoid."
+  }
+ ],
+ "weaknesses": [
+  "Colour changes world five times in 30 s. Average frame colour and brightness (0-255): daylight castle #7494C6 / 145 (0-2.5 s); door close-up #A9AEB1 / 173, then a green-tinted #C8D1BB / 205 at 3.7 s; hall #252E4B / 47; vault #4E556F / 85; tunnel #2A3253 / 50; blueprint and UI #0F1521-#151D2C / 17-30 (10-25 s); making-of #2A3D55 / 58; end card #EBECE1 / 235. Only the blue-violet ramp and three accents (brass, red, acid) carry across the first 10 s; the cobalt sky and cyan sea vanish after 2.6 s. For Sanpou: one sky, one ramp, one accent for all five scenes.",
+  "Only 13 % of the runtime is daylight. 39 of 60 sampled frames have average brightness under 60, and from 4.07 s to 27.4 s (78 % of the film) the picture is navy or near-black. The quality the owner likes is concentrated in the first 3.9 s; the rest is the dark cyber look that does not fit a Japanese logistics company.",
+  "Acid yellow-green (#D8F139) with neon glow, plus magenta and teal timeline chips, is a tech/security palette. In the daylight shot it is nearly invisible (a 1 px ring and a tiny door), so the 'one thread' only works once the film goes dark. A Sanpou route line must read on a bright sky and pale road.",
+  "Oddly shaped buildings: the keep has two leaning slab 'horns' at about 35 degrees with red tips and no structural logic, a trapezoid body with an off-centre round vault face, and leaning half-cone white turrets; tiers do not sit on each other (strips of bright sky show between the rings at about y=430-450 and y=530-560 in frame 0); tiny houses of inconsistent scale are perched on parapets; base slabs are randomly skewed and one detached tilted slab hangs off the right end with a stray diagonal line. Sanpou's buildings should stay plausible: straight walls, consistent floor heights, real roof forms.",
+  "Light direction is not fully consistent: sky shafts run 27-42 degrees below horizontal from the top-left, but the broad shadow bands on the walls run at about 65 degrees, and white shafts cannot show on white walls or clouds, so the light effect reads only on sky and water. Pick one sun position and derive shafts, wall bands and cast shadows from it.",
+  "Line weight is inconsistent between shots because strokes scale with the zoom: 2 px outlines in the wide shot, about 8 px on the same wall just before the cut, 6 px in the door close-up.",
+  "Micro-detail turns to noise at small sizes: the rows of tiny houses, 1 px course lines and crenellations shimmer in the wide shot and would be mush at 390 px phone width. Detail should be sized for the phone framing first.",
+  "Cloud shading is mechanical: every cloud has the identical offset shadow copy and nothing else, so banks look like stickers on close inspection, and the clouds do not change shape.",
+  "Much of the surface detail is meaningless greeble (abstract chevrons, dashes, vent slots, 'uid=1000'). It implies machinery but says nothing; a company site benefits from detail that is true (bay numbers, signage, vehicle markings).",
+  "No motion blur plus very fast moves (per-frame change up to 46 before the first cut, 73 in the end wipe) gives slight strobing at 30 fps; acceptable in a film, more visible in a looping web hero. Also the white serif caption sits directly on busy water with only a soft shadow, which would not meet the site's rule of navy copy on a pale-sky wash."
+ ]
+}
