@@ -46,16 +46,42 @@ In `C:\Users\RTX4070TI\Desktop\sanpou-site-v2` (git, branch `main`, commit `7286
 - Gotchas: SVG ids must be unique per scene (two stages coexist during the dissolve); `FujiMountain` and the
   finale's lane loop use a local variable `L` (the palette is `DAY`); scenes must render in < ~1 ms/frame today.
 
-## Plan for the first build session
+## Where the project stands (end of the first build session, 2026-11-13)
 
-1. `git init` this folder. Copy the original hero files into `original/` (unchanged) and start `remake/`
-   from a copy.
-2. Build a **side-by-side viewer** (`viewer.html`): original left, remake right, same frame, scrub bar,
-   play, scene jump, 1920×1080 and phone framing. Every change is judged here against the original.
-3. Bring the owner a **renderer decision** with real sample frames before building scenes:
-   - stay SVG/DOM (easy to put back on the site; soft light, blur and glow are limited), or
-   - Canvas/WebGL (higher ceiling, closer to the Motion film; more work to integrate, needs a library check).
-4. Then remake **one scene at a time** (01 → 05): style frame first, owner OK, then motion, then verify.
+Done (see `git log`, one commit per pass, evidence in `evidence/`):
+
+- `original/` = untouched copies of the site's hero (check: `cd original && sha256sum -c SHA256SUMS`);
+  `remake/` = working copy, still identical to the original.
+- **Viewer**: serve this folder (`python -m http.server 8791 --bind 127.0.0.1`, or the `hero-viewer` launch
+  config) and open `http://127.0.0.1:8791/viewer.html`. Two "sides" (listed in `sides.json`) drawn for the
+  same moment of the site clock (`viewer/timeline.js` = the site player's schedule as a pure function of ms;
+  scene 01 = 0–7000, 02 = 7000–14600, 03 = 14600–21800, 04 = 21800–27800, 05 = 27800–45800).
+- **Tools** (`tools/`, Node + the Playwright named below): `shots.mjs` (stills, contact sheets),
+  `diff-sides.mjs` (two sides at the same moments), `perf-side.mjs` / `perf-table.mjs` (smoothness with a
+  slowed CPU and the real GPU; run one at a time), `check-viewer.mjs` (0 console errors, determinism, the site's
+  real player incl. rapid clicks and reduced motion), `check-player-vs-glue.mjs`.
+- **The look**: `STYLE.md` (rules for every scene) and `CHANGES.md` (what changes per scene; the owner
+  approves its rows on a style frame). `research/` holds the reference-film study, the past owner decisions,
+  the scene 01 element checklist and a survey of the installed skills.
+- **Scene 01 style frame, round 1**: `samples/frame-a/` (side "Style frame"). Waiting for the owner's verdict;
+  nothing from it is in `remake/` yet.
+- **Renderer**: `engine/vcanvas.js` draws the same scene code on a canvas (side "… on canvas") and matches the
+  SVG rendering, so art written in the `h()` vocabulary of `STYLE.md` §2 can be drawn by either engine.
+  Measured on the phone framing: the richer scene 01 art is as smooth in SVG as the original, and canvas is
+  not smoother (numbers in the commit messages and `evidence/2026-11-13-renderer/`). Recommendation given to
+  the owner: stay SVG/DOM, keep the canvas engine as a fallback. Check the owner's answer before building on it.
+
+Next:
+
+1. Owner's verdict on the scene 01 style frame (and the renderer). Apply notes (two rounds at most), then copy
+   the approved look into `remake/js/hero-port-b.js`.
+2. Scene 01 motion pass (secondary motion, eased landings; `STYLE.md` §5), verify, commit.
+3. Scenes 02 → 05 the same way: `CHANGES.md` rows (at most five a round) → style frame → owner OK → motion →
+   verify. After every scene check a sheet of all scenes for colour drift.
+
+Usage: this account has a 5-hour usage limit; a burst of parallel agents exhausted it in the first session and
+killed work in progress. Use one or two agents at a time (a cheaper model for engineering, the best one for
+art) and keep the main session short.
 
 ## Quality bar (from the Motion film, measured)
 
