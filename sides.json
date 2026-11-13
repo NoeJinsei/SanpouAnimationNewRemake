@@ -118,6 +118,54 @@
       "schedule": {
         "holdAmbient02": true
       }
+    },
+    {
+      "id": "fuji-a",
+      "label": "Fuji A",
+      "detail": "Fuji #7fb0dc (a little deeper)",
+      "kind": "dom",
+      "base": "samples/fuji-a/js/",
+      "scripts": [
+        "hero-flag.js",
+        "hero-port-a.js",
+        "hero-port-b.js"
+      ],
+      "glue": "hero-glue.js",
+      "schedule": {
+        "holdAmbient02": true
+      }
+    },
+    {
+      "id": "fuji-b",
+      "label": "Fuji B",
+      "detail": "Fuji #5f93c9 (clearly blue, the usual illustration)",
+      "kind": "dom",
+      "base": "samples/fuji-b/js/",
+      "scripts": [
+        "hero-flag.js",
+        "hero-port-a.js",
+        "hero-port-b.js"
+      ],
+      "glue": "hero-glue.js",
+      "schedule": {
+        "holdAmbient02": true
+      }
+    },
+    {
+      "id": "fuji-c",
+      "label": "Fuji C",
+      "detail": "Fuji #4a7ab5 (deep blue, strongest silhouette)",
+      "kind": "dom",
+      "base": "samples/fuji-c/js/",
+      "scripts": [
+        "hero-flag.js",
+        "hero-port-a.js",
+        "hero-port-b.js"
+      ],
+      "glue": "hero-glue.js",
+      "schedule": {
+        "holdAmbient02": true
+      }
     }
   ]
 }

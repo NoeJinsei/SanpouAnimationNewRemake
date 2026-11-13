@@ -65,3 +65,14 @@ Not changed in this round: the convoy's speed, spacing and motion, the scroll sp
 front must stay identical or the pillar leaves its sign), the sign wording, Fuji's position and size, the
 layout of the city tiers.
 
+## Owner's decisions, 2026-11-13 (carry into round 2)
+
+- **The trucks' engines are running at the dock.** A parked truck shows a faint exhaust wisp and a trace of
+  engine movement. The original hides the exhaust at idle (its opacity is multiplied by the truck's speed), so
+  idle needs its own small baseline. A fast, sub-pixel tremble was tried in round 1 and removed because it made
+  the box edge and the lettering shimmer; use a slower, slightly larger movement.
+- **Mt Fuji's blue should be clearly darker**, in the owner's words "like the typical fuji mountain
+  illustrations that is out there". It is one colour for the whole film (`DAY.fuji`, with `DAY.fujiShade` a
+  step below), so every scene changes together. Options rendered in `evidence/2026-11-13-fuji/`; the exact
+  value is the owner's pick.
+

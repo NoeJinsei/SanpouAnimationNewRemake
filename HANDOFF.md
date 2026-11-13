@@ -136,9 +136,19 @@ in scene 05 — that is wanted, but it has to be checked.
 
 - Scene 02 (round 1): interior brightness, whether to keep the forklift in bay 02, whether the ground should
   say more. These may be moot if scene 02 is redrawn from scratch.
-- Scene 03 (round 1): Fuji's colour is shared by the whole film, so fixing it changed scene 05 too; keep that
-  or not. Cloud drift direction. Cap size.
-- The parked truck at the dock: engine running (a faint exhaust wisp) or switched off?
+- Scene 03 (round 1): cloud drift direction, cap size. **Fuji's colour is decided in direction: the owner wants
+  the blue body clearly darker, "like the typical fuji mountain illustrations that is out there" (2026-11-13).**
+  It is one colour for the whole film (`DAY.fuji` with `DAY.fujiShade`), so it applies to every scene at once.
+  Four options were rendered for the owner to pick from (`evidence/2026-11-13-fuji/`): today's `#a6cae9`,
+  then `#7fb0dc`, `#5f93c9` and `#4a7ab5`, each with a shade one step down. Watch the depth rule as it gets
+  darker: at `#4a7ab5` the mountain is darker than some of the city in front of it, which reads as wrong
+  because far things should stay lighter. Record the chosen value here once the owner says.
+- ~~The parked truck at the dock: engine running or switched off?~~ **Answered 2026-11-13: the engines are
+  running at the dock.** So a parked truck shows a faint exhaust wisp and a trace of engine movement. Note for
+  whoever draws it: the original's exhaust puffs are multiplied by `run` (the truck's speed), so they vanish
+  completely at idle - idle needs its own small baseline rather than the speed-scaled one. Round 1 also tried a
+  fast engine tremble and removed it: under a pixel it made the box edge and the lettering shimmer, so give the
+  idle a slower, larger movement instead of a fast tiny one.
 - From `research/past-decisions.json` → `openQuestions`: whether floating dust, sun rays and the map grid may
   come back in any form (they were switched off before, reason unrecorded); how much ambient motion is wanted;
   whether the two scene seams may be redesigned; and the reduced-motion still frame.
