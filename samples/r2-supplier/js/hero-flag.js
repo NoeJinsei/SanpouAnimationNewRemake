@@ -1,1 +1,0 @@
-window.JX_CLEAN_HERO=true;

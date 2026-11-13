@@ -1,3 +1,4 @@
+//== REPLACE from "  function Truck(p) {" to "  /* ---- scenery.tsx ---- */"
   /* ---- Truck and Parcel, redrawn for round 2 ----
      A Japanese medium-duty cab-over box truck in side elevation, facing right. Same props, anchor and
      footprint as before: the rear of the cargo box is local x 0, the box is 0..122 x 8..74, the front
@@ -121,7 +122,6 @@
       h("path", { d: "M164.7,28.7 L167.1,28.1 L173,45 L169.7,45 Z", fill: D.truckGlass }),      // the windscreen, seen from its edge
       h("path", { d: "M139.5,29.2 L161.6,29.2 L167.2,45 L139.5,45 Z", fill: D.truckGlass }),    // door window
       h("path", { d: "M146.5,29.2 L154,29.2 L149,45 L141.5,45 Z", fill: D.truckGlassLit }),
-      h("path", { d: "M141,45 L141,38.4 Q141,36.6 142.8,36.6 L146,36.6 Q147.8,36.6 147.8,38.4 L147.8,45 Z M142.2,35.8 L142.2,32.6 Q142.2,31.4 143.4,31.4 L145.4,31.4 Q146.6,31.4 146.6,32.6 L146.6,35.8 Z", fill: D.truckGlassShade }),   // empty seat and headrest
       h("path", { d: "M139.5,29.2 L161.6,29.2 L167.2,45 L139.5,45 Z", fill: "none", stroke: ink, strokeWidth: 1.4, strokeLinejoin: "round" }),
       h("path", { d: "M137.4,27.4 L137.4,70.8 L168.8,70.8 L168.8,47.6", fill: "none", stroke: ink, strokeWidth: 1.4, strokeLinejoin: "round", opacity: 0.75 }),   // door seam
       R(140, 50.6, 6.4, 2.4, ink, 1.2),                                                  // door handle

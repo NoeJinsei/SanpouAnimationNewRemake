@@ -87,13 +87,22 @@ with its motion pass, scenes 02 and 03 drawn as style frames in `samples/`, all 
 `samples/preview` and recorded (`evidence/2026-11-13-preview/`). The owner rejected the direction after
 watching it; see `HANDOFF.md`.
 
-Next (round 2, the full remake, in Fable 5.2):
+Round 2 (the full remake, in Fable 5.2), as of 2026-11-14:
 
-1. Watch the reference film move (`reference/motion-film/clip.mp4`, the `watch` skill), not just its frames.
-2. Scene 01 first: write what each element becomes in `CHANGES.md`, redraw the scene from a blank page inside
-   the existing scene function, show the owner the style frame beside the original, wait.
-3. Then its motion pass, then verify, then commit; then scene 02, and so on. After each scene, look at all
-   five together for colour drift.
+- **Mt Fuji: approved by the owner** (2026-11-14). It is the level every element is drawn to.
+- **`round2/` is the round 2 working copy** (viewer side `round2`, "Remake (round 2)"). `remake/` is round 1,
+  set aside. Each redrawn element lives in its own file in `round2/parts/` and is put into
+  `round2/js/hero-port-b.js` with `python tools/splice.py round2/js/hero-port-b.js round2/parts/<part>.js`
+  (a part file names the code it replaces in `//== REPLACE from "..." to "..."` header lines). Edit the part,
+  splice, check; that also lets two helpers draw two elements at once without sharing a file.
+- **Scene 01: every element redrawn** (sky and light shafts, clouds, the city as a kit of six building kinds,
+  Tokyo Tower, street furniture and road, the supplier building, the truck and parcels, the guard rail).
+  Shown to the owner as a style frame beside the original (`evidence/2026-11-14-scene01-r2/`); **check the
+  owner's verdict before building on it.** The sky, clouds, city kit, Tower and truck are shared, so scenes
+  02, 03 and 05 already show them; the warehouse, the expressway, the map, the airport and the finale's own
+  pieces are still the original drawings.
+- Next: scene 01's motion pass (after the verdict), verify, commit; then scene 02, and so on. After each
+  scene, look at all five together for colour drift.
 
 Usage: this account has a 5-hour usage limit; a burst of parallel agents exhausted it in the first session and
 killed work in progress. Use one or two agents at a time (a cheaper model for engineering, the best one for

@@ -17,7 +17,7 @@
     {
       "id": "round2",
       "label": "Remake (round 2)",
-      "detail": "the full remake so far: Mt Fuji approved; scene 01 in progress",
+      "detail": "the full remake so far: Mt Fuji approved; scene 01 redrawn (style frame, waiting for the verdict)",
       "kind": "dom",
       "base": "round2/js/",
       "scripts": [
@@ -163,38 +163,6 @@
         "hero-port-b.js"
       ],
       "glue": "hero-glue.js"
-    },
-    {
-      "id": "r2-truck",
-      "label": "R2 part: truck",
-      "detail": "round 2 work in progress: the truck and parcels alone",
-      "kind": "dom",
-      "base": "samples/r2-truck/js/",
-      "scripts": [
-        "hero-flag.js",
-        "hero-port-a.js",
-        "hero-port-b.js"
-      ],
-      "glue": "hero-glue.js",
-      "schedule": {
-        "holdAmbient02": true
-      }
-    },
-    {
-      "id": "r2-supplier",
-      "label": "R2 part: supplier",
-      "detail": "round 2 work in progress: the supplier building alone",
-      "kind": "dom",
-      "base": "samples/r2-supplier/js/",
-      "scripts": [
-        "hero-flag.js",
-        "hero-port-a.js",
-        "hero-port-b.js"
-      ],
-      "glue": "hero-glue.js",
-      "schedule": {
-        "holdAmbient02": true
-      }
     }
   ]
 }

@@ -273,121 +273,231 @@
     return { pitch: 1.6 * (e2 - 1) / (e2 + 1), run: clamp01(speed / 3) };
   }
 
+  /* ---- Truck and Parcel, redrawn for round 2 ----
+     A Japanese medium-duty cab-over box truck in side elevation, facing right. Same props, anchor and
+     footprint as before: the rear of the cargo box is local x 0, the box is 0..122 x 8..74, the front
+     bumper ends near x 177, the tyres stand on local y 98 and the caller's y is local y 96.
+     One optional new prop: `time` (seconds). With it a parked truck shows a faint exhaust wisp (the
+     engines run at the dock); without it the truck draws exactly the same, minus the wisp.
+     Draw order: ground shadow, exhaust, what sits behind the wheels, the wheels, the body. Body bob and
+     pitch move the two body groups together and never the wheels. Everything static is built once and
+     shared by every truck; the node list has the same shape on every frame. */
+  DAY.truckBoxLit = "#ffffff";      // the box: sunlit sheen
+  DAY.truckBoxShade = "#dbe4f1";    // the box: white in shade (periwinkle)
+  DAY.truckAlu = "#e2e8f1";         // aluminium rails, posts and side guards
+  DAY.truckDoor = "#e9eef6";        // rear door panel, seen when it swings open
+  DAY.truckSteel = "#8496b0";       // wheels, tank, lock rods
+  DAY.truckSteelLit = "#b6c2d3";
+  DAY.truckSteelShade = "#55657f";
+  DAY.truckCab = "#23344f";         // the cab: navy
+  DAY.truckCabLit = "#3d5580";
+  DAY.truckCabShade = "#192740";
+  DAY.truckFrame = "#1c2840";       // chassis, fenders, mirror
+  DAY.truckFrameLit = "#2c3a55";
+  DAY.truckTyre = "#151f31";
+  DAY.truckTyreLit = "#2b3a52";
+  DAY.truckGlass = "#9dbddc";       // glass reflecting the sky
+  DAY.truckGlassLit = "#d3e5f5";
+  DAY.truckGlassShade = "#6f90b6";  // the seat seen through it
+  DAY.truckBumper = "#44546f";
+  DAY.truckBumperLit = "#5d6f8d";
+  DAY.truckLens = "#f1f5fa";
+  DAY.truckStripe2 = "#eda898";     // the thin second stripe (vermilion, paler)
+  DAY.truckExhaust = "#edf2f8";
+  DAY.truckShadow = "rgba(10,20,36,0.28)"; // one flat shape on the road
+  DAY.parcelShade = "#dbe4f1";
+  DAY.parcelTapeShade = "#c8523a";
+
+  // a band between two radii, from angle a0 to a1 (degrees, clockwise on screen, 0 = right, -90 = up)
+  function arcBand(cx, cy, r0, r1, a0, a1) {
+    var q = function (r, a) { var t = a * Math.PI / 180; return (cx + r * Math.cos(t)).toFixed(2) + "," + (cy + r * Math.sin(t)).toFixed(2); };
+    var big = a1 - a0 > 180 ? 1 : 0;
+    return "M" + q(r1, a0) + " A" + r1 + "," + r1 + " 0 " + big + " 1 " + q(r1, a1) + " L" + q(r0, a1) + " A" + r0 + "," + r0 + " 0 " + big + " 0 " + q(r0, a0) + " Z";
+  }
+  var TRUCK_WHEELS = [50, 150], TRUCK_WHEEL_R = 11;   // rear (twin tyres: a dished rim), front
+  var _truckArt = null;
+  function truckArt() {
+    if (_truckArt) return _truckArt;
+    var ink = COLORS.ink, D = DAY, R = function (x, y, w, hh, fill, rx) { return h("rect", { x: x, y: y, width: w, height: hh, rx: rx || 0, fill: fill }); };
+    var holes = function (rad, r) { var d = ""; for (var i = 0; i < 6; i++) { var a = i * Math.PI / 3, cx = Math.cos(a) * rad, cy = Math.sin(a) * rad; d += "M" + (cx - r).toFixed(2) + "," + cy.toFixed(2) + "a" + r + "," + r + " 0 1 0 " + (2 * r) + ",0a" + r + "," + r + " 0 1 0 " + (-2 * r) + ",0"; } return d; };
+    var art = {};
+    // the ground shadow falls away from the sun: down and to the left
+    art.shadow = h("path", { d: "M-13,95.6 L177,95.6 L169,102.2 L-25,102.2 Z", fill: D.truckShadow });
+    // behind the wheels: chassis rail, rear bumper bracket, exhaust pipe
+    art.back = [
+      R(-2.5, 77, 129.5, 5.5, D.truckFrame, 1),
+      R(1, 80, 2.2, 4.4, D.truckFrame),
+      R(17, 85.6, 20, 3, D.truckSteelShade, 1.5),
+      R(14, 85, 5, 4.2, D.truckSteel, 1.2)
+    ];
+    // wheels: tyre with a lit crescent toward the sun, rim lip; then per axle the face, the turning hand holes, the hub
+    art.tyre = [
+      h("circle", { r: TRUCK_WHEEL_R, fill: D.truckTyre }),
+      h("path", { d: arcBand(0, 0, 8.4, 10.2, -80, 4), fill: D.truckTyreLit }),
+      h("circle", { r: 7, fill: D.truckSteelLit })
+    ];
+    art.face = [h("circle", { r: 5.9, fill: D.truckSteelShade }), h("circle", { r: 5.9, fill: D.truckSteel })];
+    art.holes = [h("path", { d: holes(4.5, 0.95), fill: D.truckFrame }), h("path", { d: holes(4.3, 0.95), fill: D.truckSteelShade })];
+    art.hub = [
+      [h("circle", { r: 2.9, fill: D.truckSteel }), h("circle", { r: 1.35, fill: D.truckSteelLit })],      // rear: dished
+      [h("circle", { r: 2.8, fill: D.truckSteelLit }), h("circle", { r: 1.35, fill: D.truckSteelShade })]  // front: proud hub
+    ];
+    // the body, part 1: under-body gear and the cargo box
+    art.frontA = [
+      h("path", { d: arcBand(50, 87, 13, 15, -165, -15), fill: D.truckFrame }),           // rear mudguard
+      R(34.6, 77, 3.4, 16.4, D.truckTyre, 0.8),                                          // mud flap
+      R(69, 77, 1.8, 12, D.truckFrame), R(86, 77, 1.8, 12, D.truckFrame),                 // side guard stays
+      R(66, 80.8, 25, 2.3, D.truckAlu, 1), R(66, 86.4, 25, 2.3, D.truckAlu, 1),          // side guard rails
+      R(95, 78.6, 24, 12.4, D.truckSteel, 2.6),                                          // fuel tank
+      R(95, 78.6, 24, 3.6, D.truckSteelLit, 2.2),
+      R(95.6, 87.4, 22.8, 3.2, D.truckSteelShade, 1.6),
+      R(99, 78, 2.2, 13.6, D.truckFrame), R(111.6, 78, 2.2, 13.6, D.truckFrame),          // tank straps
+      h("rect", { x: 95, y: 78.6, width: 24, height: 12.4, rx: 2.6, fill: "none", stroke: ink, strokeWidth: 1.3 }),
+      R(1.5, 74, 121, 3.2, D.truckFrameLit),                                             // body sub-frame
+      R(8, 74.3, 5, 2.6, D.marker, 1), R(61, 74.3, 5, 2.6, D.marker, 1), R(111, 74.3, 5, 2.6, D.marker, 1),
+      // the box
+      R(0, 8, 122, 66, D.truckBox, 2),
+      h("path", { d: "M84,12.9 L103,12.9 L87,61 L68,61 Z M108,12.9 L113,12.9 L97,61 L92,61 Z", fill: D.truckBoxLit }),
+      R(0, 8, 122, 3.4, D.truckAlu, 2),                                                  // top rail
+      R(1.3, 11.4, 119.4, 1.5, D.truckBoxShade),                                         // its shadow
+      R(1.3, 12.9, 2.5, 58.3, D.truckBoxShade),                                          // rear post, away from the sun
+      R(118.2, 12.9, 2.5, 58.3, D.truckAlu),                                             // front post
+      R(0, 61, 122, 6, COLORS.verm),
+      R(0, 69.4, 122, 1.8, D.truckStripe2),
+      R(1.3, 71.2, 119.4, 1.6, D.truckAlu),                                              // bottom rail
+      R(0.6, 8.6, 3.6, 3.6, D.truckSteelLit, 0.6), R(117.8, 8.6, 3.6, 3.6, D.truckSteelLit, 0.6),   // corner castings
+      R(0.6, 69.8, 3.6, 3.6, D.truckSteelLit, 0.6), R(117.8, 69.8, 3.6, 3.6, D.truckSteelLit, 0.6),
+      R(9, 20, 4, 15, COLORS.verm),
+      h("text", { x: 19, y: 30, fontFamily: FONTS.lat, fontSize: 12.5, fontWeight: 800, fill: ink, letterSpacing: 0.4, style: { textRendering: "geometricPrecision" } }, "Sanpou"),
+      h("text", { x: 19, y: 42, fontFamily: FONTS.jp, fontSize: 7.5, fontWeight: 700, fill: "rgba(16,31,54,0.55)", letterSpacing: 1.5, style: { textRendering: "geometricPrecision" } }, "三豊運輸"),
+      h("rect", { x: 0, y: 8, width: 122, height: 66, rx: 2, fill: "none", stroke: ink, strokeWidth: 2.6 }),
+      R(-1.4, 15.5, 2.8, 5.2, D.truckSteel, 0.6), R(-1.4, 36.5, 2.8, 5.2, D.truckSteel, 0.6), R(-1.4, 54, 2.8, 5.2, D.truckSteel, 0.6)   // door hinges
+    ];
+    // the near rear door, drawn fully open (hinge at x 0, reaching 24 to the right) and flipped behind the box by its group
+    art.door = [
+      R(0, 13, 24, 58, D.truckBoxShade, 1.2),
+      R(2, 15, 20, 54, D.truckDoor),
+      R(7.4, 13, 1.8, 58, D.truckSteel), R(16, 13, 1.8, 58, D.truckSteel),               // lock rods
+      R(5.8, 45, 5, 2.6, D.truckFrame, 1.2), R(14.4, 45, 5, 2.6, D.truckFrame, 1.2),     // their handles
+      R(0, 16.6, 6, 2.2, D.truckSteelShade), R(0, 38.2, 6, 2.2, D.truckSteelShade), R(0, 57.2, 6, 2.2, D.truckSteelShade),
+      h("rect", { x: 0, y: 13, width: 24, height: 58, rx: 1.2, fill: "none", stroke: ink, strokeWidth: 1.6 })
+    ];
+    // the body, part 2: the cab and everything on it
+    var shell = "M126,80 L126,26.6 Q126,24.6 128,24.6 L160,24 Q165.4,24 167.2,27.6 L173.4,45.2 Q174.8,46.4 174.8,48.4 L174.8,78 Q174.8,80 172.8,80 L161.2,80 A13.2,13.2 0 0 0 138.8,80 Z";
+    art.frontB = [
+      R(122.8, 29, 2.6, 48, D.truckFrame),                                               // engine air intake behind the cab
+      R(122, 25.4, 4.2, 4.8, D.truckSteelShade, 1.4),
+      h("path", { d: shell, fill: D.truckCab }),
+      h("path", { d: "M127.3,27.6 L127.3,26.6 Q127.3,25.9 128.2,25.9 L160,25.3 Q163.9,25.3 165.5,27.6 Z", fill: D.truckCabLit }),   // roof edge in the sun
+      R(127.3, 27.6, 2.2, 33.4, D.truckCabShade),                                        // back wall, away from the sun
+      h("path", { d: "M127.3,61 L173.5,61 L173.5,78.7 L160.3,78.7 A13.2,13.2 0 0 0 139.7,78.7 L127.3,78.7 Z", fill: D.truckCabShade }),   // lower body, turned under
+      R(172.2, 48.6, 1.4, 12.4, D.truckCabLit),                                          // front corner catching the sun
+      h("path", { d: arcBand(150, 87, 13.2, 15, -148, -32), fill: D.truckFrame }),        // wheel-arch lip
+      h("path", { d: "M164.7,28.7 L167.1,28.1 L173,45 L169.7,45 Z", fill: D.truckGlass }),      // the windscreen, seen from its edge
+      h("path", { d: "M139.5,29.2 L161.6,29.2 L167.2,45 L139.5,45 Z", fill: D.truckGlass }),    // door window
+      h("path", { d: "M146.5,29.2 L154,29.2 L149,45 L141.5,45 Z", fill: D.truckGlassLit }),
+      h("path", { d: "M139.5,29.2 L161.6,29.2 L167.2,45 L139.5,45 Z", fill: "none", stroke: ink, strokeWidth: 1.4, strokeLinejoin: "round" }),
+      h("path", { d: "M137.4,27.4 L137.4,70.8 L168.8,70.8 L168.8,47.6", fill: "none", stroke: ink, strokeWidth: 1.4, strokeLinejoin: "round", opacity: 0.75 }),   // door seam
+      R(140, 50.6, 6.4, 2.4, ink, 1.2),                                                  // door handle
+      h("rect", { x: 156.6, y: 51.6, width: 8.6, height: 7.4, rx: 1.2, fill: D.truckGlass, stroke: ink, strokeWidth: 1.3 }),   // safety window, kerb side
+      h("path", { d: "M159.4,52.3 L162.4,52.3 L160.4,58.3 L157.4,58.3 Z", fill: D.truckGlassLit }),
+      R(131.4, 38, 1.8, 14, D.truckSteelLit, 0.9),                                       // grab handle
+      h("path", { d: shell, fill: "none", stroke: ink, strokeWidth: 2.4, strokeLinejoin: "round" }),
+      h("line", { x1: 173.9, y1: 46.2, x2: 171.4, y2: 38.6, stroke: ink, strokeWidth: 1.5, strokeLinecap: "round" }),   // wiper at rest
+      // roof air deflector
+      h("path", { d: "M128.4,24.6 L128.4,11 Q128.4,9.4 130.2,9.5 C146,10.6 158.5,15.4 164.6,24.2 Z", fill: D.truckCab }),
+      h("path", { d: "M130.6,10.9 C145.6,12 157.4,16.2 163,23.4 L160.2,23.4 C154.8,17.8 144.8,14.3 130.6,13.4 Z", fill: D.truckCabLit }),
+      h("path", { d: "M129.7,23.5 L129.7,16.6 L147,23.5 Z", fill: D.truckCabShade }),
+      h("path", { d: "M128.4,24.6 L128.4,11 Q128.4,9.4 130.2,9.5 C146,10.6 158.5,15.4 164.6,24.2 Z", fill: "none", stroke: ink, strokeWidth: 2, strokeLinejoin: "round" }),
+      // lamps and bumper
+      R(170.6, 56.8, 4.8, 3.2, D.marker, 1),                                             // turn signal
+      h("rect", { x: 170.6, y: 60.6, width: 4.8, height: 5.6, rx: 1.2, fill: D.truckLens, stroke: ink, strokeWidth: 1.2 }),   // headlamp
+      R(163.4, 66.6, 14.2, 10.4, D.truckBumper, 2.4),
+      R(164.4, 67.4, 12.2, 2.2, D.truckBumperLit, 1.1),
+      R(164.8, 71.2, 6.4, 3, ink, 1),                                                    // cab step
+      h("circle", { cx: 174.2, cy: 73, r: 1.6, fill: D.truckLens }),                       // fog lamp
+      h("rect", { x: 163.4, y: 66.6, width: 14.2, height: 10.4, rx: 2.4, fill: "none", stroke: ink, strokeWidth: 1.6 }),
+      // mirrors: the tall one on its stays, and the small round one over the front corner
+      h("path", { d: "M165.6,31.6 L173,30 M168.2,43 L173,41.6 M168.2,26.6 L175.6,21.8", fill: "none", stroke: ink, strokeWidth: 1.5, strokeLinecap: "round" }),
+      h("rect", { x: 172.6, y: 27.6, width: 4.4, height: 15.4, rx: 1.8, fill: D.truckFrame, stroke: ink, strokeWidth: 1.3 }),
+      R(173.4, 29.2, 1.5, 12.2, D.truckCabLit, 0.75),
+      h("circle", { cx: 176.6, cy: 21, r: 2.3, fill: D.truckFrame, stroke: ink, strokeWidth: 1.3 }),
+      // rear end: tail lamp and the end of the under-run bar
+      h("rect", { x: -1.8, y: 75.6, width: 3.6, height: 6.4, rx: 1, fill: COLORS.verm, stroke: ink, strokeWidth: 1.2 }),
+      R(-3.4, 83.4, 8, 3.4, D.truckBumper, 1)
+    ];
+    return _truckArt = art;
+  }
   function Truck(p) {
     var x = p.x, y = p.y, scale = p.scale == null ? 1 : p.scale, distance = p.distance || 0,
       doorOpen = p.doorOpen || 0, bob = p.bob || 0, opacity = p.opacity == null ? 1 : p.opacity, moving = !!p.moving;
-    var pitch = p.pitch || 0, run = p.run == null ? (moving ? 1 : 0) : p.run;
-    var wheelR = 11;
-    var rot = ((distance / scale) / wheelR) * (180 / Math.PI);
-    var k = Math.max(0, Math.min(1, doorOpen));
-    var reveal = Math.max(0, (k - 0.06) / 0.94);
-    var r = 1 - Math.pow(1 - reveal, 3);
-    var doorW = 17 * r;
-    var offset = 5 * (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2);
-    var doorX = -doorW - offset;
-    var wheels = [26, 98, 144];
+    var pitch = p.pitch || 0, run = p.run == null ? (moving ? 1 : 0) : p.run, time = p.time;
+    var art = truckArt();
+    var rot = (((distance / scale) / TRUCK_WHEEL_R) * (180 / Math.PI)) % 360;
+    // the near rear door swings out on its hinge to just past square: what shows is its width seen from the side
+    var k = Math.max(0, Math.min(1, doorOpen)), e = k * k * (3 - 2 * k), swing = Math.sin(e * 100 * Math.PI / 180);
+    var body = "translate(0, " + bob + ") rotate(" + pitch.toFixed(3) + " 92 80)";
+    // exhaust from the pipe under the rear overhang: two puffs paced by the road while driving, two slow
+    // wisps paced by the clock while standing; each one swells in and thins out, so none pops on or off
+    var idle = time == null ? 0 : 1 - run;
+    var puff = function (kk, drive) {
+      var a = Math.min(kk * 5, 1) * (1 - kk);
+      return drive
+        ? h("circle", { cx: (12 - kk * 32).toFixed(2), cy: (87 - kk * 15).toFixed(2), r: (1.8 + kk * 5).toFixed(2), fill: DAY.truckExhaust, opacity: (a * 0.62 * run).toFixed(3) })
+        : h("circle", { cx: (12 - kk * 27 - Math.sin(kk * 5) * 1.2).toFixed(2), cy: (87 - kk * kk * 25).toFixed(2), r: (1.4 + kk * 3.8).toFixed(2), fill: DAY.truckExhaust, opacity: (a * 0.7 * idle).toFixed(3) });
+    };
+    var frac = function (v) { return v - Math.floor(v); };
     return h("g", { transform: "translate(" + x + ", " + y + ") scale(" + scale + ") translate(0, -96)", opacity: opacity },
-      h("ellipse", { cx: 90, cy: 101.5, rx: 102, ry: 7, fill: "rgba(10,20,36,0.2)" }),
-      h("ellipse", { cx: 90, cy: 101, rx: 74, ry: 4.6, fill: "rgba(10,20,36,0.22)" }),
-      [26, 98, 144].map(function (wx) { return h("ellipse", { cx: wx, cy: 100.5, rx: 15, ry: 3.2, fill: "rgba(10,20,36,0.3)" }); }),
-      h("g", { transform: "translate(0, " + bob + ") rotate(" + pitch.toFixed(3) + " 92 80)" },
-        h("rect", { x: 0, y: 8, width: 122, height: 66, rx: 3, fill: DAY.truckBox }),
-        h("rect", { x: 1.3, y: 50, width: 119.4, height: 22.7, fill: "rgba(16,31,54,0.06)" }),
-        h("rect", { x: 2.4, y: 9.4, width: 117.2, height: 1.8, rx: 0.9, fill: "rgba(255,255,255,0.95)" }),
-        range(9, function (i) { return h("line", { x1: 10 + i * 12.5, y1: 12, x2: 10 + i * 12.5, y2: 58, stroke: "rgba(16,31,54,0.07)", strokeWidth: 2.5 }); }),
-        h("rect", { x: 0, y: 8, width: 122, height: 5, rx: 2.5, fill: "#f3f1ed" }),
-        h("rect", { x: 0, y: 8, width: 122, height: 66, rx: 3, fill: "none", stroke: COLORS.ink, strokeWidth: 2.6 }),
-        h("rect", { x: 0, y: 61, width: 122, height: 6, fill: COLORS.verm }),
-        h("rect", { x: 0, y: 69.4, width: 122, height: 1.8, fill: COLORS.verm, opacity: 0.55 }),
-        h("rect", { x: 9, y: 20, width: 4, height: 15, fill: COLORS.verm }),
-        h("text", { x: 19, y: 30, fontFamily: FONTS.lat, fontSize: 12.5, fontWeight: 800, fill: COLORS.ink, letterSpacing: 0.4, style: { textRendering: "geometricPrecision" } }, "Sanpou"),
-        h("text", { x: 19, y: 42, fontFamily: FONTS.jp, fontSize: 7.5, fontWeight: 700, fill: "rgba(16,31,54,0.55)", letterSpacing: 1.5, style: { textRendering: "geometricPrecision" } }, "三豊運輸"),
-        h("line", { x1: 3.5, y1: 11, x2: 3.5, y2: 71, stroke: "rgba(16,31,54,0.25)", strokeWidth: 1.6 }),
-        h("line", { x1: 0, y1: 14, x2: 0, y2: 72, stroke: COLORS.ink, strokeWidth: 2.2, opacity: 0.6 - 0.2 * r }),
-        doorW > 0.3 ? h("g", { opacity: r },
-          h("rect", { x: doorX, y: 16, width: doorW, height: 54, rx: 1.5, fill: COLORS.ink2, stroke: COLORS.ink, strokeWidth: 1.6 }),
-          h("line", { x1: doorX + doorW / 2, y1: 20, x2: doorX + doorW / 2, y2: 66, stroke: "rgba(245, 236, 234,0.22)", strokeWidth: 1.4 }),
-          h("line", { x1: 0, y1: 31, x2: doorX + doorW, y2: 31, stroke: COLORS.ink, strokeWidth: 2 }),
-          h("line", { x1: 0, y1: 56, x2: doorX + doorW, y2: 56, stroke: COLORS.ink, strokeWidth: 2 }),
-          h("rect", { x: 1.5, y: 16, width: 9 * r, height: 54, fill: COLORS.recessed, opacity: 0.9 })
-        ) : null,
-        h("rect", { x: -4, y: 74, width: 176, height: 9, rx: 2.5, fill: COLORS.ink2 }),
-        h("rect", { x: 40, y: 84, width: 44, height: 4, rx: 2, fill: "#33425C" }),
-        h("rect", { x: 48, y: 76, width: 26, height: 11, rx: 4, fill: "#3A4A66", stroke: COLORS.ink, strokeWidth: 1.4 }),
-        h("rect", { x: 10, y: 84, width: 7, height: 11, rx: 1, fill: "#1A2434" }),
-        h("rect", { x: 110, y: 84, width: 7, height: 11, rx: 1, fill: "#1A2434" }),
-        h("path", { d: "M122,10 Q138,10 146,22 L146,28 L122,22 Z", fill: COLORS.inkSoft, stroke: COLORS.ink, strokeWidth: 2 }),
-        h("path", { d: "M122,24 L152,24 Q161,24 165,33 L173,52 L173,74 L122,74 Z", fill: COLORS.inkSoft, stroke: COLORS.ink, strokeWidth: 2.4 }),
-        h("path", { d: "M148,29 L156,29 Q160,29 162,34 L168,48 L148,48 Z", fill: "rgba(160,190,220,0.36)", stroke: COLORS.ink, strokeWidth: 1.4 }),
-        h("path", { d: "M152,29 L156,29 L150,48 L148,48 Z", fill: "rgba(245,250,255,0.22)" }),
-        h("path", { d: "M128,30 L144,30 L144,46 L128,46 Z", fill: "rgba(160,190,220,0.28)", stroke: COLORS.ink, strokeWidth: 1.4 }),
-        h("line", { x1: 146, y1: 28, x2: 146, y2: 72, stroke: "rgba(16,31,54,0.55)", strokeWidth: 1.4 }),
-        h("rect", { x: 134, y: 52, width: 9, height: 2.6, rx: 1.3, fill: "rgba(16,31,54,0.6)" }),
-        h("line", { x1: 150, y1: 30, x2: 156, y2: 24, stroke: COLORS.ink, strokeWidth: 1.8 }),
-        h("rect", { x: 154, y: 19, width: 4.5, height: 8, rx: 1.5, fill: COLORS.ink2, stroke: COLORS.ink, strokeWidth: 1 }),
-        h("rect", { x: 166, y: 56, width: 7, height: 10, rx: 1.5, fill: "#2A3850" }),
-        range(3, function (i) { return h("line", { x1: 167, y1: 58.5 + i * 2.6, x2: 172, y2: 58.5 + i * 2.6, stroke: "rgba(245, 236, 234,0.2)", strokeWidth: 1 }); }),
-        h("rect", { x: 120, y: 68, width: 56, height: 8, rx: 3, fill: "#41506B" }),
-        h("rect", { x: 169.5, y: 57, width: 4.5, height: 7, rx: 1.5, fill: COLORS.vermSoft }),
-        h("circle", { cx: 166, cy: 72, r: 2.2, fill: "rgba(235,244,252,0.9)", stroke: "rgba(16,31,54,0.4)", strokeWidth: 0.8 }),
-        h("rect", { x: -0.5, y: 62, width: 2.6, height: 6, rx: 1.2, fill: "#e16347" }),
-        h("ellipse", { cx: -1, cy: 65, rx: 6, ry: 4, fill: "rgba(225, 99, 71,0.22)" }),
-        [0, 45].map(function (off) {
-          var kk = ((((distance + off) % 90) + 90) % 90) / 90;
-          return h("circle", { cx: 118 - kk * 16, cy: 70 - kk * 26, r: 2 + kk * 4.5, fill: "rgba(200,210,225,0.16)", opacity: ((1 - kk) * 0.7 * run).toFixed(3) });
-        }),
-        h("rect", { x: 150, y: 21.5, width: 5, height: 2.6, rx: 1.3, fill: COLORS.vermSoft }),
-        h("rect", { x: 126, y: 5.5, width: 6, height: 2.8, rx: 1.4, fill: COLORS.vermSoft, opacity: 0.8 }),
-        // amber side-marker lenses along the rail (standard on Japanese trucks)
-        [12, 36, 92, 114].map(function (mx) { return h("rect", { x: mx, y: 76.6, width: 5, height: 3.6, rx: 1.2, fill: DAY.marker }); })
-      ),
-      wheels.map(function (cx) {
+      art.shadow,
+      h("g", null,
+        puff(frac(distance / 90), true), puff(frac(distance / 90 + 0.5), true),
+        puff(frac((time || 0) * 0.36), false), puff(frac((time || 0) * 0.36 + 0.5), false)),
+      h("g", { transform: body }, art.back),
+      TRUCK_WHEELS.map(function (cx, i) {
         return h("g", { transform: "translate(" + cx + ", 87)" },
-          h("circle", { r: wheelR, fill: COLORS.ink }),
-          h("path", { d: "M-11,0 A11,11 0 0 1 0,-11", fill: "none", stroke: "rgba(245, 236, 234,0.18)", strokeWidth: 1.6 }),
-          h("circle", { r: 6.6, fill: "#3A475E" }),
-          h("g", { transform: "rotate(" + rot + ")" }, [0, 72, 144, 216, 288].map(function (a) {
-            var rad = (a * Math.PI) / 180;
-            return h("line", { x1: Math.cos(rad) * 2.4, y1: Math.sin(rad) * 2.4, x2: Math.cos(rad) * 5.6, y2: Math.sin(rad) * 5.6, stroke: "#5A6D86", strokeWidth: 1.5 });
-          })),
-          h("circle", { r: 2.4, fill: "#76829B" }),
-          h("circle", { r: 2.4, fill: "none", stroke: "#1A2434", strokeWidth: 0.8 })
-        );
-      })
+          art.tyre, art.face[i],
+          h("g", { transform: "rotate(" + rot.toFixed(2) + ")" }, art.holes[i]),
+          art.hub[i]);
+      }),
+      h("g", { transform: body },
+        art.frontA,
+        h("rect", { x: 0.4, y: 12.6, width: 2.2, height: 58.8, fill: COLORS.recessed, opacity: e.toFixed(3) }),
+        h("g", { transform: "scale(" + (-Math.max(swing, 0.001)).toFixed(4) + ", 1)", opacity: Math.min(1, e * 12).toFixed(3) }, art.door),
+        art.frontB)
     );
   }
 
-  /* ---- Parcel.tsx (bottom-centre anchor; local height renamed h -> hh) */
+  /* ---- Parcel (bottom-centre anchor): a carton with its tape, a hand hole, a label and "this way up" ---- */
+  var _parcelArt = {};
+  function parcelArt(size) {
+    if (_parcelArt[size]) return _parcelArt[size];
+    var w = size, hh = size * 0.88, ink = COLORS.ink, tw = Math.max(5, w * 0.115);
+    var up = function (ax) { var y0 = hh * 0.9, y1 = hh * 0.62, a = w * 0.05; return "M" + ax + "," + y0 + " L" + ax + "," + y1 + " M" + (ax - a) + "," + (y1 + a) + " L" + ax + "," + y1 + " L" + (ax + a) + "," + (y1 + a); };
+    return _parcelArt[size] = h("g", { transform: "translate(" + (-w / 2) + ", " + (-hh) + ")" },
+      h("rect", { x: 0, y: 0, width: w, height: hh, rx: 2, fill: COLORS.paper }),
+      h("rect", { x: 0, y: 0, width: w, height: hh * 0.14, rx: 2, fill: COLORS.white }),                    // top edge in the sun
+      h("rect", { x: 0, y: 0, width: w * 0.12, height: hh, rx: 2, fill: DAY.parcelShade }),                 // the side away from it
+      h("rect", { x: w * 0.19, y: hh * 0.24, width: w * 0.2, height: hh * 0.1, rx: hh * 0.05, fill: COLORS.inkSoft }),   // hand hole
+      h("path", { d: up(w * 0.23) + up(w * 0.35), fill: "none", stroke: ink, strokeWidth: 2.4, strokeLinecap: "round", strokeLinejoin: "round", opacity: 0.45 }),
+      h("rect", { x: w / 2 - tw / 2, y: 0, width: tw, height: hh, fill: COLORS.verm }),                     // tape over the seam
+      h("rect", { x: w / 2 - tw / 2, y: 0, width: tw * 0.28, height: hh, fill: DAY.parcelTapeShade }),
+      h("rect", { x: w * 0.62, y: hh * 0.5, width: w * 0.3, height: hh * 0.38, rx: 1.5, fill: COLORS.white, stroke: "rgba(16,31,54,0.5)", strokeWidth: 1.2 }),   // label
+      h("rect", { x: w * 0.655, y: hh * 0.565, width: w * 0.2, height: 2.6, fill: ink, opacity: 0.6 }),
+      h("rect", { x: w * 0.655, y: hh * 0.66, width: w * 0.13, height: 2.6, fill: ink, opacity: 0.35 }),
+      h("rect", { x: w * 0.655, y: hh * 0.75, width: w * 0.23, height: hh * 0.08, fill: ink, opacity: 0.8 }),
+      h("rect", { x: 0, y: 0, width: w, height: hh, rx: 2, fill: "none", stroke: ink, strokeWidth: 2.2 })
+    );
+  }
   function Parcel(p) {
     var x = p.x, y = p.y, size = p.size == null ? 38 : p.size, squash = p.squash == null ? 1 : p.squash,
       stretch = p.stretch == null ? 1 : p.stretch, rotation = p.rotation || 0, opacity = p.opacity == null ? 1 : p.opacity,
       shadow = p.shadow || 0, shadowY = p.shadowY;
-    var w = size, hh = size * 0.88, sx = squash / stretch, sy = stretch / squash, gy = shadowY == null ? y : shadowY, flapY = hh * 0.3;
+    var w = size, sx = squash / stretch, sy = stretch / squash, gy = shadowY == null ? y : shadowY;
     return h("g", { opacity: opacity },
-      shadow > 0.01 ? h("ellipse", { cx: x, cy: gy + 3, rx: (w * 0.62 + (1 - shadow) * 14) * sx, ry: 4.5, fill: "rgba(10,20,36,0.32)", opacity: shadow }) : null,
-      h("g", { transform: "translate(" + x + ", " + y + ") rotate(" + rotation + ") scale(" + sx + ", " + sy + ")" },
-        h("g", { transform: "translate(" + (-w / 2) + ", " + (-hh) + ")" },
-          h("rect", { x: 0, y: 0, width: w, height: hh, rx: 1.8, fill: COLORS.paper }),
-          h("rect", { x: 0, y: 0, width: w, height: flapY, rx: 1.8, fill: COLORS.white }),
-          h("rect", { x: 0, y: hh * 0.78, width: w, height: hh * 0.22, fill: "rgba(16,31,54,0.05)" }),
-          h("line", { x1: 0, y1: flapY, x2: w, y2: flapY, stroke: "rgba(16,31,54,0.18)", strokeWidth: 1.2 }),
-          h("line", { x1: w / 2, y1: 0, x2: w * 0.2, y2: flapY, stroke: "rgba(16,31,54,0.1)", strokeWidth: 1 }),
-          h("line", { x1: w / 2, y1: 0, x2: w * 0.8, y2: flapY, stroke: "rgba(16,31,54,0.1)", strokeWidth: 1 }),
-          h("line", { x1: 1.5, y1: hh - 6, x2: 6, y2: hh - 1.5, stroke: "rgba(16,31,54,0.12)", strokeWidth: 1 }),
-          h("line", { x1: w - 1.5, y1: hh - 6, x2: w - 6, y2: hh - 1.5, stroke: "rgba(16,31,54,0.12)", strokeWidth: 1 }),
-          h("rect", { x: w / 2 - 2.2, y: 0, width: 4.4, height: hh, fill: COLORS.verm }),
-          h("rect", { x: w / 2 - 2.2, y: 0, width: 1.1, height: hh, fill: "rgba(0,0,0,0.14)" }),
-          h("rect", { x: 0, y: hh * 0.52 - 1.6, width: w, height: 3.2, fill: COLORS.verm, opacity: 0.88 }),
-          h("rect", { x: 0, y: hh * 0.52 - 1.6, width: w, height: 0.9, fill: "rgba(0,0,0,0.12)" }),
-          h("rect", { x: w * 0.62, y: hh * 0.62, width: w * 0.26, height: hh * 0.2, rx: 1, fill: "#FFFFFF", stroke: "rgba(16,31,54,0.4)", strokeWidth: 0.9 }),
-          h("line", { x1: w * 0.65, y1: hh * 0.68, x2: w * 0.84, y2: hh * 0.68, stroke: COLORS.ink, strokeWidth: 1, opacity: 0.55 }),
-          h("line", { x1: w * 0.65, y1: hh * 0.73, x2: w * 0.8, y2: hh * 0.73, stroke: COLORS.ink, strokeWidth: 1, opacity: 0.35 }),
-          h("rect", { x: 0, y: 0, width: w, height: hh, rx: 1.8, fill: "none", stroke: COLORS.ink, strokeWidth: 2.2 })
-        )
-      )
+      h("ellipse", { cx: x, cy: gy + 2.5, rx: (w * 0.6 + (1 - shadow) * 14) * sx, ry: 4.2, fill: DAY.truckShadow, opacity: shadow.toFixed(3) }),
+      h("g", { transform: "translate(" + x + ", " + y + ") rotate(" + rotation + ") scale(" + sx + ", " + sy + ")" }, parcelArt(size))
     );
   }
-
   /* ---- scenery.tsx ---- */
   var SUPPLIER_W = 340, SUPPLIER_DOCK = { x: 252, y: -22 };
   /* The supplier's building, round 2 (same place, width, height and dock point as before).
@@ -1693,9 +1803,9 @@
           Warehouse({ x: WAREHOUSE_X, y: GROUND, scale: B_SCALE, shutterOpen: [shutter(0), shutter(1), shutter(2)], rayPhase: time }),
           [1, 2].map(function (i) {
             var d = departDelta(i), m = truckMotion(function (f) { return departRun(i, f); }, frame);
-            return Truck({ x: dockRear(i) + d, y: GROUND + 34, scale: T_SCALE * 0.97, doorOpen: dockTruckDoor(i), distance: d, bob: m.run * Math.sin(frame * 1.15 + i) * 1.3 + (1 - m.run) * idleBob(i), moving: d > 1, pitch: m.pitch, run: m.run });
+            return Truck({ x: dockRear(i) + d, y: GROUND + 34, scale: T_SCALE * 0.97, doorOpen: dockTruckDoor(i), distance: d, bob: m.run * Math.sin(frame * 1.15 + i) * 1.3 + (1 - m.run) * idleBob(i), moving: d > 1, pitch: m.pitch, run: m.run, time: time + i * 1.7 });
           }),
-          Truck({ x: truck1X, y: GROUND + 34, scale: T_SCALE, doorOpen: door1, distance: truck1X + 400, bob: truck1Bob, moving: truck1Moving, pitch: truck1M.pitch, run: truck1M.run }),
+          Truck({ x: truck1X, y: GROUND + 34, scale: T_SCALE, doorOpen: door1, distance: truck1X + 400, bob: truck1Bob, moving: truck1Moving, pitch: truck1M.pitch, run: truck1M.run, time: time }),
           h("g", { clipPath: "url(#clipT1)" },
             [0, 1, 2].map(function (i) {
               var t0 = T_WORLD.parcels[0] + i * 26, t = clamp01((frame - t0) / (carrySpan - 52));

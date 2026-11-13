@@ -186,6 +186,12 @@ scene changes hidden at the fastest moment of a move.
 
 ## Scene 01 入荷, round 2: what each element becomes (drawn 2026-11-14, to be approved on the style frame)
 
+**Status, 2026-11-14: all rows below are drawn and in `round2/`; shown to the owner as a style frame beside the
+original (`evidence/2026-11-14-scene01-r2/`), waiting for the verdict.** Checked: 0 console errors, no frozen
+frames and no pops across scene 01, drawing 1.98 ms a frame against the original's 2.61 ms in the same run.
+Not done yet: the motion pass. One change beyond the rows: the truck has two axles (twin rear tyres) instead of
+three wheels, as the real medium truck does.
+
 Same shot: the supplier building on the left, the Sanpou truck parked at its dock, the city behind in three
 tiers, Tokyo Tower on the right, the sun top right, the road along the bottom. Every position, size and depth
 plane in `research/scene01-checklist.json` stays. Everything below is redrawn from a blank page, to the level
