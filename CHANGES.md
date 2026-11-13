@@ -3,7 +3,7 @@
 One row per decision: what the original has, what the remake has, why. The owner approves these on a style
 frame. At most five rows per round, so each can be judged. Status: proposed / approved / dropped.
 
-## Scene 01 入荷 (and the shared world: sky, city, street, truck) — round 1, drawn, waiting for the owner
+## Scene 01 入荷 (and the shared world: sky, city, street, truck) — round 1, APPROVED by the owner on 2026-11-13
 
 The frame: `samples/frame-a/js/hero-port-b.js` (side "Style frame" in the viewer). Stills:
 `evidence/2026-11-13-style-frame-01/` (`styleframe-vs-original.jpg` = original left, remake right).
@@ -16,7 +16,7 @@ The frame: `samples/frame-a/js/hero-port-b.js` (side "Style frame" in the viewer
 | 4 | Working detail | Buildings and truck clean but plain | Supplier: drain pipes, roof units with fans and louvres, flue, wall louvre, slatted shutter, steel threshold, yellow/black corner guards, door lamp, a roll cage and a pallet stack. Truck: panel seams, hinges, tank straps, mud-flap bands, rear reflector, mirror stay, tyre walls. Street: kerb joints, manhole covers, guard rail | "Detail that implies a working machine", true to a Japanese depot |
 | 5 | Shade colour | Translucent navy at one strength | Solid tones from the palette, named by job; white shades into periwinkle | Clean, consistent colour in every scene |
 
-Also changed while drawing (not in the five rows; each needs the owner's yes or no):
+Also changed while drawing (not in the five rows; shown to the owner and approved with the frame):
 - the supplier building is a clearly stronger blue than before (third party reads blue, Sanpou reads white);
 - the truck's tail-lamp glow is off (lamps off by day);
 - scene 03's foreground band uses the same dark navy, so 02 to 03 does not jump;
@@ -25,8 +25,7 @@ Also changed while drawing (not in the five rows; each needs the owner's yes or 
 Until their own rounds, scenes 03 and 05 inherit the new clouds, city shading and truck but have no light shafts
 or big cumulus yet, so the film is uneven between scenes.
 
-Open questions for the owner: the stronger blue of the supplier; the big cumulus on the left; the dark navy
-guard rail at the bottom; the farthest buildings without windows.
+The approved look now lives in `remake/js/hero-port-b.js` (copied from `samples/frame-a/`).
 
 Not changed in this round: sky colours (the July family stays), the sun's place, building shapes and places,
 the truck's design and lettering, Tokyo Tower, timings and motion.

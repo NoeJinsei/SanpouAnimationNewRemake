@@ -171,8 +171,127 @@
     cityDeep: "#a9bcd3", cityDeepTop: "#bccbde", cityWin: "rgba(236,243,250,0.5)",
     cityBack: ["#7089b1", "#7b93ba", "#65809f"], cityBackCap: "#57709a",
     cityFront: ["#5c78a5", "#66819f", "#516d9a"], cityFrontCap: "#43608c",
-    office: "#eef3f8"
+    office: "#eef3f8",
+
+    /* ---- remake, round 1 (CHANGES.md rows 1-5). One sun, top right. Every lit surface has three tones,
+       named by job: light (top or sun side), base, shade. A cast shadow is a flat shape that shows the
+       surface's shade tone; shade is the base pushed toward navy blue (shadeInk), white shades to periwinkle. */
+    shadeInk: "#263f80", stepShade: 0.25, stepLit: 0.28,
+    // depth: how far each city tier is mixed toward the sky behind it (the street is not mixed at all)
+    skyBehind: "#bfe0f5", depthFar: 0.34, depthMid: 0.2,
+    // sky: three light shafts, plain white
+    shaft: "#ffffff", shaftK: [0.1, 0.12, 0.085],
+    // clouds: pure white lobes with one shade copy on the side away from the sun; the far bank sits in the haze
+    cloudEdge: "#b4caef", bank: "#f6f9fe", bankEdge: "#c2d5f1",
+    // deep tier: silhouettes only
+    deepLit: "#dce8f4", deepShade: "#bdd0e6",
+    // window glass in shade (city tiers and the street)
+    glassShade: "#a3bfe0", farGlassShade: "#adcae7", warmShade: "#dcbd8c",
+    // the supplier (a third party: blue-grey), the strongest block in the picture
+    supLit: "#90acd5", supWall: "#587cb1", supShade: "#446397", supDeep: "#375081", supInk: "#22325a",
+    supFrame: "#3b5187", supFrameShade: "#2f4273", supGlass: "#cfe4f6", supGlint: "#f2f8fe",
+    supWarmGlint: "#ffecc2",
+    supSign: "#f2f6fb", supSignShade: "#c9d7ee", supBar: "#5f7aa8", supBar2: "#93a8cb", supBarShade: "#4c6696", supBar2Shade: "#7b93bd",
+    shutter: "#b7c6e0", shutterLine: "#93a7cb", shutterShade: "#8a9fc8", shutterLineShade: "#7087b5",
+    sideDoor: "#405a93", sideDoorShade: "#324a80",
+    roofSlab: "#1C2840", roofSlabLit: "#3a4e7c", roofUnit: "#34466c", roofUnitLit: "#566c9e", roofUnitShade: "#243152", roofFan: "#93a8cf",
+    awning: "#2a3a5e", awningLit: "#4a6090",
+    pipe: "#89a3d1", pipeLit: "#b7c9e8", pipeShade: "#6c88bd", pipeClip: "#3f5890",
+    steel: "#d5deed", steelShade: "#9eb0d0", rubber: "#16203a", rubberLit: "#33436a",
+    hazard: "#f2c230", hazardInk: "#1c2840", pallet: "#3f63aa", palletLit: "#5f82c4",
+    crate: "#c5cfe1", crateLit: "#e0e6f1", paperShade: "#dde5f5",
+    // the street: contact and cast shadows are the ground's own colour one tone down
+    walkShade: "#a1a9b8", curbJoint: "#7a8595", roadShade: "#282e37", manhole: "#5b646f", manholeRing: "#2c323a",
+    poleLit: "#a3b5ce", poleShade: "#64799b", vendShade: "#d3dcea", vendBlueShade: "#2f5f9c",
+    // foreground guard rail: the darkest band, it frames the bottom of the picture
+    fgBand: "#19233c", fgBandLit: "#31436a", fgRail: "#30426b", fgRailLit: "#566c9c", fgPost: "#111a30",
+    // truck: the white box shades into periwinkle, the cab has three navy tones, glass reflects the sky
+    boxLit: "#ffffff", boxShade: "#dde5f6", boxDeep: "#c3d0eb", boxSeam: "#e1e8f5",
+    cabLit: "#3b5179", cabShade: "#17233b", cabGlass: "#6f90bc", cabGlint: "#b9d0ec",
+    chassisLit: "#34466b", tankLit: "#5c719c", tyreWall: "#2a3a58", rim: "#46566f", rimLit: "#8d9db8", rimSpoke: "#6c7f9b", rimHub: "#8a98b0"
   };
+  /* colour and geometry helpers for the flat shading */
+  function hexRgb(c) { return [parseInt(c.substr(1, 2), 16), parseInt(c.substr(3, 2), 16), parseInt(c.substr(5, 2), 16)]; }
+  function mixHex(a, b, t) {
+    var A = hexRgb(a), B = hexRgb(b), o = "#";
+    for (var i = 0; i < 3; i++) { var v = Math.round(A[i] + (B[i] - A[i]) * t).toString(16); o += v.length < 2 ? "0" + v : v; }
+    return o;
+  }
+  // a colour family with its light and shade tones attached (family.lit[i], family.shade[i])
+  function ramp(arr) {
+    arr.lit = arr.map(function (c) { return mixHex(c, "#ffffff", DAY.stepLit); });
+    arr.shade = arr.map(function (c) { return mixHex(c, DAY.shadeInk, DAY.stepShade); });
+    return arr;
+  }
+  var toSky = function (k) { return function (c) { return mixHex(c, DAY.skyBehind, k); }; };
+  DAY.far = ramp(DAY.far.map(toSky(DAY.depthFar))); DAY.farCap = toSky(DAY.depthFar)(DAY.farCap);
+  DAY.mid = ramp(DAY.mid.map(toSky(DAY.depthMid))); DAY.midCap = toSky(DAY.depthMid)(DAY.midCap);
+  ramp(DAY.cityBack); ramp(DAY.cityFront);
+
+  /* One light for all scenes: the sun is top right, so lit sides face right, shade sides face left and every
+     cast-shadow edge runs down-left at SUN_DEG below the horizontal (the light shafts fan around that angle). */
+  var SUN_DEG = 40, SUN_COT = 1 / Math.tan(SUN_DEG * Math.PI / 180);
+  function r2(v) { return Math.round(v * 100) / 100; }
+  // Sutherland-Hodgman: a polygon cut to a rectangle, so a shadow can show each surface's own shade tone
+  function clipPoly(poly, x0, y0, x1, y1) {
+    var cut = function (pts, ax, lim, keepGreater) {
+      var out = [], n = pts.length;
+      for (var i = 0; i < n; i++) {
+        var a = pts[i], b = pts[(i + 1) % n];
+        var ina = keepGreater ? a[ax] >= lim : a[ax] <= lim, inb = keepGreater ? b[ax] >= lim : b[ax] <= lim;
+        if (ina) out.push(a);
+        if (ina !== inb) { var t = (lim - a[ax]) / (b[ax] - a[ax]); out.push([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]); }
+      }
+      return out;
+    };
+    var p = cut(poly, 0, x0, true); p = cut(p, 0, x1, false); p = cut(p, 1, y0, true); p = cut(p, 1, y1, false);
+    return p;
+  }
+  // path strings for batching many shapes into one node; all wind the same way (clockwise on screen), so
+  // shapes that overlap inside one path join instead of cutting holes
+  function polyD(p) {
+    if (!p || p.length < 3) return "";
+    var d = "", n = p.length, area = 0, i;
+    for (i = 0; i < n; i++) area += p[i][0] * p[(i + 1) % n][1] - p[(i + 1) % n][0] * p[i][1];
+    if (Math.abs(area) < 0.02) return "";
+    for (i = 0; i < n; i++) { var q = area > 0 ? p[i] : p[n - 1 - i]; d += (i ? "L" : "M") + r2(q[0]) + "," + r2(q[1]); }
+    return d + "z";
+  }
+  function rectD(x, y, w, hh) { return "M" + r2(x) + "," + r2(y) + "h" + r2(w) + "v" + r2(hh) + "h" + r2(-w) + "z"; }
+  function circD(cx, cy, r) { return "M" + r2(cx - r) + "," + r2(cy) + "a" + r2(r) + "," + r2(r) + " 0 1,1 " + r2(2 * r) + ",0a" + r2(r) + "," + r2(r) + " 0 1,1 " + r2(-2 * r) + ",0z"; }
+  // a rectangle with rounded corners, same winding
+  function rrectD(x, y, w, hh, r) {
+    r = Math.min(r, w / 2, hh / 2);
+    return "M" + r2(x + r) + "," + r2(y) + "h" + r2(w - 2 * r) + "a" + r + "," + r + " 0 0,1 " + r + "," + r + "v" + r2(hh - 2 * r) + "a" + r + "," + r + " 0 0,1 " + (-r) + "," + r +
+      "h" + r2(2 * r - w) + "a" + r + "," + r + " 0 0,1 " + (-r) + "," + (-r) + "v" + r2(2 * r - hh) + "a" + r + "," + r + " 0 0,1 " + r + "," + (-r) + "z";
+  }
+  // a shadow band between two lines running down-left at the sun's angle; u = the x where a line meets y = top
+  function sunBand(u0, u1, top, bottom) { var s = (bottom - top) * SUN_COT; return [[u0, top], [u1, top], [u1 - s, bottom], [u0 - s, bottom]]; }
+  // the shadow a ledge throws on the wall it sits on: its rectangle swept down by `drop` along the sun's angle
+  function sweepShadow(x, y, w, hh, drop) { var dx = drop * SUN_COT; return [[x, y], [x + w, y], [x + w, y + hh], [x + w - dx, y + hh + drop], [x - dx, y + hh + drop], [x - dx, y + drop]]; }
+  // a level line from x0 to x1 at height y, split into the parts in the light and the parts inside the shadows
+  function splitLine(shadows, y, x0, x1) {
+    var cuts = [];
+    shadows.forEach(function (sh) {
+      var c = clipPoly(sh, x0, y - 0.05, x1, y + 0.05);
+      if (c.length < 3) return;
+      var lo = Infinity, hi = -Infinity;
+      c.forEach(function (q) { lo = Math.min(lo, q[0]); hi = Math.max(hi, q[0]); });
+      cuts.push([lo, hi]);
+    });
+    cuts.sort(function (m, n) { return m[0] - n[0]; });
+    var lit = "", shade = "", at = x0;
+    cuts.forEach(function (c) {
+      if (c[1] <= at) return;
+      var from = Math.max(c[0], at);
+      if (from > at + 0.05) lit += "M" + r2(at) + "," + y + "H" + r2(from);
+      shade += "M" + r2(from) + "," + y + "H" + r2(c[1]);
+      at = c[1];
+    });
+    if (at < x1 - 0.05) lit += "M" + r2(at) + "," + y + "H" + r2(x1);
+    return { lit: lit, shade: shade };
+  }
+
   // the sun's glow as a true radial gradient; ids are per scene (stages coexist in a dissolve)
   function GlowDef(id, rgb, a) {
     return h("radialGradient", { id: id },
@@ -271,6 +390,13 @@
     return { pitch: 1.6 * (e2 - 1) / (e2 + 1), run: clamp01(speed / 3) };
   }
 
+  /* Remake: the truck keeps its design, proportions and lettering. New: flat three-tone shading for the one
+     light (the white box shades into periwinkle on its lower band and rear post, the cab has a sunlit edge
+     and a shade band, glass reflects the sky), one flat contact shadow on the road instead of soft ellipses,
+     and working detail: panel seams, rear door hinges, tank straps, mud-flap bands, a rear reflector, mirror
+     stays, tyre walls and a sunlit rim. Lamps are off by day, so the tail lamp no longer glows. */
+  var TRUCK_SEAMS = range(9, function (i) { return "M" + (10 + i * 12.5) + ",13.6V58"; }).join("");
+  var WHEEL_SPOKES = [0, 72, 144, 216, 288].map(function (a) { var rad = (a * Math.PI) / 180; return "M" + r2(Math.cos(rad) * 2.4) + "," + r2(Math.sin(rad) * 2.4) + "L" + r2(Math.cos(rad) * 5.6) + "," + r2(Math.sin(rad) * 5.6); }).join("");
   function Truck(p) {
     var x = p.x, y = p.y, scale = p.scale == null ? 1 : p.scale, distance = p.distance || 0,
       doorOpen = p.doorOpen || 0, bob = p.bob || 0, opacity = p.opacity == null ? 1 : p.opacity, moving = !!p.moving;
@@ -285,51 +411,61 @@
     var doorX = -doorW - offset;
     var wheels = [26, 98, 144];
     return h("g", { transform: "translate(" + x + ", " + y + ") scale(" + scale + ") translate(0, -96)", opacity: opacity },
-      h("ellipse", { cx: 90, cy: 101.5, rx: 102, ry: 7, fill: "rgba(10,20,36,0.2)" }),
-      h("ellipse", { cx: 90, cy: 101, rx: 74, ry: 4.6, fill: "rgba(10,20,36,0.22)" }),
-      [26, 98, 144].map(function (wx) { return h("ellipse", { cx: wx, cy: 100.5, rx: 15, ry: 3.2, fill: "rgba(10,20,36,0.3)" }); }),
+      // one flat contact shadow, falling down-left
+      h("path", { d: "M-5,96.8H171L166.5,103H-11.5Z", fill: DAY.roadShade }),
       h("g", { transform: "translate(0, " + bob + ") rotate(" + pitch.toFixed(3) + " 92 80)" },
         h("rect", { x: 0, y: 8, width: 122, height: 66, rx: 3, fill: DAY.truckBox }),
-        h("rect", { x: 1.3, y: 50, width: 119.4, height: 22.7, fill: "rgba(16,31,54,0.06)" }),
-        h("rect", { x: 2.4, y: 9.4, width: 117.2, height: 1.8, rx: 0.9, fill: "rgba(255,255,255,0.95)" }),
-        range(9, function (i) { return h("line", { x1: 10 + i * 12.5, y1: 12, x2: 10 + i * 12.5, y2: 58, stroke: "rgba(16,31,54,0.07)", strokeWidth: 2.5 }); }),
-        h("rect", { x: 0, y: 8, width: 122, height: 5, rx: 2.5, fill: "#f3f1ed" }),
+        h("path", { d: "M1.3,50H120.7V72.7H1.3ZM1.3,13H5.4V50H1.3Z", fill: DAY.boxShade }),
+        h("path", { d: TRUCK_SEAMS, stroke: DAY.boxSeam, strokeWidth: 1.5, fill: "none" }),
+        h("rect", { x: 0, y: 8, width: 122, height: 5, rx: 2.5, fill: DAY.boxLit }),
+        h("rect", { x: 1.3, y: 12.4, width: 119.4, height: 1.3, fill: DAY.boxDeep }),
         h("rect", { x: 0, y: 8, width: 122, height: 66, rx: 3, fill: "none", stroke: COLORS.ink, strokeWidth: 2.6 }),
         h("rect", { x: 0, y: 61, width: 122, height: 6, fill: COLORS.verm }),
         h("rect", { x: 0, y: 69.4, width: 122, height: 1.8, fill: COLORS.verm, opacity: 0.55 }),
         h("rect", { x: 9, y: 20, width: 4, height: 15, fill: COLORS.verm }),
         h("text", { x: 19, y: 30, fontFamily: FONTS.lat, fontSize: 12.5, fontWeight: 800, fill: COLORS.ink, letterSpacing: 0.4, style: { textRendering: "geometricPrecision" } }, "Sanpou"),
         h("text", { x: 19, y: 42, fontFamily: FONTS.jp, fontSize: 7.5, fontWeight: 700, fill: "rgba(16,31,54,0.55)", letterSpacing: 1.5, style: { textRendering: "geometricPrecision" } }, "三豊運輸"),
-        h("line", { x1: 3.5, y1: 11, x2: 3.5, y2: 71, stroke: "rgba(16,31,54,0.25)", strokeWidth: 1.6 }),
         h("line", { x1: 0, y1: 14, x2: 0, y2: 72, stroke: COLORS.ink, strokeWidth: 2.2, opacity: 0.6 - 0.2 * r }),
-        doorW > 0.3 ? h("g", { opacity: r },
+        // rear door hinges
+        h("path", { d: "M-1.8,18h3.6v5h-3.6zM-1.8,38.5h3.6v5h-3.6zM-1.8,59h3.6v5h-3.6z", fill: COLORS.ink2 }),
+        h("g", { opacity: r },
           h("rect", { x: doorX, y: 16, width: doorW, height: 54, rx: 1.5, fill: COLORS.ink2, stroke: COLORS.ink, strokeWidth: 1.6 }),
-          h("line", { x1: doorX + doorW / 2, y1: 20, x2: doorX + doorW / 2, y2: 66, stroke: "rgba(245, 236, 234,0.22)", strokeWidth: 1.4 }),
+          h("line", { x1: doorX + doorW / 2, y1: 20, x2: doorX + doorW / 2, y2: 66, stroke: DAY.chassisLit, strokeWidth: 1.4 }),
           h("line", { x1: 0, y1: 31, x2: doorX + doorW, y2: 31, stroke: COLORS.ink, strokeWidth: 2 }),
           h("line", { x1: 0, y1: 56, x2: doorX + doorW, y2: 56, stroke: COLORS.ink, strokeWidth: 2 }),
           h("rect", { x: 1.5, y: 16, width: 9 * r, height: 54, fill: COLORS.recessed, opacity: 0.9 })
-        ) : null,
+        ),
+        // chassis: rail with a sunlit top, side guard, strapped tank, mud flaps, rear reflector
         h("rect", { x: -4, y: 74, width: 176, height: 9, rx: 2.5, fill: COLORS.ink2 }),
+        h("rect", { x: -2.5, y: 74.5, width: 173, height: 1.6, fill: DAY.chassisLit }),
         h("rect", { x: 40, y: 84, width: 44, height: 4, rx: 2, fill: "#33425C" }),
         h("rect", { x: 48, y: 76, width: 26, height: 11, rx: 4, fill: "#3A4A66", stroke: COLORS.ink, strokeWidth: 1.4 }),
-        h("rect", { x: 10, y: 84, width: 7, height: 11, rx: 1, fill: "#1A2434" }),
-        h("rect", { x: 110, y: 84, width: 7, height: 11, rx: 1, fill: "#1A2434" }),
+        h("rect", { x: 51, y: 77.4, width: 20, height: 2, rx: 1, fill: DAY.tankLit }),
+        h("path", { d: "M55.5,76.6V86.4M66.5,76.6V86.4", stroke: COLORS.ink, strokeWidth: 1.3, fill: "none" }),
+        h("path", { d: "M10,84h7v11h-7zM110,84h7v11h-7z", fill: "#1A2434" }),
+        h("path", { d: "M10,90.6h7v1.7h-7zM110,90.6h7v1.7h-7z", fill: DAY.chassisLit }),
+        h("rect", { x: -3.4, y: 76.6, width: 4.6, height: 3.4, rx: 1, fill: COLORS.vermSoft }),
+        // cab: deflector and body with a sunlit edge and a shade band, sky in the glass
         h("path", { d: "M122,10 Q138,10 146,22 L146,28 L122,22 Z", fill: COLORS.inkSoft, stroke: COLORS.ink, strokeWidth: 2 }),
-        h("path", { d: "M122,24 L152,24 Q161,24 165,33 L173,52 L173,74 L122,74 Z", fill: COLORS.inkSoft, stroke: COLORS.ink, strokeWidth: 2.4 }),
-        h("path", { d: "M148,29 L156,29 Q160,29 162,34 L168,48 L148,48 Z", fill: "rgba(160,190,220,0.36)", stroke: COLORS.ink, strokeWidth: 1.4 }),
-        h("path", { d: "M152,29 L156,29 L150,48 L148,48 Z", fill: "rgba(245,250,255,0.22)" }),
-        h("path", { d: "M128,30 L144,30 L144,46 L128,46 Z", fill: "rgba(160,190,220,0.28)", stroke: COLORS.ink, strokeWidth: 1.4 }),
-        h("line", { x1: 146, y1: 28, x2: 146, y2: 72, stroke: "rgba(16,31,54,0.55)", strokeWidth: 1.4 }),
-        h("rect", { x: 134, y: 52, width: 9, height: 2.6, rx: 1.3, fill: "rgba(16,31,54,0.6)" }),
-        h("line", { x1: 150, y1: 30, x2: 156, y2: 24, stroke: COLORS.ink, strokeWidth: 1.8 }),
+        h("path", { d: "M122,24 L152,24 Q161,24 165,33 L173,52 L173,74 L122,74 Z", fill: COLORS.inkSoft }),
+        h("path", { d: "M123.2,60H171.8V72.8H123.2Z", fill: DAY.cabShade }),
+        h("path", { d: "M124.4,12 Q137,12.4 143.8,21.6M124.4,26.2 L152,26.2 Q159.6,26.4 163,33.8 L170.6,51.6", stroke: DAY.cabLit, strokeWidth: 1.8, fill: "none", strokeLinecap: "round" }),
+        h("path", { d: "M122,24 L152,24 Q161,24 165,33 L173,52 L173,74 L122,74 Z", fill: "none", stroke: COLORS.ink, strokeWidth: 2.4 }),
+        h("path", { d: "M148,29 L156,29 Q160,29 162,34 L168,48 L148,48 Z", fill: DAY.cabGlass, stroke: COLORS.ink, strokeWidth: 1.4 }),
+        h("path", { d: "M152,29.7 L156.4,29.7 L151.2,47.3 L148.7,47.3 L148.7,40.6 Z", fill: DAY.cabGlint }),
+        h("path", { d: "M128,30 L144,30 L144,46 L128,46 Z", fill: DAY.cabGlass, stroke: COLORS.ink, strokeWidth: 1.4 }),
+        h("path", { d: "M134.4,30.7 L139.6,30.7 L134.6,45.3 L129.4,45.3 Z", fill: DAY.cabGlint }),
+        h("line", { x1: 146, y1: 28, x2: 146, y2: 72, stroke: COLORS.ink, strokeWidth: 1.4, opacity: 0.55 }),
+        h("rect", { x: 134, y: 52, width: 9, height: 2.6, rx: 1.3, fill: DAY.cabShade }),
+        h("path", { d: "M150,30 L156,24M150.4,36.5 L156.6,27", stroke: COLORS.ink, strokeWidth: 1.8, fill: "none" }),
         h("rect", { x: 154, y: 19, width: 4.5, height: 8, rx: 1.5, fill: COLORS.ink2, stroke: COLORS.ink, strokeWidth: 1 }),
         h("rect", { x: 166, y: 56, width: 7, height: 10, rx: 1.5, fill: "#2A3850" }),
-        range(3, function (i) { return h("line", { x1: 167, y1: 58.5 + i * 2.6, x2: 172, y2: 58.5 + i * 2.6, stroke: "rgba(245, 236, 234,0.2)", strokeWidth: 1 }); }),
+        h("path", { d: "M167,58.5h5M167,61.1h5M167,63.7h5", stroke: DAY.cabLit, strokeWidth: 1, fill: "none" }),
         h("rect", { x: 120, y: 68, width: 56, height: 8, rx: 3, fill: "#41506B" }),
+        h("rect", { x: 122.5, y: 68.8, width: 51, height: 1.7, rx: 0.85, fill: DAY.tankLit }),
         h("rect", { x: 169.5, y: 57, width: 4.5, height: 7, rx: 1.5, fill: COLORS.vermSoft }),
         h("circle", { cx: 166, cy: 72, r: 2.2, fill: "rgba(235,244,252,0.9)", stroke: "rgba(16,31,54,0.4)", strokeWidth: 0.8 }),
         h("rect", { x: -0.5, y: 62, width: 2.6, height: 6, rx: 1.2, fill: "#e16347" }),
-        h("ellipse", { cx: -1, cy: 65, rx: 6, ry: 4, fill: "rgba(225, 99, 71,0.22)" }),
         [0, 45].map(function (off) {
           var kk = ((((distance + off) % 90) + 90) % 90) / 90;
           return h("circle", { cx: 118 - kk * 16, cy: 70 - kk * 26, r: 2 + kk * 4.5, fill: "rgba(200,210,225,0.16)", opacity: ((1 - kk) * 0.7 * run).toFixed(3) });
@@ -337,19 +473,16 @@
         h("rect", { x: 150, y: 21.5, width: 5, height: 2.6, rx: 1.3, fill: COLORS.vermSoft }),
         h("rect", { x: 126, y: 5.5, width: 6, height: 2.8, rx: 1.4, fill: COLORS.vermSoft, opacity: 0.8 }),
         // amber side-marker lenses along the rail (standard on Japanese trucks)
-        [12, 36, 92, 114].map(function (mx) { return h("rect", { x: mx, y: 76.6, width: 5, height: 3.6, rx: 1.2, fill: DAY.marker }); })
+        h("path", { d: [12, 36, 92, 114].map(function (mx) { return rrectD(mx, 76.6, 5, 3.6, 1.2); }).join(""), fill: DAY.marker })
       ),
       wheels.map(function (cx) {
         return h("g", { transform: "translate(" + cx + ", 87)" },
           h("circle", { r: wheelR, fill: COLORS.ink }),
-          h("path", { d: "M-11,0 A11,11 0 0 1 0,-11", fill: "none", stroke: "rgba(245, 236, 234,0.18)", strokeWidth: 1.6 }),
-          h("circle", { r: 6.6, fill: "#3A475E" }),
-          h("g", { transform: "rotate(" + rot + ")" }, [0, 72, 144, 216, 288].map(function (a) {
-            var rad = (a * Math.PI) / 180;
-            return h("line", { x1: Math.cos(rad) * 2.4, y1: Math.sin(rad) * 2.4, x2: Math.cos(rad) * 5.6, y2: Math.sin(rad) * 5.6, stroke: "#5A6D86", strokeWidth: 1.5 });
-          })),
-          h("circle", { r: 2.4, fill: "#76829B" }),
-          h("circle", { r: 2.4, fill: "none", stroke: "#1A2434", strokeWidth: 0.8 })
+          h("circle", { r: 8.7, fill: "none", stroke: DAY.tyreWall, strokeWidth: 1.5 }),
+          h("circle", { r: 6.6, fill: DAY.rim }),
+          h("path", { d: "M0,-5.8 A5.8,5.8 0 0 1 5.8,0", fill: "none", stroke: DAY.rimLit, strokeWidth: 1.6, strokeLinecap: "round" }),
+          h("path", { d: WHEEL_SPOKES, transform: "rotate(" + rot + ")", stroke: DAY.rimSpoke, strokeWidth: 1.5, fill: "none" }),
+          h("circle", { r: 2.4, fill: DAY.rimHub, stroke: DAY.rubber, strokeWidth: 0.8 })
         );
       })
     );
@@ -388,57 +521,161 @@
 
   /* ---- scenery.tsx ---- */
   var SUPPLIER_W = 340, SUPPLIER_DOCK = { x: 252, y: -22 };
+  /* Remake: the supplier keeps its place, footprint and every part (fascia, sign plate, eight windows with
+     the same two warm panes, dock door under its awning, bumpers, the two crates, side door, roof slab and
+     the two roof units). New: one light. `shadows` lists what is in shade on this wall, as shapes in wall
+     coordinates; every surface a shape crosses shows its own shade tone there (lit > wall > shade > deep),
+     cut to the surface in code. Working detail: drain pipes, roof units with fans, a wall louvre, a slatted
+     dock shutter with a steel threshold, striped corner guards, a door lamp, a roll cage and a pallet stack. */
+  var _supMemo = {};
   function SupplierBuilding(p) {
     var x = p.x, y = p.y, scale = p.scale == null ? 1.9 : p.scale;
-    return h("g", { transform: "translate(" + x + ", " + y + ") scale(" + scale + ") translate(0, -278)" },
-      h("ellipse", { cx: 170, cy: 282, rx: 196, ry: 10, fill: "rgba(10,20,36,0.25)" }),
-      h("rect", { x: 0, y: 64, width: 340, height: 214, rx: 5, fill: "#7e94b6", stroke: "#42536e", strokeWidth: 3.4 }),
-      h("rect", { x: 0, y: 64, width: 340, height: 52, rx: 5, fill: "#93a8c4" }),
-      h("line", { x1: 0, y1: 116, x2: 340, y2: 116, stroke: "rgba(16,31,54,0.5)", strokeWidth: 2 }),
-      h("rect", { x: -9, y: 54, width: 358, height: 16, rx: 2.5, fill: COLORS.ink2 }),
-      h("rect", { x: 36, y: 34, width: 66, height: 22, rx: 2, fill: "#33425C", stroke: COLORS.ink, strokeWidth: 2 }),
-      h("rect", { x: 46, y: 26, width: 12, height: 10, fill: "#3D4D6B" }),
-      h("rect", { x: 232, y: 40, width: 84, height: 16, rx: 2, fill: "#33425C", stroke: COLORS.ink, strokeWidth: 2 }),
-      h("rect", { x: 22, y: 78, width: 150, height: 22, rx: 4, fill: "#e9f1f9", stroke: "rgba(22,41,63,0.3)", strokeWidth: 1.4 }),
-      h("rect", { x: 30, y: 85, width: 86, height: 8, rx: 4, fill: "#68809f" }),
-      h("rect", { x: 124, y: 85, width: 38, height: 8, rx: 4, fill: "#8ea4bf" }),
-      [0, 1].map(function (rr) {
-        return [0, 1, 2].map(function (c) {
-          var warm = (rr === 0 && c === 1);
-          return h("g", null,
-            h("rect", { x: 21 + c * 56, y: 125 + rr * 44, width: 48, height: 38, rx: 3, fill: "#54698c" }),
-            h("rect", { x: 24 + c * 56, y: 128 + rr * 44, width: 42, height: 32, rx: 2.5, fill: warm ? DAY.warm : "#cde2f4" }),
-            h("rect", { x: 24 + c * 56, y: 128 + rr * 44, width: 42, height: 13, rx: 2.5, fill: "rgba(255,255,255,0.45)" }),
-            h("line", { x1: 45 + c * 56, y1: 128 + rr * 44, x2: 45 + c * 56, y2: 160 + rr * 44, stroke: "rgba(22,41,63,0.3)", strokeWidth: 1.6 }),
-            h("line", { x1: 24 + c * 56, y1: 144 + rr * 44, x2: 66 + c * 56, y2: 144 + rr * 44, stroke: "rgba(22,41,63,0.22)", strokeWidth: 1.4 })
-          );
-        });
-      }),
-      h("g", null,
-        [206, 262].map(function (wx, wi) {
-          return h("g", null,
-            h("rect", { x: wx - 3, y: 125, width: 48, height: 38, rx: 3, fill: "#54698c" }),
-            h("rect", { x: wx, y: 128, width: 42, height: 32, rx: 2.5, fill: wi === 1 ? DAY.warm : "#cde2f4" }),
-            h("rect", { x: wx, y: 128, width: 42, height: 13, rx: 2.5, fill: "rgba(255,255,255,0.45)" }),
-            h("line", { x1: wx + 21, y1: 128, x2: wx + 21, y2: 160, stroke: "rgba(22,41,63,0.3)", strokeWidth: 1.6 }),
-            h("line", { x1: wx, y1: 144, x2: wx + 42, y2: 144, stroke: "rgba(22,41,63,0.22)", strokeWidth: 1.4 })
-          );
-        })
-      ),
-      h("rect", { x: 206, y: 186, width: 100, height: 92, rx: 2.5, fill: "#6d829f" }),
-      h("rect", { x: 206, y: 186, width: 100, height: 92, rx: 2.5, fill: "none", stroke: "rgba(16,31,54,0.6)", strokeWidth: 2 }),
-      h("rect", { x: 198, y: 176, width: 116, height: 11, rx: 2.5, fill: "#3A4A66" }),
-      h("rect", { x: 198, y: 171, width: 116, height: 6, rx: 3, fill: "#44557A" }),
-      h("rect", { x: 210, y: 270, width: 10, height: 8, rx: 1.5, fill: "#1A2434" }),
-      h("rect", { x: 292, y: 270, width: 10, height: 8, rx: 1.5, fill: "#1A2434" }),
-      h("rect", { x: 246, y: 180, width: 20, height: 5, rx: 2.5, fill: "#c9d2dc" }),
-      h("rect", { x: 216, y: 246, width: 28, height: 30, rx: 1.5, fill: COLORS.paper, stroke: COLORS.ink, strokeWidth: 2 }),
+    var mk = x + "|" + y + "|" + scale;
+    if (_supMemo[mk]) return _supMemo[mk];
+    var D = DAY;
+    var shadows = [
+      sweepShadow(-9, 54, 358, 16, 8),          // under the roof slab
+      sunBand(96, 170, 64, 278),                // one broad band of shade across the sunlit wall
+      sweepShadow(198, 171, 116, 16, 13),       // under the dock awning
+      [[0, 64], [11, 64], [11, 278], [0, 278]], // the shade side of the block
+      [[11, 70], [14, 70], [14, 278], [11, 278]], [[320.4, 70], [323, 70], [323, 278], [320.4, 278]]   // beside the drain pipes
+    ];
+    var shadeOn = function (rects) {
+      var d = "";
+      rects.forEach(function (r) { shadows.forEach(function (sh) { d += polyD(clipPoly(sh, r[0], r[1], r[0] + r[2], r[1] + r[3])); }); });
+      return d;
+    };
+    // windows: [frame x, frame y, warm]
+    var wins = [];
+    [0, 1].forEach(function (rr) { [0, 1, 2].forEach(function (c) { wins.push([21 + c * 56, 125 + rr * 44, rr === 0 && c === 1]); }); });
+    wins.push([203, 125, false], [259, 125, true]);
+    var dFrames = "", dCool = "", dWarm = "", dGlintC = "", dGlintW = "", dBars = "", frameR = [], coolR = [], warmR = [];
+    wins.forEach(function (w) {
+      var fx = w[0], fy = w[1], gx = fx + 3, gy = fy + 3;
+      dFrames += rrectD(fx, fy, 48, 38, 3); frameR.push([fx, fy, 48, 38]);
+      // the sky reflected across the top of the pane
+      var glint = "M" + gx + "," + (gy + 13) + "v-10.5a2.5,2.5 0 0,1 2.5,-2.5h37a2.5,2.5 0 0,1 2.5,2.5v10.5z";
+      if (w[2]) { dWarm += rrectD(gx, gy, 42, 32, 2.5); dGlintW += glint; warmR.push([gx, gy, 42, 32]); }
+      else { dCool += rrectD(gx, gy, 42, 32, 2.5); dGlintC += glint; coolR.push([gx, gy, 42, 32]); }
+      dBars += "M" + (gx + 21) + "," + gy + "v32M" + gx + "," + (gy + 16) + "h42";
+    });
+    // dock shutter slats, split where the awning's shadow ends
+    var slatL = "", slatS = "";
+    [199, 212, 225, 238, 251, 264].forEach(function (sy) { var sp = splitLine(shadows, sy, 206, 306); slatL += sp.lit; slatS += sp.shade; });
+    // striped corner guards at the dock jambs: ink stripes cut to the two posts
+    var guards = [[203, 238, 6, 34], [303, 238, 6, 34]], dGuard = "", dStripe = "";
+    guards.forEach(function (g) {
+      dGuard += rectD(g[0], g[1], g[2], g[3]);
+      for (var k = -1; k < 4; k++) dStripe += polyD(clipPoly([[g[0] - 1, g[1] + 6 + k * 11], [g[0] + g[2] + 1, g[1] + k * 11 - 2], [g[0] + g[2] + 1, g[1] + k * 11 + 3.5], [g[0] - 1, g[1] + 11.5 + k * 11]], g[0], g[1], g[0] + g[2], g[1] + g[3]));
+    });
+    var pipe = function (px) {
+      return [
+        h("rect", { x: px, y: 70, width: 4.6, height: 206, fill: D.pipe }),
+        h("rect", { x: px + 3, y: 70, width: 1.6, height: 206, fill: D.pipeLit }),
+        h("path", { d: shadeOn([[px, 70, 4.6, 206]]), fill: D.pipeShade }),
+        h("path", { d: rectD(px - 1.6, 104, 7.8, 3.4) + rectD(px - 1.6, 164, 7.8, 3.4) + rectD(px - 1.6, 224, 7.8, 3.4) + rectD(px - 1.2, 271, 7, 5.4), fill: D.pipeClip })
+      ];
+    };
+    var fan = function (cx, cy, r) {
+      return [
+        h("circle", { cx: cx, cy: cy, r: r, fill: D.roofUnitShade, stroke: D.roofFan, strokeWidth: 1.6 }),
+        h("path", { d: "M" + cx + "," + (cy - r + 1.2) + "V" + (cy + r - 1.2) + "M" + (cx - r + 1.2) + "," + cy + "H" + (cx + r - 1.2), stroke: D.roofFan, strokeWidth: 1.6, fill: "none" }),
+        h("circle", { cx: cx, cy: cy, r: 1.9, fill: D.roofFan })
+      ];
+    };
+    return _supMemo[mk] = h("g", { transform: "translate(" + x + ", " + y + ") scale(" + scale + ") translate(0, -278)", "data-cache": "supplier-" + mk, "data-box": "-12 22 366 260" },
+      // wall: sunlit fascia, wall, plinth; then the shade each of them receives
+      h("rect", { x: 0, y: 64, width: 340, height: 214, rx: 5, fill: D.supWall }),
+      h("rect", { x: 0, y: 64, width: 340, height: 52, rx: 5, fill: D.supLit }),
+      h("rect", { x: 0, y: 100, width: 340, height: 16, fill: D.supLit }),
+      h("path", { d: "M0,264H340V273a5,5 0 0,1 -5,5H5a5,5 0 0,1 -5,-5Z", fill: D.supShade }),
+      h("path", { d: shadeOn([[0, 64, 340, 52]]) + rrectD(18.6, 80.6, 150, 22, 4), fill: D.supWall }),
+      h("path", { d: shadeOn([[0, 116, 340, 148]]), fill: D.supShade }),
+      h("path", { d: shadeOn([[0, 264, 340, 14]]) + rectD(0, 114.8, 340, 2.4), fill: D.supDeep }),
+      h("rect", { x: 0, y: 64, width: 340, height: 214, rx: 5, fill: "none", stroke: D.supInk, strokeWidth: 3.4 }),
+      // name plate (no lettering: an unbranded supplier)
+      h("rect", { x: 22, y: 78, width: 150, height: 22, rx: 4, fill: D.supSign }),
+      h("path", { d: shadeOn([[22, 78, 150, 22]]), fill: D.supSignShade }),
+      h("rect", { x: 30, y: 85, width: 86, height: 8, rx: 4, fill: D.supBar }),
+      h("rect", { x: 124, y: 85, width: 38, height: 8, rx: 4, fill: D.supBar2 }),
+      h("defs", null, h("clipPath", { id: "wSupBars" }, h("rect", { x: 30, y: 85, width: 86, height: 8, rx: 4 }), h("rect", { x: 124, y: 85, width: 38, height: 8, rx: 4 }))),
+      h("g", { clipPath: "url(#wSupBars)" },
+        h("path", { d: shadeOn([[30, 85, 86, 8]]), fill: D.supBarShade }),
+        h("path", { d: shadeOn([[124, 85, 38, 8]]), fill: D.supBar2Shade })),
+      // wall louvre
+      h("rect", { x: 266, y: 85, width: 38, height: 19, rx: 2, fill: D.supFrame }),
+      h("path", { d: rectD(269.5, 88.4, 31, 2.4) + rectD(269.5, 93.3, 31, 2.4) + rectD(269.5, 98.2, 31, 2.4), fill: D.supLit }),
+      // windows: frame, glass, one diagonal reflection, the shade they receive, glazing bars
+      h("path", { d: dFrames, fill: D.supFrame }),
+      h("path", { d: shadeOn(frameR), fill: D.supFrameShade }),
+      h("path", { d: dCool, fill: D.supGlass }),
+      h("path", { d: dWarm, fill: D.warm }),
+      h("path", { d: dGlintC, fill: D.supGlint }),
+      h("path", { d: dGlintW, fill: D.supWarmGlint }),
+      h("path", { d: shadeOn(coolR), fill: D.glassShade }),
+      h("path", { d: shadeOn(warmR), fill: D.warmShade }),
+      h("path", { d: dBars, stroke: D.supFrame, strokeWidth: 1.7, fill: "none" }),
+      pipe(14), pipe(323),
+      // loading dock: slatted shutter in its frame, steel threshold, corner guards, bumpers, awning with lamp
+      h("rect", { x: 203, y: 183, width: 106, height: 95, fill: D.supDeep }),
+      h("rect", { x: 206, y: 186, width: 100, height: 92, fill: D.shutter }),
+      h("path", { d: shadeOn([[206, 186, 100, 92]]), fill: D.shutterShade }),
+      h("path", { d: slatL, stroke: D.shutterLine, strokeWidth: 1.7, fill: "none" }),
+      h("path", { d: slatS, stroke: D.shutterLineShade, strokeWidth: 1.7, fill: "none" }),
+      h("rect", { x: 209, y: 272.6, width: 94, height: 5.4, fill: D.steelShade }),
+      h("rect", { x: 209, y: 272.6, width: 94, height: 1.8, fill: D.steel }),
+      h("path", { d: dGuard, fill: D.hazard }),
+      h("path", { d: dStripe, fill: D.hazardInk }),
+      h("rect", { x: 210, y: 270, width: 10, height: 8, rx: 1.5, fill: D.rubber }),
+      h("rect", { x: 292, y: 270, width: 10, height: 8, rx: 1.5, fill: D.rubber }),
+      h("path", { d: rectD(211, 270.4, 8, 1.8) + rectD(293, 270.4, 8, 1.8), fill: D.rubberLit }),
+      h("rect", { x: 198, y: 176, width: 116, height: 11, rx: 2.5, fill: D.awning }),
+      h("rect", { x: 198, y: 171, width: 116, height: 6, rx: 3, fill: D.awningLit }),
+      h("rect", { x: 246, y: 180, width: 20, height: 5, rx: 2.5, fill: D.steel }),
+      // waiting goods on a pallet (the parcels start from here)
+      h("rect", { x: 213, y: 275, width: 65, height: 3, fill: D.pallet }),
+      h("rect", { x: 216, y: 246, width: 28, height: 30, rx: 1.5, fill: COLORS.paper }),
+      h("rect", { x: 216, y: 266, width: 28, height: 10, fill: D.paperShade }),
       h("rect", { x: 228, y: 246, width: 3.4, height: 30, fill: COLORS.verm }),
-      h("rect", { x: 250, y: 254, width: 24, height: 22, rx: 1.5, fill: "#C9CDD4", stroke: COLORS.ink, strokeWidth: 2 }),
-      h("rect", { x: 150, y: 232, width: 30, height: 46, rx: 2, fill: "#5b6d88", stroke: "#3a4a64", strokeWidth: 2 }),
-      h("rect", { x: 172, y: 252, width: 3.4, height: 8, rx: 1.7, fill: "rgba(245, 236, 234,0.4)" }),
-
+      h("rect", { x: 216, y: 246, width: 28, height: 30, rx: 1.5, fill: "none", stroke: COLORS.ink, strokeWidth: 2 }),
+      h("rect", { x: 250, y: 254, width: 24, height: 22, rx: 1.5, fill: D.crate }),
+      h("rect", { x: 250, y: 254, width: 24, height: 6, rx: 1.5, fill: D.crateLit }),
+      h("rect", { x: 250, y: 254, width: 24, height: 22, rx: 1.5, fill: "none", stroke: COLORS.ink, strokeWidth: 2 }),
+      // side door with its lamp
+      h("rect", { x: 150, y: 232, width: 30, height: 46, rx: 2, fill: D.sideDoor, stroke: D.supInk, strokeWidth: 2 }),
+      h("rect", { x: 154.5, y: 237, width: 10, height: 15, rx: 1.2, fill: D.supGlass }),
+      h("rect", { x: 154.5, y: 258, width: 21, height: 15, rx: 1.2, fill: D.sideDoorShade }),
+      h("rect", { x: 172, y: 252, width: 3.4, height: 8, rx: 1.7, fill: D.steel }),
+      h("rect", { x: 160, y: 221.5, width: 10, height: 3.4, rx: 1, fill: D.supInk }),
+      h("rect", { x: 161.6, y: 224.9, width: 6.8, height: 4, rx: 2, fill: D.supSign }),
+      // by the side door: a roll cage with two boxes, and a stack of empty pallets
+      h("path", { d: rectD(88.5, 257, 18, 16), fill: D.crateLit }),
+      h("path", { d: rectD(90.5, 246.5, 11, 10.5), fill: D.crate }),
+      h("path", { d: "M87,238V274M108,238V274M97.5,238V273M87,238.8H108M87,247.6H108M87,256.4H108M87,265.2H108", stroke: D.steel, strokeWidth: 1.8, fill: "none" }),
+      h("rect", { x: 86, y: 273, width: 23, height: 2.4, fill: D.steelShade }),
+      h("path", { d: circD(89.8, 276.6, 1.7) + circD(105.2, 276.6, 1.7), fill: D.rubber }),
+      h("path", { d: [265.1, 269.4, 273.7].map(function (py) { return rectD(115, py, 30, 1.8) + rectD(115, py + 1.8, 5.5, 2.5) + rectD(127.2, py + 1.8, 5.5, 2.5) + rectD(139.5, py + 1.8, 5.5, 2.5); }).join(""), fill: D.pallet }),
+      h("rect", { x: 115, y: 265.1, width: 30, height: 1.8, fill: D.palletLit }),
+      // roof: slab with its sunlit top edge, two plant units with fans and louvres, a capped flue
+      h("rect", { x: -9, y: 54, width: 358, height: 16, rx: 2.5, fill: D.roofSlab }),
+      h("rect", { x: -9, y: 54, width: 358, height: 3.4, rx: 1.7, fill: D.roofSlabLit }),
+      h("rect", { x: 48.5, y: 28, width: 7, height: 8, fill: D.roofUnit }),
+      h("rect", { x: 46, y: 26, width: 12, height: 3.6, rx: 1.2, fill: D.roofUnitLit }),
+      h("rect", { x: 36, y: 34, width: 66, height: 22, rx: 2, fill: D.roofUnit }),
+      h("rect", { x: 36, y: 34, width: 66, height: 4.4, rx: 2, fill: D.roofUnitLit }),
+      fan(54, 47, 6.6),
+      h("path", { d: "M70,43.4H96M70,47.6H96M70,51.8H96", stroke: D.roofUnitLit, strokeWidth: 1.8, fill: "none" }),
+      h("rect", { x: 36, y: 34, width: 66, height: 22, rx: 2, fill: "none", stroke: COLORS.ink, strokeWidth: 2 }),
+      h("rect", { x: 232, y: 40, width: 84, height: 16, rx: 2, fill: D.roofUnit }),
+      h("rect", { x: 232, y: 40, width: 84, height: 3.8, rx: 2, fill: D.roofUnitLit }),
+      fan(247, 49.6, 4.9), fan(263, 49.6, 4.9),
+      h("path", { d: "M276,47.4H308M276,51.6H308", stroke: D.roofUnitLit, strokeWidth: 1.8, fill: "none" }),
+      h("rect", { x: 232, y: 40, width: 84, height: 16, rx: 2, fill: "none", stroke: COLORS.ink, strokeWidth: 2 })
     );
+  }
+  // the flat shadow the supplier lays on the pavement in front of it (world coordinates)
+  function supplierGroundShadow(x, y, scale) {
+    return polyD([[x - 16 * scale, y], [x + 341.5 * scale, y], [x + 341.5 * scale - 16 * SUN_COT, y + 16], [x - 16 * scale - 16 * SUN_COT, y + 16]]);
   }
 
   function makeSkylineTier(seed, span, opt) {
@@ -610,31 +847,43 @@
     // windows batched into <=5 <path> nodes (frames / three glass colours /
     // sky-reflection top) instead of 3 rects per window
     var rp = function (rx, ry, rw, rh) { return "M" + rx + "," + ry + "h" + rw + "v" + rh + "h" + (-rw) + "z"; };
-    var dFrame = "", dWarm = "", dBright = "", dGlass = "", dTop = "", dCool = "";
+    var dFrame = "", dWarm = "", dBright = "", dGlass = "", dTop = "", dCool = "", dShadeG = "", dShadeW = "";
+    // one light: the left end of every block is its shade side (the wall and the glass it crosses each go
+    // one tone down along the same edge), the right end is its sunlit side
+    var faceShade = faces.shade ? faces.shade[fi % faces.length] : mixHex(face, DAY.shadeInk, DAY.stepShade);
+    var faceLit = faces.lit ? faces.lit[fi % faces.length] : mixHex(face, "#ffffff", DAY.stepLit);
+    var shW = Math.round(w * 0.16), litW = detail > 0 ? 7 : 5, shX = x + shW;
     if (hgt >= 46 && w >= 34) for (var r = 0; r < rows; r++) {
       for (var c = 0; c < cols; c++) {
         var wx = x + mx + c * px2 + (px2 - cw) / 2, wy = top + myT + r * py2 + (py2 - ch) / 2;
         var rv = random(seed + "-w" + r + "-" + c);
+        var warm = detail > 0 && rv < DAY.warmP;
         if (detail > 0) dFrame += rp(wx - 1.6, wy - 1.6, cw + 3.2, ch + 3.2);
-        if (detail > 0 && rv < DAY.warmP) dWarm += rp(wx, wy, cw, ch);
+        if (warm) dWarm += rp(wx, wy, cw, ch);
         else if (rv < DAY.warmP + DAY.litP) dBright += rp(wx, wy, cw, ch);
         else if (rv < DAY.warmP + DAY.litP + DAY.coolP) dCool += rp(wx, wy, cw, ch);
         else dGlass += rp(wx, wy, cw, ch);
-        dTop += rp(wx, wy, cw, ch * 0.42);
+        if (wx >= shX) dTop += rp(wx, wy, cw, ch * 0.42);
+        else if (wx + cw > shX) { dTop += rp(shX, wy, wx + cw - shX, ch * 0.42); if (warm) dShadeW += rp(wx, wy, shX - wx, ch); else dShadeG += rp(wx, wy, shX - wx, ch); }
+        else if (warm) dShadeW += rp(wx, wy, cw, ch); else dShadeG += rp(wx, wy, cw, ch);
       }
     }
     var roofBox = p.fi == null ? random(seed + "-roof") > 0.5 : p.fi % 2 === 0;
     var roofMast = p.fi == null ? random(seed + "-roof") > 0.78 : p.fi % 3 === 2;
     var _out = h("g", null,
       h("rect", { x: x, y: top, width: w, height: hgt, fill: face }),
+      h("rect", { x: x, y: top, width: shW, height: hgt, fill: faceShade }),
+      h("rect", { x: x + w - litW, y: top, width: litW, height: hgt, fill: faceLit }),
       dFrame ? h("path", { d: dFrame, fill: DAY.frame }) : null,
       dGlass ? h("path", { d: dGlass, fill: DAY.glass }) : null,
       dCool ? h("path", { d: dCool, fill: DAY.cool }) : null,
       dBright ? h("path", { d: dBright, fill: DAY.lit }) : null,
       dWarm ? h("path", { d: dWarm, fill: DAY.warm }) : null,
       dTop ? h("path", { d: dTop, fill: DAY.refl }) : null,
-      h("rect", { x: x, y: top, width: w * 0.14, height: hgt, fill: DAY.shade }),
-      h("rect", { x: x + w - 3, y: top, width: 3, height: hgt, fill: DAY.rim }),
+      dShadeG ? h("path", { d: dShadeG, fill: detail > 0 ? DAY.glassShade : DAY.farGlassShade }) : null,
+      dShadeW ? h("path", { d: dShadeW, fill: DAY.warmShade }) : null,
+      // the parapet throws a strip of shade on the wall under it
+      detail > 0 ? h("rect", { x: x + shW, y: top + 2, width: w - shW, height: 4, fill: faceShade }) : null,
       h("rect", { x: x - 2, y: top - 7, width: w + 4, height: 9, rx: 2, fill: cap }),
       detail > 0 && roofBox ? h("rect", { x: x + w * 0.3, y: top - 19, width: 20, height: 12, rx: 1.5, fill: cap }) : null,
       detail > 0 && roofMast ? h("rect", { x: x + w * 0.68, y: top - 34, width: 3.4, height: 27, rx: 1.5, fill: cap }) : null
@@ -686,25 +935,78 @@
     }));
   }
 
-  /* puffy flat-bottom day cloud (kurzgesagt-style): round lobes over a pill-shaped base, one flat
-     silhouette lit from above. The white lit layer, then the body nudged down (a sunlit crescent stays
-     on every lobe), then the shade on the underside, cut to the base's own rounded bottom so it never
-     reads as a separate bar. `edge` (0..1) lets callers fade wrap-around entry. */
+  /* Remake of the puffy flat-bottom day cloud: a cumulus is a cluster of round lobes standing on one flat
+     base, pure white. It is built in masses painted from the shade side (left) to the sun side (right);
+     each mass is painted twice: first its shade copy, the same shapes moved a little down and to the left
+     (away from the sun) in the one cloud-shade colour, then the white body. So the cloud has a shaded left
+     side and an underside cut to its own base (never a separate bar), and each mass lays one bold shaded
+     edge on the mass behind it. Footprint as the original Cloud: x 0..w, base line at y = +0.10 w.
+     A lobe is [centre x, radius, lift above the base] in units of w. `edge` (0..1) fades the wrap-around entry. */
+  var CLOUD_BASE = 0.1;
+  var CLOUD_SHAPES = {
+    // the everyday cloud: a shoulder, one dome, a low end toward the sun
+    puff: { x0: 0.05, x1: 0.95, off: [0.032, 0.023], masses: [
+      [[0.15, 0.08, 0], [0.3, 0.115, 0.012], [0.24, 0.07, 0.07]],
+      [[0.53, 0.15, 0.04], [0.46, 0.1, 0.11], [0.61, 0.09, 0.1], [0.44, 0.1, 0], [0.66, 0.105, 0]],
+      [[0.81, 0.088, 0], [0.905, 0.055, 0]]] },
+    // a broad heap with two domes
+    heap: { x0: 0.04, x1: 0.96, off: [0.032, 0.023], masses: [
+      [[0.12, 0.07, 0], [0.24, 0.1, 0.01], [0.36, 0.115, 0.06], [0.3, 0.075, 0.115]],
+      [[0.61, 0.145, 0.05], [0.55, 0.1, 0.135], [0.685, 0.09, 0.115], [0.5, 0.1, 0], [0.73, 0.11, 0]],
+      [[0.86, 0.085, 0], [0.82, 0.06, 0.06], [0.935, 0.045, 0]]] },
+    // the summer giant of the far plane: a towering cumulus standing on the horizon, shoulders stepping down
+    giant: { x0: 0.02, x1: 0.985, off: [0.02, 0.014], skirt: 0.15, masses: [
+      [[0.057, 0.057, 0], [0.114, 0.076, 0], [0.219, 0.095, 0.038], [0.314, 0.105, 0.105], [0.25, 0.066, 0.16]],
+      [[0.457, 0.105, 0.24], [0.381, 0.062, 0.325], [0.52, 0.066, 0.33], [0.452, 0.056, 0.39], [0.39, 0.085, 0.19], [0.53, 0.08, 0.2], [0.457, 0.133, 0.057], [0.448, 0.114, 0]],
+      [[0.629, 0.1, 0.11], [0.585, 0.066, 0.2], [0.675, 0.07, 0.185], [0.724, 0.085, 0.07], [0.619, 0.095, 0]],
+      [[0.82, 0.085, 0.075], [0.775, 0.055, 0.15], [0.9, 0.065, 0.01], [0.955, 0.04, 0]]] },
+    // a long low bank for the far plane: simpler, two masses
+    bank: { x0: 0.01, x1: 0.99, off: [0.016, 0.011], masses: [
+      [[0.06, 0.05, 0], [0.15, 0.07, 0.01], [0.27, 0.085, 0.05], [0.24, 0.07, 0], [0.62, 0.085, 0.07], [0.56, 0.06, 0], [0.7, 0.07, 0.01]],
+      [[0.4, 0.07, 0.02], [0.5, 0.06, 0], [0.345, 0.055, 0], [0.82, 0.065, 0.015], [0.91, 0.05, 0], [0.965, 0.035, 0]]] }
+  };
+  var _cloudMemo = {};
+  function CloudBody(shape, w, far) {
+    var key = shape + "|" + w + "|" + (far ? 1 : 0);
+    if (_cloudMemo[key]) return _cloudMemo[key];
+    var S = CLOUD_SHAPES[shape] || CLOUD_SHAPES.puff, B = CLOUD_BASE * w, ox = -S.off[0] * w, oy = S.off[1] * w, top = 0;
+    var white = far ? DAY.bank : DAY.cloudTop, edge = far ? DAY.bankEdge : DAY.cloudEdge;
+    var kids = [], bh = 0.075 * w, bx = S.x0 * w, bw = (S.x1 - S.x0) * w;
+    S.masses.forEach(function (g, gi) {
+      var d = "", ds = "";
+      g.forEach(function (lb) {
+        var r = lb[1] * w, cx = lb[0] * w, cy = B - r - lb[2] * w;
+        d += circD(cx, cy, r); ds += circD(cx + ox, cy + oy, r);
+        top = Math.min(top, cy - r);
+      });
+      if (gi === 0) { d += rrectD(bx, B - bh, bw, bh, bh * 0.5); ds += rrectD(bx + ox, B - bh + oy, bw, bh, bh * 0.5); }   // the flat base
+      else {                                    // later masses: close the notches between the lobes that stand on the base
+        var lo = Infinity, hi = -Infinity;
+        g.forEach(function (lb) { if (lb[2] === 0) { lo = Math.min(lo, lb[0] * w); hi = Math.max(hi, lb[0] * w); } });
+        if (hi > lo) d += rectD(lo, B - bh, hi - lo, bh);
+      }
+      kids.push(h("path", { d: ds, fill: edge }), h("path", { d: d, fill: white }));
+    });
+    // a cloud that stands behind the city keeps its lower body plain, so no shaded edge peeks between buildings
+    if (S.skirt) kids.push(h("path", { d: rrectD(bx, B - S.skirt * w, bw, S.skirt * w, bh * 0.5), fill: white }));
+    return _cloudMemo[key] = h("g", { "data-cache": "cloud-" + key, "data-box": r2(ox - 2) + " " + r2(top - 2) + " " + r2(w - ox + 4) + " " + r2(B + oy - top + 4) }, kids);
+  }
   function Cloud(p) {
-    var w = p.w == null ? 240 : p.w, o = p.o == null ? 0.94 : p.o, edge = p.edge == null ? 1 : p.edge;
-    var hgt = w * 0.34, baseTop = -hgt * 0.14, baseH = hgt * 0.44;
-    var lobes = [[0.2, -0.16, 0.3], [0.44, -0.36, 0.44], [0.67, -0.2, 0.33], [0.84, -0.06, 0.22]];
-    var br = baseH * 0.44, bot = baseTop + baseH, sy = bot - baseH * 0.3;
-    var sx = br - Math.sqrt(br * br - (sy - (bot - br)) * (sy - (bot - br)));
-    var shadeD = "M" + sx + "," + sy + " L" + (w - sx) + "," + sy + " A" + br + "," + br + " 0 0 1 " + (w - br) + "," + bot +
-      " L" + br + "," + bot + " A" + br + "," + br + " 0 0 1 " + sx + "," + sy + " Z";
-    return h("g", { opacity: o * DAY.cloudO * clamp01(edge) },
-      lobes.map(function (lb) { return h("circle", { cx: w * lb[0], cy: hgt * lb[1], r: hgt * lb[2], fill: DAY.cloudTop }); }),
-      h("rect", { x: 0, y: baseTop, width: w, height: baseH, rx: baseH * 0.5, fill: DAY.cloudTop }),
-      lobes.map(function (lb) { return h("circle", { cx: w * lb[0] + hgt * lb[2] * 0.05, cy: hgt * lb[1] + hgt * lb[2] * 0.17, r: hgt * lb[2] * 0.95, fill: DAY.cloud }); }),
-      h("rect", { x: 0, y: baseTop + baseH * 0.12, width: w, height: baseH * 0.88, rx: baseH * 0.44, fill: DAY.cloud }),
-      h("path", { d: shadeD, fill: DAY.cloudShade })
-    );
+    var w = p.w == null ? 240 : p.w, edge = p.edge == null ? 1 : p.edge;
+    return h("g", { opacity: r2(clamp01(edge)) }, CloudBody(p.shape || "puff", w, !!p.far));
+  }
+
+  /* Light shafts: broad wedges of plain white that fan from a point beyond the top-right corner, on the
+     sun's side. They lie on the sky only, behind the sun, the clouds and every building, and breathe and
+     sway very slowly. fan = [from, to] in degrees below the horizontal, per shaft. */
+  function LightShafts(p) {
+    var sx = p.sx, sy = p.sy, time = p.time, L = 4400, fan = p.fan;
+    return h("g", null, fan.map(function (a, i) {
+      var sway = Math.sin(time * (0.11 + i * 0.027) + i * 2.1) * 0.3;
+      var a0 = (a[0] + sway) * Math.PI / 180, a1 = (a[1] + sway * 1.25) * Math.PI / 180;
+      var k = DAY.shaftK[i % DAY.shaftK.length] * (1 + 0.1 * Math.sin(time * (0.33 + i * 0.08) + i * 1.7));
+      return h("polygon", { points: sx + "," + sy + " " + r2(sx - Math.cos(a0) * L) + "," + r2(sy + Math.sin(a0) * L) + " " + r2(sx - Math.cos(a1) * L) + "," + r2(sy + Math.sin(a1) * L), fill: DAY.shaft, opacity: k.toFixed(3) });
+    }));
   }
 
   /* small day-sky birds: two-arc glyphs drifting slowly; flap via time */
@@ -1178,11 +1480,17 @@
     return { x: x2, y: y2, squash: 1, stretch: 1 + 0.04 * Math.sin(k5 * Math.PI), rot: 0, shadow: 0.8 * (1 - k5), op: 1, gy: groundY };
   }
 
+  var _slMemo = {};
   function Streetlight(x, y) {
-    return h("g", { transform: "translate(" + x + ", " + y + ")" },
+    var mk = x + "|" + y;
+    // remake: the pole has a sunlit side (right) and stands on a base plate; the head shows its lens
+    return _slMemo[mk] || (_slMemo[mk] = h("g", { transform: "translate(" + x + ", " + y + ")" },
       h("rect", { x: -4, y: -200, width: 8, height: 200, rx: 3, fill: DAY.pole }),
+      h("rect", { x: 1, y: -193, width: 3, height: 191, fill: DAY.poleLit }),
       h("rect", { x: -4, y: -200, width: 54, height: 7, rx: 3.5, fill: DAY.pole }),
-      h("rect", { x: 40, y: -196, width: 19, height: 8, rx: 4, fill: DAY.poleHead }));
+      h("rect", { x: -6, y: -9, width: 12, height: 9, rx: 2, fill: DAY.poleShade }),
+      h("rect", { x: 40, y: -196, width: 19, height: 8, rx: 4, fill: DAY.poleHead }),
+      h("rect", { x: 43, y: -190.4, width: 13, height: 2.4, rx: 1.2, fill: DAY.poleLit })));
   }
   /* 電柱: concrete utility poles with crossarms, a pole transformer every other pole,
      and sagging lines between them (all wires batched into one path) */
@@ -1218,27 +1526,40 @@
     if (_vmMemo && _vmMemo.k === x + "|" + baseY) return _vmMemo.v;
     var units = [{ dx: 0, body: "#f1f4f7", trim: "#c9d3de" }, { dx: 58, body: "#3f78b8", trim: "#2c5a8e" }];
     var cans = ["#e16347", "#2a7f8c", "#f2c14e", "#7aa5d6", "#e9e4d8", "#5d8f4e"];
-    var out = h("g", null,
-      h("ellipse", { cx: x + 56, cy: baseY + 3, rx: 72, ry: 6, fill: "rgba(10,20,36,0.16)" }),
-      units.map(function (u) {
+    // remake: same machines and cans (cans batched into one path per colour); each body has a shade side
+    // on the left, and the pair's shadow is a flat shape on the pavement (drawn with the street)
+    var canD = cans.map(function () { return ""; });
+    units.forEach(function (u) {
+      for (var r = 0; r < 3; r++) for (var c = 0; c < 6; c++) canD[(c + r * 2 + u.dx) % cans.length] += rrectD(x + u.dx + 8 + c * 7, baseY - 100 + 9 + r * 15, 4.4, 8.6, 1.6);
+    });
+    var out = h("g", { "data-cache": "vending-" + x + "|" + baseY, "data-box": (x - 2) + " " + (baseY - 102) + " 116 104" },
+      units.map(function (u, ui) {
         var ux = x + u.dx, top = baseY - 100;
-        var dots = "";
         return h("g", null,
           h("rect", { x: ux, y: top, width: 54, height: 100, rx: 3, fill: u.body }),
+          h("path", { d: "M" + (ux + 3) + "," + top + "h2.4v100h-2.4a3,3 0 0,1 -3,-3v-94a3,3 0 0,1 3,-3z", fill: ui ? DAY.vendBlueShade : DAY.vendShade }),
           h("rect", { x: ux, y: top, width: 54, height: 100, rx: 3, fill: "none", stroke: u.trim, strokeWidth: 2 }),
           h("rect", { x: ux + 5, y: top + 6, width: 44, height: 50, rx: 2, fill: "#fbfdff" }),
-          [0, 1, 2].map(function (r) {
-            return h("g", null,
-              h("rect", { x: ux + 6, y: top + 18 + r * 15, width: 42, height: 1.6, fill: "rgba(22,41,63,0.18)" }),
-              range(6, function (c) { return h("rect", { x: ux + 8 + c * 7, y: top + 9 + r * 15, width: 4.4, height: 8.6, rx: 1.6, fill: cans[(c + r * 2 + u.dx) % cans.length] }); }));
-          }),
+          h("path", { d: rectD(ux + 6, top + 18, 42, 1.6) + rectD(ux + 6, top + 33, 42, 1.6) + rectD(ux + 6, top + 48, 42, 1.6), fill: "rgba(22,41,63,0.18)" }),
           h("rect", { x: ux + 6, y: top + 60, width: 30, height: 9, rx: 1.5, fill: "rgba(22,41,63,0.65)" }),
           h("rect", { x: ux + 40, y: top + 60, width: 8, height: 14, rx: 1.5, fill: "rgba(22,41,63,0.35)" }),
           h("rect", { x: ux + 6, y: top + 80, width: 42, height: 13, rx: 2, fill: "rgba(10,20,36,0.75)" }));
-      }));
+      }),
+      cans.map(function (col, ci) { return h("path", { d: canD[ci], fill: col }); }));
     _vmMemo = { k: x + "|" + baseY, v: out };
     return out;
   }
+
+  // street furniture of the remake (world x): manhole covers in the near lane, guard-rail posts in the foreground
+  var MANHOLES = [1232, 2790, 4010];
+  var FG_POSTS = range(30, function (i) { return rrectD(i * 180, 1006, 11, 26, 2); }).join("");
+  function ellipseD(cx, cy, rx, ry) { return "M" + r2(cx - rx) + "," + r2(cy) + "a" + rx + "," + ry + " 0 1,1 " + (2 * rx) + ",0a" + rx + "," + ry + " 0 1,1 " + (-2 * rx) + ",0z"; }
+  // what stands on the pavement lays one flat shadow on it, falling down-left: the supplier, the vending
+  // machines, every streetlight
+  var PAVEMENT_SHADOWS = (function () {
+    var slant = function (x0, x1) { return polyD([[x0, GROUND], [x1, GROUND], [x1 - 16 * SUN_COT, GROUND + 16], [x0 - 16 * SUN_COT, GROUND + 16]]); };
+    return supplierGroundShadow(SUPPLIER_X, GROUND, B_SCALE) + slant(1296, 1414) + range(11, function (i) { return slant(-180 + i * 470 - 5, -180 + i * 470 + 6); }).join("");
+  })();
 
   /* ---- Scene12World.tsx ---- */
   function sceneWorld(frame, tOverride) {
@@ -1288,7 +1609,13 @@
     var skylineDeep = makeSkylineTier("skd", 2400, { w: [152, 96, 204, 124, 168, 108], base: 236, amp: 214, hf: [0.92, 0.5, 0.74, 0.34, 1, 0.6], g: [22, 30, 16, 34] });
     var skylineFar = makeSkylineTier("skf", 2620, { w: [122, 178, 96, 152, 198, 110], base: 184, amp: 232, hf: [0.82, 0.46, 1, 0.6, 0.72, 0.35], g: [28, 40, 20, 46, 32] });
     var skylineMid = makeSkylineTier("skm", 3000, { w: [188, 132, 224, 148, 112, 206], base: 102, amp: 176, hf: [0.68, 1, 0.42, 0.84, 0.55, 0.9], g: [42, 66, 30, 86, 52] });
-    var clouds = range(7, function (i) { var span = (WORLD_W * 0.5) / 7; return { x: i * span + random("cl-x" + i) * span * 0.38, y: 50 + random("cl-y" + i) * 210, w: 220 + random("cl-w" + i) * 280, sp: 4.5 }; });
+    // Remake: fewer, larger, composed clouds on two planes. Near plane (far layer, 4.5 px/s as before): x is the
+    // left edge in that layer at t = 0, y the flat base line. Far plane: one slow bank low behind the city.
+    var clouds = [
+      { x: -560, y: 250, w: 330, shape: "puff", sp: 4.5 }, { x: 905, y: 232, w: 440, shape: "heap", sp: 4.5 },
+      { x: 1650, y: 326, w: 400, shape: "puff", sp: 4.5 }, { x: 2230, y: 300, w: 330, shape: "heap", sp: 4.5 }
+    ];
+    var banks = [{ x: -286, y: 640, w: 1050, shape: "giant", sp: 1.2 }, { x: 1960, y: 660, w: 900, shape: "bank", sp: 1.2 }];
     return h("div", { style: { position: "absolute", inset: 0, background: "#eaf5fc", overflow: "hidden" } },
       h("div", { style: { position: "absolute", inset: 0, background: DAY.sky } }),
       h("div", { style: { position: "absolute", inset: 0, background: "radial-gradient(38% 32% at 92% 7%, rgba(255,240,200,0.46) 0%, rgba(255,240,200,0) 70%), radial-gradient(56% 40% at 8% 100%, rgba(22,41,63,0.085) 0%, rgba(22,41,63,0) 72%)", pointerEvents: "none" } }),
@@ -1299,8 +1626,13 @@
           HazeDef("wHaze0", DAY.hazeK[0]), HazeDef("wHaze1", DAY.hazeK[1]), HazeDef("wHaze2", DAY.hazeK[2]),
           GlowDef("wSun", DAY.sunGlow, 0.5)
         ),
+        // light shafts fan from beyond the top-right corner, straight on the sky
+        LightShafts({ sx: 2500, sy: -500, time: time, fan: [[16.5, 24.5], [28.5, 33.5], [40, 45]] }),
         // the sun sits clear of Tokyo Tower's antenna while scene 1 holds (tower at screen x ~1624 there)
         SkySun({ cx: 1772, cy: 104, r: 52, time: time, gid: "wSun" }),
+        h("g", { transform: "translate(" + (-cam * 0.08) + ", 0)" },
+          banks.map(function (c) { var range3 = 4200, lead = 1500, wx = ((c.x + lead + time * c.sp) % range3) - lead; var ed = Math.min((wx + lead) / 200, (range3 - lead - wx) / 200, 1); return h("g", { transform: "translate(" + r2(wx) + ", " + (c.y - c.w * CLOUD_BASE) + ")" }, Cloud({ w: c.w, shape: c.shape, far: true, edge: ed })); })
+        ),
         h("g", { transform: "translate(" + (-cam * 0.12) + ", 0)" },
           h("path", { d: "M-300," + GROUND + " C300," + (GROUND - 150) + " 800," + (GROUND - 60) + " 1400," + (GROUND - 130) + " C2000," + (GROUND - 195) + " 2600," + (GROUND - 55) + " 3200," + (GROUND - 120) + " C3800," + (GROUND - 180) + " 4400," + (GROUND - 70) + " 5200," + (GROUND - 140) + " L5200," + GROUND + " Z", fill: DAY.hill })
         ),
@@ -1308,18 +1640,15 @@
           var top = GROUND - b.h;
           var cols = Math.max(2, Math.round(b.w / 40)), rows = Math.max(2, Math.floor((b.h - 24) / 52));
           var gx = (b.w - 20) / cols, gy2 = (b.h - 30) / rows;
+          // the farthest tier is silhouette only: a shade side, a sunlit side, no windows
           return h("g", null,
             h("rect", { x: b.x, y: top, width: b.w, height: b.h, fill: DAY.deep }),
-            h("rect", { x: b.x, y: top, width: b.w, height: 4, fill: DAY.deepTop }),
-            (function () {
-              var d = "";
-              for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) d += "M" + (b.x + 11 + c * gx) + "," + (top + 14 + r * gy2) + "h" + (gx * 0.42) + "v" + (gy2 * 0.44) + "h" + (-gx * 0.42) + "z";
-              return h("path", { d: d, fill: DAY.deepWin });
-            })());
+            h("rect", { x: b.x, y: top, width: Math.round(b.w * 0.16), height: b.h, fill: DAY.deepShade }),
+            h("path", { d: rectD(b.x + b.w - 5, top, 5, b.h) + rectD(b.x, top, b.w, 4), fill: DAY.deepLit }));
         })),
         h("rect", { x: 0, y: GROUND - 470, width: 1920, height: 470, fill: "url(#wHaze0)" }),
         h("g", { transform: "translate(" + (-cam * 0.32) + ", 0)" },
-          clouds.map(function (c) { var range2 = WORLD_W * 0.5, wx = (c.x + time * c.sp) % range2; var ed = Math.min(wx / 200, (range2 - wx) / 200, 1); return h("g", { transform: "translate(" + wx + ", " + c.y + ")" }, Cloud({ w: c.w, o: 0.92, edge: ed })); }),
+          clouds.map(function (c) { var range2 = 3300, lead = 760, wx = ((c.x + lead + time * c.sp) % range2) - lead; var ed = Math.min((wx + lead) / 200, (range2 - lead - wx) / 200, 1); return h("g", { transform: "translate(" + r2(wx) + ", " + (c.y - c.w * CLOUD_BASE) + ")" }, Cloud({ w: c.w, shape: c.shape, edge: ed })); }),
           DayBirds({ seed: "w-birds", count: 4, time: time, span: 2300, yBase: 120 }),
           skylineFar.map(function (b, i) { return { b: b, i: i }; }).filter(function (o) { var vx = o.b.x - cam * 0.32; return vx + o.b.w > -240 && vx < 2160; }).map(function (o) { return CityBuilding({ x: o.b.x, baseY: GROUND, w: o.b.w, h: o.b.h, seed: "skf" + o.i, fi: o.i, faces: DAY.far, detail: 0, cap: DAY.farCap }); }),
           skylineFar.filter(function (b) { return b.h > 340; }).map(function (b, i) { return RoofBeacon({ x: b.x + b.w / 2, y: GROUND - b.h, time: time, phase: i * 1.7 }); }),
@@ -1334,11 +1663,19 @@
         h("g", { transform: "translate(" + (-cam) + ", 0)" },
           h("rect", { x: -400, y: GROUND, width: WORLD_W + 800, height: 16, fill: DAY.walk }),
           h("line", { x1: -400, y1: GROUND + 3, x2: WORLD_W + 400, y2: GROUND + 3, stroke: "rgba(245, 236, 234,0.16)", strokeWidth: 2 }),
+          // flat shadows on the pavement: one tone down, falling down-left like every other shadow
+          h("path", { d: PAVEMENT_SHADOWS, fill: DAY.walkShade }),
           h("line", { x1: -400, y1: GROUND + 9, x2: WORLD_W + 400, y2: GROUND + 9, stroke: "rgba(226,196,74,0.55)", strokeWidth: 3, strokeDasharray: "14 3" }),
           h("rect", { x: -400, y: GROUND + 16, width: WORLD_W + 800, height: 6, fill: DAY.curb }),
+          // kerb stones: a joint every 96 px (one dashed line)
+          h("line", { x1: -400, y1: GROUND + 19, x2: WORLD_W + 400, y2: GROUND + 19, stroke: DAY.curbJoint, strokeWidth: 6, strokeDasharray: "3 93" }),
           h("rect", { x: -400, y: GROUND + 22, width: WORLD_W + 800, height: 84, fill: DAY.road }),
           h("line", { x1: -400, y1: GROUND + 27, x2: WORLD_W + 400, y2: GROUND + 27, stroke: "rgba(255,255,255,0.28)", strokeWidth: 2.5 }),
           h("line", { x1: -400, y1: GROUND + 64, x2: WORLD_W + 400, y2: GROUND + 64, stroke: "rgba(255,255,255,0.6)", strokeWidth: 4, strokeDasharray: "26 32" }),
+          // manhole covers in the near lane
+          h("path", { d: MANHOLES.map(function (mx) { return ellipseD(mx, GROUND + 84, 34, 8.4); }).join(""), fill: DAY.manholeRing }),
+          h("path", { d: MANHOLES.map(function (mx) { return ellipseD(mx, GROUND + 83.4, 29, 6.4); }).join(""), fill: DAY.manhole }),
+          h("path", { d: MANHOLES.map(function (mx) { return "M" + (mx - 17) + "," + (GROUND + 83.4) + "h34M" + mx + "," + (GROUND + 79.6) + "v7.6"; }).join(""), stroke: DAY.manholeRing, strokeWidth: 2.2, fill: "none" }),
           h("line", { x1: -400, y1: GROUND + 101, x2: WORLD_W + 400, y2: GROUND + 101, stroke: "rgba(255,255,255,0.28)", strokeWidth: 2.5 }),
           h("rect", { x: -400, y: GROUND + 106, width: WORLD_W + 800, height: 194, fill: DAY.roadEdge }),
           range(11, function (i) { return Streetlight(-180 + i * 470, GROUND); }),
@@ -1372,9 +1709,13 @@
             );
           })
         ),
+        // foreground guard rail (same band and posts as before): the darkest plane, framing the bottom
         h("g", { transform: "translate(" + (-cam * 1.07) + ", 0)" },
-          h("rect", { x: -600, y: 1022, width: WORLD_W * 1.1 + 1200, height: 58, fill: DAY.fence }),
-          range(30, function (i) { return h("rect", { x: i * 180, y: 1010, width: 11, height: 22, rx: 2, fill: DAY.fencePost }); })
+          h("rect", { x: -600, y: 1022, width: WORLD_W * 1.1 + 1200, height: 58, fill: DAY.fgBand }),
+          h("rect", { x: -600, y: 1022, width: WORLD_W * 1.1 + 1200, height: 4, fill: DAY.fgBandLit }),
+          h("path", { d: FG_POSTS, fill: DAY.fgPost }),
+          h("rect", { x: -600, y: 1011, width: WORLD_W * 1.1 + 1200, height: 8, fill: DAY.fgRail }),
+          h("rect", { x: -600, y: 1011, width: WORLD_W * 1.1 + 1200, height: 2.6, fill: DAY.fgRailLit })
         )
       ),
       h("div", { style: { opacity: 1 - panK } }, SceneTitle({ no: CONTENT.scenes.receiving.no, heading: CONTENT.scenes.receiving.heading, enter: title1 })),
@@ -1520,9 +1861,9 @@
         [0, 1].map(function (rep) { return h("g", { transform: "translate(" + (wrap(scroll + 2030, GTILE) + rep * GTILE) + ", 0)" }, GantryFront(GTILE - 1300)); }),
         [0, 1].map(function (rep) {
           return h("g", { transform: "translate(" + (wrap(scroll * 1.25, TILE) + rep * TILE) + ", 0)" },
-            h("rect", { x: 0, y: 1022, width: TILE, height: 58, fill: DAY.fence }),
-            range(46, function (i) { return h("rect", { x: i * (TILE / 46), y: 1004, width: 13, height: 24, rx: 2, fill: DAY.fencePost }); }),
-            h("line", { x1: 0, y1: 1014, x2: TILE, y2: 1014, stroke: DAY.pole, strokeWidth: 5 }));
+            h("rect", { x: 0, y: 1022, width: TILE, height: 58, fill: DAY.fgBand }),
+            range(46, function (i) { return h("rect", { x: i * (TILE / 46), y: 1004, width: 13, height: 24, rx: 2, fill: DAY.fgPost }); }),
+            h("line", { x1: 0, y1: 1014, x2: TILE, y2: 1014, stroke: DAY.fgRail, strokeWidth: 5 }));
         })
       ),
       SceneTitle({ no: CONTENT.scenes.transit.no, heading: CONTENT.scenes.transit.heading, enter: titleEnter }),
