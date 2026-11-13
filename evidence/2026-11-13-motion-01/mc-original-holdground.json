@@ -1,0 +1,99 @@
+{
+ "side": "original",
+ "from": 5139,
+ "to": 7000,
+ "crop": "200,560,1300,440",
+ "steps": 111,
+ "frozenSteps": 27,
+ "longestFrozenRun": 11,
+ "longestFrozenAt": [
+  6772,
+  6956
+ ],
+ "medianChange": 0.0025,
+ "largestChange": 0.1337,
+ "largestAt": 6289,
+ "pops": [
+  {
+   "at": 5306,
+   "change": 0.034,
+   "neighbours": [
+    0.0057,
+    0.0059
+   ]
+  },
+  {
+   "at": 5422,
+   "change": 0.0554,
+   "neighbours": [
+    0.0036,
+    0.005
+   ]
+  },
+  {
+   "at": 5589,
+   "change": 0.0356,
+   "neighbours": [
+    0.0051,
+    0.0069
+   ]
+  },
+  {
+   "at": 5689,
+   "change": 0.0548,
+   "neighbours": [
+    0.0047,
+    0.0048
+   ]
+  },
+  {
+   "at": 5839,
+   "change": 0.0331,
+   "neighbours": [
+    0.002,
+    0.0031
+   ]
+  },
+  {
+   "at": 5939,
+   "change": 0.0532,
+   "neighbours": [
+    0.0028,
+    0.0023
+   ]
+  },
+  {
+   "at": 6122,
+   "change": 0.0321,
+   "neighbours": [
+    0.0022,
+    0.0042
+   ]
+  },
+  {
+   "at": 6239,
+   "change": 0.0522,
+   "neighbours": [
+    0.0016,
+    0.0009
+   ]
+  },
+  {
+   "at": 6289,
+   "change": 0.1337,
+   "neighbours": [
+    0.0009,
+    0.0011
+   ]
+  },
+  {
+   "at": 6522,
+   "change": 0.0313,
+   "neighbours": [
+    0,
+    0
+   ]
+  }
+ ],
+ "consoleErrors": []
+}

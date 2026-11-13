@@ -1,0 +1,32 @@
+{
+ "side": "original",
+ "from": 5139,
+ "to": 7000,
+ "crop": "full",
+ "steps": 111,
+ "frozenSteps": 0,
+ "longestFrozenRun": 0,
+ "longestFrozenAt": null,
+ "medianChange": 0.0055,
+ "largestChange": 0.0437,
+ "largestAt": 6289,
+ "pops": [
+  {
+   "at": 5689,
+   "change": 0.0234,
+   "neighbours": [
+    0.0057,
+    0.0059
+   ]
+  },
+  {
+   "at": 6289,
+   "change": 0.0437,
+   "neighbours": [
+    0.0051,
+    0.005
+   ]
+  }
+ ],
+ "consoleErrors": []
+}

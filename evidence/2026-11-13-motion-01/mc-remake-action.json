@@ -1,0 +1,18 @@
+{
+ "side": "remake",
+ "from": 0,
+ "to": 7000,
+ "crop": "400,560,1000,440",
+ "steps": 420,
+ "frozenSteps": 21,
+ "longestFrozenRun": 20,
+ "longestFrozenAt": [
+  0,
+  333
+ ],
+ "medianChange": 0.1893,
+ "largestChange": 6.2798,
+ "largestAt": 567,
+ "pops": [],
+ "consoleErrors": []
+}

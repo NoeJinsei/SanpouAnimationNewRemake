@@ -401,12 +401,15 @@
     var x = p.x, y = p.y, scale = p.scale == null ? 1 : p.scale, distance = p.distance || 0,
       doorOpen = p.doorOpen || 0, bob = p.bob || 0, opacity = p.opacity == null ? 1 : p.opacity, moving = !!p.moving;
     var pitch = p.pitch || 0, run = p.run == null ? (moving ? 1 : 0) : p.run;
+    // motion pass: followers. doorWob = the opened rear door's settle (local units of door width), flap =
+    // the mud flaps' swing and mirror = the mirror's nod (degrees), both lagging the body's pitch
+    var doorWob = p.doorWob || 0, flap = p.flap || 0, mirror = p.mirror || 0;
     var wheelR = 11;
     var rot = ((distance / scale) / wheelR) * (180 / Math.PI);
     var k = Math.max(0, Math.min(1, doorOpen));
     var reveal = Math.max(0, (k - 0.06) / 0.94);
     var r = 1 - Math.pow(1 - reveal, 3);
-    var doorW = 17 * r;
+    var doorW = 17 * r + doorWob * r;
     var offset = 5 * (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2);
     var doorX = -doorW - offset;
     var wheels = [26, 98, 144];
@@ -442,8 +445,11 @@
         h("rect", { x: 48, y: 76, width: 26, height: 11, rx: 4, fill: "#3A4A66", stroke: COLORS.ink, strokeWidth: 1.4 }),
         h("rect", { x: 51, y: 77.4, width: 20, height: 2, rx: 1, fill: DAY.tankLit }),
         h("path", { d: "M55.5,76.6V86.4M66.5,76.6V86.4", stroke: COLORS.ink, strokeWidth: 1.3, fill: "none" }),
-        h("path", { d: "M10,84h7v11h-7zM110,84h7v11h-7z", fill: "#1A2434" }),
-        h("path", { d: "M10,90.6h7v1.7h-7zM110,90.6h7v1.7h-7z", fill: DAY.chassisLit }),
+        [10, 110].map(function (fx) {
+          return h("g", { transform: "rotate(" + flap.toFixed(3) + " " + (fx + 3.5) + " 84)" },
+            h("rect", { x: fx, y: 84, width: 7, height: 11, fill: "#1A2434" }),
+            h("rect", { x: fx, y: 90.6, width: 7, height: 1.7, fill: DAY.chassisLit }));
+        }),
         h("rect", { x: -3.4, y: 76.6, width: 4.6, height: 3.4, rx: 1, fill: COLORS.vermSoft }),
         // cab: deflector and body with a sunlit edge and a shade band, sky in the glass
         h("path", { d: "M122,10 Q138,10 146,22 L146,28 L122,22 Z", fill: COLORS.inkSoft, stroke: COLORS.ink, strokeWidth: 2 }),
@@ -457,8 +463,9 @@
         h("path", { d: "M134.4,30.7 L139.6,30.7 L134.6,45.3 L129.4,45.3 Z", fill: DAY.cabGlint }),
         h("line", { x1: 146, y1: 28, x2: 146, y2: 72, stroke: COLORS.ink, strokeWidth: 1.4, opacity: 0.55 }),
         h("rect", { x: 134, y: 52, width: 9, height: 2.6, rx: 1.3, fill: DAY.cabShade }),
-        h("path", { d: "M150,30 L156,24M150.4,36.5 L156.6,27", stroke: COLORS.ink, strokeWidth: 1.8, fill: "none" }),
-        h("rect", { x: 154, y: 19, width: 4.5, height: 8, rx: 1.5, fill: COLORS.ink2, stroke: COLORS.ink, strokeWidth: 1 }),
+        h("g", { transform: "rotate(" + mirror.toFixed(3) + " 150.2 33)" },
+          h("path", { d: "M150,30 L156,24M150.4,36.5 L156.6,27", stroke: COLORS.ink, strokeWidth: 1.8, fill: "none" }),
+          h("rect", { x: 154, y: 19, width: 4.5, height: 8, rx: 1.5, fill: COLORS.ink2, stroke: COLORS.ink, strokeWidth: 1 })),
         h("rect", { x: 166, y: 56, width: 7, height: 10, rx: 1.5, fill: "#2A3850" }),
         h("path", { d: "M167,58.5h5M167,61.1h5M167,63.7h5", stroke: DAY.cabLit, strokeWidth: 1, fill: "none" }),
         h("rect", { x: 120, y: 68, width: 56, height: 8, rx: 3, fill: "#41506B" }),
@@ -495,7 +502,7 @@
       shadow = p.shadow || 0, shadowY = p.shadowY;
     var w = size, hh = size * 0.88, sx = squash / stretch, sy = stretch / squash, gy = shadowY == null ? y : shadowY, flapY = hh * 0.3;
     return h("g", { opacity: opacity },
-      shadow > 0.01 ? h("ellipse", { cx: x, cy: gy + 3, rx: (w * 0.62 + (1 - shadow) * 14) * sx, ry: 4.5, fill: "rgba(10,20,36,0.32)", opacity: shadow }) : null,
+      h("ellipse", { cx: x, cy: gy + 3, rx: (w * 0.62 + (1 - shadow) * 14) * sx, ry: 4.5, fill: "rgba(10,20,36,0.32)", opacity: r2(Math.max(0, shadow)) }),
       h("g", { transform: "translate(" + x + ", " + y + ") rotate(" + rotation + ") scale(" + sx + ", " + sy + ")" },
         h("g", { transform: "translate(" + (-w / 2) + ", " + (-hh) + ")" },
           h("rect", { x: 0, y: 0, width: w, height: hh, rx: 1.8, fill: COLORS.paper }),
@@ -579,9 +586,7 @@
     var fan = function (cx, cy, r) {
       return [
         h("circle", { cx: cx, cy: cy, r: r, fill: D.roofUnitShade, stroke: D.roofFan, strokeWidth: 1.6 }),
-        h("path", { d: "M" + cx + "," + (cy - r + 1.2) + "V" + (cy + r - 1.2) + "M" + (cx - r + 1.2) + "," + cy + "H" + (cx + r - 1.2), stroke: D.roofFan, strokeWidth: 1.6, fill: "none" }),
-        h("circle", { cx: cx, cy: cy, r: 1.9, fill: D.roofFan })
-      ];
+      ];   // the blades and hub turn: SupplierMotion draws them
     };
     return _supMemo[mk] = h("g", { transform: "translate(" + x + ", " + y + ") scale(" + scale + ") translate(0, -278)", "data-cache": "supplier-" + mk, "data-box": "-12 22 366 260" },
       // wall: sunlit fascia, wall, plinth; then the shade each of them receives
@@ -672,6 +677,30 @@
       h("path", { d: "M276,47.4H308M276,51.6H308", stroke: D.roofUnitLit, strokeWidth: 1.8, fill: "none" }),
       h("rect", { x: 232, y: 40, width: 84, height: 16, rx: 2, fill: "none", stroke: COLORS.ink, strokeWidth: 2 })
     );
+  }
+  /* Motion pass: what moves on the supplier, drawn over its memoised (static) group in the same frame.
+     The three roof fans turn slowly, each at its own speed; now and then the sky slides across a window
+     pane as a glint (two panes, own periods), off the pane and at opacity 0 between glints. */
+  var SUP_FANS = [[54, 47, 6.6, 61, 0.4], [247, 49.6, 4.9, 83, 1.9], [263, 49.6, 4.9, 74, 3.1]];   // cx, cy, r, deg/s, phase
+  var SUP_GLINTS = [[136, 128, 11.3, 4.7], [206, 128, 14.9, 12.5]];                                  // pane x, y (42x32), period s, phase s
+  function SupplierMotion(p) {
+    var x = p.x, y = p.y, scale = p.scale, time = p.time, D = DAY;
+    var dBlade = "", dHub = "";
+    SUP_FANS.forEach(function (f) {
+      var a = (time * f[3] + f[4] * 57.3) * Math.PI / 180, c = Math.cos(a), s = Math.sin(a), rr = f[2] - 1.2;
+      dBlade += "M" + r2(f[0] - c * rr) + "," + r2(f[1] - s * rr) + "L" + r2(f[0] + c * rr) + "," + r2(f[1] + s * rr) +
+        "M" + r2(f[0] + s * rr) + "," + r2(f[1] - c * rr) + "L" + r2(f[0] - s * rr) + "," + r2(f[1] + c * rr);
+      dHub += circD(f[0], f[1], 1.9);
+    });
+    return h("g", { transform: "translate(" + x + ", " + y + ") scale(" + scale + ") translate(0, -278)" },
+      h("path", { d: dBlade, stroke: D.roofFan, strokeWidth: 1.6, fill: "none" }),
+      h("path", { d: dHub, fill: D.roofFan }),
+      h("defs", null, h("clipPath", { id: "wSupGlint" }, SUP_GLINTS.map(function (g) { return h("rect", { x: g[0], y: g[1], width: 42, height: 32, rx: 2.5 }); }))),
+      h("g", { clipPath: "url(#wSupGlint)" }, SUP_GLINTS.map(function (g) {
+        var c = (((time + g[3]) % g[2]) + g[2]) % g[2], u = Math.min(1, c / 1.7), e = u * u * (3 - 2 * u);
+        var gx = g[0] - 22 + e * 78, op = u < 1 ? Math.sin(u * Math.PI) * 0.75 : 0;   // a slanted band, sun angle
+        return h("polygon", { points: r2(gx + 12) + "," + g[1] + " " + r2(gx + 22) + "," + g[1] + " " + r2(gx + 10) + "," + (g[1] + 32) + " " + r2(gx) + "," + (g[1] + 32), fill: D.supGlint, opacity: r2(op) });
+      })));
   }
   // the flat shadow the supplier lays on the pavement in front of it (world coordinates)
   function supplierGroundShadow(x, y, scale) {
@@ -1453,8 +1482,10 @@
     var landX = to.x - 46;
     if (t <= 0 || t >= 1) return null;
     if (t < ANT) {
-      var k = t / ANT;
-      return { x: from.x, y: from.y - 3 * k, squash: 1 + 0.09 * Math.sin(k * Math.PI), stretch: 1, rot: 0, shadow: 0.85, op: 1, gy: from.y };
+      var k = t / ANT, kin = clamp01(k / 0.6);
+      // motion pass: it is lifted off the stack and settles back onto the dock (no 3 px jump into the arc), and
+      // eases in over the first 60 % of the beat instead of popping on
+      return { x: from.x, y: from.y - 3 * Math.sin(k * Math.PI), squash: 1 + 0.09 * Math.sin(k * Math.PI), stretch: 1, rot: 0, shadow: 0.85 * kin, op: kin * kin * (3 - 2 * kin), gy: from.y };
     }
     if (t < ARC) {
       var k2 = easeInOutCubic((t - ANT) / (ARC - ANT));
@@ -1462,7 +1493,9 @@
       var apex = Math.min(from.y, groundY) - 112;
       var x = (1 - k2) * (1 - k2) * from.x + 2 * (1 - k2) * k2 * mx + k2 * k2 * landX;
       var y = (1 - k2) * (1 - k2) * from.y + 2 * (1 - k2) * k2 * apex + k2 * k2 * groundY;
-      return { x: x, y: y, squash: 1, stretch: 1 + 0.05 * Math.sin(k2 * Math.PI), rot: Math.sin(k2 * Math.PI) * 2.5 * Math.sign(landX - from.x), shadow: 0.3, op: 1, gy: groundY };
+      // the shadow leaves the dock as the parcel lifts and grows on the ground as it comes down
+      var onDock = k2 < 0.2, sh = onDock ? 0.85 * (1 - k2 / 0.2) : Math.pow((k2 - 0.2) / 0.8, 2);
+      return { x: x, y: y, squash: 1, stretch: 1 + 0.05 * Math.sin(k2 * Math.PI), rot: Math.sin(k2 * Math.PI) * 2.5 * Math.sign(landX - from.x), shadow: sh, op: 1, gy: onDock ? from.y : groundY };
     }
     if (t < LAND) {
       var k3 = (t - ARC) / (LAND - ARC);
@@ -1477,7 +1510,7 @@
     var mx2 = (landX + to.x + 40) / 2;
     var x2 = (1 - k5) * (1 - k5) * landX + 2 * (1 - k5) * k5 * mx2 + k5 * k5 * (to.x + 40);
     var y2 = (1 - k5) * (1 - k5) * groundY + 2 * (1 - k5) * k5 * hopApex + k5 * k5 * to.y;
-    return { x: x2, y: y2, squash: 1, stretch: 1 + 0.04 * Math.sin(k5 * Math.PI), rot: 0, shadow: 0.8 * (1 - k5), op: 1, gy: groundY };
+    return { x: x2, y: y2, squash: 1, stretch: 1 + 0.04 * Math.sin(k5 * Math.PI), rot: 0, shadow: 1 - k5, op: 1, gy: groundY };
   }
 
   var _slMemo = {};
@@ -1587,9 +1620,26 @@
     var truck1X = truck1At(frame);
     var truck1Moving = (arriveK > 0.02 && arriveK < 0.98) || (departK > 0.02 && departK < 0.98) || departDelta(0) > 1;
     var truck1M = truckMotion(truck1Run, frame);
-    var truck1Bob = truck1M.run * Math.sin(frame * 1.15) * 1.3 + (1 - truck1M.run) * (settleBob + Math.sin(time * 1.4) * 0.35);
-    var door1 = interpolate(frame, [T_WORLD.doorOpen[0], T_WORLD.doorOpen[1]], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }) *
-      interpolate(frame, [T_WORLD.doorClose[0], T_WORLD.doorClose[1]], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }) +
+    /* Motion pass (scene 01). Same path, same frame ranges; only the quality of motion inside them changes:
+       - the rear door opens and closes with an ease in-out (it was linear), the opened door overswings once
+         and settles, and the box gives one small jolt as the door shuts (in ambient time, so it carries on
+         into the hold without a jump);
+       - the box dips at its rear and rocks once as each parcel lands inside;
+       - mud flaps and the mirror follow the body's braking pitch about 70 ms late.
+       (A fast engine tremble while parked was tried and left out: sub-pixel shaking makes the box edge and
+       lettering shimmer on the rasteriser; the slow breathing bob stays as the parked truck's idle.) */
+    var carrySpanEnd = function () { return (T_WORLD.parcels[1] - T_WORLD.parcels[0]) - 52; };
+    // a damped swing that starts softly (its first ~1.5 frames build up), so a kick never reads as a jump
+    var dampedKick = function (x, decay, rate) { return x > 0 ? Math.exp(-x / decay) * Math.sin(x / rate) * (1 - Math.exp(-x * x / 2)) : 0; };
+    var shutT = frame >= 183 ? time * 30 - 184 : 0;
+    var landRock = 0;
+    for (var li = 0; li < 3; li++) landRock += dampedKick(frame - (T_WORLD.parcels[0] + li * 26 + carrySpanEnd()), 3.6, 1.4);
+    var truck1Bob = truck1M.run * Math.sin(frame * 1.15) * 1.3 + (1 - truck1M.run) * (settleBob + Math.sin(time * 1.4) * 0.35) +
+      landRock * 0.45 + dampedKick(shutT, 3, 1.2) * 0.5;
+    var truck1Lag = truckMotion(truck1Run, frame - 2.4);
+    var doorEase = function (f, a, b) { var u = clamp01((f - a) / (b - a)); return easeInOutCubic(u); };
+    var door1Wob = dampedKick(frame - 73, 4.5, 1.5) * 1.4;
+    var door1 = doorEase(frame, T_WORLD.doorOpen[0], T_WORLD.doorOpen[1]) * (1 - doorEase(frame, T_WORLD.doorClose[0], T_WORLD.doorClose[1])) +
       interpolate(frame, [300, 316], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }) *
       interpolate(frame, [T_WORLD.doorsClose2[0], T_WORLD.doorsClose2[1]], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
     var dock = { x: SUPPLIER_X + SUPPLIER_DOCK.x * B_SCALE, y: GROUND + SUPPLIER_DOCK.y * B_SCALE };
@@ -1683,17 +1733,19 @@
           FloatingParticles({ seed: "world-a", x: 60, y: 240, width: 1700, height: 560, time: time, count: 24, baseOpacity: 0.4 }),
           FloatingParticles({ seed: "world-b", x: 2050, y: 240, width: 1700, height: 560, time: time, count: 24, baseOpacity: 0.4 }),
           SupplierBuilding({ x: SUPPLIER_X, y: GROUND, scale: B_SCALE }),
+          SupplierMotion({ x: SUPPLIER_X, y: GROUND, scale: B_SCALE, time: time }),
           Warehouse({ x: WAREHOUSE_X, y: GROUND, scale: B_SCALE, shutterOpen: [shutter(0), shutter(1), shutter(2)], rayPhase: time }),
           [1, 2].map(function (i) {
             var d = departDelta(i), m = truckMotion(function (f) { return departRun(i, f); }, frame);
             return Truck({ x: dockRear(i) + d, y: GROUND + 34, scale: T_SCALE * 0.97, doorOpen: dockTruckDoor(i), distance: d, bob: m.run * Math.sin(frame * 1.15 + i) * 1.3 + (1 - m.run) * idleBob(i), moving: d > 1, pitch: m.pitch, run: m.run });
           }),
-          Truck({ x: truck1X, y: GROUND + 34, scale: T_SCALE, doorOpen: door1, distance: truck1X + 400, bob: truck1Bob, moving: truck1Moving, pitch: truck1M.pitch, run: truck1M.run }),
+          Truck({ x: truck1X, y: GROUND + 34, scale: T_SCALE, doorOpen: door1, distance: truck1X + 400, bob: truck1Bob, moving: truck1Moving,
+            pitch: truck1M.pitch - landRock * 0.16, run: truck1M.run, doorWob: door1Wob, flap: -truck1Lag.pitch * 6, mirror: truck1Lag.pitch * 2.5 }),
           h("g", { clipPath: "url(#clipT1)" },
             [0, 1, 2].map(function (i) {
               var t0 = T_WORLD.parcels[0] + i * 26, t = clamp01((frame - t0) / (carrySpan - 52));
-              var pp = parcelPose(t, { x: dock.x, y: dock.y }, door1Target, GROUND);
-              if (!pp) return null;
+              // always in the node list (opacity 0 while waiting or once inside), so nothing is inserted mid-scene
+              var pp = parcelPose(t, { x: dock.x, y: dock.y }, door1Target, GROUND) || { x: dock.x, y: dock.y, squash: 1, stretch: 1, rot: 0, shadow: 0, gy: dock.y, op: 0 };
               return Parcel({ x: pp.x, y: pp.y, size: 52, squash: pp.squash, stretch: pp.stretch, rotation: pp.rot, shadow: pp.shadow, shadowY: pp.gy, opacity: pp.op });
             })
           ),

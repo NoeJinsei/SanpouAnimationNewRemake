@@ -1,0 +1,99 @@
+{
+ "side": "remake",
+ "from": 5139,
+ "to": 7000,
+ "crop": "200,560,1300,440",
+ "steps": 111,
+ "frozenSteps": 2,
+ "longestFrozenRun": 2,
+ "longestFrozenAt": [
+  6806,
+  6839
+ ],
+ "medianChange": 0.0077,
+ "largestChange": 0.1865,
+ "largestAt": 5239,
+ "pops": [
+  {
+   "at": 5339,
+   "change": 0.0576,
+   "neighbours": [
+    0.0008,
+    0.0009
+   ]
+  },
+  {
+   "at": 5456,
+   "change": 0.0577,
+   "neighbours": [
+    0.0004,
+    0.0124
+   ]
+  },
+  {
+   "at": 5572,
+   "change": 0.0752,
+   "neighbours": [
+    0.0007,
+    0.0014
+   ]
+  },
+  {
+   "at": 5689,
+   "change": 0.062,
+   "neighbours": [
+    0.0003,
+    0.0007
+   ]
+  },
+  {
+   "at": 5739,
+   "change": 0.0255,
+   "neighbours": [
+    0.0008,
+    0.001
+   ]
+  },
+  {
+   "at": 5839,
+   "change": 0.0361,
+   "neighbours": [
+    0.0006,
+    0.0015
+   ]
+  },
+  {
+   "at": 5939,
+   "change": 0.0622,
+   "neighbours": [
+    0.0009,
+    0.0023
+   ]
+  },
+  {
+   "at": 6172,
+   "change": 0.0258,
+   "neighbours": [
+    0.007,
+    0.0085
+   ]
+  },
+  {
+   "at": 6239,
+   "change": 0.0713,
+   "neighbours": [
+    0.0086,
+    0.0083
+   ]
+  },
+  {
+   "at": 6272,
+   "change": 0.1446,
+   "neighbours": [
+    0.0083,
+    0.0099
+   ]
+  }
+ ],
+ "consoleErrors": []
+}
