@@ -9,9 +9,16 @@ A **remake** of the website's hero animation, in the sense of game remakes (Resi
 same game, same story and scenes, much better graphics and features. The current animation is the "original
 game"; this project builds the remake.
 
+**The brief for the current round is `PROMPT-FOR-FABLE.md`. Read it first, all of it.**
+
 - **Keep exactly:** the five scenes and their order (01 入荷 receiving, 02 積込 loading, 03 輸送 expressway,
-  04 配送ネットワーク map, 05 地域とともに finale), camera path and timing, layout, every background building
-  and its place, how the trucks move, the other elements, the daylight setting.
+  04 配送ネットワーク map, 05 地域とともに finale), the story, copy, facts, timings and camera path, the
+  daylight, and the **named** cast (supplier building, Sanpou warehouse, trucks, Tokyo Tower, Mt Fuji, the
+  signs, the map, the plane) in about its place and size.
+- **Redraw from a blank page:** every drawing, with a new silhouette and new proportions, not the old shape
+  with detail added. The background fields (skyline tiers, cloud field, road traffic) are not cast: they are
+  composed again, with new widths, heights, gaps and outline. (This list used to say "layout, every background
+  building and its place"; that instruction produced two rejections and is withdrawn.)
 - **Raise:** the graphics quality of every element (buildings, roads, sky, clouds, trucks, signs, map),
   lighting and atmosphere, detail, secondary motion, and smoothness — to the level of the Motion reference
   film (see `REFERENCES.md`), in Kurzgesagt-style flat vector, fitting a Japanese logistics company.
@@ -101,8 +108,28 @@ Round 2 (the full remake, in Fable 5.2), as of 2026-11-14:
   owner's verdict before building on it.** The sky, clouds, city kit, Tower and truck are shared, so scenes
   02, 03 and 05 already show them; the warehouse, the expressway, the map, the airport and the finale's own
   pieces are still the original drawings.
-- Next: scene 01's motion pass (after the verdict), verify, commit; then scene 02, and so on. After each
-  scene, look at all five together for colour drift.
+- The owner's verdict on that scene 01: "I do see some changes but I dont see a significant improvement",
+  because the skyline layout had been kept. A second pass rebuilt the city with volume (the slightly-3d look,
+  which the owner kept) and redrew the map; the owner still wanted a far more drastic change.
+
+Round 3 (started 2026-11-14, brief in `PROMPT-FOR-FABLE.md`):
+
+- **Everything drawn so far is a floor, not a ceiling.** Each element is drawn again and shown as three
+  pictures: original, frozen round 2, new. The only settled things are the brief's "Closed" list and the
+  company facts.
+- **Step 0 is done:** `round2/js` is the one working copy and now holds the rebuilt city, the taller trial
+  tiers, the bigger trial Fuji and the teal map (parts `city2`, `skyline-calls`, `finale-city-size`,
+  `fuji-size`, `map`, applied in that order after the scene 01 parts). `samples/before-round3` (side "Round 2,
+  frozen") is a plain copy of that state, never edited, used as the middle picture of every comparison.
+  The `city-v2` and `map-v2` sides and their build scripts are gone. `CHANGES.md` ends with what each element
+  becomes in round 3.
+- **Order and gates** (one at a time; stop and wait for the owner's yes at each): 1 the shared art (sky, sun,
+  shafts, clouds, city kit and skyline, Tower, window light, Fuji's size) → 2 scenes 01-02 → 3 the Sanpou
+  warehouse → 4 scene 03 → 5 scene 04 → 6 scene 05 → 7 the seams and the motion pass → 8 the last look.
+  The owner wants all the drawing approved first and the motion built after it.
+- A part file's anchors are used up by its first splice. To change something already spliced, write a new
+  part whose anchors match the file as it is now; to try something, build a sample side from a fresh copy of
+  `round2/js` and point its build script at the part in `round2/parts/` (never a second copy of the part).
 
 Usage: this account has a 5-hour usage limit; a burst of parallel agents exhausted it in the first session and
 killed work in progress. Use one or two agents at a time (a cheaper model for engineering, the best one for

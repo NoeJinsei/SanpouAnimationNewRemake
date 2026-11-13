@@ -16,8 +16,8 @@
     },
     {
       "id": "round2",
-      "label": "Remake (round 2)",
-      "detail": "the full remake so far: Mt Fuji approved; scene 01 redrawn (style frame, waiting for the verdict)",
+      "label": "Remake (round 3 working copy)",
+      "detail": "the working copy: everything redrawn so far",
       "kind": "dom",
       "base": "round2/js/",
       "scripts": [
@@ -31,27 +31,11 @@
       }
     },
     {
-      "id": "city-v2",
-      "label": "City rebuilt",
+      "id": "before-round3",
+      "label": "Round 2, frozen",
+      "detail": "round 2 as it stood on 2026-11-14 (scene 01, the rebuilt city, the taller tiers, the bigger Fuji, the teal map), never edited: the middle picture in every three-way comparison",
       "kind": "dom",
-      "detail": "round 2 + the skyline composed again and every building given volume",
-      "base": "samples/city-v2/js/",
-      "scripts": [
-        "hero-flag.js",
-        "hero-port-a.js",
-        "hero-port-b.js"
-      ],
-      "glue": "hero-glue.js",
-      "schedule": {
-        "holdAmbient02": true
-      }
-    },
-    {
-      "id": "map-v2",
-      "label": "Map rebuilt",
-      "kind": "dom",
-      "detail": "round 2 + scene 04's coverage map redrawn: lifted plate, teal service area, streamline routes, depot markers",
-      "base": "samples/map-v2/js/",
+      "base": "samples/before-round3/js/",
       "scripts": [
         "hero-flag.js",
         "hero-port-a.js",

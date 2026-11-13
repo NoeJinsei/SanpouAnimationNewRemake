@@ -157,9 +157,11 @@
     skyN: "linear-gradient(to bottom, #58abe0 0%, #90c6e9 52%, #cfeaf8 100%)",
     sun: "#ffd24d", sunGlow: "255,224,130",
     haze: "232,243,251", hazeK: [0.6, 0.42, 0.22],
-    hill: "#dbe8f3", deep: "#cbdaea", deepTop: "#dbe6f2", deepWin: "rgba(255,255,255,0.45)",
-    far: ["#8ba2c7", "#95abce", "#7f97bd"], farCap: "#7288ab",
-    mid: ["#5f7ba8", "#6a86b2", "#54719e", "#5e88a8"], midCap: "#465e84",
+    /* The tiers were too close in value to read as distance: the far tier has been given air and
+       the near one weight, so the city has a front and a back instead of one pale wash. */
+    hill: "#dbe8f3", deep: "#cfdcea", deepTop: "#dee8f3", deepWin: "rgba(255,255,255,0.45)",
+    far: ["#9ab0d2", "#a4b8d8", "#8ea6ca"], farCap: "#8097b8",
+    mid: ["#53709f", "#5d7cab", "#486595", "#527da2"], midCap: "#3a5276",
     frame: "rgba(22,41,63,0.22)", glass: "#c6ddf1", lit: "#eef7fe", warm: "#ffd98f", cool: "#dbeaf6",
     warmP: 0.045, litP: 0.13, coolP: 0.1,
     refl: "rgba(255,255,255,0.4)", shade: "rgba(22,41,63,0.1)", rim: "rgba(255,255,255,0.3)",
@@ -718,22 +720,41 @@
 
     return _supMemo[mk] = h("g", { transform: "translate(" + x + ", " + y + ") scale(" + scale + ") translate(0, -278)", "data-cache": "supplier-" + mk, "data-box": "-24 22 376 266" }, out, last);
   }
+  /* ---- round 2, second pass: the skyline is COMPOSED, not inherited ----
+     The first pass kept this function byte for byte, so every building stood at the original's
+     x, with the original's width and the original's height: the city's silhouette - the thing
+     the eye reads first, from across the room - never changed, and only the texture inside each
+     box did. This rebuilds the silhouette.
+     The original cycles are now only a starting rhythm. Plots differ far more in width (a sliver
+     next to a slab), heights run over a much wider range, every seventh plot is a landmark tower
+     that breaks the tier's band, some gaps are negative so neighbours overlap, and each plot sits
+     at one of three depths INSIDE its tier. The array comes back sorted back to front, ready to
+     draw, carrying its depth so the building can be drawn as a volume at that distance. */
+  var TALLER = 1.22;                                               // how much taller the city stands than the original
   function makeSkylineTier(seed, span, opt) {
-    // designed rhythm, not randomness: widths, heights and gaps step through
-    // repeating cycles (different lengths, so the pattern doesn't visibly
-    // tile) - neighbours always contrast and spacing stays deliberate
-    var arr = [], x = -80, i = 0;
-    while (x < span) {
-      var w = opt.w[i % opt.w.length];
-      var hgt = Math.round(opt.base + opt.amp * opt.hf[i % opt.hf.length]);
-      if (x + w > span + 60) break;
-      arr.push({ x: x, w: w, h: hgt, i: i });
-      x += w + opt.g[i % opt.g.length];
+    var WS = [1, 0.46, 1.3, 0.72, 1.08, 0.56, 1.46, 0.86];        // plot widths: slivers beside slabs
+    var HS = [1, 0.38, 0.8, 1.24, 0.52, 0.96, 0.26, 1.12, 0.68, 1.38];
+    var GS = [1, 0.22, 1.65, -0.16, 0.9, 0.34, 1.25, -0.08];      // negative = the next plot overlaps
+    var DZ = [0, 1, 0, 2, 1, 0, 2, 1, 0, 1];                       // depth inside the tier
+    var arr = [], x = -140, i = 0, guard = 0;
+    while (x < span && guard++ < 500) {
+      var w = Math.max(44, Math.round(opt.w[i % opt.w.length] * WS[i % WS.length]));
+      var hf = opt.hf[i % opt.hf.length] * HS[i % HS.length];
+      var land = i % 7 === 3;                                      // a landmark, slim and tall
+      var lb = opt.base < 150 ? 1.55 : 1.22;                       // the near tier carries the towers
+      // the owner asked for a taller city: one factor, so every tier grows together and the skyline
+      // keeps its proportions against the Tower and Fuji
+      var hgt = Math.round(TALLER * (opt.base * (land ? 1.06 : 0.84) + opt.amp * hf * (land ? lb : 1)));
+      if (land) w = Math.max(46, Math.round(w * 0.6));
+      if (hgt < 46) hgt = 46;
+      if (x + w > span + 110) break;
+      arr.push({ x: x, w: w, h: hgt, i: i, dz: DZ[i % DZ.length], land: land });
+      x += w + Math.round(opt.g[i % opt.g.length] * GS[i % GS.length]);
       i++;
     }
+    arr.sort(function (a, b) { return a.dz - b.dz || a.x - b.x; });
     return arr;
   }
-
   /* Tokyo Tower, redrawn for round 2 (same place and height). Built as the structure is, bottom to top:
      four legs flaring to the ground with the arch between them and a girder over it; three braced panels
      up to the main deck; the two-storey main deck; five braced panels tapering to the top deck, painted
@@ -824,59 +845,82 @@
       _ttMemo[key],
       h("circle", { cx: cx, cy: baseY - H, r: (3 * u).toFixed(1), fill: "#ffb3a0", opacity: blink.toFixed(3) }));
   }
-  /* ---- round 2 city: a kit of Tokyo buildings, chosen per slot (not one box at every size) ----
-     office   concrete frame, punched windows with sills (or ribbon glazing), a shopfront, roof box / mast
-     glass    curtain-wall tower: banded glass, one diagonal reflection, a set-back crown
-     mansion  apartment block: rows of balconies in shadow, stair head and water tank on the roof
-     stepped  a tower that sets back twice as it rises, vertical glazing, a mast
-     pencil   a slim building on a narrow plot: one wide window a floor, a blade sign, a roof board
-     block    a low wide block: ribbon glazing, rooftop plant, a billboard frame
-     The far tier (detail 0) draws the same kinds with fewer, broader marks; the deep tier (detail -1) is
-     silhouettes with a few bands. Every tone is mixed from the slot's own facade colour, so a building
-     keeps its tier's distance: contrast falls with it. One light: the left return of every volume is in
-     shade, the right edge catches the sun, windows reflect the sky at their top. Signs carry blocks, never
-     lettering. Static, so each building is built once. */
-  var CITY_CYCLE = ["office", "glass", "mansion", "stepped", "glass"];
-  var _cbMemo = {};   // one drawing per building
-  function cityKind(fi, w, hgt, detail) {
-    if (detail < 0) return ["flat", "stepped", "flat", "crown"][fi % 4];
-    if (w <= 118) return detail > 0 ? "pencil" : (fi % 2 ? "glass" : "stepped");
-    if (w >= 196 && hgt / w < 1.25) return "block";
+  /* ---- round 2 city, second pass: Tokyo as volumes, not cut-outs ----
+     Every building is a box standing in space, not a shape cut from paper:
+     - ONE OBLIQUE. The sun is top right, so the left return of every volume is the shaded face,
+       and it is drawn as a real face receding toward the eye line: a point above the eye line
+       falls toward it as it goes back, a point below it rises, so the side tapers with distance.
+       The coping runs over the front and the return as one slab, which is what reads as mass.
+     - CROWNS DIFFER. parapet, double setback, a chamfered top corner, a sloped slice, a crowned
+       mast, a plant deck, water tanks, a pitched roof. The crown is what gives a skyline its
+       character, and the original had one (a flat lid) for every building.
+     - DEPTH INSIDE A TIER. A plot at dz 1 or 2 stands nearer: its base is a little lower, its
+       return is deeper and its tone a step stronger, and it overlaps its neighbours.
+     Facades: punched windows with sills, ribbon glazing, balcony rows in shadow, vertical
+     glazing strips, a banded curtain wall with one diagonal reflection. Signs carry blocks,
+     never lettering. Tones are mixed from the slot's own facade colour, so a building keeps its
+     tier's distance and contrast falls with it. Static: each building is drawn once and kept. */
+  var CITY_CYCLE = ["office", "glass", "mansion", "stepped", "glass", "block", "office", "glass"];
+  var CROWNS = ["parapet", "setback", "chamfer", "mast", "slope", "plant", "tanks", "parapet", "pitch", "setback"];
+  var _cbMemo = {};
+  function cityKind(fi, w, hgt, detail, land) {
+    if (detail < 0) return land ? "crown" : ["flat", "stepped", "flat", "crown"][fi % 4];
+    if (land) return fi % 2 ? "stepped" : "glass";
+    if (w <= 96) return detail > 0 ? "pencil" : "glass";
+    if (w >= 210 && hgt / w < 1.1) return "block";
     return CITY_CYCLE[fi % CITY_CYCLE.length];
   }
   function CityBuilding(p) {
-    var detail = p.detail == null ? 1 : p.detail;
-    var _mk = p.seed + "|" + p.x + "|" + p.baseY + "|" + p.w + "|" + p.h + "|" + detail + "|" + (p.fi == null ? -1 : p.fi) + "|" + (p.kind || "");
+    var detail = p.detail == null ? 1 : p.detail, dz = p.dz || 0, land = !!p.land;
+    var _mk = p.seed + "|" + p.x + "|" + p.baseY + "|" + p.w + "|" + p.h + "|" + detail + "|" + dz +
+      "|" + (land ? 1 : 0) + "|" + (p.fi == null ? -1 : p.fi) + "|" + (p.kind || "");
     if (_cbMemo[_mk]) return _cbMemo[_mk];
-    var x = p.x, baseY = p.baseY, w = p.w, hgt = p.h, seed = p.seed, top = baseY - hgt;
+    var x = p.x, w = p.w, hgt = p.h, seed = p.seed;
+    var baseY = p.baseY + dz * (detail > 0 ? 13 : detail === 0 ? 7 : 3);   // nearer in the tier = lower
+    var top = baseY - hgt;
     var fi = p.fi == null ? Math.floor(random(seed + "-f") * 997) : p.fi;
-    var face = p.faces[fi % p.faces.length], kind = p.kind || cityKind(fi, w, hgt, detail);
+    var face = p.faces[fi % p.faces.length], kind = p.kind || cityKind(fi, w, hgt, detail, land);
+    var crown = CROWNS[(fi * 3 + (land ? 1 : 0)) % CROWNS.length];
     var c = detail > 0 ? 1 : detail === 0 ? 0.62 : 0.5, NAVY = "#1d3156";
+    if (dz) face = mix(face, NAVY, dz * 0.055 * c);                        // and a step stronger
     var col = {
-      body: face, side: mix(face, NAVY, 0.2 * c), deep: mix(face, NAVY, 0.42 * c),
-      glass: detail < 0 ? mix(face, "#ffffff", 0.42) : mix(face, DAY.glass, 0.25 + 0.7 * c), warm: DAY.warm,
-      over: face, lite: detail < 0 ? (p.cap || mix(face, "#ffffff", 0.3)) : mix(face, "#ffffff", 0.34 * c),
-      board: mix(face, "#ffffff", 0.66), cap: detail < 0 ? face : (p.cap || mix(face, NAVY, 0.36 * c))
+      ret: mix(face, NAVY, 0.4 * c + 0.1), body: face, deep: mix(face, NAVY, 0.4 * c),
+      glass: detail < 0 ? mix(face, "#ffffff", 0.42) : mix(face, DAY.glass, 0.25 + 0.7 * c),
+      warm: DAY.warm, over: face, lite: detail < 0 ? (p.cap || mix(face, "#ffffff", 0.3)) : mix(face, "#ffffff", 0.36 * c),
+      board: mix(face, "#ffffff", 0.66), cap: detail < 0 ? face : (p.cap || mix(face, NAVY, 0.36 * c)),
+      capRet: detail < 0 ? face : mix(p.cap || mix(face, NAVY, 0.36 * c), NAVY, 0.3)
     };
-    col.wall = mix(face, DAY.glass, 0.16 + 0.3 * c); col.sheen = mix(col.wall, "#ffffff", 0.26); col.hi = mix(col.glass, "#ffffff", 0.5);
-    var ORDER = ["body", "side", "deep", "wall", "glass", "sheen", "hi", "warm", "over", "lite", "board", "cap"], L = {};
+    col.wall = mix(face, DAY.glass, 0.16 + 0.3 * c); col.sheen = mix(col.wall, "#ffffff", 0.26);
+    col.hi = mix(col.glass, "#ffffff", 0.5);
+    var ORDER = ["ret", "capRet", "body", "wall", "deep", "glass", "sheen", "hi", "warm", "over", "lite", "board", "cap"], L = {};
     ORDER.forEach(function (k) { L[k] = ""; });
     var r1 = function (v) { return Math.round(v * 10) / 10; };
     var R = function (k, rx, ry, rw, rh) { if (rw > 0.5 && rh > 0.5) L[k] += "M" + r1(rx) + "," + r1(ry) + "h" + r1(rw) + "v" + r1(rh) + "h" + r1(-rw) + "z"; };
-    var fp = detail > 0 ? 34 : detail === 0 ? 24 : 40;                 // a storey; smaller with distance
-    var sw = detail > 0 ? Math.max(8, Math.min(18, w * 0.1)) : detail === 0 ? Math.max(5, Math.min(10, w * 0.07)) : 0;
+    var P = function (k, pts) { var s = "M"; for (var q = 0; q < pts.length; q += 2) s += (q ? "L" : "") + r1(pts[q]) + "," + r1(pts[q + 1]); L[k] += s + "z"; };
+
+    /* the one oblique: the eye line, and how far back the left return goes */
+    var HZ = baseY - (detail > 0 ? 210 : detail === 0 ? 150 : 110);        // the eye line for this tier
+    var K = detail > 0 ? 0.15 : detail === 0 ? 0.1 : 0.055;                // share of the way to it
+    var D = (detail > 0 ? 1 : detail === 0 ? 0.6 : 0.26) * (1 + dz * 0.22) * Math.max(10, Math.min(w * 0.24, 72));
+    var bk = function (px, py) { return [px - D, py + (HZ - py) * K]; };   // the same point, one depth back
+    /* a volume: its shaded left return, its body, the coping slab over both. Returns the lit front. */
+    var volume = function (vx, vy, vw, vh, coping) {
+      var t = bk(vx, vy), b = bk(vx, vy + vh);
+      if (D > 2.5) P("ret", [vx, vy, t[0], t[1], b[0], b[1], vx, vy + vh]);
+      R("body", vx, vy, vw, vh);
+      if (coping) {
+        R("cap", vx - 2, vy - coping + 2, vw + 4, coping);
+        if (D > 2.5) { var t2 = bk(vx - 2, vy - coping + 2); P("capRet", [vx - 2, vy - coping + 2, t2[0], t2[1], t2[0], t2[1] + coping, vx - 2, vy + 2]); }
+      }
+      R("lite", vx + vw - 3, vy, 3, vh);                                   // the sunlit right arris
+      return { x: vx, y: vy, w: vw, h: vh };
+    };
+
+    var fp = detail > 0 ? 34 : detail === 0 ? 24 : 40;                     // a storey; smaller with distance
     var rnd = function (k) { return random(seed + "-" + k); };
     var floors = function (y0, y1) { var n = Math.max(1, Math.round((y1 - y0) / fp)); return { n: n, h: (y1 - y0) / n }; };
 
-    // one volume: its body, its shaded return on the left, the sunlit edge on the right, its coping
-    var volume = function (vx, vy, vw, vh, coping) {
-      R("body", vx, vy, vw, vh);
-      if (sw) { R("side", vx, vy, Math.min(sw, vw * 0.2), vh); R("lite", vx + vw - 3, vy, 3, vh); }
-      if (coping) R("cap", vx - 2, vy - coping + 2, vw + 4, coping);
-      var s = sw ? Math.min(sw, vw * 0.2) : 0;
-      return { x: vx + s, y: vy, w: vw - s, h: vh };
-    };
-    // --- window logics; each fills the lit front `f` between y0 and y1 ---
+    // --- facades; each fills the lit front `f` between y0 and y1 ---
     var punched = function (f, y0, y1) {
       var fl = floors(y0, y1), cols = Math.max(1, Math.round((f.w - 10) / (fp * 0.94))), cw = (f.w - 10) / cols, ww = cw * 0.6, wh = fl.h * 0.5;
       for (var r = 0; r < fl.n; r++) {
@@ -916,7 +960,7 @@
           if (rnd("b" + r + "-" + b) < DAY.warmP) R("warm", gx, ry + 3, bw * 0.66, rh - 3); else { R("glass", gx, ry + 3, bw * 0.66, rh - 3); R("hi", gx, ry + 3, bw * 0.66, (rh - 3) * 0.34); }
           if (b) R("over", f.x + 4 + b * bw - 2, ry, 4, rh);
         }
-        R("lite", f.x + 1, ry + rh, f.w - 5, detail > 0 ? 4 : 3);                  // the balcony rail, in the sun
+        R("lite", f.x + 1, ry + rh, f.w - 5, detail > 0 ? 4 : 3);
       }
     };
     var strips = function (f, y0, y1) {
@@ -934,13 +978,26 @@
       var nm = Math.max(2, Math.round(f.w / (detail > 0 ? 34 : 56)));
       for (var m = 1; m < nm; m++) R("over", f.x + m * (f.w - 3) / nm - 1.5, y0, 3, H);
     };
-    // --- roof furniture ---
-    var mast = function (cx, y, hh) { R("cap", cx - 1.8, y - hh, 3.6, hh); R("cap", cx - 7, y - hh * 0.42, 14, 3); };
-    var box = function (bx, y, bw, bh) { R("cap", bx, y - bh, bw, bh); };
+
+    // --- crowns: what makes one roof different from the next ---
+    var mast = function (cx2, y, hh) { R("cap", cx2 - 1.8, y - hh, 3.6, hh); R("cap", cx2 - 7, y - hh * 0.42, 14, 3); R("cap", cx2 - 4.5, y - hh * 0.72, 9, 2.5); };
+    var box = function (bx, y, bw, bh) { R("cap", bx, y - bh, bw, bh); if (D > 2.5) { var t = bk(bx, y - bh); P("capRet", [bx, y - bh, t[0], t[1], t[0], t[1] + bh, bx, y]); } };
     var tank = function (tx, y) { R("cap", tx, y - 25, 21, 15); R("cap", tx + 2, y - 10, 3, 10); R("cap", tx + 16, y - 10, 3, 10); };
     var billboard = function (bx, y, bw, bh) {
       R("cap", bx + bw * 0.18, y - 13, 3.4, 13); R("cap", bx + bw * 0.82 - 3.4, y - 13, 3.4, 13);
       R("board", bx, y - 12 - bh, bw, bh); R("cap", bx + 5, y - 12 - bh * 0.5, bw * 0.55, Math.max(4, bh * 0.2));
+    };
+    var doCrown = function (cx2, cy, cw2) {
+      if (detail < 0) return;
+      var s = detail > 0 ? 1 : 0.68;
+      if (crown === "setback") { box(cx2 + cw2 * 0.14, cy, cw2 * 0.72, 16 * s); box(cx2 + cw2 * 0.3, cy - 16 * s, cw2 * 0.4, 13 * s); }
+      else if (crown === "chamfer") { P("cap", [cx2, cy, cx2 + cw2, cy, cx2 + cw2, cy - 10 * s, cx2 + cw2 * 0.6, cy - 24 * s, cx2 + cw2 * 0.16, cy - 24 * s, cx2, cy - 9 * s]); }
+      else if (crown === "mast") { box(cx2 + cw2 * 0.2, cy, cw2 * 0.54, 12 * s); mast(cx2 + cw2 * 0.47, cy - 12 * s, 46 * s); }
+      else if (crown === "slope") { P("cap", [cx2, cy, cx2 + cw2, cy, cx2 + cw2, cy - 30 * s, cx2, cy - 6 * s]); }
+      else if (crown === "plant") { box(cx2 + cw2 * 0.08, cy, cw2 * 0.26, 15 * s); box(cx2 + cw2 * 0.42, cy, cw2 * 0.2, 9 * s); if (detail > 0) tank(cx2 + cw2 * 0.7, cy); }
+      else if (crown === "tanks") { if (detail > 0) { tank(cx2 + cw2 * 0.14, cy); tank(cx2 + cw2 * 0.56, cy); } else box(cx2 + cw2 * 0.2, cy, cw2 * 0.5, 10 * s); }
+      else if (crown === "pitch") { P("cap", [cx2 - 3, cy, cx2 + cw2 + 3, cy, cx2 + cw2 * 0.5, cy - 26 * s]); }
+      else box(cx2 + cw2 * 0.24, cy, cw2 * 0.44, 11 * s);                  // parapet: one low housing
     };
 
     var f, cx = x + w / 2;
@@ -949,40 +1006,39 @@
       var gf = detail > 0 ? Math.min(40, hgt * 0.25) : 0;
       if (gf) { R("deep", f.x + 5, baseY - gf + 9, f.w - 12, gf - 9); R("lite", f.x + 1, baseY - gf + 2, f.w - 5, 5); }
       (fi % 4 < 2 ? punched : ribbons)(f, top + 10, baseY - gf - 4);
-      if (detail > 0 && fi % 2 === 0) box(x + w * 0.26, top - 6, 24, 12);
-      if (detail > 0 && fi % 3 === 2) mast(x + w * 0.7, top - 6, 30);
+      doCrown(x, top - 6, w);
     } else if (kind === "glass") {
       var cr = detail > 0 ? 16 : 10;
       R("cap", x + w * 0.14, top, w * 0.72, cr + 1);
       f = volume(x, top + cr, w, hgt - cr, 0);
       curtain(f, top + cr + 4, baseY);
       R("lite", x, top + cr, w, 3);
-      if (fi % 3 === 1) mast(cx, top, detail > 0 ? 34 : 24);
+      doCrown(x, top, w);
     } else if (kind === "mansion") {
       f = volume(x, top, w, hgt, 7);
       balconies(f, top + 8, baseY - 4);
-      box(x + w * 0.6, top - 5, w * 0.22, detail > 0 ? 16 : 10);
-      if (detail > 0) tank(x + w * 0.2, top - 5);
+      doCrown(x, top - 5, w);
     } else if (kind === "stepped") {
-      var v1 = volume(x, top + hgt * 0.4, w, hgt * 0.6, detail < 0 ? 0 : 6), v2 = volume(x + w * 0.11, top + hgt * 0.15, w * 0.78, hgt * 0.25 + 1, detail < 0 ? 0 : 6),
+      var v1 = volume(x, top + hgt * 0.4, w, hgt * 0.6, detail < 0 ? 0 : 6),
+        v2 = volume(x + w * 0.11, top + hgt * 0.15, w * 0.78, hgt * 0.25 + 1, detail < 0 ? 0 : 6),
         v3 = volume(x + w * 0.25, top, w * 0.5, hgt * 0.15 + 1, detail < 0 ? 0 : 6);
       strips(v1, v1.y + 10, baseY - 6); strips(v2, v2.y + 9, v2.y + v2.h - 6); strips(v3, v3.y + 8, v3.y + v3.h - 6);
       if (detail < 0) { R("lite", x, v1.y, w, 4); R("lite", x + w * 0.11, v2.y, w * 0.78, 4); R("lite", x + w * 0.25, top, w * 0.5, 4); }
-      else mast(cx, top - 4, detail > 0 ? 44 : 30);
+      else mast(cx, top - 4, detail > 0 ? 50 : 34);
     } else if (kind === "pencil") {
       f = volume(x, top, w, hgt, 7);
       var fl = floors(top + 10, baseY - 6), wh = fl.h * 0.5;
       for (var r = 0; r < fl.n; r++) { var wy = top + 10 + r * fl.h + fl.h * 0.2; R("deep", f.x + 5, wy - 2, f.w - 12, wh + 4); R("glass", f.x + 7, wy, f.w - 16, wh); R("hi", f.x + 7, wy, f.w - 16, wh * 0.38); }
-      var sh = Math.min(hgt * 0.5, 150), sy = top + hgt * 0.14;                       // the blade sign: blocks, never lettering
+      var sh = Math.min(hgt * 0.5, 150), sy = top + hgt * 0.14;            // the blade sign: blocks, never lettering
       R("board", x + w + 1, sy, 13, sh);
       for (var k = 0; k < 4; k++) R("cap", x + w + 4, sy + 6 + k * (sh - 8) / 4, 7, (sh - 8) / 4 - 7);
-      if (fi % 2 === 0) billboard(x + 5, top - 5, w - 10, 26); else box(x + w * 0.3, top - 5, 22, 12);
+      if (fi % 2 === 0) billboard(x + 5, top - 5, w - 10, 26); else doCrown(x, top - 5, w);
     } else if (kind === "block") {
       f = volume(x, top, w, hgt, 8);
       ribbons(f, top + 10, baseY - 4);
-      box(x + w * 0.1, top - 6, w * 0.2, detail > 0 ? 13 : 9);
-      if (detail > 0) { box(x + w * 0.34, top - 6, w * 0.1, 8); if (fi % 2 === 0) billboard(x + w * 0.6, top - 6, w * 0.32, 28); else tank(x + w * 0.7, top - 6); }
-    } else {                                                                         // the deep tier: flat or crowned silhouettes
+      if (detail > 0 && fi % 2 === 0) billboard(x + w * 0.56, top - 6, w * 0.36, 28);
+      doCrown(x, top - 6, w * (detail > 0 && fi % 2 === 0 ? 0.5 : 1));
+    } else {                                                               // the deep tier: silhouettes
       f = volume(x, top, w, hgt, 0);
       R("lite", x, top, w, 4);
       if (kind === "crown") { R("body", x + w * 0.2, top - 14, w * 0.6, 15); R("lite", x + w * 0.2, top - 14, w * 0.6, 4); R("body", cx - 2, top - 46, 4, 32); }
@@ -1195,14 +1251,7 @@
     return h("div", { style: { position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(ellipse 78% 68% at 50% 46%, rgba(0,0,0,0) 58%, rgba(6,12,24,0.55) 100%)", opacity: opacity } });
   }
 
-  function AnimatedRoute(p) {
-    var d = p.d, length = p.length, draw = p.draw, flowOffset = p.flowOffset, stroke = p.stroke == null ? COLORS.verm : p.stroke,
-      strokeWidth = p.strokeWidth == null ? 4.2 : p.strokeWidth, opacity = p.opacity == null ? 0.95 : p.opacity;
-    var drawn = draw >= 1;
-    return h("path", { d: d, fill: "none", stroke: stroke, strokeWidth: strokeWidth, strokeLinecap: "round",
-      opacity: opacity * Math.min(1, draw * 3), strokeDasharray: drawn ? "3.5 11" : (length + " " + length), strokeDashoffset: drawn ? -flowOffset : length * (1 - draw) });
-  }
-
+  /* AnimatedRoute is gone: the map draws its own corridors (casing, core, flow, travelling highlight). */
   /* ---- Warehouse.tsx ---- */
   var WAREHOUSE_W = 720, WAREHOUSE_BAYS = [80, 320, 560], BAY_W = 100, BAY_H = 112, BAY_Y = 128;
   function bayWorldX(x, scale, i) { return x + WAREHOUSE_BAYS[i] * scale; }
@@ -1479,98 +1528,270 @@
     );
   }
 
-  /* ---- CoverageMap.tsx (JRMAP is a global from mapdata.js; bounds computed lazily) */
+  /* ---- round 2, scene 04: the 配送ネットワーク map redrawn from a blank page -----------------------
+     The map is an OBJECT, not a flat fill: one land silhouette lifted off the sky, with a shaded edge
+     under it (the plate's thickness) and a single flat contact shadow down-left of it. Land is one cool
+     grey tone; the covered prefectures sit on it in the film's teal family (deepest where we deliver
+     most), each separated from its neighbour by a crisp pale seam, so the service area reads as a set of
+     real prefecture shapes instead of one orange blob with lines on it. Vermilion is kept scarce: only
+     the routes, the depots' fascia line and the head office's card tab.
+     Sequence (all inside the timings the player already drives):
+       plate   mapIn 0-26  the silhouette settles, its edge and shadow opening out under it
+       prefs   4-56        each prefecture is wiped in by a band growing outward from the hub, in rank
+                           order of distance from Itabashi, so the colour spreads like ink from Tokyo
+       routes  34-78       seven curved corridors draw from the hub with a long soft landing, then light
+                           up with flowing dashes and one travelling highlight each
+       depots  60-78       three miniature Sanpou depots land with weight, overshoot and settle, their
+                           name cards sliding out on a leader afterwards
+     Never frozen while it holds: on all seven corridors the dashes flow outward and a highlight travels
+     the whole way, and the three anchor rings breathe, each on its own phase.
+     Engine: the node list is the same shape on every frame; every id is prefixed nm4; the only clip is a
+     clipPath with one rect child; no masks, filters or blur. */
+  DAY.map = {
+    land: "#bfcad4",        // the country that is not our service area: one cool grey tone, kept
+                            // light so it never competes with the teal of the area we cover
+    landSeam: "#a5b2bf",    // prefecture lines on that land
+    rim: "#5b7489",         // the plate's shaded edge, seen under the silhouette
+    cast: "rgba(32,58,90,0.13)", // the one flat contact shadow
+    heatLo: [183, 222, 216],// covered, least delivered: pale sea-foam
+    heatHi: [23, 99, 111],  // covered, most delivered: deep teal
+    seam: "#eef8f7",        // the crisp seam between two covered prefectures
+    route: "#e16347",       // the route line keeps the brand vermilion
+    routeCase: "#ffffff",   // white casing so a route reads over any prefecture tone
+    flow: "#ffffff",
+    depot: "#f8fbfd", depotShade: "#d7e5f0", depotRoof: "#e5eef5", depotDock: "#9fbdd4",
+    ink: "#13263f",
+    card: "#ffffff", cardLine: "rgba(19,38,63,0.20)",
+  };
+  // the four neighbours that touch our area and still fit inside the map box, so the plate's outline is
+  // all real coast and real prefecture border — the other 20 grey shapes are dropped with their 33k of
+  // path data (the original faded them out with a mask, which this build is not allowed to use)
+  var MAP_NEIGHBOURS = [5, 9, 10, 12];
+  var MAP_PAD = 38;
+  function mapHeat(ht) {
+    var lo = DAY.map.heatLo, hi = DAY.map.heatHi, t = Math.pow(ht, 0.75);
+    var L = function (i) { return Math.round(lo[i] + (hi[i] - lo[i]) * t); };
+    return "rgb(" + L(0) + "," + L(1) + "," + L(2) + ")";
+  }
+  var mr1 = function (v) { return Math.round(v * 10) / 10; };
+  var easeOutQuart = function (t) { return 1 - Math.pow(1 - t, 4); };
+  var easeOutQuint = function (t) { return 1 - Math.pow(1 - t, 5); };
+  var bellEase = function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2; };
+
+  /* Every name sits inside its own shape, clear of the routes, the depots and the other names; the spots
+     were found by searching each polygon for the point furthest from its border that also clears
+     everything else (tools/… scratch search, 2026-11-14). */
+  var MAP_LABEL = {
+    TOKYO: { x: 456.4, y: 791.3, f: 11.5 }, SAITAMA: { x: 461.4, y: 756.5, f: 11.5 },
+    KANAGAWA: { x: 451.5, y: 830.6, f: 14 }, CHIBA: { x: 565.7, y: 851.7, f: 15 },
+    IBARAKI: { x: 581.4, y: 715.6, f: 15 }, TOCHIGI: { x: 523.7, y: 628.1, f: 15 },
+    GUNMA: { x: 411.4, y: 665.9, f: 15 }, NIIGATA: { x: 397.0, y: 552.7, f: 15 },
+  };
+  var ROUTE_ORDER = ["CHIBA", "IBARAKI", "TOCHIGI", "GUNMA", "NIIGATA", "KANAGAWA", "SAITAMA"];
+  var ROUTE_END = {
+    CHIBA: [551, 833], IBARAKI: [612, 672], TOCHIGI: [523, 657], GUNMA: [432, 684],
+    NIIGATA: [403, 577], KANAGAWA: [470, 826], SAITAMA: [430, 718],
+  };
+  // one corridor per direction: the bearing each route leaves the hub on. Swept for the widest possible
+  // fan — the closest two corridors stay 14 map units (23 stage px) apart, so none crowds another.
+  var ROUTE_DEP = { CHIBA: 48, IBARAKI: -36, TOCHIGI: -66, NIIGATA: -96, GUNMA: -132, SAITAMA: -170, KANAGAWA: 122 };
+  /* The three bases are only 38 map units apart in reality, so the three depots cannot stand on their own
+     spots without becoming one clump. Each keeps a dot where it really is and its building is lifted off
+     that dot on a stem of its own length and direction — 48 u east, 44 u north, 40 u west — which leaves
+     43.7 map units (71 stage px) of clear air between the three illustrations. Each card sits against its
+     own building (4.8-7.5 u from it), fully on covered land, never on the grey, never over another depot's
+     dot or stem, and 22 u from the next card. Measured by the scratch layout solver, 2026-11-14. */
+  var MAP_BASES = [
+    { id: "itabashi", nm: "本社（板橋）", bld: [552, 768], w: 22, hq: true, card: [572, 786], t0: 0 },
+    { id: "shiki", nm: "志木営業所", bld: [487, 726], w: 19, hq: false, card: [487, 696], t0: 0.17 },
+    { id: "iruma", nm: "入間営業所", bld: [428, 766], w: 19, hq: false, card: [428, 736], t0: 0.32 },
+  ];
+  var CARD_F = 10, CARD_H = 18;
+
   var _mapInit = null;
   function mapInit() {
     if (_mapInit) return _mapInit;
-    var PAD = 38, x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    var x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity, info = {};
     JRMAP.covered.forEach(function (c) {
-      var nums = c.d.match(/-?\d+(\.\d+)?/g) || [];
-      for (var i = 0; i + 1 < nums.length; i += 2) { var x = Number(nums[i]), y = Number(nums[i + 1]); if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+      var nums = c.d.match(/-?\d+(\.\d+)?/g) || [], bb = [Infinity, Infinity, -Infinity, -Infinity];
+      for (var i = 0; i + 1 < nums.length; i += 2) {
+        var x = Number(nums[i]), y = Number(nums[i + 1]);
+        if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
+        if (x < bb[0]) bb[0] = x; if (x > bb[2]) bb[2] = x; if (y < bb[1]) bb[1] = y; if (y > bb[3]) bb[3] = y;
+      }
+      info[c.en] = { bb: bb };
     });
-    var bounds = [x0 - PAD, y0 - PAD, x1 - x0 + PAD * 2, y1 - y0 + PAD * 2];
+    var bounds = [x0 - MAP_PAD, y0 - MAP_PAD, x1 - x0 + MAP_PAD * 2, y1 - y0 + MAP_PAD * 2];
     var HUB = JRMAP.bases.itabashi;
     var order = JRMAP.covered.slice().sort(function (a, b) { return Math.hypot(a.cx - HUB.x, a.cy - HUB.y) - Math.hypot(b.cx - HUB.x, b.cy - HUB.y); });
-    var REVEAL_RANK = {}; order.forEach(function (c, i) { REVEAL_RANK[c.en] = i; });
-    _mapInit = { bounds: bounds, HUB: HUB, REVEAL_RANK: REVEAL_RANK };
+    order.forEach(function (c, i) { info[c.en].rank = i; });
+    JRMAP.covered.forEach(function (c) {
+      var b = info[c.en].bb, span = 0, L = MAP_LABEL[c.en];
+      [[b[0], b[1]], [b[2], b[1]], [b[0], b[3]], [b[2], b[3]]].forEach(function (q) { span = Math.max(span, Math.hypot(q[0] - HUB.x, q[1] - HUB.y)); });
+      info[c.en].span = span + 28;
+      info[c.en].deg = Math.atan2(L.y - HUB.y, L.x - HUB.x) * 180 / Math.PI;
+    });
+    var land = JRMAP.covered.map(function (c) { return c.d; })
+      .concat(MAP_NEIGHBOURS.map(function (i) { return JRMAP.greys[i]; }));
+    _mapInit = { bounds: bounds, HUB: HUB, info: info, land: land };
     return _mapInit;
   }
-  var LABEL_NUDGE = { "東京": [0, 16], "埼玉": [-27, -16], "神奈川": [0, 12], "千葉": [4, 2], "茨城": [10, -2], "栃木": [6, -8], "群馬": [-10, -6], "新潟": [-4, -4] };
-  var ROUTE_ORDER = ["CHIBA", "IBARAKI", "TOCHIGI", "GUNMA", "NIIGATA", "KANAGAWA", "SAITAMA"];
-  var MAP_FONT = 16.5;
-  function heatFill(ht) { var a = [0xf0, 0xd9, 0xb8], b = [0xcf, 0x42, 0x26]; var L = function (i) { return Math.round(a[i] + (b[i] - a[i]) * Math.pow(ht, 0.8)); }; return "rgb(" + L(0) + "," + L(1) + "," + L(2) + ")"; }
-  function LabelPlate(p) {
-    var x = p.x, y = p.y, text = p.text, opacity = p.opacity;
-    var w = text.length * MAP_FONT + 20;
-    return h("g", { opacity: opacity },
-      h("rect", { x: x - w / 2, y: y - 16, width: w, height: 25, rx: 12.5, fill: "rgba(10,20,36,0.82)", stroke: "rgba(245, 236, 234,0.25)", strokeWidth: 1 }),
-      h("text", { x: x, y: y + 2.5, textAnchor: "middle", fontFamily: FONTS.jp, fontWeight: 700, fontSize: MAP_FONT, fill: "#fff" }, text)
-    );
+
+  /* the seven corridors: a cubic that leaves the hub on its own bearing and arrives aimed at its target */
+  var _mapRoutes = null;
+  function mapRoutes() {
+    if (_mapRoutes) return _mapRoutes;
+    var H = JRMAP.bases.itabashi;
+    _mapRoutes = ROUTE_ORDER.map(function (en) {
+      var E = ROUTE_END[en], d = Math.hypot(E[0] - H.x, E[1] - H.y), a = ROUTE_DEP[en] * Math.PI / 180;
+      var c1x = H.x + Math.cos(a) * d * 0.45, c1y = H.y + Math.sin(a) * d * 0.45;
+      var ux = (E[0] - H.x) / d, uy = (E[1] - H.y) / d;
+      var c2x = E[0] - ux * d * 0.4, c2y = E[1] - uy * d * 0.4;
+      var len = 0, px = H.x, py = H.y;
+      for (var i = 1; i <= 48; i++) {
+        var t = i / 48, m = 1 - t;
+        var x = m * m * m * H.x + 3 * m * m * t * c1x + 3 * m * t * t * c2x + t * t * t * E[0];
+        var y = m * m * m * H.y + 3 * m * m * t * c1y + 3 * m * t * t * c2y + t * t * t * E[1];
+        len += Math.hypot(x - px, y - py); px = x; py = y;
+      }
+      return { en: en, end: E, len: len,
+        d: "M" + H.x + "," + H.y + " C" + mr1(c1x) + "," + mr1(c1y) + " " + mr1(c2x) + "," + mr1(c2y) + " " + E[0] + "," + E[1] };
+    });
+    return _mapRoutes;
   }
+
+  /* the plate: silhouette, its shaded edge and its one contact shadow — built once, moved by transform */
+  var _mapPlate = null;
+  function mapPlate() {
+    if (_mapPlate) return _mapPlate;
+    var M = mapInit(), C = DAY.map;
+    // the eleven land polygons are disjoint, so each layer is ONE path: a third of the nodes to patch
+    var all = M.land.join(" ");
+    _mapPlate = {
+      cast: h("path", { d: all, fill: C.cast }),
+      rim: h("path", { d: all, fill: C.rim }),
+      land: h("path", { d: all, fill: C.land, stroke: C.landSeam, strokeWidth: 1.1, strokeLinejoin: "round" }),
+    };
+    return _mapPlate;
+  }
+
+  /* a miniature Sanpou depot: white body with a navy outline, a shaded left return, a parapet roof, the
+     house vermilion fascia line and dock shutters under a canopy. Drawn with its base on (0,0) so it can
+     be scaled about the ground as it lands. */
+  var _depotMemo = {};
+  function MiniDepot(w, hq) {
+    var mk = w + "|" + (hq ? 1 : 0);
+    if (_depotMemo[mk]) return _depotMemo[mk];
+    var C = DAY.map, H = w * 0.64, R = w * 0.15, SW = w * 0.08, hw = w / 2;
+    var ink = C.ink, bays = hq ? 3 : 2, bw = w * 0.21, gap = (w * 0.84 - bays * bw) / (bays + 1);
+    var dockY = -H * 0.44, kids = [
+      h("rect", { x: -hw, y: -H, width: w, height: H, fill: C.depot, stroke: ink, strokeWidth: SW, strokeLinejoin: "round" }),
+      h("rect", { x: -hw + SW * 0.5, y: -H + SW * 0.5, width: w * 0.19, height: H - SW, fill: C.depotShade }),
+      h("rect", { x: -hw, y: -H + SW * 0.4, width: w, height: w * 0.11, fill: C.route }),
+      h("polygon", { points: (-hw - R * 0.45) + "," + (-H) + " " + (hw + R * 0.45) + "," + (-H) + " " + (hw * 0.84) + "," + (-H - R) + " " + (-hw * 0.84) + "," + (-H - R), fill: C.depotRoof, stroke: ink, strokeWidth: SW, strokeLinejoin: "round" }),
+      h("rect", { x: -hw * 0.94, y: dockY - w * 0.07, width: w * 0.94, height: w * 0.07, fill: C.depotShade }),
+    ];
+    for (var i = 0; i < bays; i++) {
+      var bx = -w * 0.42 + gap + i * (bw + gap);
+      kids.push(h("rect", { x: bx, y: dockY, width: bw, height: -dockY - SW * 0.5, fill: C.depotDock }));
+      kids.push(h("rect", { x: bx, y: dockY, width: bw, height: w * 0.04, fill: ink, opacity: 0.4 }));
+    }
+    kids.push(h("rect", { x: -hw, y: -SW * 0.7, width: w, height: SW * 0.7, fill: ink, opacity: 0.6 }));
+    if (hq) {   // the head office: a taller block on the sunlit right end
+      kids.push(h("rect", { x: hw - w * 0.34, y: -H * 1.46, width: w * 0.34, height: H * 0.5, fill: C.depot, stroke: ink, strokeWidth: SW, strokeLinejoin: "round" }));
+      kids.push(h("rect", { x: hw - w * 0.29, y: -H * 1.33, width: w * 0.24, height: H * 0.17, fill: C.depotDock }));
+    }
+    _depotMemo[mk] = kids;
+    return kids;
+  }
+
   function CoverageMap(p) {
-    var prefProgress = p.prefProgress, routeProgress = p.routeProgress, pinProgress = p.pinProgress, flowTime = p.flowTime;
-    var mi = mapInit(), bounds = mi.bounds, hub = mi.HUB, REVEAL_RANK = mi.REVEAL_RANK;
-    var pinE = easeOutCubic(clamp01(pinProgress));
-    var pop = pinProgress > 0 ? 1 + 0.22 * Math.sin(Math.min(1, pinProgress) * Math.PI) : 0;
-    var legendE = easeOutCubic(clamp01(prefProgress * 1.4 - 0.3));
-    return h("svg", { viewBox: bounds.join(" "), width: "100%", height: "100%", style: { overflow: "hidden" } },
+    var prefProgress = p.prefProgress, routeProgress = p.routeProgress, pinProgress = p.pinProgress,
+      flowTime = p.flowTime, mapIn = p.mapIn == null ? 1 : p.mapIn;
+    var M = mapInit(), C = DAY.map, HUB = M.HUB, plate = mapPlate(), routes = mapRoutes();
+    var lift = easeOutQuart(clamp01(mapIn));                 // the plate settling into the air
+    // No float on the plate: a bob repaints all eleven land polygons every frame and cost 5 fps of the
+    // scene's budget when measured, for a 2 px move. The scene is kept alive by the seven corridors
+    // (flowing dashes plus a travelling highlight on each) and the three breathing anchor rings instead.
+    var rim = 7.2 * lift, castX = -5 * lift, castY = 12 * lift;
+
+    return h("svg", { viewBox: M.bounds.join(" "), width: "100%", height: "100%", style: { overflow: "hidden" } },
       h("defs", null,
-        h("radialGradient", { id: "landFadeGrad", cx: "52%", cy: "50%", r: "50%" }, h("stop", { offset: "34%", stopColor: "#fff" }), h("stop", { offset: "62%", stopColor: "#8a8a8a" }), h("stop", { offset: "86%", stopColor: "#000" })),
-        h("mask", { id: "landFade" }, h("rect", { x: bounds[0] - 60, y: bounds[1] - 60, width: bounds[2] + 120, height: bounds[3] + 120, fill: "url(#landFadeGrad)" }))
+        JRMAP.covered.map(function (cp) {
+          var nf = M.info[cp.en], k = clamp01((prefProgress - nf.rank * 0.055) * 1.45), grow = bellEase(k) * nf.span;
+          return h("clipPath", { id: "nm4w" + nf.rank },
+            h("rect", { x: -grow, y: -2400, width: grow * 2, height: 4800,
+              transform: "translate(" + HUB.x + "," + HUB.y + ") rotate(" + mr1(nf.deg) + ")" }));
+        })
       ),
-      h("g", { mask: "url(#landFade)" }, JRMAP.greys.map(function (d) { return h("path", { d: d, fill: COLORS.greyLand, stroke: "rgba(10,20,36,0.35)", strokeWidth: 0.9, opacity: 0.5 }); })),
-      JRMAP.covered.map(function (cp) {
-        var k = clamp01((prefProgress - REVEAL_RANK[cp.en] * 0.055) * 1.5); var e = easeOutCubic(k);
-        return h("g", { transform: "translate(0, " + ((1 - e) * 9) + ")" }, h("path", { d: cp.d, fill: heatFill(cp.heat), stroke: "rgba(245,242,234,0.55)", strokeWidth: 1.2, strokeLinejoin: "round", opacity: e * 0.98 }));
-      }),
-      ROUTE_ORDER.map(function (en, i) {
-        var cp = JRMAP.covered.find(function (c) { return c.en === en; });
-        if (!cp) return null;
-        var len = Math.hypot(cp.cx - hub.x, cp.cy - hub.y);
-        var draw = clamp01((routeProgress - i * 0.07) * 1.7);
-        return AnimatedRoute({ d: "M" + hub.x + "," + hub.y + " L" + cp.cx + "," + cp.cy, length: len, draw: draw, flowOffset: flowTime * 22, strokeWidth: 3.2, opacity: 0.8 });
-      }),
-      JRMAP.covered.map(function (cp) {
-        var e = easeOutCubic(clamp01((prefProgress - REVEAL_RANK[cp.en] * 0.055) * 1.5));
-        var nd = LABEL_NUDGE[cp.jp] || [0, 0];
-        return LabelPlate({ x: cp.cx + nd[0], y: cp.cy + nd[1], text: cp.jp, opacity: e });
-      }),
-      ["shiki", "iruma"].map(function (id, j) {
-        var b = JRMAP.bases[id];
-        var e = easeOutCubic(clamp01(pinProgress * 1.3 - 0.25 - j * 0.15));
-        var bounce = e * (1 + 0.28 * Math.sin(Math.min(1, e) * Math.PI));
-        // spread #2 up-left and #3 down-left so the two circles never touch
-        var off = id === "shiki" ? [-27, -21] : [-16, 20];
-        var pp = (flowTime * 0.5 + j * 0.4) % 1;
-        return h("g", { transform: "translate(" + b.x + ", " + b.y + ")", opacity: e },
-          h("line", { x1: 0, y1: 0, x2: off[0] * 0.6, y2: off[1] * 0.6, stroke: COLORS.ink, strokeWidth: 1.6, opacity: 0.55 }),
-          h("circle", { r: 3, fill: COLORS.ink, opacity: 0.85 }),
-          h("g", { transform: "translate(" + off[0] + ", " + off[1] + ") scale(" + bounce + ")" },
-            h("circle", { r: 10 + pp * 7, fill: "none", stroke: COLORS.ink, strokeWidth: 1.4, opacity: (1 - pp) * 0.35 }),
-            h("circle", { r: 11.5, fill: "rgba(255,255,255,0.5)" }),
-            h("circle", { r: 10, fill: "#fff", stroke: COLORS.ink, strokeWidth: 2.4 }),
-            h("text", { y: 4.5, textAnchor: "middle", fontFamily: FONTS.lat, fontWeight: 800, fontSize: 12, fill: COLORS.ink }, j + 2))
-        );
-      }),
-      h("g", { transform: "translate(" + mi.HUB.x + ", " + mi.HUB.y + ")", opacity: pinE },
-        [0, 1].map(function (j) { var pp = (flowTime * 0.45 + j * 0.5) % 1; return h("circle", { r: 13 + pp * 30, fill: "none", stroke: COLORS.verm, strokeWidth: 2, opacity: pinE * (1 - pp) * 0.55 }); }),
-        h("g", { transform: "scale(" + (pop * 0.82) + ")" },
-          h("ellipse", { cy: 3, rx: 9, ry: 3.4, fill: "rgba(10,20,36,0.35)" }),
-          h("path", { d: "M0,0 C-13.5,-16.5 -15,-28.5 0,-39 C15,-28.5 13.5,-16.5 0,0 Z", fill: COLORS.verm, stroke: "#fff", strokeWidth: 3 }),
-          h("circle", { cy: -23, r: 12, fill: "#fff", stroke: "rgba(10,20,36,0.18)", strokeWidth: 1 }),
-          h("text", { y: -18.5, textAnchor: "middle", fontFamily: FONTS.lat, fontWeight: 800, fontSize: 13, fill: COLORS.ink }, "1")
-        )
-      ),
-      window.JX_CLEAN_HERO ? null : h("g", { transform: "translate(" + (bounds[0] + 22) + ", " + (bounds[1] + bounds[3] - 58) + ")", opacity: legendE },
-        h("rect", { x: 0, y: 0, width: 172, height: 46, rx: 9, fill: "rgba(10,20,36,0.78)", stroke: "rgba(245, 236, 234,0.22)", strokeWidth: 1 }),
-        h("rect", { x: 12, y: 9, width: 13, height: 10, rx: 2.5, fill: heatFill(0.75) }),
-        h("text", { x: 32, y: 18.5, fontFamily: FONTS.jp, fontSize: 11.5, fontWeight: 600, fill: "rgba(245, 236, 234,0.9)" }, "配送対応エリア"),
-        h("rect", { x: 12, y: 27, width: 13, height: 10, rx: 2.5, fill: COLORS.greyLand }),
-        h("text", { x: 32, y: 36.5, fontFamily: FONTS.jp, fontSize: 11.5, fontWeight: 600, fill: "rgba(245, 236, 234,0.6)" }, "営業エリア外")
+      h("g", { transform: "translate(" + mr1(castX) + "," + mr1(castY) + ")" }, plate.cast),
+      h("g", null,
+        h("g", { transform: "translate(0," + mr1(rim) + ")" }, plate.rim),
+        h("g", null, plate.land),
+        JRMAP.covered.map(function (cp) {
+          var nf = M.info[cp.en];
+          return h("g", { clipPath: "url(#nm4w" + nf.rank + ")" },
+            h("path", { d: cp.d, fill: mapHeat(cp.heat), stroke: C.seam, strokeWidth: 1.9, strokeLinejoin: "round" }));
+        }),
+        routes.map(function (r, i) {
+          var raw = (routeProgress - i * 0.07) * 2.6;
+          var draw = easeOutQuart(clamp01(raw)), flow = clamp01((raw - 1) * 2.2);
+          var on = Math.min(1, draw * 4), len = r.len;
+          var dash = len * (1 - draw);
+          var comet = ((flowTime * 0.28 + i * 0.37) % 1) * (len + 34);
+          // casing 4.9 u = 8.0 stage px, line 3.2 u = 5.2 px: slim enough to read as one streamline, still
+          // over the 3 px floor on a phone. The flow is long soft dashes, not stripes.
+          return h("g", null,
+            h("path", { d: r.d, fill: "none", stroke: C.routeCase, strokeWidth: 4.9, strokeLinecap: "round",
+              opacity: 0.88 * on, strokeDasharray: len + " " + len, strokeDashoffset: dash }),
+            h("path", { d: r.d, fill: "none", stroke: C.route, strokeWidth: 3.2, strokeLinecap: "round",
+              opacity: on, strokeDasharray: len + " " + len, strokeDashoffset: dash }),
+            h("path", { d: r.d, fill: "none", stroke: C.flow, strokeWidth: 3.2, strokeLinecap: "round",
+              opacity: flow * 0.26, strokeDasharray: "17 13", strokeDashoffset: -(flowTime * 20 + i * 6) }),
+            h("path", { d: r.d, fill: "none", stroke: C.flow, strokeWidth: 3.2, strokeLinecap: "round",
+              opacity: flow * 0.6, strokeDasharray: "32 " + mr1(len), strokeDashoffset: mr1(-comet) }),
+            h("circle", { cx: r.end[0], cy: r.end[1], r: 4.8 * flow, fill: C.routeCase }),
+            h("circle", { cx: r.end[0], cy: r.end[1], r: 2.8 * flow, fill: C.route })
+          );
+        }),
+        JRMAP.covered.map(function (cp) {
+          var nf = M.info[cp.en], L = MAP_LABEL[cp.en];
+          var k = clamp01((prefProgress - nf.rank * 0.055) * 1.45);
+          var e = easeOutQuart(clamp01((k - 0.45) / 0.55));
+          return h("text", { x: L.x, y: mr1(L.y + L.f * 0.36 + (1 - e) * 4), textAnchor: "middle",
+            fontFamily: FONTS.jp, fontWeight: 700, fontSize: L.f, fill: C.ink, opacity: e * 0.92 }, cp.jp);
+        }),
+        MAP_BASES.map(function (b, j) {
+          var B = JRMAP.bases[b.id], k = clamp01((pinProgress - b.t0) * 1.55);
+          // lands with weight: a damped spring about the ground, a small overshoot, then settles
+          var s = k <= 0 ? 0 : 1 - Math.exp(-5 * k) * Math.cos(7.8 * k);
+          var sy = Math.max(0.001, s), sx = 1 + (1 - s) * 0.45;
+          var cE = easeOutQuart(clamp01((k - 0.5) / 0.5));
+          var pp = (flowTime * 0.46 + j * 0.33) % 1;
+          var ring = b.hq ? C.route : C.ink;
+          var cw = b.nm.length * CARD_F + 18, cx = b.card[0], cy = b.card[1];
+          // the connector leaves the card at whichever edge faces its own building
+          var vx = b.bld[0] - cx, vy = b.bld[1] - cy;
+          var tt = Math.min(vx ? (cw / 2) / Math.abs(vx) : 1e9, vy ? (CARD_H / 2) / Math.abs(vy) : 1e9);
+          var lx1 = cx + vx * tt, ly1 = cy + vy * tt, lx2 = b.bld[0], ly2 = b.bld[1];
+          var llen = Math.max(0.1, Math.hypot(lx2 - lx1, ly2 - ly1));
+          return h("g", null,
+            h("circle", { cx: B.x, cy: B.y, r: 4 + pp * 13, fill: "none", stroke: ring, strokeWidth: 1.8, opacity: cE * (1 - pp) * 0.4 }),
+            h("line", { x1: B.x, y1: B.y, x2: b.bld[0], y2: b.bld[1], stroke: C.ink, strokeWidth: 1.9, opacity: cE * 0.55 }),
+            h("circle", { cx: B.x, cy: B.y, r: 2.6, fill: C.ink, opacity: cE }),
+            h("ellipse", { cx: b.bld[0], cy: b.bld[1] + 1.5, rx: b.w * 0.62 * sx, ry: b.w * 0.11, fill: "rgba(24,46,72,0.3)", opacity: Math.min(1, s * 1.4) }),
+            h("g", { transform: "translate(" + b.bld[0] + "," + b.bld[1] + ") scale(" + mr1(sx) + "," + mr1(sy) + ")" }, MiniDepot(b.w, b.hq)),
+            h("path", { d: "M" + mr1(lx1) + "," + mr1(ly1) + " L" + mr1(lx2) + "," + mr1(ly2), fill: "none", stroke: C.ink, strokeWidth: 1.7,
+              opacity: cE * 0.58, strokeDasharray: mr1(llen) + " " + mr1(llen), strokeDashoffset: mr1(llen * (1 - cE)) }),
+            h("g", { transform: "translate(0," + mr1((1 - cE) * -7) + ")", opacity: cE },
+              h("rect", { x: cx - cw / 2, y: cy - CARD_H / 2, width: cw, height: CARD_H, rx: 4, fill: C.card, stroke: C.cardLine, strokeWidth: 1 }),
+              h("rect", { x: cx - cw / 2 + 3.5, y: cy - 5.5, width: 3.4, height: 11, rx: 1.7, fill: b.hq ? C.route : "#7d92a8" }),
+              h("text", { x: cx - cw / 2 + 11, y: cy + 3.6, fontFamily: FONTS.jp, fontWeight: 700, fontSize: CARD_F, fill: C.ink }, b.nm))
+          );
+        })
       )
     );
   }
-
   /* ============================== SCENES ============================== */
   var GROUND = 880, B_SCALE = 1.9, T_SCALE = 2.0, SUPPLIER_X = 80, TRUCK_PARK_1 = 760, WAREHOUSE_X = 1980, WORLD_W = 4800;
   function dockRear(i) { return bayWorldX(WAREHOUSE_X, B_SCALE, i) + BAY_W * B_SCALE + 15; }
@@ -1767,19 +1988,19 @@
           h("path", { d: "M-300," + GROUND + " C200," + (GROUND - 62) + " 700," + (GROUND - 112) + " 1300," + (GROUND - 60) + " C1900," + (GROUND - 26) + " 2500," + (GROUND - 118) + " 3100," + (GROUND - 66) + " C3700," + (GROUND - 34) + " 4400," + (GROUND - 108) + " 5200," + (GROUND - 56) + " L5200," + GROUND + " Z", fill: DAY.hillNear })
         ),
         h("g", { transform: "translate(" + (-cam * 0.18) + ", 0)" }, skylineDeep.map(function (b, i) { return { b: b, i: i }; }).filter(function (o) { var vx = o.b.x - cam * 0.18; return vx + o.b.w > -240 && vx < 2160; }).map(function (o) {
-          return CityBuilding({ x: o.b.x, baseY: GROUND, w: o.b.w, h: o.b.h, seed: "skd" + o.i, fi: o.i, faces: [DAY.deep], detail: -1, cap: DAY.deepTop });
+          return CityBuilding({ x: o.b.x, baseY: GROUND, w: o.b.w, h: o.b.h, dz: o.b.dz, land: o.b.land, seed: "skd" + o.i, fi: o.i, faces: [DAY.deep], detail: -1, cap: DAY.deepTop });
         })),
         h("rect", { x: 0, y: GROUND - 470, width: 1920, height: 470, fill: "url(#wHaze0)" }),
         h("g", { transform: "translate(" + (-cam * 0.32) + ", 0)" },
           cloudsNear.map(function (c) { return cloudAt(c, 4.5); }),
           DayBirds({ seed: "w-birds", count: 4, time: time, span: 2300, yBase: 120 }),
-          skylineFar.map(function (b, i) { return { b: b, i: i }; }).filter(function (o) { var vx = o.b.x - cam * 0.32; return vx + o.b.w > -240 && vx < 2160; }).map(function (o) { return CityBuilding({ x: o.b.x, baseY: GROUND, w: o.b.w, h: o.b.h, seed: "skf" + o.i, fi: o.i, faces: DAY.far, detail: 0, cap: DAY.farCap }); }),
+          skylineFar.map(function (b, i) { return { b: b, i: i }; }).filter(function (o) { var vx = o.b.x - cam * 0.32; return vx + o.b.w > -240 && vx < 2160; }).map(function (o) { return CityBuilding({ x: o.b.x, baseY: GROUND, w: o.b.w, h: o.b.h, dz: o.b.dz, land: o.b.land, seed: "skf" + o.i, fi: o.i, faces: DAY.far, detail: 0, cap: DAY.farCap }); }),
           skylineFar.filter(function (b) { return b.h > 340; }).map(function (b, i) { return RoofBeacon({ x: b.x + b.w / 2, y: GROUND - b.h, time: time, phase: i * 1.7 }); }),
           TokyoTower({ cx: 1560, baseY: GROUND, h: 770, time: time, opacity: 0.95 })
         ),
         h("rect", { x: 0, y: GROUND - 430, width: 1920, height: 430, fill: "url(#wHaze1)" }),
         h("g", { transform: "translate(" + (-cam * 0.52) + ", 0)" },
-          skylineMid.map(function (b, i) { return { b: b, i: i }; }).filter(function (o) { var vx = o.b.x - cam * 0.52; return vx + o.b.w > -240 && vx < 2160; }).map(function (o) { return CityBuilding({ x: o.b.x, baseY: GROUND, w: o.b.w, h: o.b.h, seed: "skm" + o.i, fi: o.i, faces: DAY.mid, detail: 1, cap: DAY.midCap }); }),
+          skylineMid.map(function (b, i) { return { b: b, i: i }; }).filter(function (o) { var vx = o.b.x - cam * 0.52; return vx + o.b.w > -240 && vx < 2160; }).map(function (o) { return CityBuilding({ x: o.b.x, baseY: GROUND, w: o.b.w, h: o.b.h, dz: o.b.dz, land: o.b.land, seed: "skm" + o.i, fi: o.i, faces: DAY.mid, detail: 1, cap: DAY.midCap }); }),
           UtilityPoles(-120, 12, 360, GROUND, 176)
         ),
         h("rect", { x: 0, y: GROUND - 300, width: 1920, height: 300, fill: "url(#wHaze2)" }),
@@ -1925,18 +2146,18 @@
         }),
         h("g", null,
           h("path", { d: "M0," + (ROAD_Y - 128) + " C320," + (ROAD_Y - 158) + " 680," + (ROAD_Y - 132) + " 1080," + (ROAD_Y - 156) + " C1420," + (ROAD_Y - 176) + " 1700," + (ROAD_Y - 140) + " 1920," + (ROAD_Y - 154) + " L1920," + ROAD_Y + " L0," + ROAD_Y + " Z", fill: DAY.hill }),
-          FujiMountain({ cx: 460, baseY: 742, w: 1240, ht: 470 })
+          FujiMountain({ cx: 440, baseY: 742, w: 1480, ht: 596 })
         ),
         [0, 1].map(function (rep) {
           var off = wrap(scroll * 0.18, TILE) + rep * TILE;
           return h("g", { transform: "translate(" + off + ", 0)" },
-            farCity.map(function (b, i) { return { b: b, i: i }; }).filter(function (o) { return o.b.x + off + o.b.w > -240 && o.b.x + off < 2160; }).map(function (o) { return CityBuilding({ x: o.b.x, baseY: ROAD_Y, w: o.b.w, h: o.b.h + 110, seed: "tf" + o.i, fi: o.i, faces: DAY.far, detail: 0, cap: DAY.farCap }); }));
+            farCity.map(function (b, i) { return { b: b, i: i }; }).filter(function (o) { return o.b.x + off + o.b.w > -240 && o.b.x + off < 2160; }).map(function (o) { return CityBuilding({ x: o.b.x, baseY: ROAD_Y, w: o.b.w, h: o.b.h + 110, dz: o.b.dz, land: o.b.land, seed: "tf" + o.i, fi: o.i, faces: DAY.far, detail: 0, cap: DAY.farCap }); }));
         }),
         h("rect", { x: 0, y: ROAD_Y - 420, width: 1920, height: 420, fill: "url(#tHaze0)" }),
         [0, 1].map(function (rep) {
           var off = wrap(scroll * 0.42, TILE) + rep * TILE;
           return h("g", { transform: "translate(" + off + ", 0)" },
-            midCity.map(function (b, i) { return { b: b, i: i }; }).filter(function (o) { return o.b.x + off + o.b.w > -240 && o.b.x + off < 2160; }).map(function (o) { return CityBuilding({ x: o.b.x, baseY: ROAD_Y, w: o.b.w, h: o.b.h + 50, seed: "tc" + o.i, fi: o.i, faces: DAY.mid, detail: 1, cap: DAY.midCap }); }));
+            midCity.map(function (b, i) { return { b: b, i: i }; }).filter(function (o) { return o.b.x + off + o.b.w > -240 && o.b.x + off < 2160; }).map(function (o) { return CityBuilding({ x: o.b.x, baseY: ROAD_Y, w: o.b.w, h: o.b.h + 50, dz: o.b.dz, land: o.b.land, seed: "tc" + o.i, fi: o.i, faces: DAY.mid, detail: 1, cap: DAY.midCap }); }));
         }),
         h("rect", { x: 0, y: ROAD_Y - 260, width: 1920, height: 260, fill: "url(#tHaze1)" }),
         DayBirds({ seed: "t-birds", count: 3, time: time, span: 2100, yBase: 105 }),
@@ -2165,13 +2386,13 @@
       { x: 1826, w: 96, h: 435, k: 3 }
     ];
     var CITY_BACK = [
-      { x: 118, w: 122, h: 305 }, { x: 606, w: 130, h: 345 },
-      { x: 856, w: 118, h: 285 }, { x: 998, w: 126, h: 385 },
-      { x: 1542, w: 128, h: 365 }, { x: 1732, w: 122, h: 265 }
+      { x: 118, w: 122, h: 372 }, { x: 606, w: 130, h: 421 },
+      { x: 856, w: 118, h: 348 }, { x: 998, w: 126, h: 470 },
+      { x: 1542, w: 128, h: 445 }, { x: 1732, w: 122, h: 323 }
     ];
     var CITY_FRONT = [
-      { x: 678, w: 112, h: 175 }, { x: 986, w: 120, h: 215 },
-      { x: 1652, w: 132, h: 195 }, { x: 1794, w: 118, h: 235 }
+      { x: 678, w: 112, h: 214 }, { x: 986, w: 120, h: 262 },
+      { x: 1652, w: 132, h: 238 }, { x: 1794, w: 118, h: 287 }
     ];
     return h("div", { style: { position: "absolute", inset: 0, background: "#eaf5fc", overflow: "hidden" } },
       h("div", { style: { position: "absolute", inset: 0, background: DAY.skyN } }),
@@ -2232,7 +2453,7 @@
             return h("g", { transform: "translate(" + wx + ", " + (c.y + by) + ")" }, Cloud({ w: c.w, o: 0.92, edge: ed }));
           }),
           DayBirds({ seed: "n-birds", count: 3, time: time, span: 2300, yBase: 210 }),
-          FujiMountain({ cx: 400, baseY: 1008, w: 1700, ht: 560, capT: 0.3 }),
+          FujiMountain({ cx: 380, baseY: 1008, w: 2020, ht: 706, capT: 0.3 }),
           CITY_DEEP.map(function (b, i) {
             var bx = b.x, bw = b.w, top = 988 - b.h, bh = b.h + 22;
             var kind = b.k;
@@ -2319,7 +2540,7 @@
         )
       ),
       h("div", { style: { position: "absolute", left: 535, top: 12, width: 850, height: 1056, opacity: mapIn * (1 - recede), transform: "scale(" + ((0.95 + 0.05 * mapIn) * (1 - recede * 0.08)) + ") translate(" + (recede * -36) + "px, " + ((1 - mapIn) * 34) + "px)", transformOrigin: "46% 46%", maskImage: "radial-gradient(72% 66% at 48% 50%, rgba(0,0,0,1) 58%, rgba(0,0,0,0.6) 76%, rgba(0,0,0,0) 93%)" } },
-        CoverageMap({ prefProgress: prefK, routeProgress: routeK, pinProgress: pinK, flowTime: time })
+        CoverageMap({ prefProgress: prefK, routeProgress: routeK, pinProgress: pinK, flowTime: time, mapIn: mapIn })
       ),
       recede < 0.96 ? h("div", { style: { opacity: 1 - recede, transform: "translateX(" + (recede * 60) + "px)" } },
         KpiCard({

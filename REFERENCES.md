@@ -9,8 +9,10 @@ A "remake", like the Resident Evil or Final Fantasy remakes: same game, same sto
 and features. The current hero (`sanpou-site-v2/public_html/assets/js/hero-port-b.js`, daylight, commit
 `72862b6`) is the original game.
 
-- Keep: the five scenes and their order, camera path and timing, layout, the buildings and their places, how
-  the trucks move, the other elements.
+- Keep: the five scenes and their order, camera path and timing, the story, the named cast and where it sits,
+  how the trucks move. (This line first said "layout, the buildings and their places". That reading produced two
+  rejections and is withdrawn: every drawing is redrawn, and the skyline, clouds and traffic are composed again.
+  `CLAUDE.md` and `PROMPT-FOR-FABLE.md` are the rule.)
 - Raise: graphics quality of every element, lighting/atmosphere, detail, secondary motion, smoothness —
   to the level of the Motion reference film below.
 - Separate tasks: website wording / polish; integrating the remake into the site (only after it is finished).

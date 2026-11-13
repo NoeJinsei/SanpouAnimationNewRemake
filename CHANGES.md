@@ -282,3 +282,123 @@ What this settles:
 
 Still untouched and still the original drawings: the warehouse of scene 02, the expressway of scene 03, the
 airport, terminal, plane, office block and road traffic of scene 05.
+
+## Round 3: what each element becomes (written 2026-11-14, before anything is drawn)
+
+The brief for this round is `PROMPT-FOR-FABLE.md`. Everything drawn so far is a floor: each element below is
+drawn again and has to beat the version in `samples/before-round3` (viewer side "Round 2, frozen") on its
+own, shown as three pictures: the original, the frozen round 2, and the new one. The owner approves each pass
+on a style frame from the real scene code before any motion is built on it. Sizes marked **(owner picks)**
+are shown as options on the frame and are not decided here.
+
+**Why the last two attempts read as polish, and what changes in how I draw.** Round 2's buildings were boxes
+with rectangles on them, lit weakly, in a pale sky: correct, and flat. This round is drawn like a lit
+illustration instead of a diagram: a sky with value structure, three clearly separated depth planes, cast
+shadows you can read from across the room, shapes built from several volumes rather than one box, and
+something moving in every plane. Before a frame is shown, two checks have to pass: the named thing's outline
+is visibly different from the original's (overlaid), and `diff-sides` shows the field it sits in was composed
+again, not re-textured.
+
+### Pass 1: the shared art (appears in four scenes, drawn once)
+
+| Element | It becomes |
+|---|---|
+| Sky | One sky family for all five scenes: a deeper blue overhead, paling through the middle, and two or three broad flat bands of pale air low on the horizon, so the top third has depth and the horizon value no longer jumps at a seam. Measured for copy contrast under the wash before it is shown. |
+| Sun | One component used by every scene, same size and finish everywhere: disc, lighter core, a warm bloom into the sky. A thin cloud can cross it. |
+| Light shafts | Three or four wedges of clearly different width that really fan from the sun's position, present in every scene, with a cloud edge cutting across one so they sit in the air and not on top of the picture. |
+| Clouds | Four species instead of one: a tall towering cumulus, the flat-based fair-weather cloud, a thin high streak, and small scraps. Composed overlaps on two depth planes, one speed per plane and the same wrap in every scene; the far plane passes behind the tall buildings. |
+| Birds | Small filled silhouettes with a body and two wings, a flap-then-glide cycle on each bird's own phase, banking when they turn, one loose group and a single; never the same bird drawn twice. |
+| Hills | The two soft curves go. One distant mountain range takes their place: a jagged far ridge and a lower, longer near ridge, the range Fuji stands behind in scenes 03 and 05. |
+| Skyline layout | Composed again by hand in clusters (a knot of towers, a belt of mid-rises, gaps of low roofs), not on a repeating cycle, and taller: raised base and wider range. **How much taller (owner picks)**: today's trial and two steps up, on the frame. |
+| The buildings | Nine real Tokyo types, each built from several volumes in the oblique view, each with its own window system: a curtain-wall tower with a rounded corner and cloud shapes reflected in the glass; an apartment slab with balcony rows, an open side corridor and a zigzag escape stair; a tower that steps back unevenly; a slim pencil building with a stack of blank blade signs and a blank party wall; a wide podium with a tower set back on it; a corner building with a chamfered face and ribbon windows wrapping it; a low block with tanks and a roof fence; a building topped by a blank billboard frame; and one under construction, half wrapped in mesh, with a tower crane. No invented shapes. |
+| Window light | A thin moving layer over the near tier, outside the cached drawings: one slow sheen sliding down one glass tower, three to five single panes catching the sun, one or two warm panes changing slowly. Daylight on glass, never a twinkle field. |
+| Haze and depth | The same two haze bands at the same strength in every scene, and depth carried mostly by value and scale: the far tier pale but readable, the near tier strong. |
+| Roof beacons | The dark stubs come out. (Blinking roof lamps were rejected before as a night element.) |
+| Tokyo Tower | Rebuilt around its legs: four of them, each a braced lattice you can see sky through, the far pair a tone down behind the near pair; the arch framed between the legs with thickness and a shaded side; a real base (the low building under the tower, splayed footings, a contact shadow); both decks; the whole height banded in orange and white; lit per face. A lift car riding between the ground and the main deck, and the beacon, live outside the cache. |
+| Mt Fuji | The approved drawing, unchanged. **Its size (owner picks)**: approved size, today's trial, one step between; and in scene 05 the city is arranged so the mountain reads whole instead of in slivers. |
+
+### Pass 2: scenes 01 and 02, the depot street
+
+| Element | It becomes |
+|---|---|
+| Utility poles and wires | Drawn for their distance: one bold pole shape with a crossarm and a transformer that still read on a phone, two wires with different sag per span, a slow sway. Nothing spent where the supplier building hides them. |
+| The street | A road that is used: lighter polished wheel tracks, joints, one manhole and one kerb grating drawn boldly, a stop line and a striped crossing seen in perspective, a dropped kerb at the dock. Clean and dark where the controls sit over it. |
+| Street lamps | Irregular spacing, two heights, one carrying a pair of blank banners, each with a flat shadow on the paving. The same lamp design is used in scene 03. |
+| Vending machines | Staged in the oblique view with a side and a top, at slightly different depths, the cans simplified to bold rows; something small beside them so the paving is not empty. Unbranded. |
+| Supplier building | A modern logistics building with a new outline: clean flat roof with nothing on it, metal-panel walls in broad bands, a glazed office corner whose ribbon windows wrap the return face, a slim cantilevered canopy. The owner's window and dock arrangement stays, drawn lighter: thin frames, varied reflections, blinds with soft folds. The dock works: its shutter opens for the truck. |
+| Yard props | Tied to the work instead of standing by: a short roller conveyor from the dock to the truck's tail carries the cartons (shown as an option against hand-off arcs), pallets stacked on purpose with their shadow, one ink rule for all of them. |
+| The truck | A modern Japanese medium box truck with form: raked windscreen under a sun visor, rounded cab corners, a front overhang, mirrors on arms, a box with a roof deflector and side skirts. Two axles, twin rear tyres, lettering and stripe exactly as they are, plain dry box. |
+| Trucks at the bays | Shown two ways on the frame, **(owner picks)**: three of the same truck, or a mixed fleet from our own range (a 軽 van, a 2 t, the 4 t, a large truck), all plain dry bodies. |
+| Parcels | The carton stays; they are carried, enter the truck through its door instead of vanishing at an edge, and never pass in front of a cab. (Choreography is built in the motion pass.) |
+| Foreground rail | Behaves like the nearest thing to the camera: heavier, with a break in it and uneven post spacing, and a sparrow that lands on it. |
+| Vignette | Removed; the dark foreground and the deeper sky do its job. Shown with and without. |
+
+### Pass 3: the Sanpou warehouse (scene 02)
+
+| Element | It becomes |
+|---|---|
+| The building | A modern distribution centre: a long white volume with a return face and a real parapet, a navy base course, the vermilion fascia line, and a glazed office block at one end that rises above the roofline and gives it a silhouette. |
+| The roof | Clean: the spikes and grey boxes go; the office block is the one deliberate element. |
+| The name sign | 「Sanpou 物流センター」 on a raised sign band with standoffs and its own shadow. The lettering is not changed; the Archivo font question is raised with the owner at this frame. |
+| The three bays | Real dock positions at the same places and sizes: a reveal, a door frame, black dock seals, a leveller plate, bumpers, guide posts, the bay number on a plate. |
+| The shutters | Sectional doors that roll into a hood above each bay, with weight and a settle, each on its own timing. |
+| Light in the bays | True to midday: the interior is cool shade with racking in silhouette, and the sun falls into each open bay as one flat shape on the floor. **Interior brightness and the forklift in bay 02 (owner picks).** |
+| Ground shadow | One flat hard-edged shape, down-left, like everywhere else. |
+
+### Pass 4: scene 03, the expressway
+
+| Element | It becomes |
+|---|---|
+| The road | An expressway from the shared road palette: a near and a far lane of different value, edge lines and lane lines, joints, wear, a concrete barrier with its own lit top and shaded face. The invisible studs are deleted. |
+| Light poles | The street lamp of scene 01, spaced without a hole. |
+| The gantry | A real truss with front and back chords, diagonals, a walkway with a handrail, brackets, and a cast shadow on the road. |
+| The signs | Same wording. Plates with thickness, a lit top edge and shaded underside, hung from the truss on frames, proper sign arrows. The vermilion bar comes off the exit sign. |
+| Near gantry leg | Flanges, a base plate with bolts, a contact shadow; phase-locked to the far leg. |
+| The convoy | Staged in two lanes at real depth, with one truck slowly overtaking in the same direction (no oncoming cars: those were rejected before), weight in the bodies, and the shot developing as the gantry, the signs and a cloud shadow pass. **Mixed fleet as chosen in pass 2.** |
+| Jet cameo | **(owner picks)**: cut it here, or bring it properly into frame. |
+| Foreground | The same dark rail family as scenes 01 and 02, so the frame's foot does not change value at the seam. |
+| Hill band | Removed (it is not visible, and a repeating hill band in this scene was rejected before); the shared mountain range and Fuji are the middle ground. |
+
+### Pass 5: scene 04, the coverage map
+
+| Element | It becomes |
+|---|---|
+| Base colour | Not red. Two or three families shown on a frame, **(owner picks)**, all of them cool and belonging between two blue skies; vermilion only on the route line. |
+| The map as an object | One land plate with a real edge and one flat contact shadow, lifted off the sky. |
+| The rest of Japan | Drawn cool and quiet with curved coasts; only what is inside the frame is drawn. |
+| Covered prefectures | Real shapes whose outlines draw themselves, crisp seams, full opacity. Same seven prefectures plus 新潟市方面. |
+| The routes | A branching network instead of seven lines from one point: trunks leave 板橋 and split on the way out, so nothing knots at the hub. Each draws with a visible head, arrives in turn, and then flows; the Saitama route completes. |
+| The three bases | Mini versions of the redrawn Sanpou warehouse, each standing in its real place (入間 in Saitama), arriving with weight and settling, then a name card sliding out. The crowded corner is solved first; one option is to open close on the three bases and then widen, **(owner decides, since it is a move inside the scene)**. |
+| Labels | Part of the picture: prefecture names set on the land at one size, depot names on small attached cards, nothing black. |
+| Masks and dead code | Both masks removed; the invisible stars, the shooting star, the unused ray loop and the empty group cleared in one careful pass. |
+
+### Pass 6: scene 05, the finale
+
+| Element | It becomes |
+|---|---|
+| Sun and back tier | Through the shared sun and the shared building kit; the fifteen flat boxes go. |
+| Depth | Four planes separated by the shared haze bands and by value: mountain, far city, airport and near city, road. |
+| The airport | An apron that sits in the world, a taxiway, stand markings, a few ground vehicles at work. |
+| The terminal | A terminal with a pier and jet bridges, a roof structure, a canopy, drawn for the phone. No vermilion and no real operator's branding. |
+| Control tower | Mass, a glazed cab with mullions and a reflection, a shaft with structure, lit from the right. |
+| Runway | Drawn to agree with the side-on camera. |
+| Windsock | Fills and flaps. |
+| The airliner | A believable twin-engine airliner in a neutral livery of our own: tapered wing with winglet, engines on pylons, a real tail, gear that retracts, flaps and spoilers that move, smoke at the mains. The 19-second cycle stays. |
+| Sanpou office block | Our building in the last shot: a volume with a return face, canopy, dock, depth under the parapet and a mounted sign. **What the sign says (owner picks).** |
+| Road and little trucks | A taller road with lanes at real depth and markings that move with the traffic; the little trucks are the two-axle family of scenes 01 to 03 and never slide through each other. |
+| The hold | Keeps developing for its fifteen seconds: the plane's cycle, cloud shadows crossing the city, traffic, the Tower's lift, the window light, a flock, the shafts drifting. |
+
+### Pass 7: the seams and the motion pass
+
+| Seam | It becomes |
+|---|---|
+| 01 into 02 | The same pan with a bell shape and a long landing; near things lead, far things lag, and the picture settles after it stops. |
+| 02 into 03 | One move: the camera leaves with the departing trucks, the cut sits at the fastest frame, and the expressway is already running when it lands. |
+| 03 into 04 | No frozen frame: the expressway keeps running as the picture lifts into the sky both scenes share, and the map arrives in that sky. |
+| 04 into 05 | The map sinks toward 板橋 while the city rises in layers, far first, near last. |
+| Inside every scene | Arrivals with long landings, weight on anything heavy, and its own slow phase for every ambient thing. The durations and the camera path are not changed without asking. |
+
+### Pass 8: the last look
+
+All five scenes on one sheet for colour drift; dead code removed in one deliberate pass; the leftover
+mismatches fixed. Full verification and one commit.
