@@ -31,6 +31,22 @@
       }
     },
     {
+      "id": "preview",
+      "label": "Preview (01-03 new)",
+      "detail": "the newest art for scenes 01-03; 04-05 not redrawn yet",
+      "kind": "dom",
+      "base": "samples/preview/js/",
+      "scripts": [
+        "hero-flag.js",
+        "hero-port-a.js",
+        "hero-port-b.js"
+      ],
+      "glue": "hero-glue.js",
+      "schedule": {
+        "holdAmbient02": true
+      }
+    },
+    {
       "id": "original-canvas",
       "label": "Original on canvas",
       "detail": "the same art, drawn by the canvas engine",
