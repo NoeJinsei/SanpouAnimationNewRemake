@@ -46,7 +46,11 @@ In `C:\Users\RTX4070TI\Desktop\sanpou-site-v2` (git, branch `main`, commit `7286
 - Gotchas: SVG ids must be unique per scene (two stages coexist during the dissolve); `FujiMountain` and the
   finale's lane loop use a local variable `L` (the palette is `DAY`); scenes must render in < ~1 ms/frame today.
 
-## Read `HANDOFF.md` first
+## Read `CONTEXT.md` and `HANDOFF.md` first
+
+`CONTEXT.md` says what this animation is for (the hero section of the company's new website), who the company
+is, every website involved including their current live site, and every version the animation has been
+through since it was a Remotion film.
 
 The owner watched round 1 end to end on 2026-11-13 and rejected the direction: the elements still looked like
 the originals with polish on them. The project is now a **full remake** — every element redrawn from a blank

@@ -108,6 +108,7 @@ film (`reference/README.md`, measured in `research/reference-film-study.json`). 
 | `research/` | the reference-film study, the owner's past decisions and rejections with sources, and a full element checklist per scene |
 | `reference/` | the reference film itself, its frames and crops (third-party, not committed) |
 | `evidence/` | before-and-after stills and videos, one folder per pass |
+| `CONTEXT.md` | what this is for, the company, every website involved, and every past version of the animation |
 | `STYLE.md` | the look rules |
 | `CHANGES.md` | what changes per scene, and what the owner approved |
 
@@ -176,7 +177,8 @@ before planning any scene.
 
 Open a session in this folder with **Fable 5.2** selected, and paste:
 
-> Read CLAUDE.md, then HANDOFF.md, then the round 2 brief at the end of CHANGES.md. This is round 2: a full
+> Read CONTEXT.md, then CLAUDE.md, then HANDOFF.md, then the round 2 brief at the end of CHANGES.md. This is
+> round 2: a full
 > remake, not another polish pass. Round 1 was rejected because every element still read as the original with
 > shading added, so each one is redrawn from a blank page; what stays is the cast, the staging and the story.
 >
