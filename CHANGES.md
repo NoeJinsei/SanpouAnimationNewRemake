@@ -103,7 +103,8 @@ single sawtooth at one height; a shaded flank away from the sun that meets the c
 line; and enough drawing in it to hold up at the size it fills in scene 05, where it is 1700 px wide. Keep its
 position, width, height and the way the city hides its base.
 
-**Round 2 drawing, 2026-11-13: shown to the owner, waiting for the verdict.** Viewer side `fuji-r2`
+**Round 2 drawing: APPROVED by the owner on 2026-11-14 ("Yes, carry on")**, and now in `round2/`, the round 2
+working copy. It is the level every other element is drawn to. Shown on 2026-11-13 as viewer side `fuji-r2`
 (`samples/fuji-r2/` = the original with only `FujiMountain` and its palette entries replaced, so scenes 01, 02
 and 04 are pixel-identical to the original). Before and after in `evidence/2026-11-13-fuji-r2/`.
 How it is built, so the next element can match it: the mountain is drawn in "cone space" (across the cone,
@@ -182,3 +183,24 @@ and the measured reference curve in `research/reference-motion-profile.md` apply
 holds, bell-shaped moves with long landings, secondary motion on anything that starts, stops or lands, and
 scene changes hidden at the fastest moment of a move.
 
+
+## Scene 01 入荷, round 2: what each element becomes (drawn 2026-11-14, to be approved on the style frame)
+
+Same shot: the supplier building on the left, the Sanpou truck parked at its dock, the city behind in three
+tiers, Tokyo Tower on the right, the sun top right, the road along the bottom. Every position, size and depth
+plane in `research/scene01-checklist.json` stays. Everything below is redrawn from a blank page, to the level
+of the approved Fuji: a confident silhouette, then structure, then working parts, under one light.
+
+| Element | Today | Becomes |
+|---|---|---|
+| Sky and sun | a gradient, a disc half hidden behind a cloud | the same July blue; three broad shafts of light from the sun's corner; a clear sun that no cloud covers at the hold |
+| Clouds | seven copies of one four-lobe cloud | a few large built cumulus, each composed differently, flat-based, one crisp shade shape away from the sun; two depth planes |
+| Hill | one pale curve | two overlapping ridges, the nearer one a tone stronger |
+| City, three tiers | one box with one window grid at every size | the Tokyo kit of the round 2 brief: glass towers with banded facades, concrete mid-rises with balcony rows, stepped towers, pencil buildings, low blocks with rooftop plant, sign frames, masts. Far tiers stay simple silhouettes; the variety is in the tier you can see |
+| Tokyo Tower | a lattice drawn with strokes | the real structure, built as shapes: four legs and the arch, main deck, top deck, the banded mast, a lit and a shaded side |
+| Utility poles and wires | a taper, two arms, five wires | a real pole: transformer, crossarms, insulators, a street light on some; fewer and bolder wires |
+| Street | flat bands | kerb stones, a tactile strip, lane markings with a stop line and worn patches kept bold; street lamps and the vending pair redrawn |
+| Supplier building | a box with a window grid | better architecture: what the owner liked in round 1 (the richer dock) taken further, with real cast shadows |
+| Truck | the original drawing | a believable Japanese medium box truck redrawn; lettering, stripe and motion model exactly as they are; a faint exhaust at idle (owner's decision) |
+| Parcels | a box with tape | a carton with flaps, tape and a label, redrawn |
+| Foreground | a grey band with post caps | a guard rail that frames the bottom of the picture |
