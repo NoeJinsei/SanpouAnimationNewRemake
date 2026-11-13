@@ -210,3 +210,28 @@ of the approved Fuji: a confident silhouette, then structure, then working parts
 | Truck | the original drawing | a believable Japanese medium box truck redrawn; lettering, stripe and motion model exactly as they are; a faint exhaust at idle (owner's decision) |
 | Parcels | a box with tape | a carton with flaps, tape and a label, redrawn |
 | Foreground | a grey band with post caps | a guard rail that frames the bottom of the picture |
+
+## Round 2, second pass: why the first pass still read as polish (2026-11-14)
+
+The owner watched scene 01 round 2 and said: "I do see some changes but I dont see a significant
+improvement to it, nothing like the professional looking animation that I saw from x post."
+
+**The checkable cause.** `makeSkylineTier` and its cycle tables were byte-identical to the original in
+round 2's first pass (verified by diff). Every background building therefore stood at the original's x,
+with the original's width and the original's height. Only the texture *inside* each box was redrawn. The
+city's silhouette - what the eye reads first, from across the room - never moved. Same failure as round 1,
+one level up: round 1 froze each element's footprint, round 2 froze the layout. `STYLE.md` §0 is corrected.
+
+**What the owner is also seeing.** The map (scene 04), the plane and airport (05), the warehouse (02) and
+the expressway (03) are still the ORIGINAL drawings - nothing has been done to them yet.
+
+| Element | What it became |
+|---|---|
+| Skyline layout | Composed again, not inherited: plot widths that differ by 3x (slivers beside slabs), heights over a far wider range, every seventh plot a landmark tower that breaks the tier's band, some gaps negative so neighbours overlap, three depths inside each tier |
+| Every building | A volume, not a cut-out: the shaded left return is drawn as a real face receding toward the eye line, tapering with distance, with the coping running over front and return as one slab |
+| Crowns | Eight kinds instead of one flat lid: parapet, double setback, chamfered corner, sloped slice, crowned mast, plant deck, water tanks, pitched roof |
+| Tier values | The far tier given air and the near one weight, so the city has a front and a back instead of one pale wash |
+
+Built as `samples/city-v2` (viewer side "City rebuilt"); `samples/city-v2/build.sh` rebuilds it from
+`round2/js` + `round2/parts/city2.js`. 0 console errors over 22 moments and three framings, deterministic,
+and it draws at **1.97 ms a frame against the original's 2.57 ms**.

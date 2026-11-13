@@ -31,6 +31,22 @@
       }
     },
     {
+      "id": "city-v2",
+      "label": "City rebuilt",
+      "kind": "dom",
+      "detail": "round 2 + the skyline composed again and every building given volume",
+      "base": "samples/city-v2/js/",
+      "scripts": [
+        "hero-flag.js",
+        "hero-port-a.js",
+        "hero-port-b.js"
+      ],
+      "glue": "hero-glue.js",
+      "schedule": {
+        "holdAmbient02": true
+      }
+    },
+    {
       "id": "remake",
       "label": "Round 1 (set aside)",
       "detail": "round 1: scene 01 look + motion, rejected as polish; kept for reference",

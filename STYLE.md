@@ -18,8 +18,15 @@ what stays is the cast, the staging and the story. See `HANDOFF.md`.
 - Five scenes, their order, story, copy, facts, timings (`T_WORLD`, `T_TRANSIT`, `T_NETWORK`, the player's
   stops and dwell) and the camera path.
 - The cast: each scene still contains the same things (the checklists in `research/sceneNN-checklist.json`
-  are the list), and each one still sits in about the same part of the frame, at about the same size, in the
-  same depth plane, so the shot reads the same and the composition still works under the copy overlay.
+  are the list). The **named** things — the supplier building, the warehouse, the trucks, the Tower, Fuji,
+  the signs, the map, the plane — still sit in about the same part of the frame, at about the same size, in
+  the same depth plane, so the shot reads the same and the composition still works under the copy overlay.
+- **Not** the layout of the background fields.** The skyline tiers, the cloud field and the road traffic are
+  COMPOSED AGAIN for the remake: new plot widths, new heights, new gaps, new silhouette. Round 2's first pass
+  kept `makeSkylineTier` and its cycles byte for byte and only redrew the inside of each box, so every
+  building stood at the original's x with the original's width and height. The city's silhouette — the thing
+  the eye reads first — never changed, and the owner said, correctly, that he saw no significant improvement.
+  A field of background shapes is not one of the "same things": it is scenery, and scenery gets redrawn.
 - **Not** the drawings themselves: silhouette, proportions, construction, materials and detail of every
   element are expected to change, and to be clearly better. A building may gain a different roofline or window
   rhythm, the warehouse may become better architecture, Fuji may be built differently as long as it is still
