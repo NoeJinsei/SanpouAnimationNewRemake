@@ -81,8 +81,17 @@ film (`reference/README.md`, measured in `research/reference-film-study.json`). 
 - 60 fps on the site, checked with `tools/motion-check.mjs` (0 frozen frames, 0 pops) and
   `tools/perf-side.mjs` / `tools/perf-table.mjs`, not by eye.
 
-One known defect already fixed in `remake/js/hero-glue.js`, worth keeping: the site's player held scene 02
-with ambient time stopped, freezing 106 frames in a row.
+### Defects found in the original, worth fixing in the redraw
+
+- **Scene 02's hold froze the whole picture.** The site's player held it with ambient time stopped: 106
+  identical frames in a row, the longest frozen run in the film. Already fixed in `remake/js/hero-glue.js`
+  (it now passes the idle clock, as scenes 01 and 04 always did) - keep that fix.
+- **The Saitama route on the map never finishes drawing.** In `CoverageMap`, each route's progress is
+  `clamp01((routeProgress - i * 0.07) * 1.7)`, and the seventh route (`ROUTE_ORDER` ends with `SAITAMA`) tops
+  out at 0.986 when `routeProgress` is 1. `AnimatedRoute` only switches to the moving flow dashes when `draw`
+  reaches 1, so that one route stays a solid line with a small gap at its end while the other six flow. Shiki
+  is in Saitama, so it is one of the three bases' own routes. Verified by evaluating the formula from the
+  source; see `research/scene04-checklist.json`.
 
 ## What is in this folder
 

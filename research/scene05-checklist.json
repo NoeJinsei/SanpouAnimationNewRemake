@@ -1,0 +1,457 @@
+{
+ "frame": "ORIGINAL scene 05 (地域とともに / the finale) settled hold = JourneyPort._scenes.network(f) with f starting at 174 and running on as a FRAME clock (hero-glue.js line 53: STOPS[4].idle = function(c){return one('n', S.network(c));}, sec:false, so idleClk += dt/1000*30). There is no tOverride in this stop: ambient time is simply time = frame/30, continuing from the entrance. Source: C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js, sceneNetwork lines 1679-1903, with Airport 1577-1629, JetPlane 1535-1576, AirportPlane 1630-1676, TokyoTower 460-587, CityBuilding 594-644, Cloud 693-708, DayBirds 711-723, FujiMountain 730-762, Vignette 764-767, HazeDef 185-190. Stage 1920x1080, origin top-left. NO PARALLAX AND NO CAMERA IN THE SCENE: everything the finale draws sits in one group with no transform, so WORLD x = SCREEN x and WORLD y = SCREEN y everywhere below; the only transforms are the per-element translate/rotate/scale of clouds, birds, the radar, the windsock, the mini trucks and the jet. The ground line of the city is y 1010 (CityBuilding baseY) / y 1008 (Fuji baseY, Tokyo Tower baseY); the kerb starts at y 1006 and the road runs 1014-1054. At frame 174 every choreography scalar is already clamped at its end value (recede 1, mapIn 1, prefK 1, routeK 1, pinK 1, statsK 1, titleEnter 0) and stays there for every later frame, so the picture is settled and only the ambient loops move. All boxes below are SCREEN px as x, y, w, h, computed by running the unchanged file in Node with a fake window (hero-flag.js sets JX_CLEAN_HERO = true, hero-port-a.js gives JRMAP) and walking the returned {t,a,c} tree with transform composition and sampled bezier outlines; then confirmed against Chromium renders of the same moments of the site clock (0 console errors). The tree has 712 virtual nodes at frame 174 (604 in the SVG, of which 558 in the daylight world group; 105 in the coverage-map div, which is at opacity 0; 1 sky div; 1 vignette div). The scene function costs about 0.42 ms/frame in Node (no DOM). Player facts: scene 05 runs on the site clock from 27800 ms to 45800 ms (18 s, the longest stop, AUTO_DWELL[4] = 18000). Its entrance plays frames 80 -> 174 at ENTER_RATE 1.2 (36 frames/s), so 2611 ms (27800-30411 ms); the hold then runs 15389 ms, during which the frame clock goes 174 -> about 636 and ambient time 5.80 s -> 21.19 s. After the dwell the glue stops the progress bar but the idle keeps running (hero-glue.js line 212: 'final scene holds and loops its ambient idle'), so on a page left open the frame clock runs on for ever. Desktop crop centre FOCUS_X[4] = 1250; phones blend to CAM_M[4] (x 1300->1240, y 600->610, zoom 1.02->1.04) - that is player camera, not scene art. Ambient-time seam: scene 04's hold runs ambient seconds from 80/30 onward, but scene 05's entrance restarts time at frame/30 = 2.667 s, so the clouds, birds, road trucks and the jet jump back by however long scene 04 held (about 3.4 s) at the 04 -> 05 seam. Scratch files (scripts + evidence), all under C:/Users/RTX4070TI/AppData/Local/Temp/claude/9fdb7479dd8c9206/ebc51bcd-98dd-479d-bbf9-f61a2010e7ba/scratchpad/inv/s05/ : walk5.cjs (loader + tree walker with bezier sampling), report5.cjs (world-group children with screen boxes), detail5.cjs (sub-tree dumps), params.cjs + params.txt (city grids, clouds, birds, trucks, the whole plane cycle), geom.cjs (Fuji outline and the skyline occlusion scan), diff5.cjs (what changes between two hold frames, node counts, cost), and shots/ with original-t30411/30900/33000/36000/38911/39000/42000/42111/45111/45700.png plus the crops crop_airport.png, crop_office.png, crop_sun.png, crop_fujileft.png, crop_fujiright.png, crop_right.png, crop_apronedge.png, crop_appr.png, crop_gap.png. Nothing was written inside the project except this checklist.",
+ "layers": [
+  {
+   "order": 1,
+   "name": "Root div background",
+   "parallax": "none (screen-fixed)",
+   "note": "#eaf5fc, completely covered by the sky gradient. Line 1717."
+  },
+  {
+   "order": 2,
+   "name": "Sky gradient div (DAY.skyN)",
+   "parallax": "none (screen-fixed)",
+   "note": "A SHORTER gradient than scenes 01-02 use: only three stops and no warm band at the bottom. Line 1718, palette line 157."
+  },
+  {
+   "order": 3,
+   "name": "SVG defs: haloSoft, sunGlow, horizHaze",
+   "parallax": "n/a",
+   "note": "Three gradients, ids shared with nothing else. Lines 1720-1724. NOTE for the redraw: these ids are NOT per-scene, and two stages coexist during the 04->05 dissolve, so a second copy of this scene would capture the url(#...) references (hero-glue.js lines 232-234 moves the incoming stage first in the document for exactly this reason)."
+  },
+  {
+   "order": 4,
+   "name": "SVG: empty <g> at opacity 0.5 - recede*0.3",
+   "parallax": "none",
+   "note": "An empty group (its two children were deleted); 0.2 at the hold. Draws nothing. Lines 1725-1728."
+  },
+  {
+   "order": 5,
+   "name": "SVG: sky halo ellipse",
+   "parallax": "none (screen-fixed)",
+   "note": "OUTSIDE the recede group, so it is painted in scene 04 as well as 05 and does not fade in with the city. Line 1729."
+  },
+  {
+   "order": 6,
+   "name": "SVG: 30 'n-star' circles",
+   "parallax": "none",
+   "note": "All at opacity 0 - invisible. Lines 1730-1734."
+  },
+  {
+   "order": 7,
+   "name": "SVG: FloatingParticles('network')",
+   "parallax": "none",
+   "note": "Returns null (line 675). Draws nothing. Line 1735."
+  },
+  {
+   "order": 8,
+   "name": "SVG: THE DAYLIGHT WORLD - one <g> at opacity = recede (1 from frame 112 on)",
+   "parallax": "none (no transform at all; world x,y = screen x,y)",
+   "note": "Lines 1736-1860. Everything from the sun to the jet is inside this single group, painted in this order: sun group -> 26 'n2-star' circles (opacity 0) -> (shooting star: null) -> ground halo ellipse -> 5 clouds -> 3 birds -> Mt Fuji -> CITY_DEEP (15) -> horizon haze rect -> Tokyo Tower -> CITY_BACK (6) -> CITY_FRONT (4) -> wide sun glow r980 -> Airport -> Sanpou office -> kerb + road + markings -> 3 mini trucks -> AirportPlane. The whole finale therefore reveals as ONE opacity ramp, not as layered moves."
+  },
+  {
+   "order": 9,
+   "name": "HTML: coverage-map div (CoverageMap)",
+   "parallax": "none",
+   "note": "Still in the tree at the hold, 105 nodes, at opacity mapIn*(1-recede) = 0, scale(0.92) translate(-36px, 0px), with a radial mask. Invisible but still rebuilt and patched every frame (its route dash offsets and pin pulses keep animating). Lines 1862-1864."
+  },
+  {
+   "order": 10,
+   "name": "HTML: KPI card wrapper div",
+   "parallax": "none",
+   "note": "Present (EMPTY - both KpiCards return null under the flag) while recede < 0.96, i.e. up to frame 106; from frame 107 the whole div is null and the root div drops from 5 children to 4. Lines 1865-1893."
+  },
+  {
+   "order": 11,
+   "name": "HTML: SceneTitle",
+   "parallax": "none",
+   "note": "Returns null under JX_CLEAN_HERO (line 997). Nothing in the tree at all. Line 1894."
+  },
+  {
+   "order": 12,
+   "name": "HTML: logo / tagline / eyebrow block",
+   "parallax": "none",
+   "note": "The whole block is gated on '!window.JX_CLEAN_HERO', so it is null. Lines 1895-1900."
+  },
+  {
+   "order": 13,
+   "name": "HTML: vignette div",
+   "parallax": "none (screen-fixed, topmost)",
+   "note": "opacity 0.18 - lighter than scene 01's 0.26. Lines 764-767, 1901."
+  }
+ ],
+ "elements": [
+  {
+   "name": "Sky gradient",
+   "layer": "2 sky div",
+   "screenBox": "0, 0, 1920, 1080 (visible above the city skyline and in every gap)",
+   "look": "Vertical linear gradient, 3 stops only: 0% (y0) clear blue, 52% (y561.6) mid blue, 100% (y1080) very pale blue. No warm band at the horizon - the finale's sky is cooler and flatter than scene 01's.",
+   "colours": "#58abe0 -> #90c6e9 -> #cfeaf8; root behind it #eaf5fc",
+   "sourceLines": "157, 1717-1718"
+  },
+  {
+   "name": "Sky halo ellipse (haloSoft)",
+   "layer": "5 (outside the recede group)",
+   "screenBox": "20, 20, 1880, 1000 (ellipse centre 960,520, radii 940 x 500)",
+   "look": "A very soft white bloom filling almost the whole frame: 22% white at the centre, 9% at 70% of the radius, 0 at the edge. It lifts the middle of the sky and takes a little saturation out of the city behind it. Easy to miss, but it is why the finale's sky reads paler in the middle than at the corners.",
+   "colours": "rgba(255,255,255,0.22) -> rgba(255,255,255,0.09) @70% -> rgba(255,255,255,0)",
+   "sourceLines": "1721, 1729"
+  },
+  {
+   "name": "Sun",
+   "layer": "8.1 world group, first thing painted (behind clouds, birds, Fuji, the whole city)",
+   "screenBox": "centre (1652, 136). Glow circle r 190..214 (201.4 at the hold): 1450.6, -65.4, 402.8, 402.8, clipped by the top edge. Halo r 60: 1592, 76, 120, 120. Disc r 46: 1606, 90, 92, 92. Ring the same circle, 2 px stroke.",
+   "look": "4 circles: a big soft radial glow that breathes, a pale halo, a flat yellow disc, a thin white ring on the disc edge. No rays (the ray path is built and then thrown away, lines 1742-1750). Higher and further right than scene 01's sun, and noticeably bigger (disc r 46 against 40.6). IMPORTANT: it is the FIRST thing painted, so the clouds drift across it - at the hold (t 5.80 s) cloud #3's big lobe (centre about 1649,155 r 27.7) covers the lower middle of the disc, and the whole sun sits behind whichever cloud is passing.",
+   "colours": "glow gradient sunGlow rgba(255,224,130,0.55) @0 -> rgba(255,228,150,0.22) @55% -> rgba(255,232,170,0) @100%, group opacity 0.7+pulse*0.3; halo rgba(255,236,170,0.32); disc #ffd24d (DAY.sun); ring rgba(255,255,255,0.55)",
+   "sourceLines": "1722, 1737-1754"
+  },
+  {
+   "name": "Wide sun wash (second glow circle)",
+   "layer": "8.13 world group, painted AFTER the whole city and BEFORE the airport",
+   "screenBox": "centre (1652, 136) r 980: 672, -844, 1960, 1960 (so it reaches down to y 1116 and left to x 672)",
+   "look": "A huge, almost invisible warm circle at opacity 0.13 using the same sunGlow gradient. Because it is painted over the deep/back/front city but under the airport, office and road, it warms the whole right half of the skyline towards the sun and leaves the foreground cool. This is the scene's one piece of real atmosphere.",
+   "colours": "url(#sunGlow) at opacity 0.13",
+   "sourceLines": "1813"
+  },
+  {
+   "name": "Ground halo ellipse",
+   "layer": "8.4 world group (after the stars, before the clouds)",
+   "screenBox": "-190, 850, 2300, 300 (ellipse centre 960,1000, radii 1150 x 150)",
+   "look": "The same soft white haloSoft bloom laid along the horizon, wider than the frame. It brightens the band of sky just above the rooftops - but it is painted BEFORE the city, so it only shows in the gaps between buildings.",
+   "colours": "rgba(255,255,255,0.22) centre -> 0 at the edge",
+   "sourceLines": "1768"
+  },
+  {
+   "name": "Cloud - shared look",
+   "layer": "8.5 world group (in front of the sun, behind everything on the ground)",
+   "screenBox": "box = (wx, y + bob - 0.272w, w, 0.374w); cloud height unit hgt = 0.34w",
+   "look": "Identical construction to scene 01's cloud: 4 white lobes (centres at 0.20w/-0.16hgt r 0.30hgt; 0.44w/-0.36hgt r 0.44hgt; 0.67w/-0.20hgt r 0.33hgt; 0.84w/-0.06hgt r 0.22hgt) over a fully rounded white pill base (y -0.14hgt, height 0.44hgt); then the same shapes again in pale blue-white nudged right and down (lobe r x0.95, offset +0.05r, +0.17r) so a white sunlit crescent stays on top of every lobe; then a soft blue shade across the bottom 30% of the base, cut to the pill's own rounded bottom. Group opacity 0.92 * 0.96 * edge = 0.8832 at full strength.",
+   "colours": "lit #ffffff, body #eef5fb, underside shade rgba(176,206,232,0.45)",
+   "sourceLines": "693-708, 1769-1774"
+  },
+  {
+   "name": "Clouds at the hold (t = 5.80 s) - five, hand-placed, all drifting right",
+   "layer": "8.5 world group",
+   "screenBox": "#0 (w 330, lane y 104): -8.0, 18.6, 330, 123.4 - its left end is just off the frame | #1 (w 235, lane y 226): 482.4, 157.5, 235, 87.9 | #2 (w 265, lane y 70): 1158.4, -5.3, 265, 99.1 - its top lobe is cut by the top edge | #3 (w 185, lane y 172): 1567.6, 127.1, 185, 69.2 - OVER THE SUN, its lobes cover the lower half of the disc | #4 (w 150, lane y 296): 2097.4, 257.0, 150, 56.1 - OFF-SCREEN right, fading at edge 0.30",
+   "look": "Five clouds in five fixed height lanes, biggest highest-and-leftmost, smallest lowest. Four are on screen at the hold. They are the only thing in the upper half of the frame besides the sun and the birds.",
+   "colours": "as shared look",
+   "sourceLines": "1769-1774"
+  },
+  {
+   "name": "Birds (3)",
+   "layer": "8.6 world group, painted after the clouds and before Fuji",
+   "screenBox": "at t = 5.80 s: #0 (226.9, 223.6) scale 1.056 | #1 (1290.9, 275.3) scale 0.993 | #2 (1323.2, 343.0) scale 1.163. Flight band y about 210-345 - LOWER and more spread out than scene 01's. Wingspan 13.9-16.3 px.",
+   "look": "The same tiny two-arc 'm' glyphs as scene 01 (path M-7,0 Q-3.5,(-3.2-flap) 0,0 Q3.5,(-3.2-flap) 7,0), 1.7 px round stroke, 50% opacity. All three are on screen for most of the finale; #1 and #2 fly close together over the Tokyo Tower side.",
+   "colours": "stroke #2e4159, opacity 0.5",
+   "sourceLines": "711-723, 1775"
+  },
+  {
+   "name": "Mt Fuji - body",
+   "layer": "8.7 world group (behind the whole city, in front of the clouds' lane)",
+   "screenBox": "whole path -450, 433.4, 1700, 574.6 (x -450..1250, base y 1008). Parameters cx 400, baseY 1008, w 1700, ht 560, capT 0.3. Peak line y 448; the crown control point lifts the drawn apex to y 433.4 at x 400. Shoulders (the flat of the dome) at x 250.4 and 549.6, y 448. Hem knots at x 162 and 638, y 616.",
+   "look": "One flat pale-blue silhouette, no outline: a broad softly-rounded dome, not a sharp cone. Left skirt is a long cubic from (-450,1008) through (110,935) and (243,689) to (162,616); the crown is three quadratics (162,616) Q(216.4,523.6) (250.4,448) Q(400,418.9) (549.6,448) Q(583.6,523.6) (638,616); the right skirt mirrors the left out to (1250,1008). Ridge y at screen x: 0 -> 756.3, 100 -> 662.0, 200 -> 543.9, 300 -> 439.6, 400 -> 433.4 (apex), 500 -> 439.6, 600 -> 543.9, 700 -> 662.0, 800 -> 756.3, 900 -> 841.8, 1000 -> 909.3, 1100 -> 960.2, 1200 -> 995.1.",
+   "colours": "#bcd7ec (DAY.fuji)",
+   "sourceLines": "730-762, 1776"
+  },
+  {
+   "name": "Mt Fuji - snow cap",
+   "layer": "8.7 world group, painted over the body",
+   "screenBox": "162, 433.4, 476, 259.8 (x 162..638, y 433.4..693.3)",
+   "look": "Pure white. Its upper edge IS the mountain outline (the same crown segment is reused), so the cap's sides sit exactly on the silhouette; its lower edge is an irregular angular zigzag of 11 downward drips of different lengths, drawn right to left: (590.4,607.6) (549.9,662.2) (509.5,609.3) (466.6,693.3) (433.3,626.1) (392.9,673.1) (352.4,620.2) (304.8,684.9) (269.1,611.8) (223.9,651.3) (190.6,609.3), closing back to (162,616). Drip depth unit dr = 84 px. The cap is very large - 46% of the mountain's height - and it is the single brightest shape in the picture.",
+   "colours": "#ffffff (DAY.fujiCap)",
+   "sourceLines": "744-757, 1776"
+  },
+  {
+   "name": "Mt Fuji - what the city actually leaves visible",
+   "layer": "8.7 world group",
+   "screenBox": "visible ranges, scanned against every opaque shape painted after it: x 0..34 (ridge y 756->723, against the kerb and the airport apron) | x 49..696 (THE WHOLE LEFT HALF, cap and both upper slopes - this is the Fuji you see) | x 739..772 and x 777..819 and x 850..854 (three narrow slivers of the right slope between CITY_BACK#1, CITY_FRONT#0 and CITY_DEEP#6) | x 1177..1206 (a 29 px sliver of the right toe, y 988..1006, between the office's right edge and CITY_DEEP#9 - and the horizon haze is at 0.6 alpha there, so it is all but invisible)",
+   "look": "Hidden ranges: x 34..49 (behind CITY_DEEP#0), x 696..739, 772..777, 819..850, and everything from x 854 to x 1177 (behind CITY_DEEP#6/#7/#8 and CITY_BACK#2/#3). In practice Fuji is a left-hand element: the cap sits clear of the whole skyline, the right slope is diced into slivers, and the right half of the mountain is simply not there. The horizon haze also lies over the mountain from y 758 down, washing the base out.",
+   "colours": "as above",
+   "sourceLines": "1776-1812"
+  },
+  {
+   "name": "CITY_DEEP - shared look (the pale back tier, 15 hand-placed buildings)",
+   "layer": "8.8 world group (behind the haze, the tower and both front tiers)",
+   "screenBox": "all stand on y 1010; top = 988 - h, drawn height = h + 22 (the extra 22 px is buried under the kerb)",
+   "look": "A flat pale rectangle in ONE colour, a 3 px lighter strip on the top edge, a batched grid of semi-transparent windows, a shade strip down the left 14% and a 3 px light rim on the right edge. No window frames, no roof boxes. Four crown kinds, chosen per building by b.k: kind 0 = plain box + top strip; kind 1 = SETBACK CROWN, a narrower block inset by 0.17w rising 0.2*bh above a full-width shaft (each with its own 3 px top strip); kind 2 = plain box + a 3.2 x 28 rooftop mast on the centre line; kind 3 = CHAMFERED CROWN, the top-left corner dropped by 0.34w so the roof is a long diagonal (and no top strip). Window grid: cols = max(2, round(w/27)), rows = max(3, floor(gridH/36)), cell gx = (w-16)/cols, gy = gridH/rows, pane 0.46gx x 0.48gy, first pane at x+9; gridTop starts below the crown (kind 1: top + 0.2bh + 10; kind 3: top + 0.36w + 10; else top + 10) and gridH runs to 8 px above the base.",
+   "colours": "body #a9bcd3 (DAY.cityDeep), top strip and mast #bccbde (DAY.cityDeepTop), windows rgba(236,243,250,0.5) (DAY.cityWin), left shade rgba(22,41,63,0.1) (DAY.shade), right rim rgba(255,255,255,0.3) (DAY.rim)",
+   "sourceLines": "1697-1707, 1777-1808"
+  },
+  {
+   "name": "CITY_DEEP buildings (each: screen x-range, w, top y, crown kind, window grid, cell size)",
+   "layer": "8.8 world group",
+   "screenBox": "#0: 34..134, w100, top 713, kind 0, 4x7, cell 21.0x39.9 | #1: 236..328, w92, top 658, kind 2 (mast 280.4..283.6, y 630..658), 3x9, cell 25.3x37.1 | #2: 352..434, w82, top 750, kind 2 (mast 391.4..394.6, y 722..750), 3x6, cell 22.0x40.3 | #3: 452..530, w78, top 782, kind 0, 3x5, cell 20.7x42.0 | #4: 548..652, w104, top 683, kind 1 (crown 565.7..634.3 from y 680, shaft from y 745.4), 4x6, cell 22.0x40.6 | #5: 688..776, w88, top 733, kind 0, 3x7, cell 24.0x37.0 | #6: 790..862, w72, top 776, kind 1 (crown 802.2..849.8 from y 773, shaft from y 819.8), 3x4, cell 18.7x42.3 | #7: 936..1036, w100, top 623, kind 3 (roof diagonal from y 657.0 at the left to y 623 at the right), 4x9, cell 21.0x37.0 | #8: 1072..1166, w94, top 558, kind 2 (mast 1117.4..1120.6, y 530..558), 3x12, cell 26.0x36.2 | #9: 1206..1294, w88, top 724, kind 0, 3x7, cell 24.0x38.3 | #10: 1318..1414, w96, top 670, kind 2 (mast 1364.4..1367.6, y 642..670), 4x8, cell 20.0x40.3 | #11: 1444..1530, w86, top 704, kind 1 (crown 1458.6..1515.4 from y 701, shaft from y 762.2), 3x6, cell 23.3x37.8 | #12: 1548..1650, w102, top 603, kind 1 (crown 1565.3..1632.7 from y 600, shaft from y 681.4), 4x8, cell 21.5x38.5 | #13: 1700..1790, w90, top 683, kind 0, 3x8, cell 24.7x38.6 | #14: 1826..1922, w96, top 553, kind 3 (roof diagonal from y 585.6 at the left to y 553 at the right), 4x11, cell 20.0x36.8 - the last 2 px are off the right edge",
+   "look": "The comment at lines 1695-1696 says the rhythm is hand-curated: it frames Fuji on the left (#0-#6 stay low, 206-330 tall), rises into a pair of towers either side of the Tokyo Tower corridor (#7 365, #8 430), leaves #9-#11 low behind the tower's legs, and closes with two tall ones at the right edge (#12 385, #14 435). Occlusion: #0 is cut by CITY_BACK#0 from x 116; #4's right half (604-652) is fully behind CITY_BACK#1; #5 shows only x 738..776 between y 733 and 828 (CITY_BACK#1 on its left, CITY_FRONT#0 below); #7's lower half is behind CITY_BACK#2 (from y 718, x<976) and CITY_BACK#3 (from y 618, x>996); #8 shows in full only from x 1126 right; #9, #10 and #11 are the backdrop the Tokyo Tower stands against; #12 shows only above y 638 (CITY_BACK#4); #13 shows above y 738 on its right and above y 808 on its left; #14 shows above y 768 (CITY_FRONT#3).",
+   "colours": "as shared look",
+   "sourceLines": "1697-1707, 1777-1808"
+  },
+  {
+   "name": "Horizon haze band",
+   "layer": "8.9 world group - over Fuji and CITY_DEEP, UNDER the Tokyo Tower, CITY_BACK, CITY_FRONT, the airport, the office and the road",
+   "screenBox": "0, 758, 1920, 252 (y 758-1010)",
+   "look": "One vertical gradient rect rising from the city's ground line: alpha 0 at y 758, 0.33 at y 934.4, 0.60 at y 1010. It is the scene's only depth cue between tiers - it washes the bases of the pale tier and of Fuji into the sky, and because it stops before the tower and the two front tiers, those read as crisply in front. Same gradient maths as scenes 01-02 (HazeDef with DAY.hazeK[0] = 0.6), but only ONE band here, not three.",
+   "colours": "rgb(232,243,251) (DAY.haze) at 0 / 0.33 / 0.60",
+   "sourceLines": "185-190, 1723, 1809"
+  },
+  {
+   "name": "Tokyo Tower",
+   "layer": "8.10 world group - over CITY_DEEP and the haze, under CITY_BACK / CITY_FRONT (which never reach it) and under the jet",
+   "screenBox": "centre x 1360, base y 1008, H 840, tip y 168. Full box 1208.5, 165.8, 303.0, 842.2. Foot plates 1208.5..1279.7 and 1440.3..1511.5, y 1001.3-1008. Main deck 1284.4..1435.6, y 729.1-774.5. Body top y 457.8. Needle base y 283.9. Arch apex y 848.4.",
+   "look": "The same open red-and-white lattice as scene 01, but MUCH bigger (H 840 against 770) and at full strength: group opacity 0.97, and nothing in front of it, so it is the hero object of the finale. Top to bottom: blinking beacon dot r 2.2 at the tip (1360,168); grey needle y 168-283.9 (4.7 px wide at its base); striped mast - red y 283.9-323.6, white y 323.6-363.3, red y 363.3-442.7 (15.96 px wide at the bottom tapering to 10.4); two small grey platforms (33.6 x 6.3 at y 442.7 and 43.7 x 6.7 at y 451.1); tapering mid body y 457.8-729.1 (half-width 50.4 -> 13.9) with 7 X-braced bays and horizontals, WHITE between y 588.0 and 674.9 and red elsewhere (edge stroke 6.18, braces 3.95, horizontals 4.74); deck railing (9 posts 2.7 x 7.6 and a rail line at y 721.6, x 1289-1431); main deck 151.2 x 45.4 in three bands (light top 14.5, grey middle 20.9 with 12 dark windows 6.7 x 13.6, darker bottom 10.0); splayed legs y 774.5-1008 (half-width 57.1 -> 149.5, edge stroke 7.73) with X-bracing, and an arch between them (apex y 848.4, feet at x 1277.7 and 1442.3, stroke 6.96); red foot plates. The lattice is batched into about 10 <path> nodes by colour and stroke weight, so the whole tower is only 26 nodes.",
+   "colours": "red #e4553b, white #f2f6fa, grey #9aa6b4, light grey #ccd5df, deck windows #3a4757, deck bottom band #8d99a8, beacon #ffb3a0",
+   "sourceLines": "460-587, 1810"
+  },
+  {
+   "name": "CITY_BACK - shared look (6 mid-blue buildings, CityBuilding detail 1)",
+   "layer": "8.11 world group - over the tower's tier and the haze, under CITY_FRONT",
+   "screenBox": "all stand on baseY 1010; top = 1010 - h",
+   "look": "The same CityBuilding component the mid tier of scenes 01-02 uses, at detail 1: facade rect, every window with a dark frame 1.6 px larger all round, glass panes with a lighter reflection over their top 42%, a few warm (lit yellow) panes, a shade strip down the left 14%, a 3 px light rim on the right edge, a parapet cap rect (x-2, top-7, w+4, 9, rx 2). Even-index buildings carry a roof box 20 x 12 at (x + 0.3w, top-19); buildings with index%3 == 2 carry a thin mast 3.4 x 27 at (x + 0.68w, top-34). Grid: cols = round((w-20)/27), rows = round((h-28)/37), pane 0.52 x 0.5 of the cell, first pane 10 px in from the left and 16 px down. Note the component is memoised (_cbMemo, line 593), so these are built once and never change - they are completely static.",
+   "colours": "facades DAY.cityBack [0 #7089b1, 1 #7b93ba, 2 #65809f] picked by index mod 3, cap #57709a (DAY.cityBackCap), frame rgba(22,41,63,0.22), glass #c6ddf1, cool #dbeaf6, lit #eef7fe, warm #ffd98f, reflection rgba(255,255,255,0.4), shade rgba(22,41,63,0.1), rim rgba(255,255,255,0.3)",
+   "sourceLines": "594-644, 1708-1712, 1811"
+  },
+  {
+   "name": "CITY_BACK buildings (each: screen x-range, w, top y, facade, grid, warm panes, roof units)",
+   "layer": "8.11 world group",
+   "screenBox": "#0: 118..240, w122, top 705, face #7089b1, 4x7, cell 25.5x39.6, warm r0c3 + r3c1, lit 3 cool 2 plain 21, roof box at 154.6 y 686 | #1: 606..736, w130, top 665, face #7b93ba, 4x9, cell 27.5x35.2, warm r2c2 + r6c1, lit 5 cool 1 plain 28, no roof unit | #2: 856..974, w118, top 725, face #65809f, 4x7, cell 24.5x36.7, warm r5c0, lit 3 cool 1 plain 23, roof box at 891.4 y 706 AND mast at 936.2 y 691 | #3: 998..1124, w126, top 625, face #7089b1, 4x10, cell 26.5x35.7, warm r6c3 + r9c2, lit 11 cool 0 plain 27, no roof unit | #4: 1542..1670, w128, top 645, face #7b93ba, 4x9, cell 27.0x37.4, warm NONE, lit 3 cool 7 plain 26, roof box at 1580.4 y 626 | #5: 1732..1854, w122, top 745, face #65809f, 4x6, cell 25.5x39.5, warm r0c1 + r0c2, lit 3 cool 1 plain 18, mast at 1815.0 y 711",
+   "look": "Six mid-blue blocks in two clusters - three around the airport/office (118, 606, 856, 998) and two at the right edge (1542, 1732) - leaving a 400 px gap (1126..1542) that is the Tokyo Tower's corridor. #0, #1 and #3 are the ones whose warm windows read at a glance. Occlusion: #0's left 2 px are over CITY_DEEP#0; #1's base from y 828 is behind CITY_FRONT#0; #3's base from y 788 is behind CITY_FRONT#1; #4's base and #5's left half are behind CITY_FRONT#2 and #3.",
+   "colours": "as shared look",
+   "sourceLines": "1708-1712, 1811"
+  },
+  {
+   "name": "CITY_FRONT buildings (4 darker blue, CityBuilding detail 1, the nearest city tier)",
+   "layer": "8.12 world group - over everything in the city, under the wide sun wash, the airport, the office and the road",
+   "screenBox": "#0: 676..792 (cap) / 678..790 (body), w112, top 835, face #5c78a5, 3x4, cell 30.7x36.8, warm NONE, lit 2 cool 1 plain 9, roof box at 711.6 y 816 | #1: 984..1108 / 986..1106, w120, top 795, face #66819f, 4x5, cell 25.0x37.4, warm NONE, lit 1 cool 0 plain 19, no roof unit | #2: 1650..1786 / 1652..1784, w132, top 815, face #516d9a, 4x5, cell 28.0x33.4, warm r1c1, lit 0 cool 2 plain 17, roof box at 1691.6 y 796 AND mast at 1741.8 y 781 | #3: 1792..1914 / 1794..1912, w118, top 775, face #5c78a5, 4x6, cell 24.5x34.5, warm r0c1 + r4c2 + r5c2, lit 1 cool 1 plain 19, no roof unit",
+   "look": "Four low, wide, darker blocks that sit the city on the road: two beside the office (678, 986) and two at the right edge (1652, 1794). They are the darkest buildings in the frame, which is what separates the foreground from the hazy back tier. #3's three warm windows are the brightest accent on the right side. The airport apron cuts across #0's base from x 678 to 714 (below y 948).",
+   "colours": "facades DAY.cityFront [0 #5c78a5, 1 #66819f, 2 #516d9a], cap #43608c (DAY.cityFrontCap), the rest as CITY_BACK",
+   "sourceLines": "594-644, 1713-1716, 1812"
+  },
+  {
+   "name": "Airport - apron and stand markings",
+   "layer": "8.14 world group",
+   "screenBox": "apron slab 14, 948, 700, 58 | lit top edge 14, 948, 700, 5 | stand block 118, 950, 240, 16 | 3 stand stripes 34 x 2.5 at x 138, 212, 286 (y 955)",
+   "look": "A flat grey-blue slab running from the left edge to x 714, with a lighter 5 px lip along its top and a slightly darker rectangle marking the stand, scored with three short white lines. It is painted over CITY_DEEP's bases, over CITY_FRONT#0's lower-left corner and over Fuji's left toe, so it is what the whole left third of the picture stands on.",
+   "colours": "apron #9db1c6, lip rgba(255,255,255,0.35), stand #8fa3ba, stripes rgba(255,255,255,0.5)",
+   "sourceLines": "1582-1585"
+  },
+  {
+   "name": "Airport - control tower",
+   "layer": "8.14 world group",
+   "screenBox": "shaft 64..94 at the foot, 70..88 at the top, y 860-950 | lit left edge 64..76 | 3 floor lines 16 x 3 at (71, 876 / 898 / 920) | brim 48, 852, 62, 9 (rx 4.5) | glass cab 52, 822, 54, 32 (rx 5) | cab glass 56, 828, 46, 15 (rx 3) with a 6 px skylight highlight | railing 46, 816, 66, 7 (rx 3.5) | mast line x 79, y 801-816 | beacon circle centre (79, 798) r 3.4",
+   "look": "A small tapered concrete shaft with a lighter strip up its left edge and three thin floor bands, a wide brim, a dark glass cab with a teal-ish window and a white skylight strip, a railing deck on top and a short mast with a blinking vermilion beacon. About 100 px tall and 66 px wide - a silhouette, not a model. It stands clear of the terminal, with CITY_DEEP#0 and Fuji's slope behind it.",
+   "colours": "shaft #7d92b4, lit edge rgba(255,255,255,0.25), floor lines rgba(22,41,63,0.18), brim and railing and mast #57709a, cab body #16293f, cab glass #9fd0d8 @0.9, skylight rgba(255,255,255,0.35), beacon #e16347",
+   "sourceLines": "1588-1597"
+  },
+  {
+   "name": "Airport - terminal",
+   "layer": "8.14 world group",
+   "screenBox": "body 128, 900, 190, 48 (rx 3) | canopy 124, 892, 198, 10 (rx 4) | curtain wall 136, 908, 174, 24 (rx 2) with a 9 px white top band | 7 mullions at x 158 + 22i, y 908-932 | entrance 213, 936, 20, 12 with a 1.6 px white door line at 222.2 | vermilion sill 128, 940, 190, 4 | roof plant 146, 884, 26, 9 and 268, 884, 18, 9 | radar post 236, 880, 4, 12 with a 26 x 4.5 blade (rx 2.2) rotating about (238, 879)",
+   "look": "A long low white hall with a grey canopy roof overhanging both ends, a glass curtain wall with seven mullions and a white reflection band across its top, a small dark entrance with a white door line, a vermilion sill line under the glass, two grey plant boxes on the roof and a turning radar blade between them. The vermilion sill rhymes with the office building's band and with the trucks' stripe.",
+   "colours": "body #eef3f8 stroke rgba(22,41,63,0.18); canopy #d6dfe9 stroke rgba(22,41,63,0.15); glass rgba(120,150,185,0.32) stroke rgba(22,41,63,0.12); reflection rgba(255,255,255,0.5); mullions rgba(22,41,63,0.2); entrance rgba(60,84,110,0.55), door line rgba(255,255,255,0.6); sill rgba(225,99,71,0.8); plant #c3cedd; radar post #57709a, blade #7d92b4",
+   "sourceLines": "1600-1612"
+  },
+  {
+   "name": "Airport - runway",
+   "layer": "8.14 world group",
+   "screenBox": "runway 22, 966, 682, 26 (rx 3) | lit top edge 24, 966, 678, 3 | centreline y 979, x 34-692, dash 20 gap 16 | threshold piano keys: 4 bars 3 x 18 at x 30, 37, 44, 51 and 4 more at x 676, 683, 690, 697 (y 970-988) | touchdown-zone marks: pairs of 14 x 3.2 bars at y 970.5 and 984.5, at x 92, 130 (left) and x 596, 634 (right) | 12 amber edge lights r 1.6 at x 40 + 58i, y 963.5",
+   "look": "A dark grey strip lying across the whole left third with a lighter lip along its far edge, a long white dashed centreline, piano keys at both ends, two pairs of touchdown-zone bars at each end and a row of small amber lights along its far edge. Only its right 10 px are hidden (by the apron's edge at x 714, which it does not reach).",
+   "colours": "surface #59636f, lip rgba(255,255,255,0.16), centreline rgba(255,255,255,0.7), keys and zone marks rgba(255,255,255,0.55) / 0.5, edge lights #ffe08a @0.9",
+   "sourceLines": "1615-1622"
+  },
+  {
+   "name": "Airport - windsock",
+   "layer": "8.14 world group, last piece of the airport",
+   "screenBox": "pole x 650, y 934-962 | sock path (650,934) (674,937.5) (670,943.5) (650,940), rotating about (650, 937): box about 649.8, 934, 24.1, 8.5",
+   "look": "A thin pole with a small vermilion cone-shaped sock and one white band near its throat, swinging gently. 24 px long - the smallest readable detail in the scene. It sits at the right end of the runway, in front of CITY_BACK#1.",
+   "colours": "pole #57709a, sock #e16347 @0.9, band #ffffff @0.85",
+   "sourceLines": "1624-1627"
+  },
+  {
+   "name": "Sanpou office building",
+   "layer": "8.15 world group - over CITY_FRONT#0/#1 and the airport, under the road and the jet",
+   "screenBox": "body 744, 922, 432, 84 (rx 4) | parapet cap 744, 916, 432, 9 (rx 4) | sign plate 762, 906, 120, 14 (rx 3) | vermilion tab 762, 906, 5, 14 | vermilion band 744, 946, 432, 4.5 | 4 window bays 52 x 48 (rx 2.5) at x 774, 870, 966, 1062, y 958-1006, each with a 52 x 10 white top band",
+   "look": "A long low white depot: a wide pale body with a grey parapet cap, a blank white sign plate up at the left end with a vermilion tab down its left edge (NO lettering - the name is never drawn), a vermilion band across the full width at a third of the height, and four evenly spaced shuttered bays along the bottom with a bright band across the top of each. 432 px wide and only 84 px tall - it reads as the company's own building at the centre of the city, directly under the Tokyo Tower's left leg line.",
+   "colours": "body #eef3f8 (DAY.office) stroke rgba(22,41,63,0.18); cap #d6dfe9 stroke rgba(22,41,63,0.15); sign plate #ffffff stroke rgba(22,41,63,0.2); tab #e16347 (COLORS.verm); band rgba(225,99,71,0.8); bays rgba(120,150,185,0.28) stroke rgba(22,41,63,0.15), bay top band rgba(255,255,255,0.5)",
+   "sourceLines": "1815-1820"
+  },
+  {
+   "name": "Road, kerb and markings",
+   "layer": "8.16 world group - over the office and the airport, under the mini trucks and the jet",
+   "screenBox": "kerb band 0, 1006, 1920, 8 | road 0, 1014, 1920, 40 | far edge line y 1017.5 (2 px) | centre dashes y 1034 (3.4 px, dash 26 gap 24) | near edge line y 1051 (2 px) | road edge band 0, 1054, 1920, 26",
+   "look": "Five flat full-width bands closing the bottom of the frame: a pale grey kerb strip the whole city stands on, dark asphalt, two faint white edge lines, a bright white dashed centre line, then a darker band to the bottom edge. Only 74 px of road in all - a ribbon, not a street.",
+   "colours": "kerb #c6cfd9, road #3a4149 (DAY.road), edge lines rgba(255,255,255,0.3), centre dashes rgba(255,255,255,0.75), road edge #2b313a (DAY.roadEdge)",
+   "sourceLines": "1821-1826"
+  },
+  {
+   "name": "Mini trucks - shared look",
+   "layer": "8.17 world group",
+   "screenBox": "local box 0..91 x 0..43.5 (shadow ellipse centre 46,39.5 rx 45 ry 4); drawn at translate(tx, laneY) scale(dir*sc, sc)",
+   "look": "A 91 px cartoon of the Sanpou truck: a soft ground shadow ellipse; a white box body 64 x 30 (rx 3) with a navy hairline outline; a vermilion band across its bottom (y 23, 4.2 tall); a small teal name bar 15 x 3.4 at (6,6) and a grey sub-bar 9 x 2.4 at (6,12) standing in for the lettering; a dark cab drawn as one path from the box's right edge out to a rounded nose (M64,8 L79,8 Q83,8 85,12 L89,20 L90,26 Q90,30 86,30 L64,30 Z); a pale blue windscreen wedge; a small yellow headlight 3.5 x 3; and three wheels (r 6 dark, a 6.8 px grey axle line, a r 2.2 grey hub) at x 15, 50, 79, y 33, which spin. The body bobs; the shadow and wheels do not. The same truck as scenes 01-03, reduced to the few marks that survive at this size.",
+   "colours": "shadow rgba(20,30,45,0.28); body #f4f7fa stroke rgba(22,41,63,0.35); band rgba(225,99,71,0.85); name bar #2a7f8c; sub-bar rgba(22,41,63,0.3); cab #3c4a5c stroke rgba(22,41,63,0.4); windscreen #9fc4de; headlight #ffd24d @0.9; tyre #232a34, axle and hub #8b95a1",
+   "sourceLines": "1828-1845"
+  },
+  {
+   "name": "Mini trucks - the three lanes",
+   "layer": "8.17 world group, painted in lane order (lane 0 first, so the near lanes cover it)",
+   "screenBox": "lane 0: y 997, scale 0.9, MIRRORED (dir -1, driving right to left), 54 px/s, phase 620 - at the hold its body is at x 1204.9..1286.8 | lane 1: y 1008, scale 1, driving left to right, 70 px/s, phase 0 - at the hold x 106.0..197.0 | lane 2: y 1008, scale 1, driving left to right, 62 px/s, phase 1360 - at the hold x 1419.6..1510.6",
+   "look": "Three trucks, never more: one small one further away and higher up driving left, two full-size ones driving right along the same line. Because lanes 1 and 2 share a y and run at different speeds they slide through each other now and then (e.g. both are around x 690-830 at ambient t = 11.4 s) - two trucks overlapping is normal, not a bug. Lane 0's wheels sit at y 1026.7, lanes 1-2's at y 1041, so all three are on the asphalt between the two edge lines.",
+   "colours": "as shared look",
+   "sourceLines": "1846-1857"
+  },
+  {
+   "name": "AirportPlane - the jet",
+   "layer": "8.18 world group, THE LAST THING PAINTED (in front of the tower, the city, the office, the road and the trucks)",
+   "screenBox": "local -90.2..+92.1 x -89.7..0 after the 0.98 scale; anchor = the main wheels' contact point. At the hold (ambient t 5.80 s, cycle t 5.80 s = rollout) the whole group is 311.7, 876.0, 182.3, 109.5 with the plane at x 401.8, y 968.",
+   "look": "A flat side-on twin-door regional jet facing RIGHT: a white fuselage with a round nose and an up-swept tapered tail cone, a navy lower hull, a dark cockpit windshield, 12 small navy portholes at 9.2 px pitch, two pale doors; a big swept navy tail fin anchored at the tail with a vermilion beacon on its tip, a swept navy tailplane reaching past the cone, and a pale far-side wing peeking above the fuselage; a near wing swept down and back (white with a navy leading wedge) with an engine nacelle slung ahead of it (pale grey, a dark exhaust ring at the back and a teal intake lip at the front); and a three-leg landing gear that retracts. A soft ground shadow ellipse (rx 72 x (0.55 + 0.45*shk), ry 5.5) follows it and fades out as it climbs.",
+   "colours": "fuselage #ffffff stroke rgba(22,41,63,0.4); navy parts #33518c; lower hull #33518c; windshield #1e2c3d; portholes #2b3950; doors #eef2f8; near wing #f2f5fa stroke rgba(22,41,63,0.35); far wing #c7d4e8; nacelle #c3cede, exhaust #2b3950, intake lip #2a7f8c @0.85; gear legs #3a4553, wheels #232a34 stroke #5a6673; beacon #e16347; shadow rgba(22,41,63,0.2*shk); tyre puffs #eef3f7",
+   "sourceLines": "1535-1576, 1630-1676, 1859"
+  },
+  {
+   "name": "Vignette",
+   "layer": "13 vignette div",
+   "screenBox": "0, 0, 1920, 1080; ellipse centre (960, 496.8), radii 1497.6 x 734.4; clear inside 58% (868.6 x 426)",
+   "look": "Very light dark-navy edge darkening, weaker than scene 01's: about 0.08 effective alpha in the top corners and 0.10 in the bottom corners (0.55 x layer opacity 0.18).",
+   "colours": "rgba(6,12,24,0.55) at the outer edge, layer opacity 0.18",
+   "sourceLines": "764-767, 1901"
+  }
+ ],
+ "ambientMotion": [
+  {
+   "what": "Sun glow breathing",
+   "formula": "pulse = 0.5 + 0.5*sin(time*0.55), period 11.42 s. Glow circle r = 190 + pulse*24 = 190..214 px (201.4 at the hold) and its opacity = 0.7 + pulse*0.3 = 0.70..1.00. The halo, disc and ring are static. The wide r 980 wash at opacity 0.13 is static.",
+   "sourceLines": "1738, 1741"
+  },
+  {
+   "what": "Clouds drift right and wrap",
+   "formula": "wx = ((sp*4*time + i*560) mod 2400) - 240 ; edge = min((wx+240)/210, (2160-wx)/210, 1) ; vertical bob = 6*sin(0.4*time + i*1.7) (+-6 px, period 15.71 s) ; group opacity = 0.92*0.96*clamp01(edge). Lane speeds sp*4: #0 40 px/s (wrap 60.0 s), #1 28 px/s (85.7 s), #2 48 px/s (50.0 s), #3 22 px/s (109.1 s), #4 16.8 px/s (142.9 s). A wrapped cloud re-enters at x -240 and fades up over its first 210 px; it fades back out over the last 210 px before x 2160. Unlike scene 01 the fade-out IS on screen for the slow low cloud (#4 is at edge 0.30 at the hold and at 0.04 a few seconds later).",
+   "sourceLines": "1769-1774"
+  },
+  {
+   "what": "Birds drift right, bob and flap",
+   "formula": "x = ((rx*2300 + time*(14 + rs*10)) mod 2580) - 140 ; y = 210 + ry*190 + 9*sin(0.7*time + 2.2*i) (+-9 px, period 8.98 s) ; wing arc control y = -3.2 - 3.4*sin(7*time + 1.9*i) (period 0.90 s) ; scale 0.85 + rs*0.5. Measured per bird: #0 speed 18.12 px/s, scale 1.056, mid y 230.7, loop 142.4 s ; #1 speed 16.85 px/s, scale 0.993, mid y 275.5, loop 153.1 s ; #2 speed 20.27 px/s, scale 1.163, mid y 335.6, loop 127.3 s. All three are on screen through the whole 18 s hold.",
+   "sourceLines": "711-723, 1775"
+  },
+  {
+   "what": "Tokyo Tower tip beacon blink",
+   "formula": "circle opacity = 0.2 + 0.8*(0.5 + 0.5*sin(pi*time)) = 0.2..1.0, period 2 s (0.376 at the hold), multiplied by the tower group opacity 0.97.",
+   "sourceLines": "551, 585, 1810"
+  },
+  {
+   "what": "Control-tower beacon blink",
+   "formula": "opacity = 0.3 + 0.7*(0.5 + 0.5*sin(time*3.2)) = 0.30..1.00, period 1.96 s (0.550 at the hold).",
+   "sourceLines": "1578, 1597"
+  },
+  {
+   "what": "Terminal radar sweep",
+   "formula": "blade transform = rotate((time*46) mod 360) about (238, 879). One full turn every 7.83 s, constant speed - the only element in the scene that rotates all the way round.",
+   "sourceLines": "1579, 1610-1612"
+  },
+  {
+   "what": "Windsock swing",
+   "formula": "group transform = rotate(sin(time*1.7)*7 deg) about (650, 937) - +-7 degrees, period 3.70 s (-2.95 deg at the hold). The sock itself does not change shape.",
+   "sourceLines": "1625"
+  },
+  {
+   "what": "Mini trucks drive, spin their wheels and bob",
+   "formula": "d = (time*speed + phase) mod 2560 ; tx = (dir 1) d - 300, (dir -1) 2220 - d ; wheel spin = ((time*speed)/37.7)*360 mod 360 (37.7 = the r 6 wheel's circumference, so the wheels roll true) ; body bob = sin(time*6 + i*2.1)*0.5 (+-0.5 px, period 1.05 s; the shadow and the wheels do not bob). Lane 0: 54 px/s, one crossing every 47.4 s. Lane 1: 70 px/s, 36.6 s. Lane 2: 62 px/s, 41.3 s.",
+   "sourceLines": "1846-1857"
+  },
+  {
+   "what": "Jet beacon blink",
+   "formula": "fin-tip circle opacity = 0.3 + 0.7*(0.5 + 0.5*sin(time*7)) = 0.30..1.00, period 0.90 s.",
+   "sourceLines": "1669, 1574"
+  },
+  {
+   "what": "Jet ground shadow",
+   "formula": "shk = clamp01(1 - (968 - y)/260) ; the ellipse is drawn only while shk > 0.02 (i.e. until the jet is 255 px above the runway), at cy 980, rx 72*(0.55 + 0.45*shk), ry 5.5, fill alpha 0.2*shk. So the shadow shrinks and fades as the jet climbs and vanishes about 2 s into the climb-out.",
+   "sourceLines": "1670-1672"
+  },
+  {
+   "what": "Everything else is frozen",
+   "formula": "Diffing network(174) against network(275) (3.37 s later) changes 170 attributes, and they are all in: the sun glow (r + opacity), the 5 cloud transforms (and cloud #4's opacity while it fades), the 3 bird transforms and wing paths, the tower beacon opacity, the control-tower beacon opacity, the radar blade transform, the windsock transform, the 3 mini-truck transforms and their 9 wheel transforms, the jet (whole sub-tree), and the invisible coverage map's route dash offsets and pin pulses. Mt Fuji, every one of the 25 buildings, the haze, the airport ground, the office, the road and the sky never move. The CityBuilding component is memoised (line 593), so the back and front tiers are literally the same node objects every frame.",
+   "sourceLines": "593, 1679-1860"
+  },
+  {
+   "what": "Player camera drift on narrow viewports only (outside the scene function)",
+   "formula": "Desktop: a static crop centred on stage x 1250. As the visible window narrows (mobT = clamp((1500 - boxW/scale)/880)), the crop blends toward CAM_M[4]: centre x 1300 -> 1240, y 600 -> 610, zoom 1.02 -> 1.04 across the 18 s dwell with ease-in-out, exponentially smoothed (rate 2.6/s). Reduced motion: fixed at the midpoint. This is the gentlest camera of the five stops - the finale is meant to be looked at whole.",
+   "sourceLines": "hero-glue.js 105-134"
+  }
+ ],
+ "choreography": [
+  {
+   "frames": "80 (the first frame of scene 05, = scene 04's held picture)",
+   "what": "recede = 0, so the ENTIRE daylight world group is at opacity 0: no sky halo on the ground, no sun, no Fuji, no city, no road. What is on screen is the sky gradient, the big sky halo ellipse (which lives outside the recede group), the coverage map at full opacity, and the empty KPI wrapper div. Every piece of the finale is already in the DOM at this point, fully built, just invisible."
+  },
+  {
+   "frames": "80-86",
+   "what": "Nothing changes but the ambient loops (the clouds, birds, trucks and jet are all already running at time = frame/30, invisible). titleEnter has already decayed to 0 at frame 104's formula - but SceneTitle draws nothing anyway."
+  },
+  {
+   "frames": "86-112 (T_NETWORK.mapRecede) - THE REVEAL",
+   "what": "recede = easeInOutCubic over 26 frames (0.87 s at the player's 36 frames/s). The world group's opacity IS recede, so the whole daylight city fades up as one flat cross-dissolve: 86 -> 0.000, 90 -> 0.015, 95 -> 0.166, 99 -> 0.500, 104 -> 0.883, 108 -> 0.985, 112 -> 1.000. At the same time the map div fades out (opacity = mapIn*(1-recede)) and pulls back and left: scale (0.95 + 0.05*mapIn)*(1 - recede*0.08) goes 1.00 -> 0.92 and translate goes 0 -> -36 px in x. There is no camera move, no parallax, no staggering: one group of 558 nodes goes from invisible to visible together. This is the single beat the redraw has the most room to improve."
+  },
+  {
+   "frames": "96-126 / 116-140 / 128-174 (logo, tagline, stats)",
+   "what": "logoEnter (spring from frame 96), flash (96->126), taglineK (116->140) and statsK (128->174) are all computed, but the whole block they drive is gated on !window.JX_CLEAN_HERO, so NOTHING is drawn. In the site build these 78 frames of the finale are empty of any new event."
+  },
+  {
+   "frames": "107",
+   "what": "recede passes 0.96, so the KPI card wrapper div (already empty) is replaced by null and the root div drops from 5 children to 4. Positional-patcher gotcha for the redraw: the vignette div moves up one slot in the child list at this frame, so the patcher rewrites its style rather than keeping it."
+  },
+  {
+   "frames": "112-174",
+   "what": "The picture is complete and settled; only the ambient loops run. 62 frames (1.7 s at the entrance rate) of pure hold before the player even reaches its idle."
+  },
+  {
+   "frames": "174 and onwards (the hold - 15.4 s of the 18 s stop, and for ever if the page is left open)",
+   "what": "hero-glue.js STOPS[4].idle renders network(idleClk) with idleClk advancing as a FRAME clock, so ambient time = idleClk/30 keeps running: 5.80 s at frame 174, 21.19 s at the end of the dwell. Every choreography scalar is clamped, so nothing enters or leaves; the scene is carried entirely by the jet's 19 s cycle, the three road trucks, the five clouds, the three birds, the radar, the windsock and the four blinking lights."
+  },
+  {
+   "frames": "AirportPlane cycle - phase 1, approach (cycle t 0.00-5.10 s)",
+   "what": "Constant ground speed: x = -282 + 120t, so the jet enters the frame (nose at x 0) at about t 1.58 s and is fully in frame by t 2.4 s. It descends on a flattening curve y = 968 - 165*(1-k)^1.35 with a gentle float sin(t*2.1)*3.2*(1-k), k = t/5.1: (t 0) x -282 y 803 ; (t 1) -162, 847 ; (t 2) -42, 882 ; (t 3) 78, 918 ; (t 4) 198, 948 ; (t 5) 318, 967. Pitch: a nose-up glide attitude of 6.4 deg with a +-1.1 deg wander, easing (smoothstep 0.55->0.92 of k, i.e. t 2.8-4.7 s) into a -2.6 deg flare. It passes IN FRONT of the control tower and the terminal, because the jet is the last thing painted."
+  },
+  {
+   "frames": "AirportPlane cycle - phase 2, rollout (cycle t 5.10-7.50 s)",
+   "what": "Touchdown at x 330 at the same 120 px/s, then braking: x = 330 + 120*t2 - 25*t2^2 (t2 = t - 5.1), reaching 0 speed exactly at t2 2.4. Suspension bump y = 968 + 2.6*exp(-((t2-0.22)/0.16)^2) - a single 2.6 px squat 0.22 s after touchdown. Nose settles with a damped wobble rot = -2.6*exp(-1.9*t2)*cos(2.6*t2). For the first 1.05 s three tyre puffs trail behind the mains: circles at cx = x - 4 - 15*pi - 34*qq, cy = 965 - 9*qq, r = 2.5 + 8*qq, group opacity (1-q)*0.55. Positions: (t 5.5) x 374 ; (t 6.0) 418 ; (t 6.5) 449 ; (t 7.0) 468 ; (t 7.5) 474."
+  },
+  {
+   "frames": "AirportPlane cycle - phase 3, hold at the stand (cycle t 7.50-9.10 s)",
+   "what": "x 474, y 968, rot 0 for 1.6 s. The jet sits still on the runway just right of the terminal; only its fin beacon blinks. (It never taxis to the apron - the stand markings at x 118-358 are never used.)"
+  },
+  {
+   "frames": "AirportPlane cycle - phase 4, takeoff roll (cycle t 9.10-11.30 s)",
+   "what": "Accelerating from standstill: x = 474 + 30*t3^2 (t3 = t - 9.1), so 478.8 at t 9.5, 498 at t 10.0, 533 at t 10.5, 582 at t 11.0, 619 at t 11.3. Still at y 968. Rotation comes late: rot = -4*smoothstep(1.5, 2.2, t3), i.e. the nose only lifts over the last 0.7 s of the roll, reaching -4 deg at liftoff."
+  },
+  {
+   "frames": "AirportPlane cycle - phase 5, climb-out (cycle t 11.30-16.70 s)",
+   "what": "Accelerating away: x = 619 + 132*t4 + 32*t4^2 (t4 = t - 11.3). y = 968 - (x-619)*0.5*smoothstep(0, 1.15, t4), which blends off the runway onto a geometrically straight diagonal of slope -0.5 (about 26.6 deg). Pitch settles at the path angle: rot = -4 - 23.5*smoothstep(0.04, 1.2, t4) -> -27.5 deg. Gear retracts over t4 0.3-1.4 (gear = 1 - smoothstep, and the gear group's own opacity is clamp01(gear*1.5 - 0.25), so the legs are gone by t4 about 1.2). Track: (t 12.0) x 727 y 932 ; (t 12.5) 824, 866 ; (t 13.0) 936, 810 ; (t 13.5) 1064, 745 ; (t 14.0) 1209, 673 ; (t 14.5) 1369, 593 ; (t 15.0) 1546, 505 ; (t 15.5) 1738, 409 ; (t 16.0) 1946, 304 (leaving the frame). It crosses IN FRONT of the Tokyo Tower's mast around t 14.0-14.6 and exits top right under the sun. The ground shadow has faded out by about t 12.3."
+  },
+  {
+   "frames": "AirportPlane cycle - phase 6, gap (cycle t 16.70-19.00 s)",
+   "what": "AirportPlane returns null: the whole 41-node sub-tree is removed and the sky is empty of aircraft for 2.3 s, then the next approach starts. Over the 18 s dwell the visitor sees most of one full cycle; the cycle is not locked to the scene, so which phase is on screen at any moment of the hold depends only on ambient time (at the hold's first frame, t 5.80 s, the jet is braking on the runway at x 402)."
+  },
+  {
+   "frames": "positional-patcher gotcha (the whole hold)",
+   "what": "AirportPlane's node list changes shape between phases - the shadow ellipse is conditional (shk > 0.02) and the puff group is present only in the first 1.05 s of the rollout - so the group's children shift position and the diff patcher replaces nodes rather than patching attributes (26 tag replacements between two hold frames). Keep the node list stable (render the shadow and puffs at opacity 0 instead of null) if the redraw keeps this patcher."
+  }
+ ],
+ "disabledOrHidden": [
+  "SceneTitle ('04 / NETWORK', heading '1都6県、そして新潟市へ届ける。'): returns null because hero-flag.js sets window.JX_CLEAN_HERO = true (hero-port-b.js line 997, called at 1894). Not even a wrapper div remains. titleEnter is computed at line 1683 and used nowhere visible.",
+  "The entire logo / tagline / eyebrow block: LogoReveal, the 76 px tagline '大切な荷物を、きょうも確実に。' and the 17 px eyebrow 'RELIABLE DELIVERY, ACROSS EVERY REGION' are gated on 'frame >= 94 && !window.JX_CLEAN_HERO' (line 1895), so the whole centre column of the finale is absent. logoEnter, flash and taglineK are computed and unused. The site shows its own HTML copy instead.",
+  "Both KpiCards ('主要拠点 / OUR BASES' listing 板橋 / 志木 / 入間, and 'ネットワーク概況 / NETWORK OVERVIEW' with the 3 / 7 / 32台 stats): KpiCard returns null under the flag (line 865), so lines 1866-1892 build nothing. Their wrapper div survives, empty, until frame 106 and is dropped at frame 107.",
+  "The coverage map (CoverageMap, 105 nodes: the grey land mask, the 7 covered prefectures with their heat fills, the route lines, the label plates and the pulsing hub pin): the div is STILL IN THE TREE at the hold with opacity mapIn*(1-recede) = 0, and its flow animation keeps running every frame. It is the single biggest piece of invisible work in the finale. Lines 1862-1864.",
+  "FloatingParticles('network', 28 motes): the function's first statement is 'return null' (line 675), so line 1735 draws nothing.",
+  "The 30 'n-star' circles (line 1733) and the 26 'n2-star' circles (line 1758) are all drawn with opacity 0 - 56 invisible nodes, left over from a night sky. Their twinkle values tw are computed and discarded.",
+  "The shooting star (lines 1760-1767): guarded by 'if (true) return null', so it never draws.",
+  "The sun's rays: the IIFE at lines 1742-1750 builds a 12-ray path string and returns null. The finale's sun has no rays, exactly like scene 01's.",
+  "The empty <g opacity='0.5 - recede*0.3'> at lines 1725-1728: a group whose two children were deleted. It renders as an empty <g opacity='0.2'> in the DOM.",
+  "Mt Fuji's right half: everything from x 854 to x 1177 is behind CITY_DEEP#6/#7/#8 and CITY_BACK#2/#3, and the toe at x 1177-1206 is under 0.6-alpha haze. Do not expect the right slope in a screenshot - only three slivers (x 739-772, 777-819, 850-854) and the left half survive.",
+  "CITY_DEEP#4's right half (x 604-652) is completely behind CITY_BACK#1; CITY_DEEP#5 shows only x 738-776 between y 733 and 828; CITY_DEEP#7 is cut by CITY_BACK#2 below y 718 and by CITY_BACK#3 below y 618; CITY_DEEP#12 shows only above y 638; CITY_DEEP#14 only above y 768. CITY_DEEP#0 is clipped by CITY_BACK#0 from x 116.",
+  "CITY_FRONT#0's bottom-left corner (x 678-714, below y 948) is covered by the airport apron, which is painted after it.",
+  "CITY_DEEP#14's last 2 px (x 1920-1922) and the sun's glow, the sky halo and the ground halo all extend past the frame; cloud #4 is off-screen right at the hold (x 2097-2247) and re-enters from the left about 7 s later.",
+  "The airport stand block and its three stripes (x 118-358, y 950-966) are drawn as parking markings but the jet never taxis there - it lands, brakes, holds on the runway at x 474 and takes off again.",
+  "Lamp light / glows: none anywhere. The DAY palette is 'lamps off'. The only lit things are four small blinking lamps (Tokyo Tower tip, control-tower beacon, jet fin beacon, 12 amber runway edge lights at a fixed 0.9), the warm windows of CITY_BACK/CITY_FRONT, and the mini trucks' 3.5 px headlights.",
+  "No utility poles, no streetlights, no fence, no pavement tactile strip, no vending machines - none of scene 01's street furniture exists here. The whole ground plane is: apron, runway, office, kerb, road, three trucks.",
+  "The scene has no text of any kind once the flag is on: the office's sign plate is a blank white rectangle with a vermilion tab, and the mini trucks' lettering is two abstract bars. Nothing in the finale says 'Sanpou' or '三豊運輸'.",
+  "SVG id collision risk: haloSoft, sunGlow and horizHaze are NOT per-scene ids (compare GlowDef/HazeDef's id parameter in scenes 01-03). During the 04 -> 05 dissolve two copies of this scene can coexist, and hero-glue.js has to move the incoming stage first in the document (lines 232-234) so its url(#...) references resolve to its own defs."
+ ]
+}

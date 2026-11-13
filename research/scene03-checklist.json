@@ -1,0 +1,521 @@
+{
+ "frame": "ORIGINAL scene 03 (輸送 / transit, expressway) settled hold = JourneyPort._scenes.transit(150). Source: C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/original/js/hero-port-b.js, sceneTransit lines 1442-1532 (helpers GantryBack 1393-1430, GantryFront 1432-1441, ROAD_Y 1391). Stage 1920x1080, origin top-left. There is NO camera move and no cam variable: the world scrolls past at SPEED = 9 px per frame (line 1444), i.e. scroll = frame * 9, and every scrolling layer is translate(wrap(scroll * factor, tile) + rep * tile, 0) with wrap(v,t) = -(((v % t) + t) % t) (line 1453). SCREEN x = local x + that translate; y is never shifted. The ground line of the whole scene is ROAD_Y = 856 (the top edge of the asphalt); both city tiers stand on it. All boxes below are SCREEN px at frame 150, computed by running the unchanged files in Node with a fake window (hero-flag.js sets JX_CLEAN_HERO = true, hero-port-a.js gives JRMAP, which scene 03 does not use) and walking the returned {t,a,c} tree with transform composition, then confirmed against Chromium renders of the same moments (0 console errors). The tree has 1195 virtual nodes; the scene function costs about 0.39 ms/frame in Node with its memo caches warm (CityBuilding _cbMemo, GantryBack/GantryFront _gbMemo/_gfMemo). 119 attributes change every frame (nothing is still): sun glow r, 3+3 bird transforms and 6 wing paths, 3 cloud transforms (+1 cloud opacity while it fades in), the 2 far-tier and 2 mid-tier translates, the jet translate, the lane dash-offset, 36 road-dot cx, the 2 pole translates, 4 gantry translates, 4 truck translates + 4 body bob/pitch transforms + 8 exhaust circles + 12 wheel rotations, and 2 fence translates. PLAYER FACTS (hero-glue.js / viewer/timeline.js): scene 03 occupies 14600-21800 ms of the site clock. Its entrance is master frames 391->475 played at ENTER_RATE 1.2 (36 frames/s, 2333 ms), and renderMaster only starts drawing sceneTransit at master 420, so for the first ~806 ms of 'scene 03' (14600-15406 ms) the picture is still sceneWorld (scene 02 at the warehouse); sceneTransit then CROSSFADES in over master 420-438 with opacity smoothstep((m-420)/18) and is alone from about 15906 ms. Transit frame = (ms - 14600) * 0.036 - 29 during the entrance, then 55 + (ms - 16933.3)/1000*30 during the idle (hero-glue STOPS[2]: eFrom 391, eTo 475, iStart 55, sec false, i.e. a FRAME clock, not an ambient-seconds clock). So the scene only ever shows transit frames 0 -> about 201; frame 150 = 20100 ms on the site clock. Desktop crop centre FOCUS_X[2] and the phone camera blend are player camera, not scene art. SCROLL RATES (at 30 fps): far city tier 0.18 -> 48.6 px/s; mid city tier 0.42 -> 113.4 px/s; road markings, light poles, gantries and the trucks' world position 1.0 -> 270 px/s; foreground fence 1.25 -> 337.5 px/s; sky, sun, clouds, birds, jet, hill and Fuji do not scroll at all (they only have their own ambient drift). Scratch files (scripts + evidence), all under C:/Users/RTX4070TI/AppData/Local/Temp/claude/9fdb7479dd8c9206/ebc51bcd-98dd-479d-bbf9-f61a2010e7ba/scratchpad/inv/ : load.cjs, walk.cjs (tree walker, shared), s3-tree.cjs, s3-order.cjs (paint order with boxes), s3-report.cjs + s3-report-f150.txt (all the numbers), s3-windows.cjs + s3-windows.txt (per-building window grids and glass counts), s3-entrance.cjs + s3-entrance.txt (convoy entrance, gantry/pole/jet/cloud positions over the scene), s3-occl.cjs + s3-occl.txt (what hides the hill and Fuji), s3-order-f150.txt, and shots/ with original-t14600/15200/15800/16400/16933/18000/20100/21100/21799.png plus crops c-fuji.png, c-sign.png, c-road.png, c-truck1.png, c-hill-gantry.png, c-hillslit.png, c-hillslit2.png. Nothing was written inside the project except this file.",
+ "layers": [
+  {
+   "order": 1,
+   "name": "Root div background",
+   "parallax": "none (screen-fixed)",
+   "note": "#eaf5fc, fully covered by the sky gradient. Line 1455."
+  },
+  {
+   "order": 2,
+   "name": "Sky gradient div (DAY.skyT)",
+   "parallax": "none (screen-fixed)",
+   "note": "A DIFFERENT gradient from scene 01's DAY.sky: 4 stops, no warm bottom. Line 1456."
+  },
+  {
+   "order": 3,
+   "name": "Two radial washes div (warm sun wash top-right + cool shade bottom-left)",
+   "parallax": "none (screen-fixed)",
+   "note": "One div, two radial-gradients, byte-identical to scene 01's. Line 1457."
+  },
+  {
+   "order": 4,
+   "name": "SVG: sun (SkySun, gid tSun)",
+   "parallax": "0 (screen-fixed, first thing painted in the SVG)",
+   "note": "Lines 1460, 646-665. Nothing is painted in front of it at frame 150."
+  },
+  {
+   "order": 5,
+   "name": "SVG: birds flock A (DayBirds seed t-birds, count 3, span 2200, yBase 150)",
+   "parallax": "0 (own drift only)",
+   "note": "Line 1461. Behind the clouds and everything else."
+  },
+  {
+   "order": 6,
+   "name": "SVG: 3 clouds",
+   "parallax": "0 (own drift only)",
+   "note": "Lines 1462-1466. In front of the sun and flock A, behind the hill/Fuji group."
+  },
+  {
+   "order": 7,
+   "name": "SVG: hill band + Mt Fuji (one untransformed group)",
+   "parallax": "0 - NOT scrolled at all; it stays put while the city slides past",
+   "note": "Lines 1467-1470. The hill path is painted first, Fuji over it."
+  },
+  {
+   "order": 8,
+   "name": "SVG: far city tier, 2 tiled copies",
+   "parallax": "0.18 (tile 7000)",
+   "note": "Lines 1471-1475. CityBuilding detail 0, faces DAY.far, h + 110, baseY 856."
+  },
+  {
+   "order": 9,
+   "name": "SVG: haze band 0 (tHaze0)",
+   "parallax": "none (screen-fixed rect y 436-856)",
+   "note": "Line 1476, k = DAY.hazeK[1] = 0.42. Over the far tier, Fuji's lower half and the hill."
+  },
+  {
+   "order": 10,
+   "name": "SVG: mid city tier, 2 tiled copies",
+   "parallax": "0.42 (tile 7000)",
+   "note": "Lines 1477-1481. CityBuilding detail 1, faces DAY.mid, h + 50, baseY 856."
+  },
+  {
+   "order": 11,
+   "name": "SVG: haze band 1 (tHaze1)",
+   "parallax": "none (screen-fixed rect y 596-856)",
+   "note": "Line 1482, k = DAY.hazeK[2] = 0.22. Over the mid tier. Scene 03 has only TWO haze bands (scene 01 has three)."
+  },
+  {
+   "order": 12,
+   "name": "SVG: birds flock B (DayBirds seed t-birds, count 3, span 2100, yBase 105)",
+   "parallax": "0 (own drift only)",
+   "note": "Line 1483. Same seed as flock A, so it is the same three birds drawn a second time 45 px higher, in FRONT of the whole city."
+  },
+  {
+   "order": 13,
+   "name": "SVG: jet + contrail",
+   "parallax": "0 (own drift only)",
+   "note": "Lines 1484-1491, JetPlane 1535-1576. Drawn every frame but off screen left for the whole of the site's playback."
+  },
+  {
+   "order": 14,
+   "name": "SVG: FloatingParticles('transit')",
+   "parallax": "-",
+   "note": "Line 1492. Draws NOTHING (the function returns null at line 675)."
+  },
+  {
+   "order": 15,
+   "name": "SVG: road block - guardrail strip, asphalt, pale shoulder, top edge line, lane dashes, 36 road dots",
+   "parallax": "screen-fixed rects/lines; only the dash offset and the dot x scroll at 1.0",
+   "note": "Lines 1493-1498."
+  },
+  {
+   "order": 16,
+   "name": "SVG: roadside light poles, 2 tiled copies of 6",
+   "parallax": "1.0 (tile 5400 = GTILE*2)",
+   "note": "Lines 1499-1507."
+  },
+  {
+   "order": 17,
+   "name": "SVG: GantryBack (far leg, beam, both sign plates), 2 tiled copies",
+   "parallax": "1.0 (tile 2700 = GTILE, phase + 2030)",
+   "note": "Line 1508, component 1393-1430. BEHIND the trucks."
+  },
+  {
+   "order": 18,
+   "name": "SVG: the four convoy trucks",
+   "parallax": "fixed on screen (the camera rides with them); only their wheels and exhaust react to scroll",
+   "note": "Lines 1509-1519, Truck 274-356."
+  },
+  {
+   "order": 19,
+   "name": "SVG: GantryFront (near leg + its foot), 2 tiled copies",
+   "parallax": "1.0 (same tile and phase as GantryBack)",
+   "note": "Line 1520, component 1432-1441. IN FRONT of the trucks - it sweeps past them."
+  },
+  {
+   "order": 20,
+   "name": "SVG: foreground fence band + 46 posts + rail line, 2 tiled copies",
+   "parallax": "1.25 (tile 7000) - faster than the road",
+   "note": "Lines 1521-1526."
+  },
+  {
+   "order": 21,
+   "name": "HTML: vignette div",
+   "parallax": "none (screen-fixed, topmost)",
+   "note": "opacity 0.26. Lines 1530, 764-767. NOTE: unlike sceneWorld, sceneTransit calls SceneTitle and SceneCaption directly (lines 1528-1529); they return null under the flag and h() drops nulls, so there are no empty wrapper divs here at all - the root div has exactly four children (sky, washes, svg, vignette)."
+  }
+ ],
+ "elements": [
+  {
+   "name": "Sky gradient (DAY.skyT)",
+   "layer": "2 sky div",
+   "screenBox": "0, 0, 1920, 1080 (visible above the guardrail at y 840)",
+   "look": "Vertical linear gradient, 4 stops: 0% (y 0), 42% (y 453.6), 72% (y 777.6), 100% (y 1080). Clear blue at the top, pale blue in the middle, a very pale mint at the bottom. It is NOT the same gradient as scene 01's DAY.sky (which has 5 stops and a peach bottom) - this is a colour difference between the scenes.",
+   "colours": "#58abe0 -> #8fc9ec -> #c6e6f6 -> #ecf7f3; root behind it #eaf5fc",
+   "sourceLines": "156, 1455-1456"
+  },
+  {
+   "name": "Radial wash 1 - warm sun wash",
+   "layer": "3 washes div",
+   "screenBox": "ellipse centre (1766.4, 75.6), radii 729.6 x 345.6; reaches 0 at 70% = 510.7 x 241.9",
+   "look": "Soft warm glow in the top-right corner around the sun. Identical string to scene 01's.",
+   "colours": "rgba(255,240,200,0.46) at centre -> rgba(255,240,200,0) at 70%",
+   "sourceLines": "1457"
+  },
+  {
+   "name": "Radial wash 2 - cool lower-left shade",
+   "layer": "3 washes div",
+   "screenBox": "ellipse centre (153.6, 1080), radii 1075.2 x 432; reaches 0 at 72% (so it rises only to about y 769)",
+   "look": "Very faint navy shade in the bottom-left. Entirely covered by the SVG city, road and fence - it contributes nothing in this scene.",
+   "colours": "rgba(22,41,63,0.085) -> 0",
+   "sourceLines": "1457"
+  },
+  {
+   "name": "Sun",
+   "layer": "4 sun (fixed)",
+   "screenBox": "centre (1795, 88), r 46. Glow circle r 216.37 at frame 150 (range 211.6-218.5): box 1578.6, -128.4, 432.7, 432.7 (clipped by the stage). Halo r 51.52: 1743.5, 36.5, 103.0, 103.0. Disc r 35.88: 1759.1, 52.1, 71.8, 71.8.",
+   "look": "4 circles: big soft radial glow (gradient tSun), a pale halo, a flat yellow disc, and a 2 px white ring on the disc edge. No rays. Smaller and higher than scene 01's sun (r 46 vs 52, centre (1795,88) vs (1772,104)) and NOTHING covers it here - no cloud passes in front of it during the scene, so it reads as a clean bright disc in the top-right corner.",
+   "colours": "glow gradient tSun = rgb(255,224,130) at alpha 0.500 @0, 0.225 @35%, 0.060 @70%, 0 @100%; halo rgba(255,236,170,0.32); disc DAY.sun #ffd24d; ring rgba(255,255,255,0.55)",
+   "sourceLines": "646-665, 177-183, 1459-1460"
+  },
+  {
+   "name": "Birds flock A (3)",
+   "layer": "5 birds A (behind clouds, behind everything else)",
+   "screenBox": "at frame 150: #0 centre (1336.5, 184.1), box 1328.1..1344.9 x 182.0..184.1, scale 1.196 | #1 centre (1967.8, 256.4) OFF SCREEN RIGHT | #2 centre (1422.4, 345.7), box 1413.2..1431.6 x 337.5..345.7, scale 1.315",
+   "look": "Tiny two-arc 'm' glyphs (path M-7,0 Q-3.5,(-3.2-flap) 0,0 Q3.5,(-3.2-flap) 7,0), 1.7 px round stroke, 50% opacity, wingspan 14 x scale = 16.0-18.4 px. 2 of the 3 are on screen at frame 150.",
+   "colours": "stroke #2e4159, opacity 0.5",
+   "sourceLines": "711-723, 1461"
+  },
+  {
+   "name": "Birds flock B (3) - the same three birds again",
+   "layer": "12 birds B (in front of both city tiers and both haze bands, behind the jet)",
+   "screenBox": "at frame 150: #0 centre (1274.1, 139.1), box 1265.8..1282.5 x 137.0..139.1 | #1 centre (1876.5, 211.4), box 1868.6..1884.5 | #2 centre (1356.6, 300.7), box 1347.4..1365.8",
+   "look": "Identical glyphs. Because both DayBirds calls use seed 't-birds' and count 3, the per-bird random values (rx, ry, rs) are IDENTICAL, so flock B is flock A moved 45 px up (yBase 105 vs 150) and shifted sideways only by the different span in the wrap (2100 vs 2200). The two flocks travel at exactly the same speeds and stay a fixed distance apart (62 / 91 / 66 px at frame 150) for the whole scene - six birds that are really three, in two parallel pairs. 5 of the 6 birds are on screen at frame 150, all in the right half of the sky.",
+   "colours": "stroke #2e4159, opacity 0.5",
+   "sourceLines": "711-723, 1483"
+  },
+  {
+   "name": "Clouds (3) - shared look",
+   "layer": "6 clouds",
+   "screenBox": "box = (wx, y - 0.272w, w, 0.374w); cloud height unit hgt = 0.34w",
+   "look": "Puffy flat-bottom cloud, the same component as scene 01: 4 white lobes (centres at 0.20w/-0.16hgt r 0.30hgt; 0.44w/-0.36hgt r 0.44hgt; 0.67w/-0.20hgt r 0.33hgt; 0.84w/-0.06hgt r 0.22hgt) over a white pill base (y -0.14hgt, height 0.44hgt, fully rounded); then the same shapes again in pale blue-white nudged right/down (lobe r x 0.95, offset +0.05r, +0.17r) so a white sunlit crescent stays on top of every lobe; then a soft blue shade on the bottom 30% of the base. Group opacity 0.92 * 0.96 * edge = up to 0.8832.",
+   "colours": "lit DAY.cloudTop #ffffff, body DAY.cloud #eef5fb, underside shade DAY.cloudShade rgba(176,206,232,0.45)",
+   "sourceLines": "693-708, 1462-1466"
+  },
+  {
+   "name": "Clouds at frame 150 (each: wx, box, opacity)",
+   "layer": "6 clouds",
+   "screenBox": "#0: w 280, hgt 95.2, anchor y 110, wx -70 -> box -70, 33.8, 280, 104.7; opacity 0.757 (still fading in, full 0.8832 from frame 175) | #1: w 220, hgt 74.8, anchor y 196, wx 690 -> box 690, 136.2, 220, 82.3; opacity 0.8832 | #2: w 250, hgt 85, anchor y 70, wx 1450 -> box 1450, 2.0, 250, 93.5; opacity 0.8832 (its top lobe almost touches the top edge of the frame)",
+   "look": "Only three clouds in the whole sky, evenly spaced 760 px apart in a 2420 px loop, all drifting RIGHT at 36 px/s. Cloud #0 is half off the left edge at frame 150. None of them ever passes in front of the sun during the scene.",
+   "colours": "as shared look",
+   "sourceLines": "1462-1466"
+  },
+  {
+   "name": "Hill band",
+   "layer": "7 hill (not scrolled)",
+   "screenBox": "path across the whole width, base y 856. Ridge y at screen x: 0 -> 728.0, 240 -> 714.5, 480 -> 711.8, 720 -> 711.1, 960 -> 705.9, 1200 -> 695.0, 1440 -> 695.6, 1680 -> 703.3, 1920 -> 702.0. Height above the ground line 128-161 px.",
+   "look": "One shallow rolling ridge (two cubic curves, path M0,728 C320,698 680,724 1080,700 C1420,680 1700,716 1920,702 L1920,856 L0,856 Z), flat fill, no detail. IMPORTANT: it is almost never visible. Fuji sits in front of it from x -160 to 1080 and reaches down to y 742; both city tiers stand on the same ground line with tops at y 470-574 (far) and 610-675 (mid); and the four truck cargo boxes top out at y 709-723. A computed sweep of the idle frames found only thin slits where any of the ridge shows: frame 55 x 281-290; frame 80 x 457-496, 961-974, 1151-1190; frame 110 x 73-87, 584-605; frame 150 NOTHING AT ALL; frame 180 x 318-334 and 1702-1736; frame 201 x 1663-1666 - each 10-40 px wide and at most ~20 px tall, and in the rendered frames it is nearly indistinguishable from the hazed sky behind it (confirmed on a 3x crop of frame 180 at x 1640-1820).",
+   "colours": "DAY.hill #dbe8f3",
+   "sourceLines": "1467-1468"
+  },
+  {
+   "name": "Mt Fuji",
+   "layer": "7 Fuji (not scrolled; painted over the hill, under the far tier)",
+   "screenBox": "FujiMountain({cx: 460, baseY: 742, w: 1240, ht: 470}). Silhouette spans x -160 to 1080, base y 742, nominal peak y 272, true apex y 259.8 at x 460. Outline y at x: -160 -> 742, 0 -> 681.3, 160 -> 569.4, 290 -> 442.9, 351 -> 271.6 (left shoulder), 460 -> 259.8 (apex), 569 -> 271.6 (right shoulder), 634 -> 455.0, 800 -> 602.3, 1000 -> 717.1, 1080 -> 742. Snowcap hem line y 460, hem knots at x 286.4 and 633.6. At frame 150 the part you actually see is roughly x 216-705 down to y 620-710 (plus a 12 px slit at x 124-136); everything else is behind the two city tiers and the trucks.",
+   "look": "Flat 2D pastel Fuji, no outlines, exactly two paths. BODY: starts at (-160,742), a cubic out to the left hem knot (286.4,460) with controls (88,680.9) and (199.6,521.1); then the SHARED upper segment - Q(326.08,335.45) to the left shoulder (350.88,272), Q(460,247.56) over the crown to the right shoulder (569.12,272), Q(593.92,335.45) down to the right hem knot (633.6,460); then a mirrored cubic back to (1080,742). SNOWCAP: the same shared upper segment, so the cap's sides sit exactly on the mountain's edges, closed by an irregular angular zigzag hem of 11 points running right to left (drip unit dr = 70.5): (598.88,452.95) (569.37,498.78) (539.86,454.36) (508.61,524.86) (484.3,468.46) (454.79,507.94) (425.28,463.53) (390.56,517.81) (364.52,456.48) (331.54,489.61) (307.23,454.36), then Z back to (286.4,460). The cap is very large - it covers the top 40% of the mountain's height, i.e. about 200 px of the 470, so in the render the mountain reads as mostly white with a pale blue skirt. The flanks are wide and low (w 1240 against ht 470) with a broad, softly-rounded crown.",
+   "colours": "body DAY.fuji #bcd7ec, cap DAY.fujiCap #ffffff. The lower half (below y 436) is washed by haze band 0.",
+   "sourceLines": "730-762, 1469"
+  },
+  {
+   "name": "Far city tier - shared look",
+   "layer": "8 far (0.18)",
+   "screenBox": "39 buildings per 7000 px tile, all standing on y 856. At frame 150 (tile offset -243 and 6757) buildings #2-#12 are on screen; #0, #1, #13, #14 are drawn but off screen; #15-#38 are filtered out.",
+   "look": "CityBuilding with detail 0: flat facade, a grid of plain windows with NO frames and NO warm panes, a lighter reflection over the top 42% of every pane, a darker shade strip on the left 14% of the facade, a 3 px light rim on the right edge, and a parapet cap rect (x-2, top-7, w+4, 9, rx 2). No roof boxes, no masts (both are gated on detail > 0). Window grid: margins 10 left/right, 16 top, 12 bottom; column pitch aims at 33 px, row pitch at 48 px; pane = 0.52 x 0.50 of the cell; first pane at x+10+(cell-pane)/2, y+16+(cell-pane)/2. Pane colour by a per-pane hash: < 0.175 lit, < 0.275 cool, else glass. Every building's height is its tier height + 110, so this tier is tall and reads as the back of the city.",
+   "colours": "facades DAY.far [0 #8ba2c7, 1 #95abce, 2 #7f97bd] chosen by index mod 3, cap DAY.farCap #7288ab, glass #c6ddf1, cool #dbeaf6, lit #eef7fe, reflection rgba(255,255,255,0.4), shade rgba(22,41,63,0.1), rim rgba(255,255,255,0.3)",
+   "sourceLines": "444-458, 594-644, 1450, 1471-1475"
+  },
+  {
+   "name": "Far tier buildings (each: tile x, w, h, top y, screen x at frame 150, window grid, pane counts)",
+   "layer": "8 far (0.18)",
+   "screenBox": "#0 tile -80 w112 h364 top492 | screen -323..-211 OFF | 3x7 cell 30.67x48 pane 15.95x24 | lit7 cool2 glass12 | face0\n#1 tile 58 w172 h305 top551 | screen -185..-13 OFF | 5x6 cell 30.4x46.17 pane 15.81x23.08 | lit5 cool1 glass24 | face1\n#2 tile 268 w96 h386 top470 | screen 25..121 | 2x7 cell 38x51.14 pane 19.76x25.57 | lit2 cool0 glass12 | face2\n#3 tile 382 w202 h330 top526 | screen 139..341 | 6x6 cell 30.33x50.33 pane 15.77x25.17 | lit5 cool2 glass29 | face0\n#4 tile 628 w132 h349 top507 | screen 385..517 | 3x7 cell 37.33x45.86 pane 19.41x22.93 | lit3 cool4 glass14 | face1\n#5 tile 786 w152 h282 top574 | screen 543..695 | 4x5 cell 33x50.8 pane 17.16x25.4 | lit3 cool2 glass15 | face2\n#6 tile 976 w112 h364 top492 | screen 733..845 | 3x7 | lit4 cool2 glass15 | face0\n#7 tile 1106 w172 h305 top551 | screen 863..1035 | 5x6 | lit4 cool5 glass21 | face1\n#8 tile 1322 w96 h386 top470 | screen 1079..1175 | 2x7 | lit0 cool0 glass14 | face2\n#9 tile 1444 w202 h330 top526 | screen 1201..1403 | 6x6 | lit5 cool1 glass30 | face0\n#10 tile 1684 w132 h349 top507 | screen 1441..1573 | 3x7 | lit1 cool5 glass15 | face1\n#11 tile 1834 w152 h282 top574 | screen 1591..1743 | 4x5 | lit7 cool0 glass13 | face2\n#12 tile 2030 w112 h364 top492 | screen 1787..1899 | 3x7 | lit3 cool2 glass16 | face0\n#13 tile 2168 w172 h305 top551 | screen 1925..2097 OFF | #14 tile 2378 w96 h386 top470 | screen 2135..2231 OFF",
+   "look": "Heights listed are already tier height + 110. Widths cycle through [112,172,96,202,132,152] and heights through base 128 + amp 148 x [0.85,0.45,1,0.62,0.75,0.3]; gaps cycle through [26,38,18,44], so the x pattern repeats every 12 buildings (lcm of 6 and 4) and the whole silhouette is strictly periodic. Visibility at frame 150: the parts below the mid tier's tops (y 610-675) are hidden except in the mid tier's gaps (screen x -81..-47, 185..277, 429..487, 679..727, 869..941, 1123..1157, 1279..1371, 1603..1661, 1813..1861); the bottom 16 px of every building (y 840-856) is covered by the guardrail strip; and the big green sign covers x 840-1400 between y 446 and 642, which hides the upper parts of far #6, #7, #8 and #9.",
+   "colours": "as shared look",
+   "sourceLines": "1450, 1471-1475"
+  },
+  {
+   "name": "Haze band 0 (tHaze0)",
+   "layer": "9 haze0",
+   "screenBox": "0, 436, 1920, 420 (y 436-856)",
+   "look": "Vertical gradient of pale blue haze rising from the ground line: alpha 0 at y 436, 0.231 at y 730, 0.420 at y 856. Lightens the far tier, the lower half of Fuji and the hill.",
+   "colours": "rgb(232,243,251), k = DAY.hazeK[1] = 0.42",
+   "sourceLines": "185-190, 1459, 1476"
+  },
+  {
+   "name": "Mid city tier - shared look",
+   "layer": "10 mid (0.42)",
+   "screenBox": "29 buildings per 7000 px tile, all standing on y 856. At frame 150 (tile offset -567 and 6433) buildings #3-#11 are on screen; #2 and #12 are drawn but off screen; the rest are filtered out.",
+   "look": "CityBuilding with detail 1 (stronger blue, reads in front): the same construction plus a dark frame 1.6 px larger all round every pane, a few warm (lit yellow) panes, and roof units - a 20 x 12 box at (x + 0.3w, top - 19) on even-index buildings and a 3.4 x 27 mast at (x + 0.68w, top - 34) on index mod 3 == 2. Window grid pitches 27 x 37 (tighter than the far tier). Pane colour by hash: < 0.045 warm, < 0.175 lit, < 0.275 cool, else glass. Heights are tier height + 50.",
+   "colours": "facades DAY.mid [0 #5f7ba8, 1 #6a86b2, 2 #54719e, 3 #5e88a8] by index mod 4, cap/roof units DAY.midCap #465e84, frame rgba(22,41,63,0.22), glass #c6ddf1, cool #dbeaf6, lit #eef7fe, warm #ffd98f, reflection rgba(255,255,255,0.4), shade rgba(22,41,63,0.1), rim rgba(255,255,255,0.3)",
+   "sourceLines": "444-458, 594-644, 1451, 1477-1481"
+  },
+  {
+   "name": "Mid tier buildings (each: tile x, w, h, top y, screen x at frame 150, grid, warm panes as row/col from top-left, roof units)",
+   "layer": "10 mid (0.42)",
+   "screenBox": "#0 tile -80 w142 h214 top642 | screen -647..-505 (not drawn) | 5x5 cell 24.4x37.2 pane 12.69x18.6 | warm r1c1,r2c0,r3c3 lit4 cool1 glass17 | roof box | face0\n#1 tile 110 w182 h246 top610 | screen -457..-275 (not drawn) | 6x6 cell 27x36.33 | warm r1c3,r2c3,r3c3 lit5 cool2 glass26 | no roof unit | face1\n#2 tile 364 w122 h181 top675 | screen -203..-81 OFF | 4x4 cell 25.5x38.25 | warm none lit1 cool4 glass11 | roof box + mast | face2\n#3 tile 520 w232 h230 top626 | screen -47..185 | 8x5 cell 26.5x40.4 pane 13.78x20.2 | warm r2c3 lit6 cool5 glass28 | no roof unit | face3\n#4 tile 844 w152 h197 top659 | screen 277..429 | 5x5 cell 26.4x33.8 | warm r4c1 lit5 cool1 glass18 | roof box at x+45.6 | face0\n#5 tile 1054 w192 h237 top619 | screen 487..679 | 6x6 cell 28.67x34.83 | warm r1c1,r4c0 lit7 cool3 glass24 | mast at x+130.56 | face1\n#6 tile 1294 w142 h214 top642 | screen 727..869 | 5x5 | warm r0c0 lit3 cool3 glass18 | roof box | face2\n#7 tile 1508 w182 h246 top610 | screen 941..1123 | 6x6 | warm r0c2,r1c4,r1c5,r2c0,r2c2,r3c5,r4c3,r4c5,r5c0 (nine - the brightest facade in the scene) lit5 cool1 glass21 | no roof unit | face3\n#8 tile 1724 w122 h181 top675 | screen 1157..1279 | 4x4 | warm none lit3 cool2 glass11 | roof box + mast | face0\n#9 tile 1938 w232 h230 top626 | screen 1371..1603 | 8x5 | warm r2c6,r3c5 lit4 cool7 glass27 | no roof unit | face1\n#10 tile 2228 w152 h197 top659 | screen 1661..1813 | 5x5 | warm r2c2 lit1 cool1 glass22 | roof box | face2\n#11 tile 2428 w192 h237 top619 | screen 1861..2053 | 6x6 | warm none lit7 cool3 glass26 | mast | face3\n#12 tile 2692 w142 h214 top642 | screen 2125..2267 OFF",
+   "look": "Heights listed are already tier height + 50. Widths cycle through [142,182,122,232,152,192], heights base 88 + amp 108 x [0.7,1,0.4,0.85,0.55,0.92], gaps [48,72,34,92,58], so the silhouette repeats only every 30 buildings - and the tier only has 29, so within one tile it never visibly repeats. Visibility at frame 150: the lower parts of #4-#9 are behind the four trucks (truck boxes top out at y 709-723); the bottom 16 px of every building is behind the guardrail strip; the big green sign covers x 840-1400 y 446-642, hiding the roof lines of #6 and #7; the gantry's far leg (x 720-746) and near leg (x 1898-1934) cut through #5/#6 and #11.",
+   "colours": "as shared look",
+   "sourceLines": "1451, 1477-1481"
+  },
+  {
+   "name": "Haze band 1 (tHaze1)",
+   "layer": "11 haze1",
+   "screenBox": "0, 596, 1920, 260 (y 596-856)",
+   "look": "The same haze gradient, weaker: alpha 0 at y 596, 0.121 at y 778, 0.220 at y 856. Over the mid tier.",
+   "colours": "rgb(232,243,251), k = DAY.hazeK[2] = 0.22",
+   "sourceLines": "185-190, 1459, 1482"
+  },
+  {
+   "name": "Jet plane and contrail",
+   "layer": "13 jet (in front of the city, behind everything on the ground)",
+   "screenBox": "group translate(px, 148 + pb) with px = ((time * 38) % 2640) - 360 and pb = 5 sin(0.85 t). At frame 150: translate(-170, 143.53), group opacity 0.92. Aircraft (inside scale(0.34) over JetPlane's own scale(0.98), total 0.3332): local x -92..94, y -91.5..0 -> screen px-30.7..px+31.3, i.e. -200.7..-138.7 at frame 150, y 112.3..143.5. Contrail dashes are NOT scaled: line (px-150, y-11) to (px-46, y-11) and line (px-196, y-8) to (px-142, y-8). Whole group box at frame 150: -366.0, 112.3, 227.3, 31.2.",
+   "look": "A small airliner in level flight with two white speed-line dashes trailing behind it. Construction (local units, nose to the right): far-side wing peeking above the fuselage (#c7d4e8); swept tailplane; a big swept navy fin anchored at the tail; a white fuselage with a round nose and an up-swept tapered tail cone (stroke rgba(22,41,63,0.4) 1.5); a navy lower hull; a dark cockpit windshield; 12 porthole rects 4.6 x 5.2 at x -50 + 9.2i, y -42.5; two pale doors at x 60 and -38; the near wing swept down-back (white with a navy leading wedge); an engine nacelle slung ahead of the wing with a teal intake ring and a dark exhaust; landing gear and a fin-tip beacon that are both invisible here (see disabledOrHidden). CRITICAL: at the scene's scroll rate the jet never reaches the frame. px runs from -360 at frame 0 to -105.4 at frame 201 (the last frame the site ever shows), so its right-most point is still at x -73. It only crosses x = 0 at about frame 259 (8.65 s of scene time) - the site's dwell is 7.2 s and the idle clock stops at frame ~201. The jet is therefore drawn 1 group x 25 nodes every frame and is NEVER SEEN in normal playback; it appears only if the scene is held open (autoplay off, or a long manual stop).",
+   "colours": "fuselage #ffffff, navy NV #33518c (fin, tailplane, lower hull, wing wedge, portholes #2b3950), far wing #c7d4e8, near wing #f2f5fa, nacelle #c3cede with a #2a7f8c intake ring at 0.85, windshield #1e2c3d, doors #eef2f8, contrail rgba(255,255,255,0.5) w3 and rgba(255,255,255,0.28) w2",
+   "sourceLines": "1484-1491, 1535-1576"
+  },
+  {
+   "name": "Guardrail strip (top of the carriageway)",
+   "layer": "15 road block",
+   "screenBox": "0, 840, 1920, 16",
+   "look": "A flat grey band 16 px tall running the full width immediately above the asphalt. It reads as the continuous crash barrier on the far side of the carriageway and it cuts off the bottom 16 px of every building in both city tiers. No posts, no highlight, no scroll - it is a plain rect.",
+   "colours": "DAY.fence #9aa1a8",
+   "sourceLines": "1493"
+  },
+  {
+   "name": "Road surface (asphalt)",
+   "layer": "15 road block",
+   "screenBox": "0, 856, 1920, 104",
+   "look": "One flat dark-grey band, 104 px tall, full width. NOTE: #434b55 is a literal, not DAY.road - scene 01's road is #3a4149, so the two scenes' asphalt does not match.",
+   "colours": "#434b55 (literal)",
+   "sourceLines": "1494"
+  },
+  {
+   "name": "Pale shoulder band (foreground ground)",
+   "layer": "15 road block",
+   "screenBox": "0, 960, 1920, 140 (visible 960-1080)",
+   "look": "A wide flat pale-grey band below the asphalt that fills the bottom eighth of the frame; the foreground fence sits on it. Again a literal, not DAY.walk (#c4c9cf in scene 01).",
+   "colours": "#aeb4bb (literal)",
+   "sourceLines": "1495"
+  },
+  {
+   "name": "Road top edge line",
+   "layer": "15 road block",
+   "screenBox": "0, 861, 1920, 3 px stroke",
+   "look": "A faint white line 5 px below the top of the asphalt, running the full width. Static (does not scroll).",
+   "colours": "rgba(255,255,255,0.16), strokeWidth 3",
+   "sourceLines": "1496"
+  },
+  {
+   "name": "Lane centre dashes",
+   "layer": "15 road block",
+   "screenBox": "line from x -100 to 2020 at y 908, strokeWidth 5, round caps",
+   "look": "One dashed white lane line across the middle of the asphalt: dash 26 on, 32 off (period 58), with strokeDashoffset = scroll % 58, so the pattern slides LEFT at 270 px/s - one dash passes every 0.215 s. At frame 150 the offset is 16.",
+   "colours": "rgba(255,255,255,0.65)",
+   "sourceLines": "1497"
+  },
+  {
+   "name": "Road dots (36) - invisible",
+   "layer": "15 road block",
+   "screenBox": "circles r 1.8 at cy 908, cx = i*58 + 29 - (scroll % 58) for i 0..35, i.e. covering x -29 to 2059",
+   "look": "Meant to read as reflective road studs between the dashes, but they do not: their pitch (58) equals the dash period and their phase works out to 13 of 58, which is the middle of the painted 26 px dash, so every dot is centred on a white dash and a 32% white dot on a 65% white stroke is invisible. Confirmed on a crop of the road at frame 150 - no studs are visible between the dashes. They still cost 36 attribute writes per frame.",
+   "colours": "rgba(255,255,255,0.32)",
+   "sourceLines": "1498"
+  },
+  {
+   "name": "Roadside light poles",
+   "layer": "16 poles (1.0, tile 5400)",
+   "screenBox": "6 poles per tile at local x = i*700 (i 0..5), tile 5400. Each pole, relative to its centre x: shaft rect (-4, 646, 8, 210); arm rect (-4, 646, 56, 8) pointing RIGHT; head rect (42, 650, 20, 9) rx 4. At frame 150 (offset -1350) the on-screen centres are x 50, 750 and 1450; the 4th of that tile is at 2150, off screen right.",
+   "look": "Plain unlit day lamp posts: a straight 8 px shaft, a horizontal arm at the very top pointing right, and a small darker lamp head hanging at the arm's end. No glow, no bracket, no base plate. The pole at x 750 is right beside the gantry's far leg (720-746) at frame 150, and the poles are mostly behind the trucks' cargo boxes - only their arms and heads (y 646-659) show above the roof line.",
+   "colours": "shaft and arm DAY.pole #7d93b0, head DAY.poleHead #5b6b82",
+   "sourceLines": "1499-1507"
+  },
+  {
+   "name": "Gantry - the portal structure (GantryBack)",
+   "layer": "17 gantry back (1.0, tile 2700, phase scroll + 2030, inner translate 1400)",
+   "screenBox": "Writing G for the far leg's left edge (G = wrap(scroll + 2030, 2700) + rep*2700 + 1400; G = 720 at frame 150): far leg rect G..G+26, y 400-876, with a 5 px pale highlight stripe at G+5; foot plate G-8..G+34, y 862-876; beam rect G-14..G+1220, y 398-432, with a 6 px lighter top strip; 24 X-brace pairs at G-2+52i to G+50+52i, y 404-426, opacity 0.5; 4 lamp blocks 22 x 10 rx 4 at G+140, G+480, G+820, G+1100, y 386-396 (i.e. sitting on top of the beam). At frame 150: far leg 720-746, beam 706-1940, lamp blocks at 860, 1200, 1540, 1820.",
+   "look": "A flat dark-navy overhead sign gantry: a square far leg on the left, a long horizontal box beam with a faint X-lattice drawn over it at half opacity, a lighter 6 px strip along the beam's top edge, and four small darker blocks on top of the beam that read as sign lights. Two quirks to fix in a redraw: (a) the X-lattice runs from G-2 to G+1246 while the beam ends at G+1220, so the last brace sticks 26 px past the end of the beam; (b) the beam is 1234 px long but the gantry tile is 2700, so the structure occupies local 1386-2628 of its tile and leaves a 1458 px gap - since the stage is 1920 wide there is always some gantry on screen and sometimes two partial ones (at frame 55 the near leg of one portal is at x 53-89 on the left and the far leg of the next at x 1575 on the right).",
+   "colours": "leg #1A2A46, leg highlight rgba(245,236,234,0.06), foot #13233E, beam #22324F, beam top strip #2C3E5E, braces rgba(245,236,234,0.12) at group opacity 0.5, lamp blocks #33425C",
+   "sourceLines": "1393-1409, 1452-1453, 1508"
+  },
+  {
+   "name": "Gantry - the big destination sign",
+   "layer": "17 gantry back",
+   "screenBox": "plate G+120..G+680, y 446-642 (560 x 196, rx 10); header band G+120..G+680, y 446-486; shadow bar G+134..G+666, y 642-649. At frame 150: plate 840..1400, header 840..1400 y 446-486, shadow 854..1386.",
+   "look": "A Japanese expressway direction sign: a dark-green rounded plate with a 3 px pale cream border, a slightly darker green header band across the top, and a thin black shadow bar tucked under the bottom edge. It hangs 14 px below the beam with NO visible hanger or bracket - it floats. Lettering, all left-aligned at the plate's x+24 (G+144) except where noted: header '関越自動車道' (Noto Sans JP, 21 px, weight 700, letter-spacing 2, cream at 75%) at baseline y 474, and 'KAN-ETSU EXPWY' (Archivo, 15 px, weight 700, letter-spacing 2.5, cream at 45%) at x G+400, baseline y 474; body '新潟' (Noto Sans JP, 37 px, weight 800, letter-spacing 4, paper white) baseline y 540 with 'Niigata' (Archivo, 19 px, weight 700, letter-spacing 2, cream at 60%) at x G+252, baseline y 538; '前橋' baseline y 600 with 'Maebashi' at x G+252, baseline y 598. Two white up-arrows on the right of the plate at x G+520 and G+590: a 74 px vertical shaft from y 614 up to 540 plus a chevron head from (x-13,556) to (x,538) to (x+13,556), stroke 7, round caps and joins. Font note: the Latin lines ask for Archivo; no Archivo face appears in original/site/site.css, original/css/40-hero.css or vendor/fonts/fonts.css, so they probably render in the fallback sans - check the live page head before matching the lettering.",
+   "colours": "plate DAY.sign #1d6a4c, header DAY.signHead #17583e, border rgba(245,236,234,0.55) w3, big text COLORS.paper #f7f9fb, sub-text rgba(245,236,234,0.6) / 0.75 / 0.45, arrows COLORS.paper #f7f9fb, shadow bar rgba(0,0,0,0.25)",
+   "sourceLines": "1409-1421"
+  },
+  {
+   "name": "Gantry - the exit sign",
+   "layer": "17 gantry back",
+   "screenBox": "plate G+720..G+1050, y 446-566 (330 x 120, rx 10); vermilion edge bar G+720..G+729, y 446-566; shadow bar G+734..G+1036, y 566-572. At frame 150: plate 1440..1770, bar 1440..1449, shadow 1454..1756.",
+   "look": "A second, smaller green plate to the right of the big one, same border and shadow treatment, with a vermilion vertical bar down its left edge (the only warm accent in the whole upper half of the scene). Lettering left-aligned at G+752: '板橋 出口' (Noto Sans JP, 27 px, weight 800, letter-spacing 2, paper white) baseline y 496, and 'ITABASHI EXIT' (Archivo, 16 px, weight 700, letter-spacing 2, cream at 55%) baseline y 534. Also floats 14 px below the beam with no bracket.",
+   "colours": "plate DAY.sign #1d6a4c, edge bar COLORS.verm #e16347, border rgba(245,236,234,0.55) w3, text COLORS.paper and rgba(245,236,234,0.55), shadow bar rgba(0,0,0,0.25)",
+   "sourceLines": "1422-1428"
+  },
+  {
+   "name": "Gantry - the near leg (GantryFront)",
+   "layer": "19 gantry front (same tile and phase, painted AFTER the trucks)",
+   "screenBox": "column rect G+1178..G+1214, y 392-1004 (36 x 612, rx 5) with a 7 px pale stripe at G+1185; 8 dark seam lines across it at y 452, 524, 596, 668, 740, 812, 884, 956; foot rect G+1164..G+1228, y 1000-1020; foot cap rect G+1170..G+1222, y 994-1002. At frame 150: column 1898..1934, foot 1884..1948.",
+   "look": "The near-side leg of the same portal, wider (36 vs 26) and darker than the far leg, running from the beam right down past the road to a chunky base that stands on the pale shoulder band just above the foreground fence posts. Eight thin horizontal seams give it a segmented look. Because it is painted after the convoy it sweeps IN FRONT of the trucks - it is the only element in the scene that crosses the foreground, and at 270 px/s one passes every 10 s.",
+   "colours": "column #13203A, stripe rgba(245,236,234,0.05), seams rgba(10,18,32,0.5) w2.5, foot #0E1A2E, foot cap #16243C",
+   "sourceLines": "1432-1441, 1520"
+  },
+  {
+   "name": "Convoy - the four trucks' placement at frame 150",
+   "layer": "18 trucks",
+   "screenBox": "Truck({x, y: 874, scale}) with the anchor at local (0,96) = the rear-bottom corner of the cargo box, so local (lx,ly) -> screen (x + scale*lx, 874 + scale*(ly - 96)).\nTruck 1: base x 120, scale 1.80, bob lag 0. Drift +7.18 -> x 127.18. Cargo box 127.18..346.78, top y 715.6, bottom 834.4; front bumper to 443.98; wheels cx 173.98 / 303.58 / 386.38, cy 857.8, tyre r 19.8; big ground shadow centre (289.18, 883.9) rx 183.6 ry 12.6. Whole group box 105.6, 711.3, 367.2, 185.2.\nTruck 2: base x 620, scale 1.88, lag 8. Drift -8.25 -> x 611.75. Cargo box 611.75..841.11, top 708.56, bottom 832.64; bumper to 942.63; wheels 660.63 / 795.99 / 882.47, cy 857.08, r 20.68; shadow centre (788.15, 884.34) rx 191.76. Group box 589.2, 706.2, 383.5, 191.3.\nTruck 3: base x 1120, scale 1.80, lag 16. Drift -9.99 -> x 1110.01. Cargo box 1110.01..1329.61, top 715.6, bottom 834.4; bumper to 1426.81; wheels 1156.81 / 1286.41 / 1369.21, cy 857.8, r 19.8. Group box 1088.4, 713.6, 367.2, 182.9.\nTruck 4: base x 1600, scale 1.72, lag 24. Drift +4.86 -> x 1604.86. Cargo box 1604.86..1814.70, top 722.64, bottom 836.16; bumper to 1907.58; wheels 1649.58 / 1773.42 / 1852.54, cy 858.52, r 18.92. Group box 1584.2, 719.1, 350.9, 176.4.\nGaps between vehicles (front bumper to next rear): 167.8, 167.4, 178.0 px.",
+   "look": "Four identical Sanpou box trucks in a line, all facing RIGHT, all with their tyres touching y 877.4-877.8 (the anchor is only 2 local px above the tyre bottoms, so the different scales barely change the contact line - the size difference reads as size, not depth). They sit in the upper half of the 104 px carriageway, well above the lane line at y 908; there is no near lane and no oncoming traffic. Truck 4's cab is cut by the right edge of the frame and the gantry's near leg (x 1898-1934) crosses it. Every truck is passed moving: true, run: 1, distance: scroll, so the wheels spin and the exhaust puffs cycle; doorOpen is not passed, so the rear-door group is omitted entirely.",
+   "colours": "see the shared construction entry",
+   "sourceLines": "1454, 1509-1519, 274-356"
+  },
+  {
+   "name": "Truck - construction and livery (identical for all four, local units; multiply by the truck's scale for screen px)",
+   "layer": "18 trucks",
+   "screenBox": "local extents x -4..176, y 5.5..101.5; three ground shadows outside the bobbing group",
+   "look": "SHADOWS (do not bob): ellipse (90,101.5) rx 102 ry 7; ellipse (90,101) rx 74 ry 4.6; three wheel contact ellipses at x 26, 98, 144, cy 100.5, rx 15 ry 3.2.\nBODY GROUP (translate 0,bob then rotate(pitch about 92,80)): cargo box rect (0,8,122,66) rx 3 white, a darker lower third (1.3,50,119.4,22.7), a 1.8 px white highlight line just under the top edge, 9 faint vertical panel ribs at x 10 + 12.5i from y 12 to 58, a warm-white cap strip (0,8,122,5), a 2.6 px navy outline, a 6 px vermilion stripe at y 61 and a 1.8 px half-opacity vermilion line at y 69.4; a 4 x 15 vermilion bar at (9,20); 'Sanpou' (Archivo, 12.5, weight 800, navy, letter-spacing 0.4) at (19,30) and '三豊運輸' (Noto Sans JP, 7.5, weight 700, navy at 55%, letter-spacing 1.5) at (19,42); an inner rear line at x 3.5 and a rear edge line at x 0.\nCHASSIS: rail rect (-4,74,176,9); a 44 x 4 bar at (40,84); a rounded fuel tank (48,76,26,11); mud flaps (10,84,7,11) and (110,84,7,11).\nCAB (right end): a curved air deflector path from (122,10) to (146,28); the cab body path (122,24) -> (152,24) -> (165,33) -> (173,52) -> (173,74); a sloped windshield with a pale glint; a square side window (128,30,16,16); a door seam at x 146 and a 9 x 2.6 handle at (134,52); a mirror arm (150,30)->(156,24) with a 4.5 x 8 mirror at (154,19); a 7 x 10 grille at (166,56) with 3 slats; a 56 x 8 bumper at (120,68); a muted-red headlight (169.5,57,4.5,7); a 2.2 r fog lamp at (166,72); small marker lenses at (150,21.5) and (126,5.5).\nREAR: a 2.6 x 6 vermilion tail lamp at (-0.5,62) with a soft glow ellipse at (-1,65) rx 6 ry 4.\nFour amber side-marker lenses 5 x 3.6 on the rail at x 12, 36, 92, 114, y 76.6.\nWHEELS (do not bob or pitch) at (26,87), (98,87), (144,87): tyre circle r 11, a faint highlight arc on the upper-left, a #3A475E rim r 6.6, five spokes from r 2.4 to 5.6 rotated by rot, and a small hub with a dark ring.",
+   "colours": "box DAY.truckBox #f7f9fb, cap #f3f1ed, outline COLORS.ink #101F36, ribs rgba(16,31,54,0.07), lower shade rgba(16,31,54,0.06), stripes COLORS.verm #e16347 (the thin one at 0.55), text #101F36 and rgba(16,31,54,0.55); cab COLORS.inkSoft #23344F, rail COLORS.ink2 #1C2840, tank #3A4A66, bar #33425C, flaps #1A2434, grille #2A3850, bumper #41506B, glass rgba(160,190,220,0.36) and 0.28, glint rgba(245,250,255,0.22), lenses COLORS.vermSoft #b26858, fog lamp rgba(235,244,252,0.9), tail lamp #e16347 with glow rgba(225,99,71,0.22), markers DAY.marker #f0a23c; tyre #101F36, rim #3A475E, spokes #5A6D86, hub #76829B with a #1A2434 ring",
+   "sourceLines": "274-356"
+  },
+  {
+   "name": "Truck exhaust puffs (2 per truck, visible here)",
+   "layer": "18 trucks (inside the bobbing body group)",
+   "screenBox": "local circles at (118 - kk*16, 70 - kk*26) with r = 2 + kk*4.5, where kk = ((scroll + off) mod 90)/90 for off = 0 and 45",
+   "look": "Two faint grey-blue puffs that rise and grow out of the gap between the cargo box and the cab and fade as they go; the cycle is 90 px of travel = 10 frames = 1/3 s, and the two puffs are half a cycle apart. Because run = 1 for the whole scene they are always on - unlike scene 01, where they only appear while the truck moves. In practice they are barely visible: rgba(200,210,225,0.16) at up to 0.7 opacity over the white cargo box.",
+   "colours": "rgba(200,210,225,0.16), opacity (1 - kk) * 0.7",
+   "sourceLines": "333-336, 1518"
+  },
+  {
+   "name": "Foreground fence (band, posts and rail)",
+   "layer": "20 fence (1.25, tile 7000)",
+   "screenBox": "per tile: band rect (0, 1022, 7000, 58); 46 posts rect (i * 152.174, 1004, 13, 24) rx 2; rail line y 1014 from 0 to 7000, strokeWidth 5. At frame 150 (offset -1687.5) the on-screen posts are at x -13.6, 138.6, 290.8, 442.9, 595.1, 747.3, 899.5, 1051.6, 1203.8, 1356.0, 1508.2, 1660.3, 1812.5.",
+   "look": "A flat grey band along the very bottom of the frame with short post caps sticking 18 px above it at an even 152.17 px pitch, and one thin blue-grey rail line drawn across the posts (after them, so the rail is in front). It moves 1.25x faster than the road, so it is the fastest thing in the frame - one post passes every 0.451 s. The band's colour is the same grey as the guardrail at the top of the road, which flattens the depth between the two.",
+   "colours": "band DAY.fence #9aa1a8, posts DAY.fencePost #8b93a0, rail DAY.pole #7d93b0",
+   "sourceLines": "1521-1526"
+  },
+  {
+   "name": "Vignette",
+   "layer": "21 vignette div",
+   "screenBox": "0, 0, 1920, 1080; ellipse centre (960, 496.8), radii 1497.6 x 734.4; clear inside 58% (868.6 x 426)",
+   "look": "Very light dark-navy edge darkening, identical to scene 01's: nothing in the middle, about 0.12-0.14 effective alpha in the corners.",
+   "colours": "rgba(6,12,24,0.55) at the outer edge, layer opacity 0.26",
+   "sourceLines": "764-767, 1530"
+  }
+ ],
+ "ambientMotion": [
+  {
+   "what": "The whole world scrolls right-to-left (the only 'camera' in the scene)",
+   "formula": "scroll = frame * SPEED, SPEED = 9 px/frame = 270 px/s. Layer translate = wrap(scroll * f, tile) + rep * tile with wrap(v,t) = -(((v % t) + t) % t). f = 0.18 (far tier, tile 7000, 48.6 px/s), 0.42 (mid tier, tile 7000, 113.4 px/s), 1.0 (light poles tile 5400, gantries tile 2700 with phase scroll + 2030, lane dash offset, road dots), 1.25 (foreground fence, tile 7000, 337.5 px/s). Two copies (rep 0 and 1) of every tiled layer are always drawn, so the wrap is seamless. The trucks do not move in screen x - the camera rides with them.",
+   "sourceLines": "1444, 1452-1453, 1471-1526"
+  },
+  {
+   "what": "Truck wheels spin with distance",
+   "formula": "rot = ((distance / scale) / 11) * 180/pi degrees with distance = scroll, applied to the 5-spoke group only (the tyre and rim are circles). For scale 1.8 that is 26.05 degrees per frame. The spokes are 72 degrees apart, so 26.05 deg/frame strobes badly against the 5-fold symmetry (2.76 frames per spoke) - the wheels read as juddering or turning the wrong way. All four trucks spin at slightly different rates because the rate depends on their scale (26.05, 24.93, 26.05, 27.26 deg/frame).",
+   "sourceLines": "279, 342-353, 1518"
+  },
+  {
+   "what": "Truck body bob (vertical, body only - wheels and shadows stay put)",
+   "formula": "bob = sin((frame - lag) * 0.9) * 1.5 local units, lags 0, 8, 16, 24 for trucks 1-4. Period 2 pi / 0.9 = 6.98 FRAMES (0.233 s) - a fast 1.5-unit jiggle, not a slow breath; on screen it is +-2.6 to +-2.8 px. The four lags put the trucks out of phase with each other. Values at frame 150: 0.13, 1.27, 1.41, 0.45 local (0.24, 2.38, 2.54, 0.77 px).",
+   "sourceLines": "1518, 291"
+  },
+  {
+   "what": "Truck lateral drift (the convoy breathing in and out of formation)",
+   "formula": "drift = sin(time * 0.5 + i * 1.4) * 12 px, period 4 pi = 12.57 s, 1.4 rad apart per truck. At frame 150: +7.18, -8.25, -9.99, +4.86. It is added to the truck's x AND is inside the posAt() used for the pitch, so it also produces a permanent micro-pitch of about +-0.002 degrees.",
+   "sourceLines": "1511, 1516"
+  },
+  {
+   "what": "Truck pitch (weight model)",
+   "formula": "truckMotion(posAt, frame): the second difference of posAt convolved with a 40-tap damped-spring impulse response (w 0.3, z 0.45), then pitch = 1.6 tanh(-0.06 acc / 1.6), applied as rotate(pitch, 92, 80) - positive = nose down. During the hold it is essentially zero (|pitch| <= 0.002 deg); it only matters in the entrance (see choreography).",
+   "sourceLines": "259-272, 1514-1517"
+  },
+  {
+   "what": "Exhaust puffs",
+   "formula": "kk = ((scroll + off) mod 90)/90 for off = 0 and 45; circle at local (118 - 16kk, 70 - 26kk), r = 2 + 4.5kk, opacity (1 - kk) * 0.7 * run with run = 1. Cycle 90 px = 10 frames = 0.333 s, two puffs half a cycle apart, on all four trucks in lockstep (they share the same distance = scroll).",
+   "sourceLines": "333-336"
+  },
+  {
+   "what": "Lane dashes and road dots scroll",
+   "formula": "strokeDashoffset = scroll % 58 (one dash period every 58 px = 6.44 frames); road dots cx = i*58 + 29 - (scroll % 58). Both move left at 270 px/s. The dots are phase-locked to the middle of each dash and therefore invisible.",
+   "sourceLines": "1497-1498"
+  },
+  {
+   "what": "Clouds drift RIGHT and wrap",
+   "formula": "wx = ((9 * time * 4 + i * 760) mod 2420) - 250, i.e. 36 px/s for all three, loop 2420 px = 67.2 s, the three evenly spaced 760 px apart. Edge fade: ed = min((wx + 250)/210, (2170 - wx)/210, 1), so a wrapped cloud reappears at x -250 and fades in over its first 210 px (5.8 s). Group opacity = 0.92 * 0.96 * ed = up to 0.8832. NOTE the direction: the ground scrolls left (the trucks drive right) but the clouds move right, so the sky travels the wrong way relative to the parallax.",
+   "sourceLines": "1462-1466"
+  },
+  {
+   "what": "Birds drift RIGHT, bob and flap",
+   "formula": "x = ((rx * span + time * (14 + rs*10)) mod (span + 280)) - 140, with span 2200 (flock A) and 2100 (flock B); speeds 20.91, 19.81, 23.30 px/s; loops 118.6 / 125.2 / 106.4 s (A) and 113.8 / 120.1 / 102.1 s (B). y = yBase + ry*190 + 9 sin(0.7 time + 2.2 i), +-9 px with period 8.98 s; yBase 150 (A) and 105 (B). Wing flap: arc control y = -3.2 - 3.4 sin(7 time + 1.9 i), period 0.90 s. Scales 1.196, 1.141, 1.315. Same direction problem as the clouds - they drift with the trucks instead of against them.",
+   "sourceLines": "711-723, 1461, 1483"
+  },
+  {
+   "what": "Sun glow breathing",
+   "formula": "glow radius = 46*4.6 + (0.5 + 0.5 sin(0.55 time)) * 46*0.15 = 211.6 .. 218.5 px, period 11.42 s (216.37 at frame 150). The halo, disc and ring are static. The 12-ray path is computed from time but returned as null.",
+   "sourceLines": "646-665, 1460"
+  },
+  {
+   "what": "Jet flight and bob",
+   "formula": "px = ((time * 38) mod 2640) - 360 (38 px/s, loop 69.47 s); vertical bob pb = 5 sin(0.85 time), period 7.39 s, around y 148. Group opacity 0.92. Never on screen during the site's playback - see the jet element.",
+   "sourceLines": "1484-1491"
+  },
+  {
+   "what": "Nothing is static",
+   "formula": "Diffing transit(150) against transit(151) changes 119 attributes: the sun glow r; 6 bird transforms and 6 wing paths; 3 cloud transforms plus cloud #0's opacity while it fades in; the 4 city-tier translates; the jet translate; the lane dash offset; 36 road-dot cx; 2 pole translates; 4 gantry translates; 4 truck group translates, 4 body bob/pitch transforms, 8 exhaust circles (cx, cy, r, opacity each) and 12 wheel rotations; 2 fence translates. Only the sky divs, the haze rects, the road/shoulder/guardrail rects, the top edge line and the vignette never change.",
+   "sourceLines": "measured; see the scratch notes in frame"
+  }
+ ],
+ "choreography": [
+  {
+   "frames": "site clock 14600-15406 ms (master 391-420)",
+   "what": "sceneTransit is NOT drawn yet. renderMaster only adds the transit layer from master 420, so the first ~806 ms of 'scene 03' on the site clock is still sceneWorld - scene 02's warehouse at camera 1900, with trucks 2 and 3 departing (T_WORLD.departs2). Anyone judging scene 03's opening has to know its picture starts late."
+  },
+  {
+   "frames": "transit 0-18 (master 420-438, site 15406-15906 ms)",
+   "what": "The transit scene CROSSFADES in over the world: the master timeline wraps it in a layer with opacity = s*s*(3 - 2s), s = (master - 420)/18. It is called a 'slide' in the source comments but nothing moves - both pictures are drawn in place and one fades up over the other. The world layer stops being drawn at master 438."
+  },
+  {
+   "frames": "transit 0-70 (T_TRANSIT.convoyIn)",
+   "what": "The convoy eases into formation. Each truck's x = base - (1 - convoyIn) * 560 + drift, convoyIn = easeOutCubic(frame/70), so all four start 560 px to the left of their final places and slide right together, decelerating the whole way. Truck 1's rear x by frame: 0 -> -440, 10 -> -230.7, 20 -> -84.1, 30 -> 21.3, 40 -> 83.3, 50 -> 115.8, 55 -> 124.0, 60 -> 128.5, 70 -> 120+drift. Group opacity = min(1, convoyIn * 1.5), so they fade up from 0 at frame 0 to fully opaque at frame 22. Pitch (nose-down under braking, all four within 0.003 deg of each other because they share one motion curve): 0.07 at f 2, 0.34 at f 6, peak 0.478 at f 10, 0.45 at f 14, 0.31 at f 22, 0.25 at f 35, 0.18 at f 45, 0.12 at f 55, 0.02 at f 70, then 0. Note the convoy arrives from the LEFT while the road scrolls left - they are slower than the road for the first 70 frames, then match it."
+  },
+  {
+   "frames": "transit 0-55 (the whole entrance, played at 36 frames/s)",
+   "what": "Everything else is already running at full speed from frame 0: the road, poles, gantries and fence scroll, the wheels spin, the exhaust cycles, the clouds and birds drift. The gantry portal starts half off the left edge (far leg at x -630, its near leg at x 548 at frame 0) and slides out; by frame 55 only its near leg (x 53-89) and the right tip of its beam are left, and the NEXT portal's far leg has just entered at x 1575. Cloud #0 is at wx -250 at frame 0 (opacity 0, just wrapped) and fades in through the entrance; only two clouds are visible at the start."
+  },
+  {
+   "frames": "transit 55 (site 16933 ms) - the hold begins",
+   "what": "The player switches from the entrance to the idle, which keeps running a FRAME clock from 55 (hero-glue STOPS[2], sec: false). Nothing changes at the seam - the idle is the same function of the same frame number, so the scroll, the convoy settle and all the ambient motion continue without a jump."
+  },
+  {
+   "frames": "transit 55-201 (the hold, site 16933-21800 ms, 4.87 s)",
+   "what": "No choreography left - only the scroll and the ambient motion. Over these 146 frames the world moves 1314 px: the gantry portal re-enters from the right at frame 80 (far leg x 1350) and walks left to x 261 by frame 201, so the viewer sees exactly one portal cross most of the frame; the light poles pass three at a time (x 205/905/1605 at f 55, 50/750/1450 at f 150, 291/991/1691 at f 201); the fence posts pass at 2.2 a second; the far tier moves only 236 px and the mid tier 552 px in the whole hold. Frame 150 (20100 ms) is representative of the middle of this hold."
+  },
+  {
+   "frames": "transit 150 (the representative frame)",
+   "what": "One full gantry portal fills the right two thirds of the frame (far leg 720-746, beam 706-1940, big sign 840-1400, exit sign 1440-1770, near leg 1898-1934); the four trucks sit at x 127, 612, 1110, 1605; three clouds and five birds are in the sky; the sun is clear in the top-right; Fuji's crown fills the upper left between x 216 and 705; the jet is 138 px off the left edge."
+  },
+  {
+   "frames": "transit ~201 -> scene 04",
+   "what": "The site's dwell for scene 03 is 7200 ms, so the idle stops at about frame 201 and the glue crossfades to scene 04: opacity 1 for two frames (33 ms), then 0.85 s on cubic-bezier(.2,.6,.2,1), with 03's last frame frozen above the entering map. Nothing in sceneTransit plays an exit."
+  },
+  {
+   "frames": "entrance timings that exist in code but draw nothing",
+   "what": "titleEnter = clamp01((frame - 10)/36) (line 1445), cardEnter = spring(frame - T_TRANSIT.cardIn 40, damping 13, mass 0.9) (1447), chartK over frames 62-210 (1448) and cardBob = 5 sin(1.1 time) (1449) are all computed every frame and fed to SceneTitle / SceneCaption, which return null under JX_CLEAN_HERO. T_TRANSIT.countUps [62,210] is never read at all."
+  }
+ ],
+ "disabledOrHidden": [
+  "SceneTitle ('JOURNEY 輸送のながれ', '03 / TRANSIT', heading '3拠点から、決まった時間に。', teal underline): returns null because hero-flag.js sets window.JX_CLEAN_HERO = true (hero-port-b.js 996-997, called at 1528). Unlike sceneWorld, sceneTransit passes it as a direct child, so h() drops it and there is not even an empty wrapper div.",
+  "SceneCaption 'ON-TIME OPERATIONS / 関東一円から新潟へ、毎日定時で。' at (1170, 152), width 680: returns null under the same flag (1012-1013, called at 1529). Its spring entrance (cardEnter) and float (cardBob = 5 sin(1.1 t)) are computed but have no effect.",
+  "The transit operations card (CONTENT.transitCard: 運行モニター / OPERATIONS MONITOR, 稼働中 pill, the 12-week TrendChart, 定時運行率 99.8%, 稼働ルート 24) is NOT called by sceneTransit at all. chartK (1448) and T_TRANSIT.countUps are dead.",
+  "FloatingParticles({seed:'transit', count: 28}) at line 1492: the function's first statement is 'return null' (675), so it draws nothing. There are no dust motes in this scene.",
+  "Sun rays: SkySun builds a 12-ray path string from time and then returns null for it (652-660); the second pulse p2 is unused. The sun has no rays here either.",
+  "The jet plane: drawn as about 25 nodes every frame but OFF SCREEN LEFT for the whole of the site's playback. px runs -360 (frame 0) to -105.4 (frame 201, the last frame the player reaches) and its right-most point only crosses x = 0 at about frame 259 (8.65 s). It is visible only if the scene is held open past its 7.2 s dwell.",
+  "The jet's landing gear: JetPlane is called with gear: 0, so gOp = clamp01(0 * 1.5 - 0.25) = 0 and the whole gear group (two main wheels, a nose wheel and their struts) is drawn at opacity 0.",
+  "The jet's fin-tip beacon: p.beacon is not passed, so the circle at (-64,-91.5) renders at opacity 0.",
+  "The trucks' rear doors: doorOpen is not passed (defaults to 0), so doorW = 0 and the whole door group is omitted (305-311). The trucks are sealed.",
+  "The 36 road dots (1498) are phase-locked to the centre of each lane dash and painted rgba(255,255,255,0.32) on top of a rgba(255,255,255,0.65) stroke, so none of them is visible; they still cost 36 attribute updates per frame.",
+  "The hill band (1468) is effectively invisible: Fuji covers it from x -160 to 1080, both city tiers stand on the same ground line with much higher tops, the trucks' cargo boxes cover y 709 downwards, and the guardrail covers y 840-856. A sweep of the idle frames found only 10-40 px slits (none at all at frame 150), and even those read as sky.",
+  "The far tier never shows roof boxes or masts and never has a warm window: all three are gated on detail > 0 and the far tier is called with detail 0 (618-627, 1474). Its windows also have no frames.",
+  "Far tier buildings off the frame at 150: #0 (screen -323..-211) and #1 (-185..-13) to the left, #13 (1925..2097) and #14 (2135..2231) to the right are built and in the DOM; #15-#38 are filtered out by the -240 / 2160 test. Mid tier: #2 (-203..-81) and #12 (2125..2267) are in the DOM off screen; #0, #1 and #13-#28 are filtered out.",
+  "Buildings covered at frame 150 (do not expect them in a screenshot): everything in both tiers below y 840 (guardrail); the far tier below the mid tier's roof line (610-675) except in the mid gaps at x -81..-47, 185..277, 429..487, 679..727, 869..941, 1123..1157, 1279..1371, 1603..1661, 1813..1861; far #6, #7, #8, #9 and the tops of mid #6 and #7 behind the big green sign (x 840-1400, y 446-642); the lower parts of mid #4-#9 behind the four truck boxes; narrow strips of mid #5/#6 behind the gantry's far leg (720-746) and of mid #11 behind its near leg (1898-1934).",
+  "Mt Fuji's lower two thirds: its base is at y 742 but both city tiers top out between y 470 and 675, so only the crown and the upper slopes show - roughly x 216-705 down to y 620-710 at frame 150, plus a 12 px slit at x 124-136. Its left foot (x -160..0) is off the frame.",
+  "The tier loop seams never show during the site's playback: the far tier's buildings end at tile x 6694 and the next copy starts at 6920 (a 226 px gap, against normal gaps of 18-44), and the mid tier's end at 6512 against 6920 (a 408 px gap). At 0.18 and 0.42 parallax those seams come round every 144 s and 61.7 s, and over the scene's 1809 px of scroll they stay off screen - but a redraw that keeps the same tier arrays will inherit them.",
+  "The light poles' rhythm has a hole that the site never reaches: six poles at 700 px pitch inside a 5400 px tile leaves 1900 px between the last pole of one tile and the first of the next. During frames 0-201 the three visible poles always keep their 700 px spacing; the gap first reaches the frame at about frame 260.",
+  "There is no third (deep) city tier in scene 03 - only far and mid - and no Tokyo Tower, no utility poles or wires, no vending machines, no supplier building and no warehouse. Those belong to scenes 01/02 and are not in this scene function.",
+  "Cloud #0 is at opacity 0 at frame 0 (it has just wrapped) and only reaches full 0.8832 at frame 175, so for most of the scene the sky has two full clouds and one fading one.",
+  "Bird #1 of flock A (x 1967.8 at frame 150) is off the right edge; the other five birds are on screen.",
+  "The hero progress truck, the scene index buttons, the pause button and the camera crop are hero-glue.js chrome, not part of sceneTransit - do not count them as scene art."
+ ],
+ "savedTo": "C:/Users/RTX4070TI/Desktop/sanpou-hero-remake/research/scene03-checklist.json"
+}
