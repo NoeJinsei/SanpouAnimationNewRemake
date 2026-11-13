@@ -70,6 +70,22 @@
         "engine/vcanvas.js",
         "engine/boot-canvas.js"
       ]
+    },
+    {
+      "id": "frame-02",
+      "label": "Scene 02 frame",
+      "detail": "scene 02 look study (SVG)",
+      "kind": "dom",
+      "base": "samples/frame-02/js/",
+      "scripts": [
+        "hero-flag.js",
+        "hero-port-a.js",
+        "hero-port-b.js"
+      ],
+      "glue": "hero-glue.js",
+      "schedule": {
+        "holdAmbient02": true
+      }
     }
   ]
 }
