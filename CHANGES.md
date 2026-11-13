@@ -103,6 +103,18 @@ single sawtooth at one height; a shaded flank away from the sun that meets the c
 line; and enough drawing in it to hold up at the size it fills in scene 05, where it is 1700 px wide. Keep its
 position, width, height and the way the city hides its base.
 
+**Round 2 drawing, 2026-11-13: shown to the owner, waiting for the verdict.** Viewer side `fuji-r2`
+(`samples/fuji-r2/` = the original with only `FujiMountain` and its palette entries replaced, so scenes 01, 02
+and 04 are pixel-identical to the original). Before and after in `evidence/2026-11-13-fuji-r2/`.
+How it is built, so the next element can match it: the mountain is drawn in "cone space" (across the cone,
+down the cone), so every edge that follows a gully fans out with the flank. The profile is an exponential
+flank with a narrow crater rim and the crater's far wall showing through the dip. The snow hem is seven fingers
+of different lengths lying in the gullies with rock ridges rising between them, plus five strips of snow left
+lower down. One light: the flank away from the sun is one tone down along a single line through snow and rock;
+three ridges on the sunlit side each throw one band of shade to their left across snow and rock alike, and
+their crests catch a blade of light. Two new palette entries: `fujiLight #73a5d7` (the crest light) and
+`fujiCapShade #d9e4f5` (snow in shade). Not in `remake/` yet.
+
 ### The background city — "basic and look quite the same"
 
 **"all look pretty basic and look quite the same, I want a more well designed distinct buildings that
