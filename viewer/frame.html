@@ -42,6 +42,7 @@
   Promise.all([text("../sides.json").then(JSON.parse), text("../original/site/hero-section.html")]).then(function (r) {
     var side = r[0].sides.filter(function (s) { return s.id === sideId; })[0];
     if (!side) throw new Error("no side \"" + sideId + "\" in sides.json");
+    if (side.schedule) HeroTimeline.setSchedule(side.schedule);
     // the hero section exactly as the site has it, without its script tags (loaded below, per side)
     document.getElementById("mount").innerHTML = r[1].replace(/<script[^>]*><\/script>\s*/g, "");
     var chain = Promise.resolve();

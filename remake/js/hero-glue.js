@@ -47,7 +47,7 @@
   var ambOff=0;
   var STOPS=[
     { enter:function(f){return one('w',S.world(f));}, eFrom:0, eTo:185, idle:function(t){return one('w',S.world(185,t));}, iStart:185/30, sec:true },                 // 01 入荷
-    { enter:function(f){return one('w',S.world(f, f/30 + ambOff*(391-f)/206));}, eFrom:185, eTo:391, idle:function(){return one('w',S.world(391));}, iStart:391/30, sec:true }, // 02 積込 (camera pan + load; idle holds ambient)
+    { enter:function(f){return one('w',S.world(f, f/30 + ambOff*(391-f)/206));}, eFrom:185, eTo:391, idle:function(t){return one('w',S.world(391,t));}, iStart:391/30, sec:true }, // 02 積込 (camera pan + load; the choreography holds, ambient runs on)
     { enter:master, eFrom:391, eTo:475, idle:function(c){return one('t',S.transit(c));}, iStart:55, sec:false },                                                     // 03 輸送 (depart + slide + convoy)
     { enter:function(f){return one('n',S.network(f));}, eFrom:0, eTo:80, idle:function(t){return one('n',S.network(80,t));}, iStart:80/30, sec:true, cross:true },     // 04 ネットワーク (map)
     { enter:function(f){return one('n',S.network(f));}, eFrom:80, eTo:174, idle:function(c){return one('n',S.network(c));}, iStart:174, sec:false }                  // 05 結び (commitment)

@@ -56,11 +56,16 @@
 
   // which scene functions draw this moment: [{scene, frame, time?, opacity?}], bottom layer first.
   // `time` is the ambient clock in seconds when it is not simply frame / 30.
+  // Where a side's own player differs from the site's, its sides.json entry says so and the frame page passes
+  // it here. holdAmbient02: scene 02's hold runs ambient time on (the site stops it, so its 02 hold is frozen).
+  var SCHED = { holdAmbient02: false };
+  function setSchedule(o) { for (var k in o) SCHED[k] = o[k]; }
+
   function layersFor(st) {
     var e = st.mode === "enter";
     switch (st.idx) {
       case 0: return e ? [{ scene: "world", frame: st.clk }] : [{ scene: "world", frame: 185, time: st.idle }];
-      case 1: return e ? [{ scene: "world", frame: st.clk, time: st.clk / 30 + AMB_OFF * (391 - st.clk) / 206 }] : [{ scene: "world", frame: 391 }];
+      case 1: return e ? [{ scene: "world", frame: st.clk, time: st.clk / 30 + AMB_OFF * (391 - st.clk) / 206 }] : [{ scene: "world", frame: 391, time: SCHED.holdAmbient02 ? st.idle : undefined }];
       case 2: return e ? master(st.clk) : [{ scene: "transit", frame: st.idle }];
       case 3: return e ? [{ scene: "network", frame: st.clk }] : [{ scene: "network", frame: 80, time: st.idle }];
       default: return e ? [{ scene: "network", frame: st.clk }] : [{ scene: "network", frame: st.idle }];
@@ -100,6 +105,6 @@
   root.HeroTimeline = {
     FPS: FPS, ENTER_RATE: ENTER_RATE, STOPS: STOPS, START: START, TOTAL: TOTAL, AMB_OFF: AMB_OFF,
     enterMs: enterMs, stopAt: stopAt, stateIn: stateIn, stateAt: stateAt, layersFor: layersFor,
-    dissolveAt: dissolveAt, describe: describe
+    dissolveAt: dissolveAt, describe: describe, setSchedule: setSchedule
   };
 })(typeof window !== "undefined" ? window : globalThis);

@@ -17,7 +17,7 @@
     {
       "id": "remake",
       "label": "Remake",
-      "detail": "work in progress",
+      "detail": "the remake so far (scene 01 look + motion)",
       "kind": "dom",
       "base": "remake/js/",
       "scripts": [
@@ -25,7 +25,10 @@
         "hero-port-a.js",
         "hero-port-b.js"
       ],
-      "glue": "hero-glue.js"
+      "glue": "hero-glue.js",
+      "schedule": {
+        "holdAmbient02": true
+      }
     },
     {
       "id": "original-canvas",
