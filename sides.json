@@ -86,6 +86,22 @@
       "schedule": {
         "holdAmbient02": true
       }
+    },
+    {
+      "id": "frame-03",
+      "label": "Scene 03 frame",
+      "detail": "scene 03 look study (SVG)",
+      "kind": "dom",
+      "base": "samples/frame-03/js/",
+      "scripts": [
+        "hero-flag.js",
+        "hero-port-a.js",
+        "hero-port-b.js"
+      ],
+      "glue": "hero-glue.js",
+      "schedule": {
+        "holdAmbient02": true
+      }
     }
   ]
 }

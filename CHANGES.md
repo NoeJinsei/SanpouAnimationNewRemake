@@ -47,3 +47,21 @@ street and trucks already carry the approved scene 01 look; the warehouse itself
 Not changed in this round: the camera pan and its timing, the loading choreography, the trucks' places and
 paths, the warehouse's size, position and sign, the three bay positions.
 
+## Scene 03 輸送 (the expressway) — round 1, proposed
+
+The convoy drives and the world scrolls past (`sceneTransit`); there is no camera move, so the scene is judged
+at t = 20000 ms with a second look at t = 16500 (just after the slide in). It already inherits the approved
+clouds, city shading and trucks, but not the light, so today it looks like a different film from scenes 01-02.
+
+| # | Element | Original | Remake | Why |
+|---|---|---|---|---|
+| 1 | The light | No light shafts and no big cumulus here: the sky is bare, and the scene reads cooler and flatter than scenes 01-02 | The same three fanned shafts and the same composed cumulus as scenes 01-02, with the same sun direction and strength, scrolling with their own plane | One light across all five scenes. The reference film's worst fault is colour that changes between shots, and the owner named it |
+| 2 | Mt Fuji | A white slab: the snow cap has taken over almost the whole mountain, with a pale blue sliver at the base and no shading | The owner's reference shape: a pale blue body, one white cap with the irregular drip hem, a shade side away from the sun, sitting behind the haze so it reads as distance | Fuji went through four rounds with the owner to reach that shape; today's version loses it |
+| 3 | The expressway | Flat grey bands, a dashed centre line, a plain fence | A road built like a road: value split (lighter far, darker near), lane wear either side of the dashes, surface joints, delineator posts, and a proper barrier with posts and its own shadow | The road is a third of the frame and carries no light or detail today |
+| 4 | Gantry and signs | A plain dark bar and flat green plates | Structure on the gantry (truss, brackets, walkway) and sign plates with a lit top edge, a shaded underside, a frame and a cast shadow on what is behind them | The signs are the one place the scene says where the trucks are going; they should look made, not pasted |
+| 5 | Depth | All city tiers at similar strength, the convoy level with the background | The same depth as scene 01: far tiers tinted toward the sky and simplified, the near plane stronger, the foreground barrier darkest, so the convoy reads first | Consistency with scenes 01-02, and the trucks are the subject |
+
+Not changed in this round: the convoy's speed, spacing and motion, the scroll speed, the gantry phase (back and
+front must stay identical or the pillar leaves its sign), the sign wording, Fuji's position and size, the
+layout of the city tiers.
+
