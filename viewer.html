@@ -129,7 +129,8 @@
   var FRAMINGS = { full: { w: 1920, h: 1080, framing: "stage" }, desktop: { w: 1440, h: 900, framing: "site" }, phone: { w: 390, h: 844, framing: "site" } };
   var ICON_PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg>';
   var ICON_PAUSE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>';
-  var st = { a: "original", b: "remake", framing: "full", layout: "split", t: 0, playing: false, speed: 1, loopScene: false, split: 0.5, swap: "b" };
+  // the plain address opens the newest work beside the original, so no query is needed to see the comparison
+  var st = { a: "original", b: "preview", framing: "full", layout: "split", t: 0, playing: false, speed: 1, loopScene: false, split: 0.5, swap: "b" };
 
   // the address keeps the view, so a link (or a screenshot script) opens the same picture
   (function () {
