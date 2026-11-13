@@ -17,7 +17,7 @@
     {
       "id": "round2",
       "label": "Remake (round 3 working copy)",
-      "detail": "the working copy: everything redrawn so far",
+      "detail": "the working copy: round 3 pass 1 is in (sky, city, Tokyo Tower, supplier building); the rest is still round 2 or the original",
       "kind": "dom",
       "base": "round2/js/",
       "scripts": [

@@ -152,10 +152,10 @@
    * right, white clouds, glass that reflects the sky, lamps off, and a pale blue haze between
    * the city tiers for depth (things further away sit lighter and bluer). */
   var DAY = {
-    sky: "linear-gradient(to bottom, #58abe0 0%, #8fc9ec 38%, #c2e4f6 64%, #e8f5fc 84%, #fdeee5 100%)",
-    skyT: "linear-gradient(to bottom, #58abe0 0%, #8fc9ec 42%, #c6e6f6 72%, #ecf7f3 100%)",
-    skyN: "linear-gradient(to bottom, #58abe0 0%, #90c6e9 52%, #cfeaf8 100%)",
-    sun: "#ffd24d", sunGlow: "255,224,130",
+    // one sky for every scene (round 3): deeper overhead, paling through the middle. The pale air low on the
+    // horizon is drawn as flat bands by SkyAir(), so the horizon never changes value at a scene change.
+    sky: "linear-gradient(to bottom, #3f95d9 0%, #57a9e1 9%, #72b9e6 17%, #92cbed 36%, #a6d5f1 46%, #b3dcf4 100%)",
+    sun: "#ffd24d", sunGlow: "255,248,226",
     haze: "232,243,251", hazeK: [0.6, 0.42, 0.22],
     /* The tiers were too close in value to read as distance: the far tier has been given air and
        the near one weight, so the city has a front and a back instead of one pale wash. */
@@ -177,12 +177,14 @@
     cityFront: ["#5c78a5", "#66819f", "#516d9a"], cityFrontCap: "#43608c",
     office: "#eef3f8"
   };
-  // the sun's glow as a true radial gradient; ids are per scene (stages coexist in a dissolve)
+  // the sun's bloom as a true radial gradient: strong at the disc, bleeding a long way into the sky; ids are
+  // per scene (stages coexist in a dissolve)
   function GlowDef(id, rgb, a) {
     return h("radialGradient", { id: id },
-      h("stop", { offset: "0", stopColor: "rgba(" + rgb + "," + a.toFixed(3) + ")" }),
-      h("stop", { offset: "0.35", stopColor: "rgba(" + rgb + "," + (a * 0.45).toFixed(3) + ")" }),
-      h("stop", { offset: "0.7", stopColor: "rgba(" + rgb + "," + (a * 0.12).toFixed(3) + ")" }),
+      h("stop", { offset: "0", stopColor: "rgba(" + rgb + "," + (a * 1.5).toFixed(3) + ")" }),
+      h("stop", { offset: "0.14", stopColor: "rgba(" + rgb + "," + (a * 1.1).toFixed(3) + ")" }),
+      h("stop", { offset: "0.34", stopColor: "rgba(" + rgb + "," + (a * 0.5).toFixed(3) + ")" }),
+      h("stop", { offset: "0.62", stopColor: "rgba(" + rgb + "," + (a * 0.16).toFixed(3) + ")" }),
       h("stop", { offset: "1", stopColor: "rgba(" + rgb + ",0)" }));
   }
   // vertical haze rising from a ground line (screen-space; per-scene ids)
@@ -501,29 +503,36 @@
     );
   }
   /* ---- scenery.tsx ---- */
-  var SUPPLIER_W = 340, SUPPLIER_DOCK = { x: 252, y: -22 };
-  /* The supplier's building, round 2 (same place, width, height and dock point as before).
-     Colours: blue-grey for a third party's building; each surface has a light / base / shade set. */
-  DAY.supInk = "#26344f"; DAY.supRoof = "#1f2c47"; DAY.supRoofLip = "#3a4d74";
-  DAY.supWall = "#9db1ce"; DAY.supWallLight = "#bccbe0"; DAY.supWallShade = "#7a8fb4";
-  DAY.supBand = "#5f79a5"; DAY.supBandShade = "#4c6591";
-  DAY.supPlinth = "#566b91"; DAY.supPlinthLight = "#6f85aa"; DAY.supPlinthShade = "#465a7f";
-  DAY.supFrame = "#4c6187"; DAY.supFrameShade = "#3f5378";
-  DAY.supGlass = "#c6dcf1"; DAY.supGlassHi = "#e6f1fb"; DAY.supGlassShade = "#a3bddb";
-  DAY.supWarmHi = "#ffeabf"; DAY.supWarmShade = "#f0c275";
-  DAY.supBlind = "#f1f5fa"; DAY.supBlindShade = "#d3dde9";
-  DAY.supSill = "#c4d1e3"; DAY.supSillShade = "#a5b6cf";
-  DAY.supPlate = "#eaf1f9"; DAY.supPlateShade = "#c9d7e9"; DAY.supBar1 = "#60789b"; DAY.supBar1Shade = "#506789"; DAY.supBar2 = "#8ea4bf"; DAY.supBar2Shade = "#7a90ad";
-  DAY.supSteel = "#ced8e6"; DAY.supSteelLine = "#b4c1d5"; DAY.supSteelShade = "#aebbd0"; DAY.supSteelLineShade = "#98a8c1";
-  DAY.supSteelBar = "#95a6c0"; DAY.supSteelBarShade = "#8091ad";
-  DAY.supDoor = "#566c92"; DAY.supDoorShade = "#475b80"; DAY.supDoorKick = "#8799b6";
-  DAY.supCanopy = "#2a3a59"; DAY.supCanopyLip = "#44587f"; DAY.supCanopyUnder = "#1f2c47";
-  DAY.supDock = "#7388ab"; DAY.supRubber = "#1a2434";
-  DAY.supPale = "#e6edf5"; DAY.supPaleShade = "#c6d2e2";
-  DAY.supPlant = "#8397b8"; DAY.supPlantLight = "#a3b5cf"; DAY.supPlantShade = "#6c81a5"; DAY.supRail = "#3d4f72"; DAY.supRailPale = "#5a6f95";
+  var SUPPLIER_W = 364, SUPPLIER_DOCK = { x: 252, y: -22 };
+  /* The supplier's building, round 3: drawn again from a blank page as a modern office-over-dock unit.
+     SUPPLIER_W is the width of its front. The front's right end, the ground line and the dock point are
+     where they were (so the truck and the parcels meet it as before); it has grown to the left and up.
+     SUPPLIER_DOCK is measured from SUPPLIER_X, as before.
+     Colours: blue-grey for a third party's building. Every surface has a base and a shade (the base pushed
+     toward navy); the return face is one tone below the shade; pale aluminium carries the light. */
+  DAY.supInk = "#26344f";                                                              // the outline
+  DAY.supWall = "#abbdd9"; DAY.supWallLight = "#cfdbec"; DAY.supWallShade = "#889fc4"; // the hall: metal sandwich panels
+  DAY.supJoint = "#96abcd"; DAY.supJointShade = "#768eb6";                             // their joints
+  DAY.supPod = "#6d87b3"; DAY.supPodLight = "#8ba3c8"; DAY.supPodShade = "#59729f";    // the office corner: slate panels
+  DAY.supPodJoint = "#5f79a6"; DAY.supPodJointShade = "#4d6692";
+  DAY.supPodSide = "#4e6792"; DAY.supPodSideJoint = "#445b85";                         // its return face, away from the sun
+  DAY.supPlinth = "#4c628b"; DAY.supPlinthLight = "#677ea6"; DAY.supPlinthShade = "#3f547b"; DAY.supPlinthSide = "#384b70";   // base course
+  DAY.supAlu = "#e6edf6"; DAY.supAluLit = "#fafcfe"; DAY.supAluShade = "#c4d0e3"; DAY.supAluSide = "#aebdd5";                // copings, sills, sun shades, canopy edges
+  DAY.supFrame = "#3f5479"; DAY.supFrameShade = "#34476b"; DAY.supFrameSide = "#33456a";                                    // window and door frames
+  DAY.supGlass = "#c9def2"; DAY.supGlassHi = "#ecf5fd"; DAY.supGlassIn = "#b4cce7"; DAY.supGlassShade = "#a3bedd";          // glass, sky in it, what stands behind it, glass in shade
+  DAY.supGlassSide = "#89a7cc"; DAY.supGlassSideHi = "#a8c1e0";
+  DAY.supWarmHi = "#ffeabf"; DAY.supWarmIn = "#f6cd84"; DAY.supWarmShade = "#f0c275";
+  DAY.supBlind = "#eef3f9"; DAY.supBlindFold = "#dae3ef"; DAY.supBlindShade = "#cdd8e7";
+  DAY.supPlate = "#eef3f9"; DAY.supPlateShade = "#ccd8e9"; DAY.supBar1 = "#5a739e"; DAY.supBar1Shade = "#4a628c"; DAY.supBar2 = "#9bafcb"; DAY.supBar2Shade = "#8499b8";
+  DAY.supSteel = "#d3dcea"; DAY.supSteelLine = "#b8c5da"; DAY.supSteelShade = "#b1bed4"; DAY.supSteelLineShade = "#9aaac4";
+  DAY.supSteelBar = "#8fa1bd"; DAY.supSteelBarShade = "#7a8dab";
+  DAY.supDoor = "#566f9b"; DAY.supDoorShade = "#475f8a";
+  DAY.supCanopyUnder = "#2c3d5e";
+  DAY.supDock = "#7d92b5"; DAY.supDockShade = "#62789e"; DAY.supRubber = "#1a2434";
+  DAY.supInside = "#3a4e75"; DAY.supInsideFloor = "#5b7199"; DAY.supInsideStock = "#6c83aa"; DAY.supInsidePale = "#aebcd2";
   DAY.supSafety = "#f2c14e"; DAY.supSafetyShade = "#d8a53a";
-  DAY.supPallet = "#4f73b3"; DAY.supPalletDark = "#3d5b93";
-  DAY.supCarton = "#d9dfe8"; DAY.supCartonShade = "#c1cad8"; DAY.supPaperShade = "#dfe6ef";
+  DAY.supPallet = "#4f73b3"; DAY.supPalletDark = "#35508a";
+  DAY.supCarton = "#d9dfe8"; DAY.supCartonShade = "#bfc9d8"; DAY.supCartonTape = "#a9b5c8"; DAY.supPaperShade = "#dfe6ef";
   DAY.supGroundShade = "#a9b1bc";
 
   // A cast shadow is one flat polygon. What it covers on a surface is that polygon clipped to the surface and
@@ -553,502 +562,1217 @@
     return d + "Z";
   }
 
-  /* Local units, ground at y 278, wall 0..340 wide (x 1.9 on screen). A two-storey office-over-dock building:
-     three pilasters make two bays (office on the left, dock on the right), a floor band, a plinth, a fascia
-     under a dark coping, plant on the roof. One sun, top right: everything proud of the wall throws a flat
-     shadow down and to the left. Static, so it is built once. */
+  /* Local units (x 1.9 on screen), ground at y 278, the front runs x 0..W.
+     Two volumes under flat roofs with nothing on them: on the left the office corner, taller, in slate
+     panels, its ribbon of glazing wrapping onto the return face; on the right the dock hall, lower, in broad
+     horizontal bands of light metal panel, with a slim canopy over the dock. A darker base course runs under
+     both. The same oblique as the city: the left return recedes and tapers toward the eye line.
+     One sun, top right: whatever stands proud throws a flat shadow down and to the left, and two bands of
+     shadow from across the street lie over the wall; each takes what it crosses one tone down.
+     Static, so it is built once: one cached group, then the roller shutter as its own node (a motion pass
+     can roll it up: the dock's inside is drawn behind it), then the cartons that stand in front of it. */
   var _supMemo = {};
   function SupplierBuilding(p) {
     var x = p.x, y = p.y, scale = p.scale == null ? 1.9 : p.scale, mk = x + "|" + y + "|" + scale;
     if (_supMemo[mk]) return _supMemo[mk];
-    var D = DAY, out = [], last = [];
-    var G = 278, W = SUPPLIER_W, TOP = 67, FL = 166, GF = 174, PL = 262;   // ground, width, wall top, floor band top, ground-storey top, plinth top
-    var SL = 1;                                                            // a cast shadow runs this far left per unit down
-    function R(rx0, ry0, w, hh, fill, rr) { return h("rect", { x: rx0, y: ry0, width: w, height: hh, rx: rr, fill: fill }); }
-    function rd(rx0, ry0, w, hh) { return "M" + rx0 + "," + ry0 + "h" + w + "v" + hh + "h" + (-w) + "z"; }
-    function band(xa, xb) { return [[xa, TOP], [xb, TOP], [xb - (290 - TOP) * SL, 290], [xa - (290 - TOP) * SL, 290]]; }
-    function off(rx0, ry0, w, hh, d) { var dx = d * 0.8 * SL; return [[rx0 - dx, ry0 + d], [rx0 + w - dx, ry0 + d], [rx0 + w - dx, ry0 + hh + d], [rx0 - dx, ry0 + hh + d]]; }
+    var D = DAY, INK = D.supInk, out = [], shut = [], front = [];
+    var G = 278, W = SUPPLIER_W, OX = W - 340;             // ground; width of the front; how far it has grown to the left
+    var PW = 150, PT = 22, HT = 56, CAP = 6, BC = 262;     // office corner: width and top; hall top; coping height; base course top
+    var DP = 32, HZ = 236, PK = 0.1;                       // the return: its depth, the eye line, how fast it tapers
+    var WY = 94, WH = 54, FW = 1.6;                        // upper windows: head, height; frame width
+    var LINE = Math.round(22 / scale) / 10;                // loose objects carry the parcels' ink line (2.2 px on screen)
+    function r1(v) { return Math.round(v * 10) / 10; }
+    function R(rx0, ry0, w, hh, fill, rr) { return h("rect", { x: r1(rx0), y: r1(ry0), width: r1(w), height: r1(hh), rx: rr, fill: fill }); }
+    function rd(rx0, ry0, w, hh) { return "M" + r1(rx0) + "," + r1(ry0) + "h" + r1(w) + "v" + r1(hh) + "h" + r1(-w) + "z"; }
+    function fill(list, d, colour) { if (d) list.push(h("path", { d: d, fill: colour })); }
+    function S(u, sy) { return [-DP * u, sy + (HZ - sy) * PK * u]; }                       // a point on the return: u 0 at the corner, 1 at the back
+    function side(u0, u1, ya, yb) { return _polyD([S(u0, ya), S(u1, ya), S(u1, yb), S(u0, yb)]); }
+    function band(a, b) { return [[a - 18, 18], [b - 18, 18], [b - 284, 284], [a - 284, 284]]; }   // a band of shadow lying across the front
+    function drop(rx0, ry0, w, hh, d) { return [[rx0 - d, ry0 + d], [rx0 + w - d, ry0 + d], [rx0 + w - d, ry0 + hh + d], [rx0 - d, ry0 + hh + d]]; }
 
-    // windows: [x, y, w, h, lights, per-light { warm, blind }]
-    var WINS = [
-      [28, 108, 144, 46, 4, [{ blind: 13 }, {}, { blind: 22 }, { warm: 1 }]],     // office ribbon, upper floor
-      [28, 190, 66, 26, 2, [{}, {}]],                                                   // high strip over the stores, ground floor
-      [229, 100, 54, 46, 2, [{ blind: 16 }, { warm: 1 }]]                            // over the dock
-    ];
     var SH = [
-      [[0, TOP], [W, TOP], [W, TOP + 7], [0, TOP + 7]],                              // under the coping
-      band(122, 180), band(82, 100),                                                 // two bands of cast shadow across the office bay
-      [[194, 164], [322, 164], [306, 192], [178, 192]],                              // under the dock canopy
-      [[133, 211], [175, 211], [168, 222], [126, 222]],                              // under the door canopy
-      [[184, TOP], [184, PL], [179.5, PL], [179.5, TOP + 6]],                        // beside the middle pilaster
-      [[330, TOP], [330, PL], [325.5, PL], [325.5, TOP + 6]],                        // beside the corner pilaster
-      [[10, GF], [330, GF], [330, GF + 3.5], [10, GF + 3.5]],                        // under the floor band
-      [[13, 78], [13, PL], [9.5, PL], [9.5, 82]],                                    // beside the downpipe
-      off(30, 87, 120, 16, 3), off(98, 188, 27, 25, 5)                              // behind the name plate and the wall unit
+      [[0, PT + CAP], [PW, PT + CAP], [PW, PT + CAP + 3.4], [0, PT + CAP + 3.4]],        // under the two copings
+      [[PW, HT + CAP], [W, HT + CAP], [W, HT + CAP + 3.4], [PW, HT + CAP + 3.4]],
+      band(262, 312), band(170, 184),                                                    // from across the street
+      [[0, WY], [133, WY], [127, WY + 6.5], [0, WY + 6.5]],                              // under the sun shade over the ribbon
+      [[0, WY + WH + 3], [133, WY + WH + 3], [130, WY + WH + 6], [0, WY + WH + 6]],      // under its sill
+      [[236.5, WY], [323.5, WY], [317.5, WY + 6.5], [230.5, WY + 6.5]],                  // the same pair at the window over the dock
+      [[236.5, WY + WH + 3], [323.5, WY + WH + 3], [320.5, WY + WH + 6], [233.5, WY + WH + 6]],
+      [[20.5, 215], [95.5, 215], [92.5, 218], [17.5, 218]],                              // under the low strip window's sill
+      [[190, 174], [362, 174], [338, 198], [166, 198]],                                  // under the dock canopy
+      [[158, 209], [204, 209], [196, 217], [150, 217]],                                  // under the door canopy
+      drop(14, 50, 86, 16, 2.4),                                                         // behind the name plate
+      [[8, 263], [14, 263], [14, G], [8, G]],                                            // beside the pallets
+      [[227, 238], [232.3, 238], [232.3, 256], [227, 256]],                              // beside the cartons on the dock
+      [[289.5, 242], [296, 242], [296, 256], [289.5, 256]], [[294.5, 228], [301, 228], [301, 236], [294.5, 236]]
     ];
-    WINS.forEach(function (w) { var sy = w[1] + w[3] + 3.5; SH.push([[w[0] - 3, sy], [w[0] + w[2] + 3, sy], [w[0] + w[2] + 0.5, sy + 3], [w[0] - 5.5, sy + 3]]); });
-    // one diagonal of sky across the glass, on the same lines through every pane
-    var REFL = [];
-    for (var k = 0; k < 6; k++) { REFL.push([[58 + k * 62, 60], [76 + k * 62, 60], [76 + k * 62 - 220, 280], [58 + k * 62 - 220, 280]], [[84 + k * 62, 60], [90 + k * 62, 60], [90 + k * 62 - 220, 280], [84 + k * 62 - 220, 280]]); }
-
     function castD(x0, y0, x1, y1) { var d = ""; for (var i = 0; i < SH.length; i++) d += _polyD(_clipPoly(SH[i], x0, y0, x1, y1)); return d; }
-    function surf(sx, sy, w, hh, fill, shade) {                                      // a flat surface and whatever shadow falls on it
-      out.push(R(sx, sy, w, hh, fill));
-      var d = castD(sx, sy, sx + w, sy + hh);
-      if (d) out.push(h("path", { d: d, fill: shade }));
+    // flat surfaces of one material, and whatever shadow falls on them
+    function tone(list, rects, colour, shade) {
+      var d = "", s = "";
+      rects.forEach(function (q) { d += rd(q[0], q[1], q[2], q[3]); s += castD(q[0], q[1], q[0] + q[2], q[1] + q[3]); });
+      fill(list, d, colour); fill(list, s, shade);
     }
-    function glass(gx, gy, w, hh, warm, blind) {                                     // a pane set back in its frame
-      var g = warm ? [D.warm, D.supWarmHi, D.supWarmShade] : [D.supGlass, D.supGlassHi, D.supGlassShade], hi = "";
-      out.push(R(gx, gy, w, hh, g[0]));
-      REFL.forEach(function (q) { hi += _polyD(_clipPoly(q, gx, gy, gx + w, gy + hh)); });
-      if (hi) out.push(h("path", { d: hi, fill: g[1] }));
-      out.push(h("path", { d: castD(gx, gy, gx + w, gy + hh) + rd(gx, gy, w, 2.6) + rd(gx + w - 2.2, gy, 2.2, hh), fill: g[2] }));
-      if (blind) {
-        out.push(R(gx, gy, w, blind, D.supBlind));
-        out.push(h("path", { d: castD(gx, gy, gx + w, gy + blind) + rd(gx, gy, w, 2.6) + rd(gx + w - 2.2, gy, 2.2, blind) + rd(gx, gy + blind - 2.2, w, 2.2), fill: D.supBlindShade }));
+    /* glazing: n panes in a thin frame. Per pane: warm (a lit room), inside (what stands behind the glass, as
+       [from, to, height] along the foot of the pane), hi (sky in the glass, as [offset, width, lean]: every pane
+       gets its own), blind (how far a roller blind is down). The reveal shades the head and the sun side. */
+    function glaze(list, gx, gy, w, hh, n, spec) {
+      var pw = (w - FW * (n + 1)) / n, y0 = gy + FW, ph = hh - 2 * FW, y1 = y0 + ph;
+      var warm = "", dark = "", wdark = "", hi = "", whi = "", shade = "", wshade = "", blind = "", fold = "", bshade = "", frame = [[gx, gy, w, FW], [gx, gy + hh - FW, w, FW]];
+      for (var i = 0; i <= n; i++) frame.push([gx + i * (pw + FW), gy + FW, FW, ph]);
+      for (i = 0; i < n; i++) {
+        var s = spec[i] || {}, px = gx + FW + i * (pw + FW), px1 = px + pw, k, a, d;
+        if (s.warm) warm += rd(px, y0, pw, ph);
+        for (k = 0; s.inside && k < s.inside.length; k++) { a = s.inside[k]; d = rd(px + a[0] * pw, y1 - a[2], (a[1] - a[0]) * pw, a[2]); if (s.warm) wdark += d; else dark += d; }
+        for (k = 0; s.hi && k < s.hi.length; k++) {
+          a = s.hi[k]; var lean = ph * (a[2] == null ? 0.7 : a[2]);
+          d = _polyD(_clipPoly([[px + a[0], y0], [px + a[0] + a[1], y0], [px + a[0] + a[1] - lean, y1], [px + a[0] - lean, y1]], px, y0, px1, y1));
+          if (s.warm) whi += d; else hi += d;
+        }
+        d = castD(px, y0, px1, y1) + rd(px, y0, pw, 2.2) + rd(px1 - 1.8, y0 + 2.2, 1.8, ph - 2.2);
+        if (s.warm) wshade += d; else shade += d;
+        if (s.blind) {
+          blind += rd(px, y0, pw, s.blind);
+          for (k = 8; k < s.blind - 4; k += 8) fold += rd(px, y0 + k, pw, 1.4);
+          fold += rd(px, y0 + s.blind - 2.4, pw, 2.4);
+          bshade += castD(px, y0, px1, y0 + s.blind) + rd(px, y0, pw, 2.2) + rd(px1 - 1.8, y0 + 2.2, 1.8, s.blind - 2.2);
+        }
+      }
+      list.push(R(gx, gy, w, hh, D.supGlass));
+      fill(list, warm, D.warm); fill(list, dark, D.supGlassIn); fill(list, wdark, D.supWarmIn);
+      fill(list, hi, D.supGlassHi); fill(list, whi, D.supWarmHi);
+      fill(list, shade, D.supGlassShade); fill(list, wshade, D.supWarmShade);
+      fill(list, blind, D.supBlind); fill(list, fold, D.supBlindFold); fill(list, bshade, D.supBlindShade);
+      tone(list, frame, D.supFrame, D.supFrameShade);
+    }
+    function carton(list, cx0, cy0, w, hh) {                                              // a plain carton: shaded left side, a strip of tape
+      list.push(h("rect", { x: cx0, y: cy0, width: w, height: hh, rx: 0.8, fill: D.supCarton, stroke: COLORS.ink, strokeWidth: LINE }));
+      list.push(R(cx0 + LINE / 2, cy0 + LINE / 2, 3.2, hh - LINE, D.supCartonShade), R(cx0 + w * 0.5 - 1.5, cy0 + LINE / 2, 3, hh - LINE, D.supCartonTape));
+    }
+
+    /* ---- the ground: one flat contact shadow, lying to the left ---- */
+    fill(out, _polyD([[W + 3, G], [W, G + 3.6], [-80, G + 3.6], [-71, S(1, G)[1]], [-DP, S(1, G)[1]], [0, G]]), D.supGroundShade);
+
+    /* ---- the outline: ink behind the whole silhouette (front, return, the step in the roof) ---- */
+    (function () {
+      var OL = 2.4, OB = 1.2, st = (PT - S(1, PT)[1]) / DP, sb = (G - S(1, G)[1]) / DP, xl = -DP - OL;
+      var vt = OL * Math.sqrt(1 + st * st), vb = OB * Math.sqrt(1 + sb * sb);
+      fill(out, _polyD([[xl, PT + st * xl - vt], [(vt - OL) / st, PT - OL], [PW + OL, PT - OL], [PW + OL, HT - OL], [W + OL, HT - OL],
+        [W + OL, G + OB], [(OB - vb) / sb, G + OB], [xl, G + sb * xl + vb]]), INK);
+    })();
+
+    /* ---- the return face of the office corner: in shade, the glazing carried round onto it ---- */
+    fill(out, side(0, 1, PT + CAP, BC), D.supPodSide);
+    fill(out, side(0, 1, 165.2, 166.8) + side(0.5, 0.55, PT + CAP, WY - 4) + side(0.5, 0.55, WY + WH + 3, BC), D.supPodSideJoint);
+    fill(out, side(0, 1, BC, G), D.supPlinthSide);
+    fill(out, side(0, 1, PT, PT + CAP) + side(0, 0.95, WY - 4, WY) + side(0, 0.95, WY + WH, WY + WH + 3), D.supAluSide);
+    fill(out, side(0, 0.9, WY, WY + WH), D.supFrameSide);
+    fill(out, side(0.06, 0.44, WY + FW, WY + WH - FW) + side(0.5, 0.85, WY + FW, WY + WH - FW), D.supGlassSide);
+    fill(out, _polyD([S(0.2, WY + FW), S(0.38, WY + FW), S(0.06, WY + 34), S(0.06, WY + 20)]) + _polyD([S(0.85, WY + 22), S(0.85, WY + 34), S(0.5, WY + WH - FW), S(0.5, WY + 44)]), D.supGlassSideHi);
+
+    /* ---- the fronts: slate panels on the office corner, light metal panels in broad bands on the hall ---- */
+    tone(out, [[0, PT + CAP, PW, BC - PT - CAP]], D.supPod, D.supPodShade);
+    tone(out, [[52, PT + CAP, 1.6, WY - 4 - PT - CAP], [104, PT + CAP, 1.6, WY - 4 - PT - CAP], [52, WY + WH + 3, 1.6, BC - WY - WH - 3], [104, WY + WH + 3, 1.6, BC - WY - WH - 3], [0, 165.2, PW, 1.6]], D.supPodJoint, D.supPodJointShade);
+    tone(out, [[PW, HT + CAP, W - PW, BC - HT - CAP]], D.supWall, D.supWallShade);
+    tone(out, [[PW, 93.2, W - PW, 1.6], [PW, 129.2, W - PW, 1.6], [PW, 165.2, W - PW, 1.6], [PW, 201.2, W - PW, 1.6], [PW, 237.2, W - PW, 1.6]], D.supJoint, D.supJointShade);
+    out.push(R(W - 3, HT + CAP, 3, BC - HT - CAP, D.supWallLight), R(PW - 3, PT + CAP, 3, HT - PT - CAP, D.supPodLight));   // the edges that face the sun
+    tone(out, [[0, BC, W, G - BC]], D.supPlinth, D.supPlinthShade);
+    out.push(R(0, BC, W, 1.8, D.supPlinthLight));
+    // copings: a thin pale cap on each roof, its top edge in the sun
+    fill(out, rd(0, PT, PW, CAP) + rd(PW, HT, W - PW, CAP), D.supAlu);
+    fill(out, rd(0, PT, PW, 1.6) + rd(PW, HT, W - PW, 1.6), D.supAluLit);
+
+    /* ---- office corner ---- */
+    // name plate: no lettering, two bars stand in for a name
+    tone(out, [[14, 50, 86, 16]], D.supPlate, D.supPlateShade);
+    tone(out, [[20, 55, 46, 6]], D.supBar1, D.supBar1Shade); tone(out, [[70, 55, 22, 6]], D.supBar2, D.supBar2Shade);
+    // the ribbon: five panes from the corner, under a slim sun shade
+    glaze(out, 0, WY, 131.6, WH, 5, [
+      { blind: 16, hi: [[32, 8]], inside: [[0, 0.55, 12]] },
+      { hi: [[22, 3.4, 0.5], [31, 9, 0.5]], inside: [[0.35, 1, 17]] },
+      { blind: 31 },
+      { warm: 1, hi: [[36, 6]], inside: [[0, 0.45, 13]] },
+      { hi: [[44, 13, 0.9]], inside: [[0.5, 1, 21], [0, 0.5, 10]] }]);
+    tone(out, [[0, WY - 4, 133, 4], [0, WY + WH, 133, 3]], D.supAlu, D.supAluShade);
+    out.push(R(0, WY - 4, 133, 1.4, D.supAluLit));
+    // the low strip of windows over the stores
+    glaze(out, 22, 188, 72, 24, 3, [{ hi: [[20, 6]] }, { hi: [[9, 3, 0.5]] }, { hi: [[15, 4], [23, 3]] }]);
+    tone(out, [[20.5, 212, 75, 3]], D.supAlu, D.supAluShade);
+
+    /* ---- hall ---- */
+    // the window over the dock: the ribbon's little brother, same head and sill
+    glaze(out, 238, WY, 84, WH, 3, [
+      { blind: 22, hi: [[38, 7]] },
+      { hi: [[24, 4, 0.5], [33, 9, 0.5]], inside: [[0.2, 0.85, 14]] },
+      { warm: 1, hi: [[42, 7]], inside: [[0.45, 1, 18]] }]);
+    tone(out, [[236.5, WY - 4, 87, 4], [236.5, WY + WH, 87, 3]], D.supAlu, D.supAluShade);
+    out.push(R(236.5, WY - 4, 87, 1.4, D.supAluLit));
+    // staff door: a glazed leaf in a thin frame, a pull bar, a step, a slim canopy, a call panel beside it
+    tone(out, [[164, 214, 34, G - 214]], D.supFrame, D.supFrameShade);
+    tone(out, [[166, 216, 30, G - 216]], D.supDoor, D.supDoorShade);
+    glaze(out, 169, 219.4, 24, 36, 1, [{ hi: [[27, 7]] }]);
+    out.push(R(166, 268, 30, 10, D.supSteelBar), R(189.4, 257, 2.6, 9, D.supAlu, 1.3), R(161, 275, 40, 3, D.supPlinthLight));
+    tone(out, [[158, 205, 46, 4]], D.supAlu, D.supAluShade);
+    out.push(R(158, 205, 46, 1.4, D.supAluLit), R(159.5, 209, 43, 1.8, D.supCanopyUnder));
+    out.push(R(202.4, 236, 6.4, 11, D.supAlu, 1), R(204, 238, 3.2, 3.2, D.supFrame));
+
+    /* ---- the dock ---- */
+    // inside, behind the shutter: back wall, floor, a rack of stock either side of a clear lane
+    out.push(R(228, 184, 104, 72, D.supInside), R(228, 247, 104, 9, D.supInsideFloor));
+    fill(out, rd(232, 196, 30, 3) + rd(232, 220, 30, 3) + rd(232, 196, 3, 51) + rd(259, 196, 3, 51) + rd(298, 204, 30, 3) + rd(298, 226, 30, 3) + rd(298, 204, 3, 43) + rd(325, 204, 3, 43), D.supInsideStock);
+    fill(out, rd(237, 206, 11, 14) + rd(249, 210, 8, 10) + rd(237, 232, 20, 15) + rd(303, 212, 9, 14) + rd(313, 216, 10, 10) + rd(303, 233, 20, 14), D.supInsidePale);
+    // hood and guides
+    tone(out, [[222, 176, 116, 8], [222, 184, 6, 72], [332, 184, 6, 72]], D.supFrame, D.supFrameShade);
+    // the dock itself: a raised sill with a safety edge, rubber bumpers and the leveller's lip folded down
+    out.push(R(220, 256, 124, G - 256, D.supDock), R(220, 256, 4.6, G - 256, D.supDockShade), R(220, 256, 124, 3.6, D.supSafety));
+    out.push(R(232, 263.5, 10, 11.5, D.supRubber, 1.5), R(318, 263.5, 10, 11.5, D.supRubber, 1.5));
+    out.push(R(254, 259.6, 52, 7, D.supSteelBar), R(254, 264.6, 52, 2, D.supSteelBarShade));
+    // the canopy: a slim slab cantilevered from the wall; its end and its underside show how far it stands out
+    fill(out, _polyD([[202.8, 164.8], [363.2, 164.8], [363.2, 173], [347.4, 176.5], [186.8, 176.5], [186.8, 168.6]]), INK);
+    fill(out, _polyD([[204, 172], [362, 172], [346, 175.3], [188, 175.3]]), D.supCanopyUnder);
+    fill(out, _polyD([[204, 166], [204, 172], [188, 175.3], [188, 169.5]]), D.supAluSide);
+    out.push(R(204, 166, 158, 6, D.supAlu), R(204, 166, 158, 1.6, D.supAluLit), R(264, 172.6, 32, 2.4, D.supAlu, 1.2));
+
+    /* ---- the yard: few things, each with the same ink line ---- */
+    // empty pallets, three high
+    (function () {
+      var deck = "", py;
+      for (var i = 0; i < 3; i++) { py = G - 7.2 * (i + 1); deck += rd(14, py, 40, 2.4) + rd(14, py + 5, 40, 2.2) + rd(14, py + 2.4, 6, 2.6) + rd(31, py + 2.4, 6, 2.6) + rd(48, py + 2.4, 6, 2.6); }
+      out.push(h("rect", { x: 14, y: G - 21.6, width: 40, height: 21.6, fill: D.supPalletDark, stroke: COLORS.ink, strokeWidth: LINE }));
+      fill(out, deck, D.supPallet);
+    })();
+    // a roll cage with two cartons in it, one of them the kind being loaded
+    carton(out, 72, 250.6, 22, 19);
+    out.push(h("rect", { x: 74, y: 235.6, width: 18, height: 15, rx: 0.8, fill: COLORS.paper, stroke: COLORS.ink, strokeWidth: LINE }), R(74.6, 236.2, 3, 13.8, D.supPaperShade), R(81.4, 236.2, 3.2, 13.8, COLORS.verm));
+    out.push(h("path", { d: "M69.4,226V270.6M96.6,226V270.6M69.4,227.2H96.6M69.4,246H96.6M67.4,270.6H98.6", fill: "none", stroke: COLORS.ink, strokeWidth: r1(2 + 2 * LINE) }));
+    out.push(h("path", { d: "M69.4,227.2V270.6M96.6,227.2V270.6M69.4,227.2H96.6M69.4,246H96.6M68.6,270.6H97.4", fill: "none", stroke: D.supAlu, strokeWidth: 2 }));
+    out.push(h("circle", { cx: 72.4, cy: 275, r: 2.6, fill: COLORS.ink }), h("circle", { cx: 93.6, cy: 275, r: 2.6, fill: COLORS.ink }));
+    // guide posts either side of the dock
+    [212.5, 344.5].forEach(function (bx) {
+      out.push(h("rect", { x: bx, y: 239, width: 7.4, height: G - 239, rx: 2, fill: D.supSafety, stroke: COLORS.ink, strokeWidth: LINE }), R(bx + LINE / 2, 241, 2.2, G - 241 - LINE / 2, D.supSafetyShade));
+      fill(out, rd(bx, 248.6, 7.4, 7) + rd(bx, 263, 7.4, 7), COLORS.ink);
+    });
+
+    /* ---- its own node: the roller shutter (closed), so a motion pass can roll it up ---- */
+    tone(shut, [[228, 184, 104, 66]], D.supSteel, D.supSteelShade);
+    (function () {
+      var lines = [];
+      for (var i = 1; i < 8; i++) lines.push([228, 184 + i * 8.25 - 0.8, 104, 1.6]);
+      tone(shut, lines, D.supSteelLine, D.supSteelLineShade);
+    })();
+    tone(shut, [[228, 250, 104, 6]], D.supSteelBar, D.supSteelBarShade);
+    shut.push(R(273, 251.6, 14, 2.8, D.supFrame, 1.4));
+
+    /* ---- in front of it: cartons waiting on the dock; the middle stays clear, the parcels start there ---- */
+    front.push(h("g", { transform: "translate(246, 256) scale(" + (1 / scale).toFixed(4) + ")" }, parcelArt(52)));
+    carton(front, 296, 236, 26, 20); carton(front, 301, 222, 18, 14);
+
+    return _supMemo[mk] = h("g", { transform: "translate(" + x + ", " + y + ") scale(" + scale + ") translate(" + (-OX) + ", " + (-G) + ")" },
+      h("g", { "data-cache": "supplier-" + mk, "data-box": "-84 14 456 274" }, out),
+      h("g", null, shut),
+      h("g", null, front));
+  }
+  /* ================= round 3: the city, drawn again from a blank page =================
+     Nine Tokyo building types, each built from several volumes in the film's one oblique (the lit front
+     square to the picture, the shaded side going back to the left, the roof where the eye is above it),
+     each with its own window system:
+       G  a glass curtain-wall tower: chamfered shaded corner, banded glass, the sky and two clouds
+          reflected in it, a plant room behind the parapet
+       M  an apartment slab: rows of balconies in shadow (or, seen from its other side, open corridors
+          with a zigzag escape stair), a lift overrun and a water tank on the roof, a steel stair on
+          the end wall
+       S  a tower that steps back unevenly as it rises, with vertical window strips between piers
+       P  a pencil building on a narrow plot: one window a floor, a stack of blank blade signs, a blank
+          party wall with a pipe and an outside stair
+       D  a wide podium with an arcade, and a tower set back on it with a frame of two-storey bays
+       C  a corner building: a chamfered face, ribbon windows wrapping all three faces
+       L  a low block whose roof you look down on: tanks, a stair head, condensers, a fence
+       B  a building carrying a large blank billboard on a steel frame, and a blank wall sign
+       X  a building site: steel frame, half wrapped in pale mesh, a hoarding, a tower crane
+     A tier is two rows (deep tier: one). Inside a row nothing overlaps, so a row can be drawn in any
+     order; overlaps are between rows, and a front-row building throws one flat shadow, down and to the
+     left, on whatever stands behind it. Rows are COMPOSED by hand, building by building.
+     Every building is drawn once and kept. What moves is drawn outside it, as pure functions of time:
+     CityLights (a sheen sliding down one glass tower, single panes catching the sun, a lamp-lit room) and
+     CityCranes (the jib slewing, the trolley and the hook).
+     Colour: each wall material gives a lit front; shade is that colour pushed toward navy, light is it
+     pushed toward white, and distance mixes everything toward the air colour. No outlines. */
+
+  /* How tall the city stands, for every tier in every scene. base multiplies every height; amp widens
+     (or narrows) how far a building stands above or below its row's usual roofline. */
+  var SKYLINE_SIZE = { base: 1, amp: 1 };
+
+  DAY.cityAir = "#bcd8ef";          // the air between the tiers: every tone is mixed toward it with distance
+  DAY.cityNavy = "#1b2f55";         // what a shaded tone is pushed toward
+  DAY.cityTile = "#abbdda";         // pale tile cladding (apartment slabs, low blocks)
+  DAY.cityConcrete = "#7f96bf";     // concrete and panel walls
+  DAY.cityDark = "#536c9d";         // dark panel walls
+  DAY.cityCurtainFrame = "#3e6fb5"; // a curtain wall that reflects the sky: its frame
+  DAY.cityCurtain = "#4f86cf";      // ... its glass
+  DAY.cityCurtainSky = "#7fb0e6";   // ... the bright sky across its top
+  DAY.cityNavyFrame = "#33507f";    // a dark curtain wall: its frame
+  DAY.cityNavyGlass = "#47689f";    // ... its glass
+  DAY.cityNavySky = "#6a93cb";      // ... the bright sky across its top
+  DAY.cityNavyCloud = "#b4d0ee";    // ... a cloud reflected in it
+  DAY.cityMesh = "#d3deec";         // the mesh sheet round a building site
+  DAY.cityPane = "#cfe2f4";         // window glass against a dark wall: it reflects the sky
+  DAY.cityPaneSky = "#eef6fd";      // ... and the brightest part of that reflection
+  DAY.cityPaneDark = "#5f7db0";     // window glass against a pale wall: the room behind shows
+  DAY.cityPaneDarkSky = "#8fa9d2";  // ... the sky across its top
+  DAY.cityCloud = "#e6f1fb";        // a cloud reflected in glass; blank sign boards
+  DAY.citySafety = "#f2c14e";       // safety yellow: the crane's jib tip and hook, the hoarding stripe
+  DAY.cityWarmLit = "#fff1cf";      // a lamp-lit room at its brightest (its resting colour is DAY.warm)
+  DAY.cityCast = "24,42,86";        // a cast shadow (r,g,b), laid over a wall at the tier's own strength
+
+  var CITY_MAT = {
+    t: { f: DAY.cityTile, g: DAY.cityPaneDark, hi: DAY.cityPaneDarkSky },
+    c: { f: DAY.cityConcrete, g: DAY.cityPane, hi: DAY.cityPaneSky },
+    d: { f: DAY.cityDark, g: DAY.cityPane, hi: DAY.cityPaneSky },
+    g: { f: DAY.cityCurtainFrame, g: DAY.cityCurtain, hi: DAY.cityCurtainSky, cloud: DAY.cityCloud },
+    n: { f: DAY.cityNavyFrame, g: DAY.cityNavyGlass, hi: DAY.cityNavySky, cloud: DAY.cityNavyCloud },
+    m: { f: DAY.cityMesh, g: DAY.cityPaneDark, hi: DAY.cityPaneDarkSky, deep: 0.72 }
+  };
+  var CITY_MATS = { G: "g", M: "t", S: "c", P: "d", D: "c", C: "t", L: "t", B: "d", X: "m" };
+  // a tier's drawing: u = scale of every part, air = how far its tones go toward the air, lod = how much is drawn
+  var CITY_LOOK = {
+    near: { u: 1, air: 0, lod: 2 },
+    nearBack: { u: 0.94, air: 0.14, lod: 2 },
+    far: { u: 0.78, air: 0.4, lod: 1 },
+    farBack: { u: 0.72, air: 0.5, lod: 1 },
+    deep: { u: 0.6, air: 0.7, lod: 0 }
+  };
+  // the two haze bands, the same in every scene: [strength at the ground, height]
+  var CITY_HAZE = [[0.4, 430], [0.2, 270]];
+  function CityHaze(id, baseY, i) { return h("rect", { x: 0, y: baseY - CITY_HAZE[i][1], width: 1920, height: CITY_HAZE[i][1], fill: "url(#" + id + ")" }); }
+
+  var _cpMemo = {};
+  function cityPal(mat, air) {
+    var key = mat + "|" + air;
+    if (_cpMemo[key]) return _cpMemo[key];
+    var m = CITY_MAT[mat], W = "#ffffff", N = DAY.cityNavy, f = m.f, g = m.g;
+    var a = function (c) { return air ? mix(c, DAY.cityAir, air) : c; };
+    return _cpMemo[key] = {
+      side: a(mix(f, N, 0.42)), sideGlass: a(mix(g, N, 0.45)), sideLite: a(mix(mix(f, N, 0.42), W, 0.5)),
+      mid: a(mix(f, N, 0.2)), midGlass: a(mix(g, N, 0.22)),
+      front: a(f), top: a(mix(f, W, 0.42)), deep: a(mix(f, N, m.deep || 0.6)),
+      glass: a(g), hi: a(m.hi), cloud: a(m.cloud || DAY.cityCloud), board: a(DAY.cityCloud),
+      trim: a(mix(f, N, 0.24)), lite: a(mix(f, W, 0.6)), safety: a(DAY.citySafety),
+      cast: "rgba(" + DAY.cityCast + "," + (0.24 * (1 - air)).toFixed(3) + ")"
+    };
+  }
+  // paint order inside one layer of a building
+  var CITY_KEYS = ["side", "sideGlass", "sideLite", "mid", "midGlass", "front", "top", "deep", "glass", "hi", "cloud", "board", "trim", "lite", "safety", "cast"];
+
+  /* The drawing board for one building. Local units: x along the front from its left corner, y up from
+     the ground, z back from the front. Depth goes left, and toward the eye line (E above the ground). */
+  function cityCtx(X, baseY, u, lod) {
+    var E = 260 * u, KZ = 0.0016 / u, layers = [], cur, c = { u: u, lod: lod, E: E, t: Math.max(3, 3.6 * u), info: {} };
+    function r1(v) { return Math.round(v * 10) / 10; }
+    function px(x, z) { return X + x - (z || 0) * 0.9; }
+    function py(y, z) { return baseY - y - (z ? z * (y < E ? KZ * 1.75 * (E - y) : KZ * Math.max(E - y, -300 * u)) : 0); }
+    function add(k, d) { cur[k] = (cur[k] || "") + d; }
+    c.px = px; c.py = py;
+    c.layer = function () { cur = {}; layers.push(cur); };
+    c.layer();
+    // a rectangle square to the picture, at depth z: x, y are its left and its foot
+    c.R = function (k, x, y, w, hh, z) {
+      if (w < 0.8 || hh < 0.8) return;
+      var yt = py(y + hh, z), yb = y <= 0 ? baseY : py(y, z);
+      add(k, "M" + r1(px(x, z)) + "," + r1(yt) + "h" + r1(w) + "v" + r1(yb - yt) + "h" + r1(-w) + "z");
+    };
+    // n rectangles in a row with a gap between them
+    c.split = function (k, x, y, w, hh, n, gap, z) {
+      var bw = (w - (n - 1) * gap) / n;
+      for (var i = 0; i < n; i++) c.R(k, x + i * (bw + gap), y, bw, hh, z);
+    };
+    // a bar with round ends
+    c.cap = function (k, x, y, w, hh, z) {
+      if (w < hh) w = hh;
+      var r = r1(hh / 2);
+      add(k, "M" + r1(px(x, z) + hh / 2) + "," + r1(py(y + hh, z)) + "h" + r1(w - hh) + "a" + r + "," + r + " 0 0 1 0," + r1(hh) + "h" + r1(hh - w) + "a" + r + "," + r + " 0 0 1 0," + r1(-hh) + "z");
+    };
+    // a disc; y is its centre
+    c.disc = function (k, x, y, r) {
+      r = r1(r);
+      add(k, "M" + r1(px(x, 0) - r) + "," + r1(py(y, 0)) + "a" + r + "," + r + " 0 1 1 " + r1(2 * r) + ",0a" + r + "," + r + " 0 1 1 " + r1(-2 * r) + ",0z");
+    };
+    // a polygon through [x, y, z] triples
+    c.P = function (k, p) {
+      var d = "";
+      for (var i = 0; i < p.length; i += 3) d += (i ? "L" : "M") + r1(px(p[i], p[i + 2])) + "," + r1(py(p[i + 1], p[i + 2]));
+      add(k, d + "z");
+    };
+    // a wall standing on the plan line (xa, za) -> (xb, zb), from y0 up to y1
+    c.W = function (k, xa, za, xb, zb, y0, y1) {
+      var ax = r1(px(xa, za)), bx = r1(px(xb, zb));
+      add(k, "M" + ax + "," + r1(py(y1, za)) + "L" + bx + "," + r1(py(y1, zb)) + "L" + bx + "," + r1(y0 <= 0 ? baseY : py(y0, zb)) + "L" + ax + "," + r1(y0 <= 0 ? baseY : py(y0, za)) + "z");
+    };
+    // a volume: its shaded side, its lit front, and its roof when the eye is above it
+    c.box = function (x, w, y0, y1, z, d, o) {
+      o = o || {}; z = z || 0;
+      c.W(o.side || "side", x, z + d, x, z, y0, y1);
+      c.R(o.front || "front", x, y0, w, y1 - y0, z);
+      if (y1 < E - 6 * u && !o.noTop) c.P("top", [x, y1, z, x + w, y1, z, x + w, y1, z + d, x, y1, z + d]);
+    };
+    // the arris that catches the sun: the right edge of a lit front
+    c.edge = function (x, y0, y1, z) { c.R("lite", x - c.t, y0, c.t, y1 - y0, z); };
+    // a pane the light layer may pick: kept in tier coordinates
+    c.pane = function (x, y, w, hh, z) { (c.info.panes = c.info.panes || []).push([r1(px(x, z)), r1(py(y + hh, z)), r1(w), r1(hh)]); };
+    c.done = function (pal) {
+      var kids = [];
+      for (var i = 0; i < layers.length; i++) for (var j = 0; j < CITY_KEYS.length; j++) {
+        var k = CITY_KEYS[j];
+        if (layers[i][k]) kids.push(h("path", { d: layers[i][k], fill: pal[k] }));
+      }
+      return kids;
+    };
+    return c;
+  }
+  // how far back each type's shaded side runs, so a row can keep neighbours clear of each other
+  var CITY_DEPTH = {
+    G: function (w, u) { return Math.min(w * 0.42, 58 * u); },
+    M: function (w, u) { return 30 * u; },
+    S: function (w, u) { return Math.min(w * 0.36, 52 * u); },
+    P: function (w, u) { return 42 * u; },
+    D: function (w, u) { return 64 * u; },
+    C: function (w, u) { return Math.max(Math.min(w * 0.22, 40 * u) * 0.8 + 22 * u, w * 0.3); },
+    L: function (w, u) { return 60 * u; },
+    B: function (w, u) { return Math.min(w * 0.34, 46 * u); },
+    X: function (w, u) { return Math.min(w * 0.38, 58 * u); }
+  };
+
+  /* G: the glass tower */
+  function cityG(c, w, hh, v) {
+    var u = c.u, lod = c.lod, t = c.t, FL = 30 * u * (lod ? 1 : 1.5), d = CITY_DEPTH.G(w, u), ch = Math.min(13 * u, w * 0.14);
+    var crown = lod ? FL * 1.15 : 0, top = hh - crown, lob = lod ? FL * 1.4 : 0, e = lod ? 6 * u : 0, i, y;
+    if (lod) c.box(w * (v % 2 ? 0.44 : 0.18), w * 0.4, hh - FL, hh + FL * 0.7, 16 * u, d * 0.4);     // plant room, behind the parapet
+    c.W("side", 0, d, 0, ch, 0, hh);
+    c.W("mid", 0, ch, ch, 0, 0, hh);                                                                // the chamfered corner
+    c.R("front", ch, 0, w - ch, hh);
+    var gx = ch + (lod ? 2 * u : 0), gw = w - gx - e, gh = top - lob;
+    c.R("glass", gx, lob, gw, gh);
+    // the bright sky across the top of the glass, its lower edge on the light's diagonal
+    c.P("hi", [gx, top, 0, gx + gw, top, 0, gx + gw, top - gh * 0.26, 0, gx, Math.max(lob, top - gh * 0.26 - gw * 0.85), 0]);
+    // clouds reflected in it, built like the sky's own (round lobes on a flat base); the floor bands cut them
+    var cloud = function (cx, k, sz) {
+      var yb = lob + Math.round(gh * k / FL) * FL + t / 2;
+      if (yb + sz * 0.54 > top - 2 * u) return;
+      c.cap("cloud", cx - sz / 2, yb, sz, sz * 0.2);
+      c.disc("cloud", cx - sz * 0.2, yb + sz * 0.2, sz * 0.19); c.disc("cloud", cx + sz * 0.06, yb + sz * 0.27, sz * 0.25); c.disc("cloud", cx + sz * 0.3, yb + sz * 0.17, sz * 0.15);
+    };
+    cloud(gx + gw * 0.53, v % 2 ? 0.6 : 0.68, gw * 0.8);
+    if (lod) cloud(gx + gw * 0.34, v % 2 ? 0.22 : 0.3, gw * 0.5);
+    if (lod) {
+      var step = FL * (lod > 1 ? 1 : 2);
+      if (v % 2) {                                                                                  // vertical fins
+        var nf = Math.max(3, Math.round(gw / ((lod > 1 ? 21 : 30) * u)));
+        for (i = 1; i < nf; i++) c.R("trim", gx + i * gw / nf - t / 2, lob, t, gh);
+        for (y = lob + FL * 4; y < top - FL * 2; y += FL * 4) c.R("trim", gx, y - t / 2, gw, t);
+      } else for (y = lob + step; y < top - 2; y += step) c.R("trim", gx, y - t / 2, gw, t);        // floor bands
+      c.W("sideGlass", 0, d - 4 * u, 0, ch + 4 * u, lob, top);
+      c.R("deep", gx, top + crown * 0.22, gw, crown * 0.42);                                        // louvres of the plant floor
+      c.R("lite", w - e, lob, e, hh - lob);                                                         // the corner that catches the sun
+      c.R("lite", ch, hh - 4 * u, w - ch, 4 * u);
+      c.split("deep", gx + 3 * u, 0, gw - 6 * u, lob - 8 * u, Math.max(2, Math.round(gw / (34 * u))), 6 * u);
+      c.R("lite", ch, lob - 8 * u, w - ch, 4 * u);
+      if (lod > 1) for (i = 0; i < 4; i++) c.pane(gx + (i % 3) * gw / 3 + 2 * u, lob + Math.round(gh * (0.3 + i * 0.14) / FL) * FL + t / 2, gw / 3 - 4 * u, FL - t);
+    }
+    c.info.glass = [c.px(gx, 0), c.py(top, 0), gw, gh];
+  }
+  // an outside steel stair seen from its side, on the plane x: flights zigzag between depths za and zb, a
+  // landing at every turn, one post at the back
+  function cityStair(c, x, za, zb, n, fh, th) {
+    var u = c.u, l = 5 * u;
+    for (var i = 0; i < n; i++) {
+      var z0 = i % 2 ? zb : za, z1 = i % 2 ? za : zb, sy = i * fh + 3 * u, o = i % 2 ? -l : l;
+      c.P("sideLite", [x, sy, z0, x, sy + fh, z1, x, sy + fh + th, z1, x, sy + th, z0]);
+      c.P("sideLite", [x, sy + fh, z1 - o, x, sy + fh, z1 + o, x, sy + fh + th, z1 + o, x, sy + fh + th, z1 - o]);
+    }
+    c.R("sideLite", x - c.t / 2, 0, c.t, n * fh + 3 * u + th, zb + l);
+  }
+  /* M: the apartment slab. Even v: the balcony side, with the steel stair on the end wall. Odd v: the
+     corridor side, with the escape stair in its own bay at the lit end. */
+  function cityM(c, w, hh, v) {
+    var u = c.u, lod = c.lod, t = c.t, d = CITY_DEPTH.M(w, u), corridor = v % 2 === 1, core = lod ? 36 * u : 0;
+    var n = Math.max(3, Math.round((hh - 8 * u) / (30 * u * (lod ? 1 : 2)))), fh = (hh - 8 * u) / n, i, b, y0;
+    var zx = 6 * u, zw = w - core - 11 * u, nb = Math.max(1, Math.round(zw / (46 * u))), bw = zw / nb, ry0 = corridor ? 0.36 : 0.44;
+    if (lod) {                                                                                      // on the roof: lift overrun, water tank on legs
+      c.box(w - core + 3 * u, core - 7 * u, hh - fh, hh + fh * 0.8, 8 * u, 24 * u);
+      var tx = w - core - 46 * u;
+      if (tx > 10 * u) {
+        c.R("side", tx + 4 * u, hh - 8 * u, t, 20 * u, 12 * u); c.R("side", tx + 23 * u, hh - 8 * u, t, 20 * u, 12 * u);
+        c.box(tx, 31 * u, hh + 10 * u, hh + 27 * u, 12 * u, 14 * u, { front: "lite" });
       }
     }
-    function carton(cx0, cy0, w, hh, fill, shade, tape) {
-      out.push(h("rect", { x: cx0, y: cy0, width: w, height: hh, rx: 1, fill: fill, stroke: COLORS.ink, strokeWidth: 1.6 }));
-      out.push(R(cx0 + 0.8, cy0 + 0.8, 3.4, hh - 1.6, shade));
-      if (tape) out.push(R(cx0 + w * 0.46, cy0 + 0.8, 3.6, hh - 1.6, COLORS.verm));
+    c.box(0, w, 0, hh, 0, d);
+    if (lod) c.edge(w, 0, hh);
+    for (i = 1; i < n; i++) {
+      y0 = i * fh;
+      var ry = y0 + fh * ry0, rh = fh * (1 - ry0) - t;                                              // the open part above the balustrade
+      if (lod > 1) {
+        c.split("deep", zx, ry, zw, rh, nb, 4 * u);
+        for (b = 0; b < nb; b++) {
+          if (corridor) c.R("glass", zx + b * bw + bw * 0.34, ry, 11 * u, rh * 0.8);                // a flat's door
+          else { c.R("glass", zx + b * bw + 6 * u, ry, bw - 17 * u, rh * 0.7); if ((b + i) % 2) c.pane(zx + b * bw + 6 * u, ry, bw - 17 * u, rh * 0.7); }   // the sliding door, its head in the shade of the slab above
+        }
+      } else c.R("deep", zx, ry, zw, rh);
+      if (lod) c.R("lite", zx - 2 * u, y0 + 3 * u, zw + 4 * u, ry - y0 - 3 * u);                    // the balustrade, in the sun
     }
-
-    /* ---- ground: one flat contact shadow, falling toward the viewer's left ---- */
-    out.push(h("path", { d: "M-14," + G + "L343," + G + "L338," + (G + 7) + "L-22," + (G + 7) + "Z", fill: D.supGroundShade }));
-
-    /* ---- roof plant, standing behind the parapet (the coping is painted over its feet) ---- */
-    // stair head
-    out.push(R(22, 30, 74, 30, D.supInk, 2), R(24, 32, 70, 28, D.supPlant), R(24, 32, 11, 28, D.supPlantShade), R(20, 27, 78, 5.4, D.supRoof, 1.5), R(20, 27, 78, 2, D.supRoofLip, 1));
-    out.push(R(62, 38, 22, 22, D.supFrame), h("path", { d: rd(65, 41.5, 16, 2.4) + rd(65, 47, 16, 2.4) + rd(65, 52.5, 16, 2.4), fill: D.supPlantShade }));
-    // handrail along the roof edge
-    (function () { var d = rd(100, 45, 114, 2.6); for (var i = 0; i < 6; i++) d += rd(100 + i * 22.3, 45, 2.6, 14); out.push(h("path", { d: d, fill: D.supRailPale })); })();
-    // water tank: a cylinder lying on two saddles, lit along its top
-    out.push(h("path", { d: rd(135, 50, 7, 9) + rd(162, 50, 7, 9), fill: D.supRail }));
-    out.push(R(122, 29, 60, 24, D.supInk, 12), R(124, 31, 56, 20, D.supPale, 10));
-    out.push(h("path", { d: "M124.8,45L179.2,45A10,10 0 0 1 170,51L134,51A10,10 0 0 1 124.8,45Z", fill: D.supPaleShade }));
-    out.push(h("path", { d: rd(141, 31, 2.6, 20) + rd(160.4, 31, 2.6, 20), fill: D.supPaleShade }), R(147.5, 26.4, 9, 5, D.supRail, 1.2));
-    // two condensers, and a vent
-    [222, 264].forEach(function (cx0) {
-      out.push(R(cx0 - 2, 32, 40, 28, D.supInk, 2), R(cx0, 34, 36, 26, D.supPlant), R(cx0, 34, 36, 2.6, D.supPlantLight), R(cx0, 34, 6, 26, D.supPlantShade));
-      out.push(h("circle", { cx: cx0 + 20, cy: 47, r: 9.4, fill: D.supInk }), h("circle", { cx: cx0 + 20, cy: 47, r: 7, fill: D.supPlantShade }));
-    });
-    out.push(R(310.5, 44, 5, 16, D.supRail), R(306, 40, 14, 5, D.supRail, 2));
-
-    /* ---- the wall: ink behind it for the outline, then panels, structure and plinth ---- */
-    out.push(R(-3.2, 60, W + 6.4, G - 60 + 1.8, D.supInk, 3));
-    surf(10, TOP, 174, FL - TOP, D.supWall, D.supWallShade); surf(196, TOP, 134, FL - TOP, D.supWall, D.supWallShade);
-    surf(10, GF, 174, PL - GF, D.supWall, D.supWallShade); surf(196, GF, 134, PL - GF, D.supWall, D.supWallShade);
-    surf(0, FL, W, GF - FL, D.supWallLight, D.supWall);                              // floor band
-    surf(0, TOP, 10, PL - TOP, D.supWallLight, D.supWall); surf(184, TOP, 12, PL - TOP, D.supWallLight, D.supWall); surf(330, TOP, 10, PL - TOP, D.supWallLight, D.supWall);   // pilasters
-    surf(0, TOP, W, 17, D.supBand, D.supBandShade);                                  // fascia under the coping
-    surf(0, PL, W, G - PL, D.supPlinth, D.supPlinthShade);                           // plinth
-    out.push(R(0, PL, W, 2.4, D.supPlinthLight));
-
-    /* ---- office bay ---- */
-    // downpipe with its head, brackets and shoe
-    surf(13, 76, 5, PL - 72, D.supWallLight, D.supWall);
-    out.push(R(13, 76, 1.8, PL - 72, D.supWallShade), R(10.5, 70, 10, 9, D.supFrame, 1.5));
-    out.push(h("path", { d: rd(11, 120, 9, 2.6) + rd(11, 182, 9, 2.6) + rd(11, 240, 9, 2.6) + rd(13, PL + 4, 12, 3.2), fill: D.supFrame }));
-    // name plate: no lettering, two bars stand in for a name
-    surf(30, 87, 120, 16, D.supPlate, D.supPlateShade); surf(38, 91.5, 64, 7, D.supBar1, D.supBar1Shade); surf(110, 91.5, 30, 7, D.supBar2, D.supBar2Shade);
-    // windows
-    WINS.forEach(function (w) {
-      surf(w[0], w[1], w[2], w[3], D.supFrame, D.supFrameShade);
-      var pw = (w[2] - 3 * (w[4] + 1)) / w[4];
-      for (var i = 0; i < w[4]; i++) glass(w[0] + 3 + i * (pw + 3), w[1] + 3, pw, w[3] - 6, w[5][i].warm, w[5][i].blind);
-      surf(w[0] - 3, w[1] + w[3], w[2] + 6, 3.5, D.supSill, D.supSillShade);
-    });
-    // wall unit on its bracket, beside the high strip of windows
-    out.push(R(96.5, 213, 30, 2.8, D.supCanopy), R(98, 188, 27, 25, D.supPale, 2), R(98, 188, 5.5, 25, D.supPaleShade));
-    out.push(h("circle", { cx: 110, cy: 200.5, r: 8, fill: D.supFrame }), h("circle", { cx: 110, cy: 200.5, r: 2.8, fill: D.supPale }));
-    out.push(h("path", { d: rd(119.5, 193, 4, 2.4) + rd(119.5, 199, 4, 2.4) + rd(119.5, 205, 4, 2.4), fill: D.supPaleShade }));
-    // staff door under its own small canopy, with a call panel beside it
-    surf(136, 216, 34, G - 216, D.supFrame, D.supFrameShade); surf(139, 219, 28, G - 219, D.supDoor, D.supDoorShade);
-    glass(143, 224, 20, 22, 0, 0);
-    out.push(R(139, 267, 28, 11, D.supDoorKick), R(160.5, 249, 2.8, 10, D.supPale, 1.4));
-    out.push(R(133, 206, 42, 6.4, D.supCanopy, 1), R(133, 206, 42, 2.2, D.supCanopyLip, 1), R(149, 212.4, 8, 3, D.supPale, 1));
-    out.push(R(174, 238, 7.5, 13, D.supPale, 1), R(175.8, 240.4, 4, 3.4, D.supFrame));
-
-    /* ---- dock bay ---- */
-    // roller shutter: hood and guides, the curtain with its slats, the bottom bar
-    surf(200, 176, 112, 80, D.supFrame, D.supFrameShade); surf(204, 184, 104, 66, D.supSteel, D.supSteelShade);
-    (function () {
-      var lit = "", dark = "";
-      for (var i = 1; i < 8; i++) { var ly = 184 + i * 8.25 - 0.8; lit += rd(204, ly, 104, 1.6); dark += castD(204, ly, 308, ly + 1.6); }
-      out.push(h("path", { d: lit, fill: D.supSteelLine }), h("path", { d: dark, fill: D.supSteelLineShade }));
-    })();
-    surf(204, 250, 104, 6, D.supSteelBar, D.supSteelBarShade);
-    out.push(R(249, 251.6, 14, 2.8, D.supFrame, 1.4));
-    // the dock itself: a raised sill with a safety edge, rubber bumpers and a leveller
-    out.push(R(196, 256, 120, G - 256, D.supDock), R(196, 256, 5, G - 256, D.supPlinth), R(196, 256, 120, 3.6, D.supSafety));
-    out.push(R(208, 263.5, 10, 11.5, D.supRubber, 1.5), R(294, 263.5, 10, 11.5, D.supRubber, 1.5));
-    out.push(R(230, 259.6, 52, 7, D.supSteelBar), R(230, 264.6, 52, 2, D.supSteelBarShade));   // the lip of the dock leveller, folded down
-    // canopy hung from the wall on two rods
-    out.push(h("path", { d: "M210.4,128L213.4,130.4L200.6,161L197.6,161Z M303.6,128L300.6,130.4L313.4,161L316.4,161Z" + rd(207, 124.6, 9.4, 6) + rd(297.6, 124.6, 9.4, 6), fill: D.supCanopy }));
-    out.push(R(192, 160, 130, 10.4, D.supCanopy, 1.5), R(192, 160, 130, 3, D.supCanopyLip, 1.5), R(193.5, 168, 127, 2.4, D.supCanopyUnder));
-
-    /* ---- coping: the dark line that closes the building against the sky ---- */
-    out.push(R(-7, 56, W + 14, 11.4, D.supRoof, 2), R(-7, 56, W + 14, 3.2, D.supRoofLip, 1.6));
-
-    /* ---- things that say the place works ---- */
-    // pallets, three high
-    (function () {
-      var deck = "", feet = "";
-      for (var i = 0; i < 3; i++) { var py = G - 7.2 * (i + 1); deck += rd(26, py, 38, 2.5) + rd(26, py + 4.7, 38, 2.5); feet += rd(27, py + 2.5, 6, 2.2) + rd(42, py + 2.5, 6, 2.2) + rd(57, py + 2.5, 6, 2.2); }
-      out.push(h("path", { d: feet, fill: D.supPalletDark }), h("path", { d: deck, fill: D.supPallet }));
-    })();
-    // roll cage with two cartons in it
-    carton(78.5, 250, 21, 19, D.supCarton, D.supCartonShade); carton(80, 234.5, 17, 15.5, COLORS.paper, D.supPaperShade);
-    out.push(h("path", { d: rd(74, 226, 2.6, 46) + rd(101.4, 226, 2.6, 46) + rd(74, 226, 30, 2.6) + rd(74, 244, 30, 2.2) + rd(72.5, 269.4, 33, 3), fill: D.supPale }));
-    out.push(h("circle", { cx: 78, cy: 275.2, r: 2.8, fill: D.supInk }), h("circle", { cx: 100, cy: 275.2, r: 2.8, fill: D.supInk }));
-    // guide posts either side of the dock
-    [188.5, 316.5].forEach(function (bx) {
-      out.push(R(bx, 239, 7.4, G - 239, D.supSafety, 2), R(bx, 241, 2.4, G - 241, D.supSafetyShade));
-      out.push(h("path", { d: rd(bx, 249, 7.4, 7.2) + rd(bx, 263.4, 7.4, 7.2), fill: D.supInk }));
-    });
-    // cartons waiting on the dock; the middle is left clear, parcels start there
-    carton(208, 228, 26, 28, COLORS.paper, D.supPaperShade, true);
-    carton(271, 236, 25, 20, D.supCarton, D.supCartonShade); carton(275, 221.4, 18, 14.6, D.supCarton, D.supCartonShade);
-
-    /* ---- kept last and separate: the parts a motion pass may turn or switch (static for now) ---- */
-    [222, 264].forEach(function (cx0) {
-      last.push(h("g", { transform: "translate(" + (cx0 + 20) + ", 47)" },
-        h("path", { d: rd(-7, -1.3, 14, 2.6) + rd(-1.3, -7, 2.6, 14), fill: D.supPlantLight }), h("circle", { cx: 0, cy: 0, r: 2.4, fill: D.supInk })));
-    });
-    last.push(h("g", null, R(241, 170.4, 30, 4.4, D.supCanopyUnder, 1.5), R(244, 171.6, 24, 3.2, D.supPale, 1.4)));
-
-    return _supMemo[mk] = h("g", { transform: "translate(" + x + ", " + y + ") scale(" + scale + ") translate(0, -278)", "data-cache": "supplier-" + mk, "data-box": "-24 22 376 266" }, out, last);
-  }
-  /* ---- round 2, second pass: the skyline is COMPOSED, not inherited ----
-     The first pass kept this function byte for byte, so every building stood at the original's
-     x, with the original's width and the original's height: the city's silhouette - the thing
-     the eye reads first, from across the room - never changed, and only the texture inside each
-     box did. This rebuilds the silhouette.
-     The original cycles are now only a starting rhythm. Plots differ far more in width (a sliver
-     next to a slab), heights run over a much wider range, every seventh plot is a landmark tower
-     that breaks the tier's band, some gaps are negative so neighbours overlap, and each plot sits
-     at one of three depths INSIDE its tier. The array comes back sorted back to front, ready to
-     draw, carrying its depth so the building can be drawn as a volume at that distance. */
-  var TALLER = 1.22;                                               // how much taller the city stands than the original
-  function makeSkylineTier(seed, span, opt) {
-    var WS = [1, 0.46, 1.3, 0.72, 1.08, 0.56, 1.46, 0.86];        // plot widths: slivers beside slabs
-    var HS = [1, 0.38, 0.8, 1.24, 0.52, 0.96, 0.26, 1.12, 0.68, 1.38];
-    var GS = [1, 0.22, 1.65, -0.16, 0.9, 0.34, 1.25, -0.08];      // negative = the next plot overlaps
-    var DZ = [0, 1, 0, 2, 1, 0, 2, 1, 0, 1];                       // depth inside the tier
-    var arr = [], x = -140, i = 0, guard = 0;
-    while (x < span && guard++ < 500) {
-      var w = Math.max(44, Math.round(opt.w[i % opt.w.length] * WS[i % WS.length]));
-      var hf = opt.hf[i % opt.hf.length] * HS[i % HS.length];
-      var land = i % 7 === 3;                                      // a landmark, slim and tall
-      var lb = opt.base < 150 ? 1.55 : 1.22;                       // the near tier carries the towers
-      // the owner asked for a taller city: one factor, so every tier grows together and the skyline
-      // keeps its proportions against the Tower and Fuji
-      var hgt = Math.round(TALLER * (opt.base * (land ? 1.06 : 0.84) + opt.amp * hf * (land ? lb : 1)));
-      if (land) w = Math.max(46, Math.round(w * 0.6));
-      if (hgt < 46) hgt = 46;
-      if (x + w > span + 110) break;
-      arr.push({ x: x, w: w, h: hgt, i: i, dz: DZ[i % DZ.length], land: land });
-      x += w + Math.round(opt.g[i % opt.g.length] * GS[i % GS.length]);
-      i++;
+    if (!lod) return;
+    c.split("deep", zx, 0, zw, fh * 0.72, Math.max(2, nb), 7 * u);                                  // the open ground floor between its columns
+    c.R("lite", 0, hh - 4 * u, w, 4 * u);
+    var th = Math.max(t, 5 * u);
+    if (corridor) {
+      var sx = w - core + 2 * u, sw = core - 6 * u;                                                 // the stair bay: flights zigzag up it
+      c.R("deep", sx, fh * 0.2, sw, hh - fh * 0.2 - 9 * u);
+      for (i = 0; i < n - 1; i++) {
+        var a = i % 2 ? sw - 2 * u : 2 * u, e2 = i % 2 ? 2 * u : sw - 2 * u, fy = i * fh + fh * 0.2;
+        c.P("lite", [sx + a, fy, 0, sx + e2, fy + fh, 0, sx + e2, fy + fh + th, 0, sx + a, fy + th, 0]);
+      }
+    } else {
+      c.R("trim", w - core - t / 2, 0, t, hh - 4 * u);                                              // the stair and lift core
+      if (lod > 1) for (i = 1; i < n; i++) c.R("glass", w - core + 12 * u, i * fh + fh * 0.3, 12 * u, fh * 0.44);
+      cityStair(c, -7 * u, d * 0.16, d * 0.9, n - 1, fh, Math.max(t, 6.5 * u));                                   // the steel stair standing off the end wall
+      if (lod > 1 && nb > 2 && n > 4) {                                                             // bedding aired over two balconies
+        c.R("board", zx + ((v >> 1) % nb) * bw + 12 * u, 2 * fh + 3 * u, 19 * u, fh * 0.44);
+        c.R("board", zx + ((v >> 1) + 2) % nb * bw + 9 * u, (n - 2) * fh + 3 * u, 19 * u, fh * 0.44);
+      }
     }
-    arr.sort(function (a, b) { return a.dz - b.dz || a.x - b.x; });
-    return arr;
   }
-  /* Tokyo Tower, redrawn for round 2 (same place and height). Built as the structure is, bottom to top:
-     four legs flaring to the ground with the arch between them and a girder over it; three braced panels
-     up to the main deck; the two-storey main deck; five braced panels tapering to the top deck, painted
-     in bands of international orange and white; the top deck; the banded mast with its antenna bars; the
-     needle. One light, sun top right: the left members and the far face of the lattice are a tone down
-     (orange pushed toward navy, white toward periwinkle), the right members carry the light.
-     t = height above the ground as a fraction of the whole tower. Static except the beacon at the tip. */
+  /* S: the tower that steps back. Even v: the steps are on its shaded side, so each stage shows its
+     own shaded face; odd v: on its lit side. */
+  function cityS(c, w, hh, v) {
+    var u = c.u, lod = c.lod, t = c.t, FL = 30 * u, d = CITY_DEPTH.S(w, u);
+    var st = v % 2 ? [[0, 1, 0, 0.52], [0, 0.82, 0.52, 0.72], [0.15, 0.82, 0.72, 0.87], [0.15, 0.6, 0.87, 1]]
+      : [[0, 1, 0, 0.5], [0.18, 1, 0.5, 0.71], [0.18, 0.8, 0.71, 0.87], [0.36, 0.8, 0.87, 1]];
+    for (var s = 0; s < 4; s++) {
+      var x = st[s][0] * w, sw = (st[s][1] - st[s][0]) * w, y0 = st[s][2] * hh, y1 = st[s][3] * hh, z = s * 5 * u;
+      c.box(x, sw, s ? y0 - FL : 0, y1, z, d * (1 - s * 0.15));
+      if (!lod) continue;
+      c.edge(x + sw, y0, y1, z);
+      var nb = Math.max(1, Math.round((sw - 8 * u) / (25 * u))), bw = (sw - 8 * u) / nb, step = FL * (lod > 1 ? 2 : 3), gap = Math.max(t, 5 * u);
+      var a = y0 + 9 * u, e = y1 - 11 * u, nfl = Math.max(1, Math.round((e - a) / step)), fl = (e - a + gap) / nfl;
+      for (var b = 0; b < nb; b++) for (var f = 0; f < nfl; f++) {                                  // tall panes between piers
+        var sx = x + 4 * u + b * bw + bw * 0.22, hiH = lod > 1 && f === nfl - 1 ? Math.min(15 * u, (fl - gap) * 0.4) : 0;
+        c.R("glass", sx, a + f * fl, bw * 0.56, fl - gap - hiH, z);
+        if (hiH) c.R("hi", sx, a + f * fl + fl - gap - hiH, bw * 0.56, hiH, z);
+        if (lod > 1 && s < 2 && (b + f) % 3 === 0) c.pane(sx, a + f * fl, bw * 0.56, fl - gap, z);
+      }
+      c.R("lite", x - 1.5 * u, y1 - 4 * u, sw + 3 * u, 4 * u, z);
+    }
+    c.info.castTop = st[0][3] * hh;
+  }
+  /* P: the pencil building */
+  function cityP(c, w, hh, v) {
+    var u = c.u, lod = c.lod, t = c.t, d = CITY_DEPTH.P(w, u), n = Math.max(4, Math.round((hh - 10 * u) / (31 * u * (lod ? 1 : 2)))), fh = (hh - 10 * u) / n, i, y0;
+    if (lod) c.box(w * 0.4, w * 0.52, hh - fh * 0.5, hh + 22 * u, 18 * u, 24 * u);                 // stair head
+    c.box(0, w, 0, hh, 0, d);
+    for (i = 1; i < n; i++) {
+      y0 = i * fh;
+      if (lod > 1 && (i + v) % 4 === 2) {                                                           // a floor behind a blank sign
+        c.R("board", 4 * u, y0 + fh * 0.22, w - 8 * u, fh * 0.6);
+        c.R("trim", 9 * u, y0 + fh * 0.42, (w - 18 * u) * 0.64, Math.max(t, 5 * u));
+      } else if (lod) {
+        c.split("glass", 5 * u, y0 + fh * 0.28, w - 10 * u, fh * 0.3, 2, t); c.split("hi", 5 * u, y0 + fh * 0.58, w - 10 * u, fh * 0.2, 2, t);
+        if (lod > 1) c.pane(5 * u, y0 + fh * 0.28, (w - 10 * u - t) / 2, fh * 0.5);
+      } else c.R("glass", 5 * u, y0 + fh * 0.3, w - 10 * u, fh * 0.4);
+    }
+    if (!lod) return;
+    c.edge(w, 0, hh);
+    c.R("deep", 5 * u, 0, w - 10 * u, fh * 0.72); c.R("board", 2 * u, fh * 0.72, w - 4 * u, 7 * u);
+    var sn = Math.min(6, n - 2), sh = fh * 0.84;                                                    // the blade signs, blank
+    for (i = 0; i < sn; i++) {
+      var dark = (i * 2 + v) % 3 === 0;
+      c.R(dark ? "trim" : "board", w + 1.5 * u, fh * 1.3 + i * fh, 13.5 * u, sh);
+      c.R(dark ? "lite" : "trim", w + 8.2 * u - t / 2, fh * 1.3 + i * fh + 5 * u, t, sh - 10 * u);
+    }
+    c.R("lite", 0, hh - 4 * u, w, 4 * u);
+    c.R("sideLite", -t / 2, 0, t, hh - 9 * u, d * 0.26);                                            // a pipe down the party wall
+    cityStair(c, -6 * u, d * 0.42, d * 0.94, n - 1, fh, Math.max(t, 6 * u));                        // the outside stair at the back
+  }
+  /* D: the podium and the tower set back on it */
+  function cityD(c, w, hh, v) {
+    var u = c.u, lod = c.lod, t = c.t, FL = 30 * u, ph = Math.min(hh * 0.42, 122 * u), pd = CITY_DEPTH.D(w, u);
+    var tw = w * 0.54, tx = v % 2 ? w * 0.05 : w * 0.41, tz = 18 * u, td = 40 * u, i, r, y;
+    c.box(0, w, 0, ph, 0, pd);
+    if (lod) {
+      var gf = ph * 0.38, nb = Math.max(2, Math.round((w - 16 * u) / (40 * u)));
+      c.split("deep", 8 * u, 0, w - 16 * u, gf - 5 * u, nb, 8 * u);                                 // the arcade between its piers
+      c.R("lite", 3 * u, gf - 5 * u, w - 6 * u, 5 * u);
+      c.split("glass", 8 * u, gf + (ph - gf) * 0.22, w - 16 * u, (ph - gf) * 0.5, lod > 1 ? Math.max(3, Math.round((w - 16 * u) / (21 * u))) : nb, lod > 1 ? 4 * u : 7 * u);
+      c.R("lite", 0, ph - 4 * u, w, 4 * u); c.edge(w, 0, ph);
+      if (lod > 1 && tx > 20 * u) { var sx = Math.max(3 * u, tx - 52 * u); c.P("cast", [tx, ph, tz, tx, ph, pd - 3 * u, sx, ph, pd - 3 * u, sx, ph, tz + 10 * u]); }   // the tower's shadow on the podium roof
+    }
+    c.info.castTop = ph;
+    c.layer();
+    if (lod) c.box(tx + tw * 0.22, tw * 0.5, hh - FL, hh + FL * 0.6, tz + 14 * u, td * 0.4);
+    c.box(tx, tw, ph, hh, tz, td);
+    var body = hh - ph - (lod ? FL * 1.1 : 0), rows = Math.max(1, Math.round(body / (FL * (lod ? 2 : 3)))), chh = body / rows;
+    var nc = Math.max(2, Math.round(tw / (44 * u))), cw = tw / nc;
+    for (r = 0; r < rows; r++) {
+      y = ph + r * chh;
+      if (!lod) { c.R("glass", tx + 5 * u, y + chh * 0.25, tw - 10 * u, chh * 0.5, tz); continue; }
+      for (i = 0; i < nc; i++) {                                                                    // one two-storey bay of the frame
+        var gx = tx + i * cw + 4 * u, gw2 = cw - 8 * u, hi = (i * 2 + r * 3 + v) % 5 === 0;
+        if (lod > 1) {
+          var p2 = (chh - 10 * u - t) / 2;
+          c.R("glass", gx, y + 5 * u, gw2, p2, tz); c.R(hi ? "hi" : "glass", gx, y + 5 * u + p2 + t, gw2, p2, tz);
+          if ((i + r) % 2) c.pane(gx, y + 5 * u + p2 + t, gw2, p2, tz);
+        } else c.R("glass", gx, y + 5 * u, gw2, chh - 10 * u, tz);
+      }
+      c.W("sideGlass", tx, tz + td - 6 * u, tx, tz + 6 * u, y + 5 * u, y + chh - 5 * u);
+    }
+    if (lod) { if (lod > 1) c.R("deep", tx + 5 * u, hh - FL * 0.9, tw - 10 * u, FL * 0.45, tz); c.R("lite", tx - u, hh - 4 * u, tw + 2 * u, 4 * u, tz); c.edge(tx + tw, ph, hh, tz); }
+  }
+  /* C: the corner building */
+  function cityC(c, w, hh, v) {
+    var u = c.u, lod = c.lod, t = c.t, cw = Math.min(w * 0.22, 40 * u), cz = cw * 0.8, d = CITY_DEPTH.C(w, u);
+    var gf = lod ? 40 * u : 0, n = Math.max(2, Math.round((hh - gf - 10 * u) / (30 * u * (lod ? 1 : 2)))), fh = (hh - gf - 10 * u) / n, crest = lod ? 16 * u : 0, i;
+    if (lod) c.box(w * 0.52, w * 0.34, hh - fh, hh + 19 * u, 16 * u, 24 * u);
+    c.W("side", 0, d, 0, cz, 0, hh);
+    c.W("mid", 0, cz, cw, 0, 0, hh + crest);                                                        // the chamfered face, with its raised parapet
+    c.R("front", cw, 0, w - cw, hh);
+    var fw = w - cw - 9 * u, ng = Math.max(1, Math.round(fw / (36 * u)));
+    for (i = 0; i < n; i++) {                                                                       // a ribbon window round all three faces
+      var yb = gf + i * fh + fh * 0.3, bh = fh * 0.46;
+      c.W("sideGlass", 0, d - 5 * u, 0, cz + 3 * u, yb, yb + bh);
+      c.W("midGlass", cw * 0.08, cz * 0.92, cw * 0.92, cz * 0.08, yb, yb + bh);
+      if (lod > 1) {
+        c.split("glass", cw + 3 * u, yb, fw, bh * 0.6, ng, t); c.split("hi", cw + 3 * u, yb + bh * 0.6, fw, bh * 0.4, ng, t);
+        if (i % 2 === 0) c.pane(cw + 3 * u + (i % ng) * (fw + t) / ng, yb, (fw - (ng - 1) * t) / ng, bh);
+      } else c.R("glass", cw + 3 * u, yb, fw, bh);
+    }
+    if (lod) {
+      c.W("deep", cw * 0.24, cz * 0.76, cw * 0.76, cz * 0.24, 0, gf - 10 * u);                      // the entrance, on the corner
+      c.W("lite", cw * 0.1, cz * 0.9, cw * 0.9, cz * 0.1, gf - 10 * u, gf - 5 * u);
+      c.split("deep", cw + 7 * u, 0, w - cw - 14 * u, gf - 12 * u, Math.max(1, ng), 7 * u);
+      if (lod > 1) {
+        c.R("board", cw + 4 * u, gf - 12 * u, w - cw - 8 * u, 6 * u);
+        c.W("board", cw * 0.22, cz * 0.78, cw * 0.78, cz * 0.22, hh - 13 * u, hh + crest - 4 * u);  // a blank plate on the parapet
+      }
+      c.R("lite", cw, hh - 4 * u, w - cw, 4 * u); c.edge(w, 0, hh);
+    }
+    c.info.castLeft = cw;
+  }
+  /* L: the low block, seen from above its roof */
+  function cityL(c, w, hh, v) {
+    var u = c.u, lod = c.lod, t = c.t, d = CITY_DEPTH.L(w, u), n = Math.max(2, Math.round((hh - 6 * u) / (31 * u))), fh = (hh - 6 * u) / n, i, b;
+    var nb = Math.max(1, Math.round((w - 12 * u) / (52 * u))), bw = (w - 12 * u) / nb;
+    c.box(0, w, 0, hh, 0, d);
+    if (!lod) return;
+    c.split("deep", 7 * u, 0, w - 14 * u, fh * 0.74, nb, 8 * u);                                    // shop fronts
+    for (b = 0; b < nb; b++) if ((b + v) % 3 !== 1) c.R((b + v) % 2 ? "board" : "trim", 6 * u + b * bw + 2 * u, fh * 0.6, bw - 4 * u, 8 * u);   // blank awnings
+    for (i = 1; i < n; i++) for (b = 0; b < nb; b++) {                                              // windows in pairs, on one sill
+      var wx = 6 * u + b * bw + bw * 0.13, ww = bw * 0.32, wy = i * fh + fh * 0.3, wh = fh * 0.48;
+      c.R("glass", wx, wy, ww, wh); c.R("glass", wx + bw * 0.42, wy, ww, wh);
+      if (lod > 1) { c.R("lite", wx - 2 * u, wy - t, bw * 0.74 + 4 * u, t); if ((b + i) % 2 === 0) c.pane(wx, wy, ww, wh); }
+    }
+    c.R("trim", w - 9 * u, 0, t, hh - 5 * u);                                                       // a downpipe
+    c.R("lite", 0, hh - 4 * u, w, 4 * u); c.edge(w, 0, hh);
+    if (hh >= c.E - 6 * u) return;
+    c.layer();                                                                                      // what stands on the roof
+    c.box(w * 0.6, 34 * u, hh, hh + 28 * u, 28 * u, 30 * u);                                        // stair head and its door
+    c.R("deep", w * 0.6 + 19 * u, hh, 10 * u, 20 * u, 28 * u);
+    for (i = 0; i < (w > 150 * u ? 2 : 1); i++) {                                                   // water tanks on legs
+      var tx = w * 0.1 + i * 45 * u;
+      c.R("side", tx + 6 * u, hh, t, 11 * u, 36 * u); c.R("side", tx + 25 * u, hh, t, 11 * u, 36 * u);
+      c.cap("lite", tx, hh + 9 * u, 36 * u, 19 * u, 36 * u); c.R("trim", tx + 16 * u, hh + 9 * u, t, 19 * u, 36 * u);
+    }
+    if (w > 180 * u) { c.box(w * 0.82, 22 * u, hh, hh + 13 * u, 46 * u, 12 * u); }                  // a condenser
+    c.R("trim", 2 * u, hh + 14 * u, w - 4 * u, t, 3 * u);                                           // the roof fence: a rail on posts
+    var np = Math.max(2, Math.round(w / (30 * u)));
+    for (i = 0; i <= np; i++) c.R("trim", 2 * u + i * (w - 4 * u - t) / np, hh, t, 14 * u, 3 * u);
+  }
+  /* B: the building under a billboard */
+  function cityB(c, w, hh, v) {
+    var u = c.u, lod = c.lod, t = c.t, d = CITY_DEPTH.B(w, u), n = Math.max(3, Math.round((hh - 8 * u) / (31 * u * (lod ? 1 : 2)))), fh = (hh - 8 * u) / n, i;
+    var sg = lod ? 30 * u : 0, bwid = w * 0.94, bx = w * 0.03, bh = Math.min(78 * u, w * 0.56), by = hh + 15 * u;
+    c.box(0, w, 0, hh, 0, d);
+    for (i = 1; i < n; i++) {
+      if (lod > 1) {
+        c.split("glass", 6 * u, i * fh + fh * 0.26, w - sg - 10 * u, fh * 0.32, 2, 7 * u); c.split("hi", 6 * u, i * fh + fh * 0.58, w - sg - 10 * u, fh * 0.2, 2, 7 * u);
+        if (i % 2) c.pane(6 * u, i * fh + fh * 0.26, (w - sg - 17 * u) / 2, fh * 0.52);
+      } else c.R("glass", 6 * u, i * fh + fh * 0.28, w - sg - 10 * u, fh * 0.48);
+    }
+    if (!lod) return;
+    c.split("deep", 6 * u, 0, w - 12 * u, fh * 0.72, 2, 8 * u); c.edge(w, 0, hh);
+    c.R("board", w - sg + 3 * u, hh * 0.24, sg - 9 * u, hh * 0.64);                                 // the wall sign, blank blocks
+    var bl = (hh * 0.64 - 8 * u) / 3;
+    for (i = 0; i < 3; i++) c.R("trim", w - sg + 8 * u, hh * 0.24 + 7 * u + i * bl, sg - 19 * u, bl - 6 * u);
+    c.R("lite", 0, hh - 4 * u, w, 4 * u);
+    // the billboard: a blank board on a steel frame, standing on the roof's edge
+    c.R("trim", bx + bwid * 0.14, hh - 2 * u, t + 1, 19 * u); c.R("trim", bx + bwid * 0.5 - t / 2, hh - 2 * u, t + 1, 19 * u); c.R("trim", bx + bwid * 0.86 - t, hh - 2 * u, t + 1, 19 * u);
+    c.W("side", bx, 9 * u, bx, 0, by, by + bh);
+    c.R("board", bx, by, bwid, bh);
+    c.R("trim", bx, by, bwid, t); c.R("trim", bx, by + bh - t, bwid, t);
+    c.cap("trim", bx + 9 * u, by + bh * 0.44, bwid * 0.52, bh * 0.26);
+    c.R("trim", bx + 9 * u, by + bh * 0.2, bwid * 0.3, Math.max(t, 6 * u)); c.R("trim", bx + 9 * u + bwid * 0.36, by + bh * 0.2, bwid * 0.2, Math.max(t, 6 * u));
+  }
+  /* X: the building site. v: bit 0 moves the crane's mast, bit 1 turns its jib to the left. */
+  function cityX(c, w, hh, v) {
+    var u = c.u, lod = c.lod, t = c.t, d = CITY_DEPTH.X(w, u), cell = 32 * u * (lod > 1 ? 1 : 1.6);
+    var nx = Math.max(2, Math.round(w / cell)), cwd = w / nx, ny = Math.max(3, Math.round(hh / cell)), chh = hh / ny, i, y;
+    var mz = d * 0.5, mx = w * (v % 2 ? 0.34 : 0.62), mt = hh + 165 * u, mb = hh - 24 * u, hw = 6.5 * u;
+    // the crane's mast, standing inside the frame: two chords and a zigzag web
+    if (lod > 1) {
+      c.R("lite", mx - hw, mb, t, mt - mb, mz); c.R("lite", mx + hw - t, mb, t, mt - mb, mz);
+      var seg = 15 * u, k = 0;
+      for (y = mb; y < mt - seg * 0.5; y += seg, k++) {
+        var xa = k % 2 ? mx + hw - t : mx - hw, xb = k % 2 ? mx - hw : mx + hw - t;
+        c.P("lite", [xa, y, mz, xa + t, y, mz, xb + t, y + seg, mz, xb, y + seg, mz]);
+      }
+    } else c.R("lite", mx - Math.max(2.5, 4 * u), mb, Math.max(5, 8 * u), mt - mb, mz);
+    c.layer();
+    // the steel frame: dark between floors, pale columns and beams
+    c.box(0, w, 0, hh, 0, d, { side: "deep", front: "deep", noTop: 1 });
+    if (lod) {
+      for (i = 0; i <= nx; i++) c.R("lite", Math.min(w - t, Math.max(0, i * cwd - t / 2)), 0, t, hh + (i % 2 ? 10 * u : 0));
+      for (i = 1; i <= ny; i++) c.R("lite", 0, i * chh - t, w, t);
+    }
+    c.layer();
+    // the mesh sheet: all of the upper floors, stepping down toward the lit corner
+    var m1 = Math.round(ny * 0.52) * chh, m2 = Math.round(ny * 0.26) * chh, m3 = chh * 0.55, x2 = Math.round(nx * 0.4) * cwd, x3 = Math.round(nx * 0.72) * cwd, mtop = hh + 7 * u;
+    c.R("front", 0, m1, w, mtop - m1); c.R("front", x2, m2, w - x2, m1 - m2 + 1); c.R("front", x3, m3, w - x3, m2 - m3 + 1);
+    c.W("side", 0, d, 0, 0, m1, mtop);
+    if (lod) {
+      for (i = 1; i < nx; i++) { var sx = i * cwd, sy = sx >= x3 - 1 ? m3 : sx >= x2 - 1 ? m2 : m1; c.R("trim", sx - t / 2, sy, t, mtop - sy); }
+      for (y = m1 + 2 * chh; y < hh - chh * 0.5; y += 2 * chh) c.R("trim", 0, y - t / 2, w, t);
+      c.R("board", -3 * u, 0, w + 6 * u, 24 * u); c.R("safety", -3 * u, 15 * u, w + 6 * u, Math.max(t, 4 * u));   // the hoarding
+    }
+    c.info.crane = [c.px(mx, mz), c.py(mt, mz), u, v];
+  }
+  var CITY_TYPES = { G: cityG, M: cityM, S: cityS, P: cityP, D: cityD, C: cityC, L: cityL, B: cityB, X: cityX };
+
+  /* A row, composed by hand: [type, x, width, height, variant, material] from left to right. x is where the
+     lit front starts, in the coordinates the row was composed in (dx moves them into the tier's own).
+     ref is the row's usual roofline, for SKYLINE_SIZE. A building is pushed right if it would touch the
+     one before it, so inside a row nothing overlaps and the drawing order cannot matter. */
+  function cityRow(look, baseY, ref, dx, spec) {
+    var items = [], cur = -1e9, u = look.u, S = SKYLINE_SIZE, i, j;
+    for (i = 0; i < spec.length; i++) {
+      var e = spec[i], t = e[0], w = e[2];
+      var xl = CITY_DEPTH[t](w, u) * 0.9 + (t === "M" || t === "P" ? 9 * u : 0), xr = t === "P" ? 17 * u : 0;
+      var x = Math.round(Math.max(e[1] + dx, cur + xl + 2)), hh = Math.max(50, Math.round(e[3] * S.base + (e[3] - ref) * (S.amp - 1)));
+      items.push({ t: t, x: x, w: w, h: hh, v: e[4] || 0, m: e[5] || CITY_MATS[t], xl: xl, x0: x - xl - 3, x1: x + w + xr + 3, cast: [], node: null, info: null });
+      cur = x + w + xr;
+    }
+    var N = 1;                                      // the most buildings ever in view at once
+    for (i = 0; i < items.length; i++) { var n = 0; for (j = i; j < items.length && items[j].x0 < items[i].x1 + 1985; j++) n++; if (n > N) N = n; }
+    return { look: look, baseY: baseY, items: items, N: N + 1, cranes: null };
+  }
+  // a building in the front row throws a shadow on the one behind it: recorded on the back row before anything is drawn
+  function cityShade(back, front) {
+    back.items.forEach(function (B) {
+      front.items.forEach(function (F) {
+        var u = front.look.u, lx = F.x - B.x, a = F.xl + 26 * u, hh = F.h;
+        if (F.t === "D") {                                         // the tower first, then the podium's own corner
+          var tl = lx + (F.v % 2 ? 0.05 : 0.41) * F.w - 16 * u;
+          if (tl > 14 && tl - 60 * u < B.w - 6) B.cast.push([tl, hh, 60 * u]);
+          hh = Math.min(hh * 0.42, 122 * u);
+        } else if (F.t === "S") hh *= F.v % 2 ? 0.52 : 0.5;        // a stepped tower's corner is its lowest stage
+        if (lx > 14 && lx - a < B.w - 6 && hh > 60) B.cast.push([lx, hh + 2, a]);
+      });
+    });
+  }
+  function cityNode(it, row) {
+    if (it.node) return it.node;
+    var look = row.look, c = cityCtx(it.x, row.baseY, look.u, look.lod), pal = cityPal(it.m, look.air), i, j;
+    CITY_TYPES[it.t](c, it.w, it.h, it.v);
+    if (it.cast.length && look.lod) {
+      var x0 = c.info.castLeft || 0, yT = c.info.castTop || it.h;
+      for (i = 0; i < it.cast.length; i++) {
+        var s = it.cast[i], q = _clipPoly([[s[0], 0], [s[0], s[1]], [s[0] - s[2], s[1] - s[2] * 0.85], [s[0] - s[2], 0]], x0, 0, it.w, yT);
+        if (q.length > 2) { var p = []; for (j = 0; j < q.length; j++) p.push(q[j][0], q[j][1], 0); c.P("cast", p); }
+      }
+    }
+    it.info = c.info;
+    return it.node = h("g", null, c.done(pal));
+  }
+  /* Draw a row. off is the tier's x offset on screen. Each building keeps its own slot in the list (its
+     index modulo the slot count), so one entering or leaving the picture touches only its own slot and the
+     list never changes length. */
+  var CITY_EMPTY = h("g", null);
+  function CityRow(row, off) {
+    var it = row.items, N = row.N, out = null, i, j;
+    for (i = 0; i < it.length; i++) if (it[i].x1 + off > -30 && it[i].x0 + off < 1950) {
+      if (!out) { out = []; for (j = 0; j < N; j++) out.push(CITY_EMPTY); }
+      out[i % N] = cityNode(it[i], row);
+    }
+    return out ? h("g", null, out) : CITY_EMPTY;      // a row wholly out of view (the far copy of scene 03's loop) is one empty group
+  }
+  /* The tower cranes of a row: the arm (jib, counter-jib, ties, counterweight) is drawn once; slewing is
+     the arm's width changing as it turns away from us, very slowly. The trolley runs along the jib and the
+     hook rises and falls on its own slow phases. */
+  var CITY_JIB = 185;                    // the jib's length at scale 1
+  function cityArm(u, pal) {
+    var t = Math.max(3, 3.6 * u), JL = CITY_JIB * u, CL = 54 * u, AP = 34 * u, steel = "", i;
+    var n1 = function (v) { return Math.round(v * 10) / 10; };
+    var R = function (x, y, w, hh) { return "M" + n1(x) + "," + n1(y) + "h" + n1(w) + "v" + n1(hh) + "h" + n1(-w) + "z"; };
+    var Q = function (p) { var d = ""; for (var q = 0; q < p.length; q += 2) d += (q ? "L" : "M") + n1(p[q]) + "," + n1(p[q + 1]); return d + "z"; };
+    var topY = function (x) { return -14 * u + (x / JL) * 9 * u; };                    // the jib's top chord, falling toward the tip
+    steel += R(0, -t, JL - 15 * u, t + 1);
+    steel += Q([2 * u, topY(0), JL - 15 * u, topY(JL - 15 * u), JL - 15 * u, topY(JL - 15 * u) + t, 2 * u, topY(0) + t]);
+    var ns = 10, sg = (JL - 19 * u) / ns;
+    for (i = 0; i < ns; i++) {
+      var xa = 2 * u + i * sg, xb = xa + sg, up = i % 2 === 0;
+      steel += Q([xa, up ? -t : topY(xa) + t, xa + t, up ? -t : topY(xa) + t, xb + t, up ? topY(xb) + t : -t, xb, up ? topY(xb) + t : -t]);
+    }
+    steel += Q([0, -AP, JL * 0.6, topY(JL * 0.6), JL * 0.6, topY(JL * 0.6) + t, 0, -AP + t]);        // tie to the jib
+    steel += Q([0, -AP, -CL + 8 * u, -t - 2, -CL + 8 * u, -2, 0, -AP + t]);                          // tie to the counter-jib
+    steel += R(-CL, -t - 1, CL, t + 2);
+    return h("g", null,
+      h("path", { d: steel, fill: pal.lite }),
+      h("path", { d: R(-CL, 0, 15 * u, 15 * u), fill: pal.deep }),
+      h("path", { d: R(JL - 15 * u, -t - 3 * u, 15 * u, t + 4 * u), fill: pal.safety }));
+  }
+  function cityCraneHead(u, pal) {
+    var t = Math.max(3, 3.6 * u);
+    return h("g", null,
+      h("rect", { x: (-t / 2).toFixed(1), y: (-34 * u).toFixed(1), width: t.toFixed(1), height: (34 * u).toFixed(1), fill: pal.lite }),
+      h("rect", { x: (-8.5 * u).toFixed(1), y: 0, width: (17 * u).toFixed(1), height: (6 * u).toFixed(1), fill: pal.deep }),
+      h("rect", { x: (3 * u).toFixed(1), y: (5 * u).toFixed(1), width: (14 * u).toFixed(1), height: (13 * u).toFixed(1), fill: pal.board }),
+      h("rect", { x: (9 * u).toFixed(1), y: (7 * u).toFixed(1), width: (8 * u).toFixed(1), height: (6 * u).toFixed(1), fill: pal.deep }));
+  }
+  // where something at x in a tier stands when the tier has moved by off; on a loop of length tile, its nearest copy
+  function cityAt(x, off, tile) { x += off || 0; return tile ? ((x + 960) % tile + tile) % tile - 960 : x; }
+  function CityCranes(row, time, off, tile) {
+    if (!row.cranes) {
+      row.cranes = [];
+      row.items.forEach(function (it, i) {
+        if (it.t !== "X") return;
+        cityNode(it, row);
+        var k = it.info.crane, pal = cityPal(it.m, row.look.air);
+        row.cranes.push({ x: k[0], y: k[1], u: k[2], dir: (k[3] >> 1) % 2 ? -1 : 1, ph: i * 1.7 + it.x * 0.003, pal: pal, arm: cityArm(k[2], pal), head: cityCraneHead(k[2], pal) });
+      });
+    }
+    return h("g", null, row.cranes.map(function (k) {
+      var u = k.u, t = Math.max(3, 3.6 * u), s = (0.76 + 0.2 * Math.sin(time * 0.11 + k.ph)) * k.dir;
+      var tr = (0.36 + 0.3 * (0.5 + 0.5 * Math.sin(time * 0.083 + k.ph * 2.1))) * CITY_JIB * u * s;
+      var drop = (44 + 22 * Math.sin(time * 0.097 + k.ph * 1.3)) * u;
+      return h("g", { transform: "translate(" + cityAt(k.x, off, tile).toFixed(1) + "," + k.y + ")" },
+        h("g", { transform: "scale(" + s.toFixed(4) + ",1)" }, k.arm),
+        h("rect", { x: (tr - t / 2).toFixed(1), y: 0, width: t.toFixed(1), height: drop.toFixed(1), fill: k.pal.deep }),
+        h("rect", { x: (tr - 4.5 * u).toFixed(1), y: drop.toFixed(1), width: (9 * u).toFixed(1), height: (8 * u).toFixed(1), fill: k.pal.safety }),
+        k.head);
+    }));
+  }
+  /* Window light: a thin layer over a tier, a pure function of time. def (in the coordinates the rows were
+     composed in, dx as for the rows): sheen [[x, phase]] = the glass tower nearest x; glint [[x, height
+     above the ground, period, phase]] and warm [[x, height, phase]] = the pane nearest that point. */
+  function cityLights(rows, dx, def) {
+    var L = { sheen: [], glint: [], warm: [] };
+    var near = function (x, y, glass, room) {
+      var best = null, bd = 1e9;
+      rows.forEach(function (row) {
+        row.items.forEach(function (it) {
+          if (Math.abs(it.x + it.w / 2 - x) > 240) return;
+          cityNode(it, row);
+          if (glass) { var dg = Math.abs(it.x + it.w / 2 - x); if (it.info.glass && dg < bd) { bd = dg; best = it.info.glass; } return; }
+          (it.info.panes || []).forEach(function (p) {
+            var dd = Math.abs(p[0] + p[2] / 2 - x) + Math.abs(p[1] + p[3] / 2 - (row.baseY - y));
+            if (dd < bd && !(room && p[3] > p[2] * 1.6)) { bd = dd; best = p; }
+          });
+        });
+      });
+      return best;
+    };
+    (def.sheen || []).forEach(function (s) { var g = near(s[0] + dx, 0, true); if (g) L.sheen.push({ g: g, ph: s[1] }); });
+    (def.glint || []).forEach(function (s) { var p = near(s[0] + dx, s[1]); if (p) L.glint.push({ r: p, T: s[2], ph: s[3] }); });
+    (def.warm || []).forEach(function (s) { var p = near(s[0] + dx, s[1], false, true); if (p) L.warm.push({ r: p, ph: s[2] }); });
+    return L;
+  }
+  function CityLights(L, time, off, tile) {
+    return h("g", null,
+      // the sheen: two bands of sky sliding down the glass on the light's diagonal, 11 s of travel in every 20
+      L.sheen.map(function (s) {
+        var g = s.g, p = ((((time + s.ph) % 20) + 20) % 20) / 11;
+        if (p >= 1) return h("path", { d: "M0,0", fill: "#ffffff", opacity: 0 });
+        var xl = cityAt(g[0], off, tile), xr = xl + g[2], sl = g[2] * 0.85, yr = g[1] - 130 - sl + (g[3] + sl + 150) * p;
+        var band = function (a, b) { return _polyD(_clipPoly([[xr, yr + a], [xr, yr + b], [xl, yr + b + sl], [xl, yr + a + sl]], xl, g[1], xr, g[1] + g[3])); };
+        return h("path", { d: (band(0, 74) + band(92, 108)) || "M0,0", fill: "#ffffff", opacity: (0.3 * Math.pow(Math.sin(Math.PI * p), 0.7)).toFixed(3) });
+      }),
+      // single panes that catch the sun and let it go, each on its own slow phase
+      L.glint.map(function (s) {
+        var k = Math.max(0, Math.sin(time * 6.2832 / s.T + s.ph));
+        return h("rect", { x: cityAt(s.r[0], off, tile).toFixed(1), y: s.r[1], width: s.r[2], height: s.r[3], fill: DAY.lit, opacity: (0.92 * k * k * k).toFixed(3) });
+      }),
+      // a room with its lamp on: always warm, brightening and settling very slowly
+      L.warm.map(function (s) {
+        var k = 0.5 - 0.5 * Math.cos(time * 6.2832 / 31 + s.ph), wx = cityAt(s.r[0], off, tile).toFixed(1);
+        return h("g", null,
+          h("rect", { x: wx, y: s.r[1], width: s.r[2], height: s.r[3], fill: DAY.warm }),
+          h("rect", { x: wx, y: s.r[1], width: s.r[2], height: s.r[3], fill: DAY.cityWarmLit, opacity: (0.8 * k).toFixed(3) }));
+      }));
+  }
+
+  /* ---- scenes 01 and 02: the street's skyline, three tiers. Composed in scene 01's screen coordinates
+     (scene 02 shows the same rows 1092 px further on for the near tier, 672 for the far, 378 for the deep).
+     The tallest and strongest stand right of x 1150; left of it nothing rises into the headline; round
+     Tokyo Tower (x 1500 to 1750) the near tier is left open and the far tier kept low. In scene 02 the
+     glass tower and the building site frame the warehouse on the right. ---- */
+  var _cityW = null;
+  function cityWorld() {
+    if (_cityW) return _cityW;
+    var c = {
+      deep: cityRow(CITY_LOOK.deep, GROUND, 320, -36, [
+        ["M", -60, 130, 300, 0, "c"], ["G", 112, 72, 400, 0, "n"], ["S", 252, 96, 360, 0, "c"], ["D", 420, 150, 420, 0, "c"],
+        ["M", 640, 150, 320, 0, "c"], ["G", 850, 70, 410, 1, "n"], ["S", 1002, 90, 400, 0, "c"], ["G", 1128, 76, 500, 0, "n"],
+        ["S", 1448, 80, 470, 0, "c"], ["M", 1566, 140, 280, 0, "c"], ["D", 1794, 140, 430, 0, "c"], ["G", 1996, 76, 520, 0, "n"],
+        ["S", 2134, 96, 450, 0, "c"], ["M", 2290, 150, 330, 0, "c"], ["G", 2484, 70, 400, 1, "n"]]),
+      farBack: cityRow(CITY_LOOK.farBack, GROUND, 400, -64, [
+        ["G", 150, 96, 380, 1, "n"], ["S", 620, 110, 400, 0, "c"], ["G", 1226, 118, 612, 0, "g"], ["S", 1392, 100, 500, 0, "d"],
+        ["S", 2130, 110, 420, 1, "c"]]),
+      far: cityRow(CITY_LOOK.far, GROUND, 340, -64, [
+        ["S", 40, 118, 400, 1, "c"], ["M", 262, 170, 330, 0, "t"], ["D", 470, 210, 400, 0, "c"], ["C", 760, 120, 330, 0, "t"],
+        ["B", 932, 100, 300, 0, "d"], ["D", 1085, 190, 440, 0, "d"], ["M", 1306, 150, 340, 1, "t"], ["M", 1516, 180, 270, 0, "c"],
+        ["X", 1778, 130, 420, 0, "m"], ["S", 1975, 120, 500, 1, "d"], ["C", 2190, 130, 360, 0, "t"], ["M", 2360, 150, 300, 0, "c"],
+        ["G", 2524, 104, 470, 1, "g"]]),
+      nearBack: cityRow(CITY_LOOK.nearBack, GROUND, 340, -104, [
+        ["C", 24, 176, 340, 0, "t"], ["S", 420, 150, 380, 0, "d"], ["G", 660, 118, 400, 1, "n"], ["C", 850, 150, 300, 0, "c"],
+        ["G", 1256, 124, 400, 0, "n"], ["S", 2060, 150, 390, 1, "c"], ["B", 2300, 120, 300, 0, "d"], ["G", 2570, 126, 600, 0, "n"],
+        ["X", 2747, 180, 430, 0, "m"], ["S", 3000, 140, 420, 0, "d"]]),
+      near: cityRow(CITY_LOOK.near, GROUND, 260, -104, [
+        ["L", -110, 190, 150, 0, "t"], ["P", 172, 54, 310, 0, "d"], ["M", 300, 230, 300, 1, "c"], ["B", 610, 130, 240, 0, "d"],
+        ["L", 800, 150, 130, 1, "t"], ["M", 1036, 204, 335, 0, "t"], ["P", 1412, 54, 300, 1, "c"], ["D", 1790, 250, 400, 1, "d"],
+        ["L", 2100, 180, 150, 0, "c"], ["C", 2330, 160, 260, 0, "t"], ["M", 2582, 210, 300, 1, "t"], ["L", 2826, 190, 140, 1, "c"],
+        ["B", 3060, 130, 250, 1, "d"]])
+    };
+    cityShade(c.farBack, c.far); cityShade(c.nearBack, c.near);
+    c.farLights = cityLights([c.farBack, c.far], -64, { sheen: [[1285, 0]] });
+    c.nearLights = cityLights([c.nearBack, c.near], -104, {
+      sheen: [[2633, 10]],
+      glint: [[1110, 250, 13, 0.4], [1436, 190, 17, 2.6], [1870, 300, 11, 4.4], [2620, 430, 15, 1.2], [2960, 110, 19, 3.3]],
+      warm: [[1905, 262, 0.8], [2870, 75, 3.6]]
+    });
+    return _cityW = c;
+  }
+  /* ---- scene 03: the city along the expressway, two tiers on a 3840 px loop (the scene only ever
+     travels about 330 px of the far tier and 760 of the near one). Low where Mt Fuji stands behind it
+     (the first 1500 px of the far tier, 1950 of the near), so the mountain reads whole above the roofs;
+     the towers stand to the right of it. ---- */
+  var CITY_TILE = 3840, _cityT = null;
+  function cityTransit() {
+    if (_cityT) return _cityT;
+    var c = {
+      farBack: cityRow(CITY_LOOK.farBack, ROAD_Y, 380, 0, [
+        ["G", 170, 92, 300, 0, "n"], ["S", 700, 100, 330, 0, "c"], ["G", 1130, 90, 320, 1, "g"], ["G", 1600, 112, 540, 0, "g"],
+        ["S", 1800, 100, 470, 0, "d"], ["G", 2030, 96, 430, 1, "n"], ["S", 2640, 100, 420, 0, "c"], ["G", 3190, 100, 470, 0, "g"],
+        ["S", 3480, 96, 380, 1, "d"]]),
+      far: cityRow(CITY_LOOK.far, ROAD_Y, 300, 0, [
+        ["M", 60, 170, 280, 0, "t"], ["C", 290, 120, 320, 0, "c"], ["M", 470, 150, 250, 1, "c"], ["D", 670, 180, 340, 0, "c"],
+        ["S", 900, 110, 330, 0, "d"], ["C", 1060, 120, 300, 0, "t"], ["M", 1240, 170, 290, 0, "t"], ["B", 1480, 100, 290, 0, "d"],
+        ["D", 1700, 200, 470, 0, "d"], ["M", 1950, 160, 370, 0, "t"], ["S", 2160, 120, 500, 1, "c"], ["X", 2340, 130, 390, 0, "m"],
+        ["M", 2520, 170, 300, 1, "c"], ["C", 2740, 130, 340, 0, "t"], ["B", 2920, 100, 260, 0, "d"], ["D", 3090, 200, 420, 1, "c"],
+        ["M", 3340, 180, 280, 0, "t"], ["S", 3570, 110, 350, 0, "d"]]),
+      nearBack: cityRow(CITY_LOOK.nearBack, ROAD_Y, 320, 0, [
+        ["S", 130, 140, 330, 0, "d"], ["M", 730, 190, 290, 0, "c"], ["G", 1215, 110, 330, 1, "n"], ["S", 1500, 130, 330, 1, "c"],
+        ["G", 2040, 124, 450, 0, "n"], ["X", 2250, 180, 380, 0, "m"], ["S", 2560, 150, 420, 0, "d"], ["G", 2990, 120, 400, 1, "n"],
+        ["B", 3300, 120, 300, 0, "d"], ["S", 3560, 130, 340, 1, "c"]]),
+      near: cityRow(CITY_LOOK.near, ROAD_Y, 240, 0, [
+        ["L", 40, 190, 160, 0, "t"], ["M", 280, 210, 300, 0, "t"], ["P", 570, 54, 320, 0, "d"], ["L", 690, 170, 150, 1, "c"],
+        ["C", 940, 160, 270, 0, "t"], ["L", 1160, 160, 160, 0, "c"], ["M", 1400, 215, 310, 1, "t"], ["P", 1700, 52, 310, 1, "c"],
+        ["L", 1830, 170, 150, 0, "t"], ["M", 2110, 200, 290, 0, "t"], ["L", 2390, 180, 140, 1, "c"], ["D", 2680, 250, 430, 0, "d"],
+        ["C", 3010, 160, 280, 0, "t"], ["M", 3250, 210, 300, 1, "c"], ["P", 3540, 54, 310, 0, "d"], ["L", 3640, 150, 150, 0, "t"]])
+    };
+    cityShade(c.farBack, c.far); cityShade(c.nearBack, c.near);
+    c.lights = cityLights([c.nearBack, c.near], 0, {
+      sheen: [[2100, 4]],
+      glint: [[385, 200, 13, 0.4], [597, 180, 17, 2.6], [1020, 170, 11, 4.4], [2790, 300, 15, 1.2], [2200, 210, 19, 3.3]],
+      warm: [[1726, 200, 0.8], [2470, 80, 3.6]]
+    });
+    return _cityT = c;
+  }
+  /* ---- scene 05: the finale's city, nothing moving but its light. A low belt in front of Mt Fuji so the
+     mountain stands whole above it, a knot of towers between the mountain and Tokyo Tower, a second knot
+     right of the Tower, the Tower's own corridor kept low. ---- */
+  var _cityN = null;
+  function cityFinale() {
+    if (_cityN) return _cityN;
+    var c = {
+      far: cityRow(CITY_LOOK.far, 1008, 300, 0, [
+        ["M", 20, 150, 210, 0, "t"], ["S", 215, 100, 260, 0, "c"], ["M", 360, 170, 200, 1, "c"], ["C", 570, 110, 240, 0, "t"],
+        ["B", 725, 96, 200, 0, "d"], ["D", 860, 170, 340, 0, "c"], ["S", 1075, 110, 440, 0, "d"], ["M", 1275, 150, 230, 0, "t"],
+        ["S", 1500, 100, 430, 1, "c"], ["G", 1625, 104, 560, 0, "g"], ["D", 1775, 150, 470, 1, "d"]]),
+      back: cityRow(CITY_LOOK.nearBack, 1010, 300, 0, [
+        ["M", 150, 180, 190, 0, "t"], ["B", 395, 110, 170, 0, "d"], ["L", 560, 150, 130, 1, "c"], ["C", 800, 140, 250, 0, "t"],
+        ["G", 986, 118, 430, 0, "n"], ["P", 1150, 50, 300, 0, "d"], ["X", 1572, 150, 390, 1, "m"], ["S", 1778, 140, 430, 0, "d"]]),
+      front: cityRow(CITY_LOOK.near, 1010, 220, 0, [
+        ["L", 1590, 165, 150, 0, "c"], ["C", 1815, 150, 240, 0, "t"]])
+    };
+    cityShade(c.back, c.front);
+    c.lights = cityLights([c.back, c.front], 0, {
+      sheen: [[1045, 2]],
+      glint: [[240, 130, 13, 0.4], [880, 150, 17, 2.6], [1180, 200, 11, 4.4], [1900, 150, 15, 1.2], [1660, 80, 19, 3.3]],
+      warm: [[900, 90, 0.8], [1880, 100, 3.6]]
+    });
+    return _cityN = c;
+  }
+  /* Tokyo Tower, round 3: drawn again from a blank page as the structure it is, in the city's one oblique
+     (the near face square to the picture, the far face behind it to the left and a tone down).
+     - The ground: one flat contact shadow; four splayed footings; the low podium building that stands
+       under the tower, between the legs.
+     - FOUR legs, each an open lattice column (two chords, bracing, struts). The near pair stands in
+       front of the podium, the far pair rises behind it. An arch with thickness, a shaded soffit and a
+       lit top edge is framed between the near legs and hung from the girder; the far arch shows behind.
+     - Above the girder: corner posts, one big X per panel with a gusset where it crosses, the lift
+       shaft up the middle.
+     - The two-storey main deck and the small top deck are boxes with glazing, a lit end, a shaded
+       return, and a shadow thrown on the lattice under them; then the antenna drum, the banded mast,
+       the needle and its lamp.
+     - Orange and white bands run over the whole height. Light is per FACE: everything on the near face
+       is the base colour (its right edges lit), everything on the far and left faces is one tone down
+       (orange pushed toward navy, white toward periwinkle).
+     Coordinates: t = height as a fraction of the tower, a = px right of a face's centre line,
+     d = depth (0 the near face, 1 the far face). Same props, place, height and footprint as before.
+     Two cached groups, with the moving parts between and after them, all pure functions of p.time:
+     a reflection crossing the main deck's glass, the lift car riding inside the lattice between the
+     podium roof and the main deck, the aviation lamp at the tip. */
   var _ttMemo = {};
+  DAY.towerOrange = "#e4553b";        // Tokyo Tower's own red-orange: the face toward the sun (nothing else uses it)
+  DAY.towerOrangeLit = "#f08a6c";     // its sunlit edges
+  DAY.towerOrangeShade = "#ab4a45";   // the faces away from the sun: orange pushed toward navy
+  DAY.towerWhite = "#f5f8fc";         // white bands, deck panels, copings, footings
+  DAY.towerWhiteShade = "#c6d3e9";    // white away from the sun: periwinkle
+  DAY.towerStone = "#dde4ed";         // the podium's wall
+  DAY.towerSteel = "#b3bfd1";         // roofs, skirts, the stone's shaded side, the contact shadow on the ground
+  DAY.towerSteelShade = "#8693aa";    // soffits and undersides
+  DAY.towerGlass = "#364b70";         // deck and podium glazing
+  DAY.towerGlassSky = "#7c9ac5";      // the sky reflected across the top of a pane
+  DAY.towerGlassShade = "#2a3b5b";    // glazing on a shaded face
+  DAY.towerLamp = "#c23f2f";          // the aviation lamp, resting
+  DAY.towerLampLit = "#ffc4b2";       // the aviation lamp, lit
   function TokyoTower(p) {
     var cx = p.cx, baseY = p.baseY, H = p.h, time = p.time || 0, u = H / 770;
-    var key = cx + "|" + baseY + "|" + H;
-    if (!_ttMemo[key]) {
+    var key = cx + "|" + baseY + "|" + H, m = _ttMemo[key];
+    if (!m) {
       var r1 = function (v) { return Math.round(v * 10) / 10; };
-      var Y = function (t) { return baseY - t * H; };
-      var hwL = function (t) { return 137 * u * Math.exp(-2.72 * t); };                       // the legs: a flare
-      var hwU = function (t) { return (40 - (t - 0.455) / 0.265 * 25.5) * u; };               // above the deck: a straight taper
-      var RED = "#e4553b", REDS = mix(RED, "#1d3156", 0.3), REDL = mix(RED, "#ffffff", 0.2);
-      var WHT = "#f4f7fb", WHTS = "#c9d6e8", GRY = "#b4bfcc", GRYS = "#8793a5", GLS = "#34445e";
-      var F = { red: "", reds: "", redl: "", wht: "", whts: "", gry: "", grys: "", gls: "" }, S = { red: "", reds: "", wht: "", whts: "" };
-      var poly = function (k, pts) { F[k] += "M" + pts.map(function (q) { return r1(q[0]) + "," + r1(q[1]); }).join("L") + "z"; };
-      var rect = function (k, x, y, w, hh) { poly(k, [[x, y], [x + w, y], [x + w, y + hh], [x, y + hh]]); };
-      var seg = function (k, x0, y0, x1, y1) { S[k] += "M" + r1(x0) + "," + r1(y0) + "L" + r1(x1) + "," + r1(y1); };
-
-      // legs: two solid members that flare, the left in shade, the right in the sun with a lit edge
-      var tl = [0, 0.05, 0.11, 0.2, 0.275, 0.34, 0.4], wl = function (t) { return (22 - 24 * t) * u; };
-      [-1, 1].forEach(function (sd) {
-        var outer = tl.map(function (t) { return [cx + sd * hwL(t), Y(t)]; }), inner = tl.map(function (t) { return [cx + sd * (hwL(t) - wl(t)), Y(t)]; });
-        poly(sd < 0 ? "reds" : "red", outer.concat(inner.reverse()));
-        if (sd > 0) poly("redl", tl.map(function (t) { return [cx + hwL(t), Y(t)]; }).concat(tl.slice().reverse().map(function (t) { return [cx + hwL(t) - 4.2 * u, Y(t)]; })));
-        rect("reds", cx + sd * 137 * u - (sd < 0 ? 5 : 27) * u, baseY - 7 * u, 32 * u, 7 * u);
-      });
-      // the arch between the legs, the girder over it, and the struts that hang it from the girder
-      var ax = 116 * u, apex = Y(0.185), gy = Y(0.2);
-      for (var k = -3; k <= 3; k++) { var dx = k * 26 * u; seg("reds", cx + dx, gy, cx + dx, apex + 0.185 * H * Math.pow(Math.abs(dx) / ax, 2.3)); }
-      rect("red", cx - hwL(0.2), gy - 3 * u, hwL(0.2) * 2, 6.4 * u);
-      // braced panels from the girder up to the main deck: the far face first, then the near face
-      var panel = function (t0, t1, hw, front, back) {
-        var a = hw(t0), b = hw(t1), y0 = Y(t0), y1 = Y(t1), ym = (y0 + y1) / 2;
-        seg(back, cx, y0, cx, y1); seg(back, cx - (a + b) / 2 + 3 * u, ym, cx + (a + b) / 2 - 3 * u, ym);
-        seg(front, cx - a + 3 * u, y0, cx + b - 3 * u, y1); seg(front, cx + a - 3 * u, y0, cx - b + 3 * u, y1);
-        seg(front, cx - b, y1, cx + b, y1);
+      var PLZ = 2 * u, HT = H - PLZ, HW0 = 115 * u, DEP = 0.2;         // ground in front of the feet; tower height; half width at the ground; the oblique
+      var T_G = 0.2, T_D0 = 0.42, T_D1 = 0.478, T_U1 = 0.737, T_U2 = 0.768;    // girder; main deck; top deck
+      var Y = function (t) { return baseY - PLZ - t * HT; };
+      var hw = function (t) {                                          // half width of a face: a flare to the main deck, a straight taper above it
+        if (t <= T_D0) return HW0 * Math.exp(-2.867 * t);
+        if (t <= T_D1) return (34.5 - (t - T_D0) / (T_D1 - T_D0) * 3.5) * u;
+        return (31 - Math.min(1, (t - T_D1) / (T_U1 - T_D1)) * 18) * u;
       };
-      [[0.2, 0.275], [0.275, 0.34], [0.34, 0.4]].forEach(function (q) { panel(q[0], q[1], hwL, "red", "reds"); });
+      var sOf = function (t) { return 2 * DEP * hw(t); };              // how far left the far face sits
+      var rise = function (t) { return 0.065 * (0.26 - t) * HT * hw(t) / HW0; };   // and how far toward the eye line (t = 0.26)
+      var X = function (a, t, d) { return cx + sOf(t) * (0.5 - d) + a; };
+      var Yd = function (t, d) { return Y(t) - rise(t) * d; };
 
-      // above the main deck: five panels, bottom to top orange, orange, white, white, orange
-      var tu = [0.455, 0.508, 0.561, 0.614, 0.667, 0.72], band = ["red", "red", "wht", "wht", "red"];
-      for (var i = 0; i < 5; i++) {
-        var t0 = tu[i], t1 = tu[i + 1], c = band[i], cs = c + "s", ew = 6.4 * u;
-        panel(t0, t1, hwU, c, cs);
-        poly(cs, [[cx - hwU(t0), Y(t0)], [cx - hwU(t1), Y(t1)], [cx - hwU(t1) + ew, Y(t1)], [cx - hwU(t0) + ew, Y(t0)]]);
-        poly(c, [[cx + hwU(t0), Y(t0)], [cx + hwU(t1), Y(t1)], [cx + hwU(t1) - ew, Y(t1)], [cx + hwU(t0) - ew, Y(t0)]]);
-      }
+      var lay = {};
+      var add = function (k, q) {                                      // one closed shape into colour layer k, all wound one way so overlaps never cancel
+        var n = q.length, ar = 0, s = "", i;
+        for (i = 0; i < n; i += 2) ar += q[i] * q[(i + 3) % n] - q[(i + 2) % n] * q[i + 1];
+        if (ar < 0) { var rv = []; for (i = n - 2; i >= 0; i -= 2) rv.push(q[i], q[i + 1]); q = rv; }
+        for (i = 0; i < n; i += 2) s += (i ? "L" : "M") + r1(q[i]) + "," + r1(q[i + 1]);
+        lay[k] = (lay[k] || "") + s + "z";
+      };
+      var bar = function (k, x0, y0, x1, y1, w) {                      // a straight member of width w
+        var dx = x1 - x0, dy = y1 - y0, n = Math.sqrt(dx * dx + dy * dy) || 1, ox = -dy / n * w / 2, oy = dx / n * w / 2;
+        var q = [x0 + ox, y0 + oy, x1 + ox, y1 + oy, x1 - ox, y1 - oy, x0 - ox, y0 - oy];
+        add(k, q); return q;
+      };
+      var box = function (k, x, y, w, hh) { add(k, [x, y, x + w, y, x + w, y + hh, x, y + hh]); };
+      var strip = function (k, fa, fb, t0, t1, d, n) {                 // the area between two edges a = fa(t), a = fb(t) of a face
+        var q = [], i, t;
+        for (i = 0; i <= n; i++) { t = t0 + (t1 - t0) * i / n; q.push(X(fa(t), t, d), Yd(t, d)); }
+        for (i = n; i >= 0; i--) { t = t0 + (t1 - t0) * i / n; q.push(X(fb(t), t, d), Yd(t, d)); }
+        add(k, q); return q;
+      };
+      var above = function (q, yc) {                                   // the part of a shape above the line y = yc (a shadow's straight edge)
+        var o = [], n = q.length, i;
+        for (i = 0; i < n; i += 2) {
+          var x0 = q[i], y0 = q[i + 1], x1 = q[(i + 2) % n], y1 = q[(i + 3) % n], in0 = y0 <= yc, in1 = y1 <= yc;
+          if (in0) o.push(x0, y0);
+          if (in0 !== in1) o.push(x0 + (x1 - x0) * (yc - y0) / (y1 - y0), yc);
+        }
+        return o;
+      };
 
-      // main deck: roof, upper windows, a white band, lower windows, the skirt; its left end in shade
-      var dT = Y(0.455), dw = 72 * u;
-      poly("grys", [[cx - 52 * u, dT + 42 * u], [cx + 52 * u, dT + 42 * u], [cx + 44 * u, dT + 52 * u], [cx - 44 * u, dT + 52 * u]]);
-      rect("gry", cx - dw - 2 * u, dT, dw * 2 + 4 * u, 8 * u);
-      rect("gls", cx - dw, dT + 8 * u, dw * 2, 13 * u);
-      rect("wht", cx - dw, dT + 21 * u, dw * 2, 7 * u);
-      rect("gls", cx - dw, dT + 28 * u, dw * 2, 9 * u);
-      rect("gry", cx - dw, dT + 37 * u, dw * 2, 6 * u);
-      for (var m = 1; m < 9; m++) rect("gry", cx - dw + m * dw * 2 / 9 - 1.7 * u, dT + 8 * u, 3.4 * u, 13 * u);
-      rect("grys", cx - dw - 2 * u, dT, 16 * u, 8 * u); rect("whts", cx - dw, dT + 21 * u, 14 * u, 7 * u); rect("grys", cx - dw, dT + 37 * u, 14 * u, 6 * u);
+      /* ---- the ground under the tower: one flat contact shadow, falling a little to the left; the feet and the podium stand on it ---- */
+      var GA = HW0 + 10 * u, gL = X(-GA, 0, 1) - 12 * u;
+      add("gSh", [gL, baseY, X(GA, 0, -0.14), baseY, X(GA, 0, 1.1), Yd(0, 1.1), gL, Yd(0, 1.1)]);
 
-      // top deck, the banded mast with its antenna bars, the needle
-      var tdT = Y(0.742);
-      rect("gry", cx - 25 * u, tdT, 50 * u, 6 * u); rect("gls", cx - 23 * u, tdT + 6 * u, 46 * u, 6 * u); rect("grys", cx - 20 * u, tdT + 12 * u, 40 * u, 5 * u);
-      var tm = [0.742, 0.776, 0.808, 0.84, 0.872], mw = function (t) { return (8.6 - (t - 0.742) / 0.13 * 3.2) * u; }, mc = ["wht", "red", "wht", "red"];
-      for (var j = 0; j < 4; j++) {
-        var a0 = mw(tm[j]), a1 = mw(tm[j + 1]), y0 = Y(tm[j]), y1 = Y(tm[j + 1]);
-        poly(mc[j], [[cx - a0, y0], [cx + a0, y0], [cx + a1, y1], [cx - a1, y1]]);
-        poly(mc[j] + "s", [[cx - a0, y0], [cx - a0 * 0.3, y0], [cx - a1 * 0.3, y1], [cx - a1, y1]]);
-      }
-      [0.79, 0.824, 0.856].forEach(function (t) { rect("gry", cx - 17 * u, Y(t), 34 * u, 3.6 * u); });
-      poly("gry", [[cx - 3 * u, Y(0.872)], [cx + 3 * u, Y(0.872)], [cx + 1.5 * u, Y(1)], [cx - 1.5 * u, Y(1)]]);
+      /* ---- a leg: a lattice column from its footing to the girder (X bracing on the near pair, a quieter zigzag on the far pair) ---- */
+      var lw = function (t) { return (40 - 70 * t) * u; }, CO = 8 * u, CI = 6.4 * u, T_F = 0.016;
+      var LJ = [T_F, 0.08, 0.14, T_G];
+      var leg = function (k, sd, d, zig) {
+        strip(k, function (t) { return sd * hw(t); }, function (t) { return sd * (hw(t) - CO); }, T_F, T_G, d, 6);
+        strip(k, function (t) { return sd * (hw(t) - lw(t)); }, function (t) { return sd * (hw(t) - lw(t) + CI); }, T_F, T_G, d, 6);
+        for (var j = 0; j < 3; j++) {
+          var a = LJ[j], b = LJ[j + 1];
+          var oa = sd * (hw(a) - CO / 2), ob = sd * (hw(b) - CO / 2), ia = sd * (hw(a) - lw(a) + CI / 2), ib = sd * (hw(b) - lw(b) + CI / 2);
+          if (!zig || j % 2 === 0) bar(k, X(oa, a, d), Yd(a, d), X(ib, b, d), Yd(b, d), zig ? 3.6 * u : 3.4 * u);
+          if (!zig || j % 2 === 1) bar(k, X(ia, a, d), Yd(a, d), X(ob, b, d), Yd(b, d), zig ? 3.6 * u : 3.4 * u);
+          bar(k, X(oa, a, d), Yd(a, d), X(ia, a, d), Yd(a, d), 3.6 * u);
+        }
+      };
+      var footing = function (kb, ks, sd, d) {                         // splayed concrete under a leg, its left side in shade
+        var o0 = sd * (hw(0) + 8 * u), i0 = sd * (hw(0) - lw(0) - 8 * u), o1 = sd * (hw(T_F) + 2.5 * u), i1 = sd * (hw(T_F) - lw(T_F) - 2.5 * u);
+        var l0 = Math.min(o0, i0), r0 = Math.max(o0, i0), l1 = Math.min(o1, i1), r1b = Math.max(o1, i1);
+        add(kb, [X(l0, 0, d), Yd(0, d), X(r0, 0, d), Yd(0, d), X(r1b, T_F, d), Yd(T_F, d), X(l1, T_F, d), Yd(T_F, d)]);
+        if (ks) add(ks, [X(l0, 0, d), Yd(0, d), X(l0 + 10 * u, 0, d), Yd(0, d), X(l1 + 6 * u, T_F, d), Yd(T_F, d), X(l1, T_F, d), Yd(T_F, d)]);
+      };
+      /* ---- an arch framed between two legs: a band with thickness, its soffit a tone down, its sunward top edge lit ---- */
+      var T_A0 = 0.078, T_A1 = 0.168;
+      var archPt = function (th, d) { var t = T_A0 + (T_A1 - T_A0) * Math.sin(th), a = -Math.cos(th) * (hw(t) - lw(t)); return [X(a, t, d), Yd(t, d)]; };
+      var arch = function (k, ks, d, thick, soff, kl) {
+        var N = 26, inn = [], out = [], sof = [], lit = [], i, i0 = 14, i1 = 21;
+        for (i = 0; i <= N; i++) {
+          var th = Math.PI * i / N, q = archPt(th, d), q0 = archPt(Math.max(0, th - 0.02), d), q1 = archPt(Math.min(Math.PI, th + 0.02), d);
+          var tx = q1[0] - q0[0], ty = q1[1] - q0[1], n = Math.sqrt(tx * tx + ty * ty) || 1, nx = ty / n, ny = -tx / n;
+          inn.push(q[0], q[1]); out.unshift(q[0] + nx * thick, q[1] + ny * thick); sof.unshift(q[0] + nx * soff, q[1] + ny * soff);
+          if (i >= i0 && i <= i1) lit.push(q[0] + nx * (thick - 2.4 * u), q[1] + ny * (thick - 2.4 * u));
+        }
+        add(k, inn.concat(out));
+        if (ks) add(ks, inn.concat(sof));
+        if (kl) add(kl, lit.concat(out.slice(2 * (N - i1), 2 * (N - i0 + 1))));
+      };
 
-      var sw = r1(4 * u), kids = [];
-      ["reds", "whts"].forEach(function (k2) { kids.push(h("path", { d: S[k2], fill: "none", stroke: k2 === "reds" ? REDS : WHTS, strokeWidth: r1(3.4 * u) })); });
-      kids.push(h("path", { d: F.reds, fill: REDS }), h("path", { d: F.whts, fill: WHTS }));
-      kids.push(h("path", { d: S.red, fill: "none", stroke: RED, strokeWidth: sw }), h("path", { d: S.wht, fill: "none", stroke: WHT, strokeWidth: sw }));
-      kids.push(h("path", { d: "M" + r1(cx - ax) + "," + r1(baseY) + "C" + r1(cx - ax) + "," + r1(Y(0.12)) + " " + r1(cx - 52 * u) + "," + r1(apex) + " " + r1(cx) + "," + r1(apex) + "C" + r1(cx + 52 * u) + "," + r1(apex) + " " + r1(cx + ax) + "," + r1(Y(0.12)) + " " + r1(cx + ax) + "," + r1(baseY), fill: "none", stroke: RED, strokeWidth: r1(7 * u) }));
-      kids.push(h("path", { d: F.red, fill: RED }), h("path", { d: F.redl, fill: REDL }), h("path", { d: F.wht, fill: WHT }),
-        h("path", { d: F.gls, fill: GLS }), h("path", { d: F.gry, fill: GRY }), h("path", { d: F.grys, fill: GRYS }));
-      _ttMemo[key] = h("g", { "data-cache": "tower-" + key, "data-box": r1(cx - 145 * u) + " " + r1(baseY - H - 2) + " " + r1(290 * u) + " " + r1(H + 4) }, kids);
-    }
-    var blink = 0.25 + 0.75 * (0.5 + 0.5 * Math.sin(time * Math.PI));
-    return h("g", { opacity: p.opacity == null ? 1 : p.opacity },
-      _ttMemo[key],
-      h("circle", { cx: cx, cy: baseY - H, r: (3 * u).toFixed(1), fill: "#ffb3a0", opacity: blink.toFixed(3) }));
-  }
-  /* ---- round 2 city, second pass: Tokyo as volumes, not cut-outs ----
-     Every building is a box standing in space, not a shape cut from paper:
-     - ONE OBLIQUE. The sun is top right, so the left return of every volume is the shaded face,
-       and it is drawn as a real face receding toward the eye line: a point above the eye line
-       falls toward it as it goes back, a point below it rises, so the side tapers with distance.
-       The coping runs over the front and the return as one slab, which is what reads as mass.
-     - CROWNS DIFFER. parapet, double setback, a chamfered top corner, a sloped slice, a crowned
-       mast, a plant deck, water tanks, a pitched roof. The crown is what gives a skyline its
-       character, and the original had one (a flat lid) for every building.
-     - DEPTH INSIDE A TIER. A plot at dz 1 or 2 stands nearer: its base is a little lower, its
-       return is deeper and its tone a step stronger, and it overlaps its neighbours.
-     Facades: punched windows with sills, ribbon glazing, balcony rows in shadow, vertical
-     glazing strips, a banded curtain wall with one diagonal reflection. Signs carry blocks,
-     never lettering. Tones are mixed from the slot's own facade colour, so a building keeps its
-     tier's distance and contrast falls with it. Static: each building is drawn once and kept. */
-  var CITY_CYCLE = ["office", "glass", "mansion", "stepped", "glass", "block", "office", "glass"];
-  var CROWNS = ["parapet", "setback", "chamfer", "mast", "slope", "plant", "tanks", "parapet", "pitch", "setback"];
-  var _cbMemo = {};
-  function cityKind(fi, w, hgt, detail, land) {
-    if (detail < 0) return land ? "crown" : ["flat", "stepped", "flat", "crown"][fi % 4];
-    if (land) return fi % 2 ? "stepped" : "glass";
-    if (w <= 96) return detail > 0 ? "pencil" : "glass";
-    if (w >= 210 && hgt / w < 1.1) return "block";
-    return CITY_CYCLE[fi % CITY_CYCLE.length];
-  }
-  function CityBuilding(p) {
-    var detail = p.detail == null ? 1 : p.detail, dz = p.dz || 0, land = !!p.land;
-    var _mk = p.seed + "|" + p.x + "|" + p.baseY + "|" + p.w + "|" + p.h + "|" + detail + "|" + dz +
-      "|" + (land ? 1 : 0) + "|" + (p.fi == null ? -1 : p.fi) + "|" + (p.kind || "");
-    if (_cbMemo[_mk]) return _cbMemo[_mk];
-    var x = p.x, w = p.w, hgt = p.h, seed = p.seed;
-    var baseY = p.baseY + dz * (detail > 0 ? 13 : detail === 0 ? 7 : 3);   // nearer in the tier = lower
-    var top = baseY - hgt;
-    var fi = p.fi == null ? Math.floor(random(seed + "-f") * 997) : p.fi;
-    var face = p.faces[fi % p.faces.length], kind = p.kind || cityKind(fi, w, hgt, detail, land);
-    var crown = CROWNS[(fi * 3 + (land ? 1 : 0)) % CROWNS.length];
-    var c = detail > 0 ? 1 : detail === 0 ? 0.62 : 0.5, NAVY = "#1d3156";
-    if (dz) face = mix(face, NAVY, dz * 0.055 * c);                        // and a step stronger
-    var col = {
-      ret: mix(face, NAVY, 0.4 * c + 0.1), body: face, deep: mix(face, NAVY, 0.4 * c),
-      glass: detail < 0 ? mix(face, "#ffffff", 0.42) : mix(face, DAY.glass, 0.25 + 0.7 * c),
-      warm: DAY.warm, over: face, lite: detail < 0 ? (p.cap || mix(face, "#ffffff", 0.3)) : mix(face, "#ffffff", 0.36 * c),
-      board: mix(face, "#ffffff", 0.66), cap: detail < 0 ? face : (p.cap || mix(face, NAVY, 0.36 * c)),
-      capRet: detail < 0 ? face : mix(p.cap || mix(face, NAVY, 0.36 * c), NAVY, 0.3)
-    };
-    col.wall = mix(face, DAY.glass, 0.16 + 0.3 * c); col.sheen = mix(col.wall, "#ffffff", 0.26);
-    col.hi = mix(col.glass, "#ffffff", 0.5);
-    var ORDER = ["ret", "capRet", "body", "wall", "deep", "glass", "sheen", "hi", "warm", "over", "lite", "board", "cap"], L = {};
-    ORDER.forEach(function (k) { L[k] = ""; });
-    var r1 = function (v) { return Math.round(v * 10) / 10; };
-    var R = function (k, rx, ry, rw, rh) { if (rw > 0.5 && rh > 0.5) L[k] += "M" + r1(rx) + "," + r1(ry) + "h" + r1(rw) + "v" + r1(rh) + "h" + r1(-rw) + "z"; };
-    var P = function (k, pts) { var s = "M"; for (var q = 0; q < pts.length; q += 2) s += (q ? "L" : "") + r1(pts[q]) + "," + r1(pts[q + 1]); L[k] += s + "z"; };
+      /* ---- the far face and what is seen through the near one: all one tone down ---- */
+      [-1, 1].forEach(function (sd) { leg("oS", sd, 1, true); footing("wall", sd < 0 ? "stS" : null, sd, 1); });
+      arch("oS", null, 1, 6.5 * u, 0);
+      bar("oS", X(-hw(T_G), T_G, 1), Yd(T_G, 1), X(hw(T_G), T_G, 1), Yd(T_G, 1), 7 * u);
+      var PW = function (t) { return (12 - 11 * (t - T_G)) * u; };                       // corner posts below the main deck
+      var PU = function (t) { return (7.4 - 7 * (t - T_D1)) * u; };                      // and above it
+      var JL = [T_G, 0.288, 0.345, T_D0], BL = ["o", "w", "o"];                          // panels and their bands, girder to main deck
+      var JU = [T_D1, 0.5425, 0.607, 0.672, T_U1], BU = ["o", "w", "o", "w"];            // main deck to top deck
+      var farPanel = function (a, b, c, pw, core, rung) {              // far corner posts, the rung that shows on the left face, the lift shaft
+        [-1, 1].forEach(function (sd) { strip(c + "S", function (t) { return sd * hw(t); }, function (t) { return sd * (hw(t) - pw(t) * 0.82); }, a, b, 1, 3); });
+        if (rung) bar(c + "S", X(-hw(b), b, 1), Yd(b, 1), X(hw(b), b, 1), Yd(b, 1), rung);
+        strip(c + "S", function () { return -core; }, function () { return core; }, a, b, 0.5, 1);
+      };
+      for (var j = 0; j < 3; j++) farPanel(JL[j], JL[j + 1], BL[j], PW, 3 * u, j < 2 ? 4.4 * u : 0);
+      for (j = 0; j < 4; j++) farPanel(JU[j], JU[j + 1], BU[j], PU, 2.1 * u, j < 3 ? 3.8 * u : 0);
+      strip("oS", function () { return -3 * u; }, function () { return 3 * u; }, 0.07, T_G, 0.5, 1);                // the lift shaft, below the girder
 
-    /* the one oblique: the eye line, and how far back the left return goes */
-    var HZ = baseY - (detail > 0 ? 210 : detail === 0 ? 150 : 110);        // the eye line for this tier
-    var K = detail > 0 ? 0.15 : detail === 0 ? 0.1 : 0.055;                // share of the way to it
-    var D = (detail > 0 ? 1 : detail === 0 ? 0.6 : 0.26) * (1 + dz * 0.22) * Math.max(10, Math.min(w * 0.24, 72));
-    var bk = function (px, py) { return [px - D, py + (HZ - py) * K]; };   // the same point, one depth back
-    /* a volume: its shaded left return, its body, the coping slab over both. Returns the lit front. */
-    var volume = function (vx, vy, vw, vh, coping) {
-      var t = bk(vx, vy), b = bk(vx, vy + vh);
-      if (D > 2.5) P("ret", [vx, vy, t[0], t[1], b[0], b[1], vx, vy + vh]);
-      R("body", vx, vy, vw, vh);
-      if (coping) {
-        R("cap", vx - 2, vy - coping + 2, vw + 4, coping);
-        if (D > 2.5) { var t2 = bk(vx - 2, vy - coping + 2); P("capRet", [vx - 2, vy - coping + 2, t2[0], t2[1], t2[0], t2[1] + coping, vx - 2, vy + 2]); }
-      }
-      R("lite", vx + vw - 3, vy, 3, vh);                                   // the sunlit right arris
-      return { x: vx, y: vy, w: vw, h: vh };
-    };
+      /* ---- the podium: the low building under the tower, between the legs (no lettering) ---- */
+      var S0 = sOf(0), R0 = rise(0), PHW = 66 * u, PH = 46 * u, PD0 = 0.26, PD1 = 0.78;
+      var px = function (d) { return cx + S0 * (0.5 - d) - PHW; };                                                   // its left wall, at depth d
+      var py = function (hh, d) { return Y(0) - hh - R0 * d * (1 - hh / (0.26 * HT)); };
+      var pl = px(PD0), pr = pl + 2 * PHW, pb = py(0, PD0), pt = py(PH, PD0);
+      add("stB", [px(PD1), py(PH, PD1), pl, pt, pl, pb, px(PD1), py(0, PD1)]);                                       // left return
+      box("wall", pl, pt, pr - pl, pb - pt);
+      box("whB", pl - 2.5 * u, pt - 1 * u, pr - pl + 5 * u, 5.5 * u);                                                // coping
+      box("stB", pl, pt + 4.5 * u, pr - pl, 2.8 * u);                                                                // and its shade on the wall
+      var wy = pt + 12 * u, wh2 = 11.5 * u, wx0 = pl + 8 * u, wx1 = pr - 8 * u;
+      box("gl", wx0, wy, wx1 - wx0, wh2); box("sky", wx0, wy, wx1 - wx0, 4.2 * u);                                   // upper floor: one ribbon of glass
+      for (j = 1; j < 6; j++) box("whB", wx0 + (wx1 - wx0) * j / 6 - 1.5 * u, wy, 3 * u, wh2);
+      var cy2 = pt + 28.5 * u, ex0 = (pl + pr) / 2 - 36 * u;
+      box("gl", ex0, cy2, 72 * u, 5.5 * u); box("sky", ex0, cy2 + 5.5 * u, 72 * u, pb - cy2 - 5.5 * u);              // the glazed entrance, the canopy's shade across its top
+      for (j = 1; j < 4; j++) box("whB", ex0 + 72 * u * j / 4 - 1.5 * u, cy2, 3 * u, pb - cy2);
+      box("whB", pl - 3 * u, cy2 - 3.8 * u, pr - pl + 6 * u, 3.8 * u);                                               // canopy
+      box("stB", pl, cy2, ex0 - pl, 2.6 * u); box("stB", ex0 + 72 * u, cy2, pr - ex0 - 72 * u, 2.6 * u);
+      var stx = cx - 10 * u, sty = pt - 1 * u - 12 * u;                                                              // where the lift shaft meets the roof
+      box("wall", stx, sty, 20 * u, 12 * u); box("stB", stx, sty, 6 * u, 12 * u); box("whB", stx - 1.5 * u, sty - 2.6 * u, 23 * u, 2.6 * u);
 
-    var fp = detail > 0 ? 34 : detail === 0 ? 24 : 40;                     // a storey; smaller with distance
-    var rnd = function (k) { return random(seed + "-" + k); };
-    var floors = function (y0, y1) { var n = Math.max(1, Math.round((y1 - y0) / fp)); return { n: n, h: (y1 - y0) / n }; };
-
-    // --- facades; each fills the lit front `f` between y0 and y1 ---
-    var punched = function (f, y0, y1) {
-      var fl = floors(y0, y1), cols = Math.max(1, Math.round((f.w - 10) / (fp * 0.94))), cw = (f.w - 10) / cols, ww = cw * 0.6, wh = fl.h * 0.5;
-      for (var r = 0; r < fl.n; r++) {
-        var wy = y0 + r * fl.h + fl.h * 0.2;
-        if (detail > 0) {
-          for (var q = 0; q < cols; q++) {
-            var wx = f.x + 5 + q * cw + (cw - ww) / 2;
-            R("deep", wx - 2, wy - 2, ww + 4, wh + 4);
-            if (rnd("w" + r + "-" + q) < DAY.warmP) R("warm", wx, wy, ww, wh); else { R("glass", wx, wy, ww, wh); R("hi", wx, wy, ww, wh * 0.4); }
+      /* ---- the decks: square boxes on the tower's axis. Front face, left return a tone down, soffit tapering in to the lattice ---- */
+      var glassRows = [];
+      var deck = function (tb, tt, half, rows, panes, soffH) {
+        var dep = 2 * DEP * half, fall = dep * 0.2, x0 = cx + dep / 2 - half, x1 = x0 + 2 * half, xb = x0 - dep;
+        var y = Y(tt), tot = Y(tb) - Y(tt), sum = 0;
+        rows.forEach(function (r) { sum += r[0]; });
+        rows.forEach(function (r) {
+          var hh = r[0] / sum * tot, kd = r[1];
+          var kf = kd === "g" ? "gl" : kd === "w" ? "whB" : "stB", kr = kd === "g" ? "glS" : kd === "w" ? "wS" : "stS";
+          box(kf, x0, y, 2 * half, hh);
+          add(kr, [xb, y + fall, x0, y, x0, y + hh, xb, y + hh + fall]);
+          if (kd === "r") { box("whB", x0 - 1.5 * u, y, 2 * half + 3 * u, 2.6 * u); add("wS", [xb - 1.5 * u, y + fall, x0 - 1.5 * u, y, x0 - 1.5 * u, y + 2.6 * u, xb - 1.5 * u, y + 2.6 * u + fall]); }
+          if (kd === "g") {
+            box("sky", x0, y, 2 * half, hh * 0.36);
+            for (var i = 1; i < panes; i++) box("w", x0 + i * 2 * half / panes - 1.6 * u, y, 3.2 * u, hh);          // mullions: in front of the moving reflection
+            box("w", x1 - 4 * u, y, 4 * u, hh); box("w", x0, y, 3.2 * u, hh);
+            box("wS", xb + dep / 2 - 1.5 * u, y + fall / 2, 3 * u, hh);
+            glassRows.push([x0 + 3.2 * u, y, x1 - 4 * u, hh]);
           }
-          R("lite", f.x + 3, wy + wh + 4, f.w - 8, 3);
-        } else {
-          var segs = Math.max(1, Math.round(f.w / 58)), sg = (f.w - 8) / segs;
-          for (var s2 = 0; s2 < segs; s2++) R("glass", f.x + 4 + s2 * sg + 3, wy, sg - 6, wh);
-        }
-      }
-    };
-    var ribbons = function (f, y0, y1) {
-      var fl = floors(y0, y1), rh = fl.h * 0.44;
-      for (var r = 0; r < fl.n; r++) {
-        var wy = y0 + r * fl.h + fl.h * 0.22;
-        R("glass", f.x + 5, wy, f.w - 12, rh);
-        if (detail > 0) {
-          R("hi", f.x + 5, wy, f.w - 12, rh * 0.38);
-          var nm = Math.max(1, Math.round((f.w - 12) / 30));
-          for (var m = 1; m < nm; m++) R("over", f.x + 5 + m * (f.w - 12) / nm - 1.5, wy, 3, rh);
-        }
-      }
-    };
-    var balconies = function (f, y0, y1) {
-      var fl = floors(y0, y1), bays = Math.max(1, Math.round((f.w - 8) / 48)), bw = (f.w - 8) / bays, rh = fl.h * 0.5;
-      for (var r = 0; r < fl.n; r++) {
-        var ry = y0 + r * fl.h + fl.h * 0.08;
-        R("deep", f.x + 4, ry, f.w - 10, rh);
-        if (detail > 0) for (var b = 0; b < bays; b++) {
-          var gx = f.x + 4 + b * bw + bw * 0.16;
-          if (rnd("b" + r + "-" + b) < DAY.warmP) R("warm", gx, ry + 3, bw * 0.66, rh - 3); else { R("glass", gx, ry + 3, bw * 0.66, rh - 3); R("hi", gx, ry + 3, bw * 0.66, (rh - 3) * 0.34); }
-          if (b) R("over", f.x + 4 + b * bw - 2, ry, 4, rh);
-        }
-        R("lite", f.x + 1, ry + rh, f.w - 5, detail > 0 ? 4 : 3);
-      }
-    };
-    var strips = function (f, y0, y1) {
-      if (y1 - y0 < 16 || f.w < 22) return;
-      var cols = Math.max(2, Math.round((f.w - 8) / (detail > 0 ? 26 : 30))), cw = (f.w - 8) / cols;
-      for (var q = 0; q < cols; q++) { R("glass", f.x + 4 + q * cw + cw * 0.22, y0, cw * 0.56, y1 - y0); if (detail > 0) R("hi", f.x + 4 + q * cw + cw * 0.22, y0, cw * 0.56, Math.min(14, (y1 - y0) * 0.2)); }
-      if (detail >= 0) for (var yy = y0 + fp * (detail > 0 ? 1 : 2); yy < y1 - 6; yy += fp * (detail > 0 ? 1 : 2)) R("over", f.x + 3, yy, f.w - 8, 3);
-    };
-    var curtain = function (f, y0, y1) {
-      R("wall", f.x, y0, f.w - 3, y1 - y0);
-      var H = y1 - y0, x1 = f.x + f.w - 3;
-      L.sheen += "M" + r1(f.x + f.w * 0.46) + "," + r1(y0) + "L" + r1(x1) + "," + r1(y0) + "L" + r1(x1) + "," + r1(y0 + H * 0.3) + "L" + r1(f.x) + "," + r1(y0 + H * 0.8) + "L" + r1(f.x) + "," + r1(y0 + H * 0.52) + "z";
-      var stepY = fp * (detail > 0 ? 1 : 2);
-      for (var yy = y0 + stepY - 3; yy < y1 - 4; yy += stepY) R("over", f.x, yy, f.w - 3, 3);
-      var nm = Math.max(2, Math.round(f.w / (detail > 0 ? 34 : 56)));
-      for (var m = 1; m < nm; m++) R("over", f.x + m * (f.w - 3) / nm - 1.5, y0, 3, H);
-    };
+          y += hh;
+        });
+        var tS = tb - soffH / HT;
+        add("stS", [xb + dep * 0.55, Y(tb) + fall * 0.45, x1 - 8 * u, Y(tb), X(hw(tS), tS, 0) + 2 * u, Y(tS), X(-hw(tS), tS, 1) - 2 * u, Y(tS)]);
+      };
+      var SOFF = 10 * u, SOFT = 6 * u;
+      deck(T_D0, T_D1, 60 * u, [[6, "r"], [13, "g"], [7, "w"], [11, "g"], [6, "s"]], 8, SOFF);
+      deck(T_U1, T_U2, 20 * u, [[4.5, "r"], [10, "g"], [5, "s"]], 4, SOFT);
 
-    // --- crowns: what makes one roof different from the next ---
-    var mast = function (cx2, y, hh) { R("cap", cx2 - 1.8, y - hh, 3.6, hh); R("cap", cx2 - 7, y - hh * 0.42, 14, 3); R("cap", cx2 - 4.5, y - hh * 0.72, 9, 2.5); };
-    var box = function (bx, y, bw, bh) { R("cap", bx, y - bh, bw, bh); if (D > 2.5) { var t = bk(bx, y - bh); P("capRet", [bx, y - bh, t[0], t[1], t[0], t[1] + bh, bx, y]); } };
-    var tank = function (tx, y) { R("cap", tx, y - 25, 21, 15); R("cap", tx + 2, y - 10, 3, 10); R("cap", tx + 16, y - 10, 3, 10); };
-    var billboard = function (bx, y, bw, bh) {
-      R("cap", bx + bw * 0.18, y - 13, 3.4, 13); R("cap", bx + bw * 0.82 - 3.4, y - 13, 3.4, 13);
-      R("board", bx, y - 12 - bh, bw, bh); R("cap", bx + 5, y - 12 - bh * 0.5, bw * 0.55, Math.max(4, bh * 0.2));
-    };
-    var doCrown = function (cx2, cy, cw2) {
-      if (detail < 0) return;
-      var s = detail > 0 ? 1 : 0.68;
-      if (crown === "setback") { box(cx2 + cw2 * 0.14, cy, cw2 * 0.72, 16 * s); box(cx2 + cw2 * 0.3, cy - 16 * s, cw2 * 0.4, 13 * s); }
-      else if (crown === "chamfer") { P("cap", [cx2, cy, cx2 + cw2, cy, cx2 + cw2, cy - 10 * s, cx2 + cw2 * 0.6, cy - 24 * s, cx2 + cw2 * 0.16, cy - 24 * s, cx2, cy - 9 * s]); }
-      else if (crown === "mast") { box(cx2 + cw2 * 0.2, cy, cw2 * 0.54, 12 * s); mast(cx2 + cw2 * 0.47, cy - 12 * s, 46 * s); }
-      else if (crown === "slope") { P("cap", [cx2, cy, cx2 + cw2, cy, cx2 + cw2, cy - 30 * s, cx2, cy - 6 * s]); }
-      else if (crown === "plant") { box(cx2 + cw2 * 0.08, cy, cw2 * 0.26, 15 * s); box(cx2 + cw2 * 0.42, cy, cw2 * 0.2, 9 * s); if (detail > 0) tank(cx2 + cw2 * 0.7, cy); }
-      else if (crown === "tanks") { if (detail > 0) { tank(cx2 + cw2 * 0.14, cy); tank(cx2 + cw2 * 0.56, cy); } else box(cx2 + cw2 * 0.2, cy, cw2 * 0.5, 10 * s); }
-      else if (crown === "pitch") { P("cap", [cx2 - 3, cy, cx2 + cw2 + 3, cy, cx2 + cw2 * 0.5, cy - 26 * s]); }
-      else box(cx2 + cw2 * 0.24, cy, cw2 * 0.44, 11 * s);                  // parapet: one low housing
-    };
+      /* ---- the near face: the base colour, its right edges lit ---- */
+      [-1, 1].forEach(function (sd) { leg("o", sd, 0, false); footing("w", "wA", sd, 0); });
+      strip("oL", function (t) { return hw(t) - 2.4 * u; }, function (t) { return hw(t); }, T_F, T_G, 0, 6);
+      strip("oL", function (t) { return -(hw(t) - lw(t)) - 2.2 * u; }, function (t) { return -(hw(t) - lw(t)); }, T_F, T_A0, 0, 3);
+      arch("o", "oA", 0, 11 * u, 4 * u, "oL");
+      [-0.64, -0.3, 0.3, 0.64].forEach(function (lam) {                                                              // the hangers that carry the arch
+        var q = archPt(Math.acos(-lam), 0);
+        bar("o", q[0], q[1] - 6 * u, q[0], Y(T_G), 3.6 * u);
+      });
+      bar("o", X(-hw(T_G), T_G, 0), Y(T_G), X(hw(T_G), T_G, 0), Y(T_G), 7.4 * u);                                    // the girder over the arch
+      box("oL", X(-hw(T_G), T_G, 0), Y(T_G) - 3.7 * u, 2 * hw(T_G), 2.2 * u);
+      // a panel: two corner posts, one X, the rail that closes it. sh = the height above which a deck throws its shadow on it
+      var nearPanel = function (a, b, c, pw, xw, rail, sh, gus) {
+        var parts = [];
+        [-1, 1].forEach(function (sd) { parts.push(strip(c, function (t) { return sd * hw(t); }, function (t) { return sd * (hw(t) - pw(t)); }, a, b, 0, 3)); });
+        if (c === "o") strip("oL", function (t) { return hw(t) - 2.4 * u; }, function (t) { return hw(t); }, a, sh || b, 0, 3);
+        var ea = hw(a) - pw(a) / 2, eb = hw(b) - pw(b) / 2;
+        var P = [[X(-ea, a, 0), Y(a), X(eb, b, 0), Y(b)], [X(ea, a, 0), Y(a), X(-eb, b, 0), Y(b)]];
+        P.forEach(function (q) { parts.push(bar(c, q[0], q[1], q[2], q[3], xw)); });
+        if (sh) parts.forEach(function (q) { var s = above(q, Y(sh)); if (s.length > 4) add(c + "A", s); });
+        if (rail) bar(c, X(-hw(b), b, 0), Y(b), X(hw(b), b, 0), Y(b), rail);
+        if (gus) {                                                     // the gusset plate where the X crosses
+          var A = P[0], B = P[1], d1x = A[2] - A[0], d1y = A[3] - A[1], d2x = B[2] - B[0], d2y = B[3] - B[1];
+          var den = d1x * d2y - d1y * d2x, s = ((B[0] - A[0]) * d2y - (B[1] - A[1]) * d2x) / den, gx = A[0] + d1x * s, gy = A[1] + d1y * s;
+          var n1 = Math.sqrt(d1x * d1x + d1y * d1y), n2 = Math.sqrt(d2x * d2x + d2y * d2y);
+          add(c, [gx + d1x / n1 * gus, gy + d1y / n1 * gus, gx + d2x / n2 * gus, gy + d2y / n2 * gus, gx - d1x / n1 * gus, gy - d1y / n1 * gus, gx - d2x / n2 * gus, gy - d2y / n2 * gus]);
+        }
+      };
+      for (j = 0; j < 3; j++) nearPanel(JL[j], JL[j + 1], BL[j], PW, 4.8 * u, j < 2 ? 5.6 * u : 0, j === 2 ? T_D0 - (SOFF + 15 * u) / HT : 0, 7.5 * u);
+      for (j = 0; j < 4; j++) nearPanel(JU[j], JU[j + 1], BU[j], PU, 3.8 * u, j < 3 ? 4.6 * u : 0, j === 3 ? T_U1 - (SOFT + 9 * u) / HT : 0, 0);
 
-    var f, cx = x + w / 2;
-    if (kind === "office") {
-      f = volume(x, top, w, hgt, 8);
-      var gf = detail > 0 ? Math.min(40, hgt * 0.25) : 0;
-      if (gf) { R("deep", f.x + 5, baseY - gf + 9, f.w - 12, gf - 9); R("lite", f.x + 1, baseY - gf + 2, f.w - 5, 5); }
-      (fi % 4 < 2 ? punched : ribbons)(f, top + 10, baseY - gf - 4);
-      doCrown(x, top - 6, w);
-    } else if (kind === "glass") {
-      var cr = detail > 0 ? 16 : 10;
-      R("cap", x + w * 0.14, top, w * 0.72, cr + 1);
-      f = volume(x, top + cr, w, hgt - cr, 0);
-      curtain(f, top + cr + 4, baseY);
-      R("lite", x, top + cr, w, 3);
-      doCrown(x, top, w);
-    } else if (kind === "mansion") {
-      f = volume(x, top, w, hgt, 7);
-      balconies(f, top + 8, baseY - 4);
-      doCrown(x, top - 5, w);
-    } else if (kind === "stepped") {
-      var v1 = volume(x, top + hgt * 0.4, w, hgt * 0.6, detail < 0 ? 0 : 6),
-        v2 = volume(x + w * 0.11, top + hgt * 0.15, w * 0.78, hgt * 0.25 + 1, detail < 0 ? 0 : 6),
-        v3 = volume(x + w * 0.25, top, w * 0.5, hgt * 0.15 + 1, detail < 0 ? 0 : 6);
-      strips(v1, v1.y + 10, baseY - 6); strips(v2, v2.y + 9, v2.y + v2.h - 6); strips(v3, v3.y + 8, v3.y + v3.h - 6);
-      if (detail < 0) { R("lite", x, v1.y, w, 4); R("lite", x + w * 0.11, v2.y, w * 0.78, 4); R("lite", x + w * 0.25, top, w * 0.5, 4); }
-      else mast(cx, top - 4, detail > 0 ? 50 : 34);
-    } else if (kind === "pencil") {
-      f = volume(x, top, w, hgt, 7);
-      var fl = floors(top + 10, baseY - 6), wh = fl.h * 0.5;
-      for (var r = 0; r < fl.n; r++) { var wy = top + 10 + r * fl.h + fl.h * 0.2; R("deep", f.x + 5, wy - 2, f.w - 12, wh + 4); R("glass", f.x + 7, wy, f.w - 16, wh); R("hi", f.x + 7, wy, f.w - 16, wh * 0.38); }
-      var sh = Math.min(hgt * 0.5, 150), sy = top + hgt * 0.14;            // the blade sign: blocks, never lettering
-      R("board", x + w + 1, sy, 13, sh);
-      for (var k = 0; k < 4; k++) R("cap", x + w + 4, sy + 6 + k * (sh - 8) / 4, 7, (sh - 8) / 4 - 7);
-      if (fi % 2 === 0) billboard(x + 5, top - 5, w - 10, 26); else doCrown(x, top - 5, w);
-    } else if (kind === "block") {
-      f = volume(x, top, w, hgt, 8);
-      ribbons(f, top + 10, baseY - 4);
-      if (detail > 0 && fi % 2 === 0) billboard(x + w * 0.56, top - 6, w * 0.36, 28);
-      doCrown(x, top - 6, w * (detail > 0 && fi % 2 === 0 ? 0.5 : 1));
-    } else {                                                               // the deep tier: silhouettes
-      f = volume(x, top, w, hgt, 0);
-      R("lite", x, top, w, 4);
-      if (kind === "crown") { R("body", x + w * 0.2, top - 14, w * 0.6, 15); R("lite", x + w * 0.2, top - 14, w * 0.6, 4); R("body", cx - 2, top - 46, 4, 32); }
-      var fl2 = floors(top + 16, baseY - 10);
-      for (var r2 = 0; r2 < fl2.n; r2++) { var by = top + 16 + r2 * fl2.h + fl2.h * 0.25, half = (w - 22) / 2; R("glass", x + 10, by, kind === "crown" ? w - 20 : half - 5, fl2.h * 0.32); if (kind !== "crown") R("glass", x + 16 + half, by, half - 5, fl2.h * 0.32); }
+      /* ---- above the top deck: the antenna drum, the banded mast with two collars, the needle, the lamp's lantern ---- */
+      var T_M = 0.8, MB = [T_M, 0.823, 0.846, 0.869, 0.892, 0.915], MC = ["o", "w", "o", "w", "o"];
+      var mh = function (t) { return (6.4 - (t - T_M) / 0.115 * 2.8) * u; };
+      box("w", cx - 8.5 * u, Y(T_M), 17 * u, Y(T_U2) - Y(T_M)); box("wA", cx - 8.5 * u, Y(T_M), 5.6 * u, Y(T_U2) - Y(T_M));
+      for (j = 0; j < 5; j++) {
+        var ma = MB[j], mb = MB[j + 1];
+        add(MC[j], [cx - mh(ma), Y(ma), cx + mh(ma), Y(ma), cx + mh(mb), Y(mb), cx - mh(mb), Y(mb)]);
+        add(MC[j] + "A", [cx - mh(ma), Y(ma), cx - mh(ma) * 0.3, Y(ma), cx - mh(mb) * 0.3, Y(mb), cx - mh(mb), Y(mb)]);
+      }
+      [T_M, 0.869].forEach(function (t) { box("wA", cx - 11 * u, Y(t) - 2.2 * u, 22 * u, 4.4 * u); });
+      add("wA", [cx - 2.5 * u, Y(0.915), cx + 2.5 * u, Y(0.915), cx + 1.7 * u, Y(0.99), cx - 1.7 * u, Y(0.99)]);
+      box("wA", cx - 3.6 * u, Y(0.99) - 1 * u, 7.2 * u, 3 * u);
+
+      var paint = function (list) { return list.map(function (e) { return h("path", { d: lay[e[0]], fill: e[1] }); }); };
+      var bx = r1(cx - 162 * u) + " " + r1(baseY - H - 8 * u) + " " + r1(324 * u) + " " + r1(H + 10 * u);
+      m = _ttMemo[key] = {
+        back: h("g", { "data-cache": "towerA-" + key, "data-box": bx }, paint([
+          ["gSh", DAY.towerSteel], ["oS", DAY.towerOrangeShade], ["wS", DAY.towerWhiteShade],
+          ["wall", DAY.towerStone], ["stB", DAY.towerSteel], ["stS", DAY.towerSteelShade],
+          ["glS", DAY.towerGlassShade], ["gl", DAY.towerGlass], ["sky", DAY.towerGlassSky], ["whB", DAY.towerWhite]])),
+        front: h("g", { "data-cache": "towerB-" + key, "data-box": bx }, paint([
+          ["o", DAY.towerOrange], ["w", DAY.towerWhite], ["oA", DAY.towerOrangeShade], ["wA", DAY.towerWhiteShade], ["oL", DAY.towerOrangeLit]])),
+        glass: glassRows[0],                                           // the main deck's upper glazing: x0, y, x1, height
+        liftY0: sty - 2.6 * u - 20 * u, liftY1: Y(T_D0) + SOFF + 1 * u, tipY: Y(0.99) - 3 * u
+      };
     }
-    var kids = [];
-    ORDER.forEach(function (k2) { if (L[k2]) kids.push(h("path", { d: L[k2], fill: col[k2] })); });
-    return _cbMemo[_mk] = h("g", null, kids);
+    var n1 = function (v) { return String(Math.round(v * 10) / 10); };
+    // the lift, inside the lattice: twenty seconds a round trip, long soft starts and landings, a wait at each end
+    var lt = ((time % 20) + 20) % 20, lk = lt < 2 ? 1 : lt < 9 ? 1 - (lt - 2) / 7 : lt < 12 ? 0 : lt < 19 ? (lt - 12) / 7 : 1;
+    lk = lk * lk * lk * (lk * (6 * lk - 15) + 10);
+    var ly = m.liftY0 + (m.liftY1 - m.liftY0) * lk;
+    // the sky's reflection crossing the main deck's upper glazing, then a pause
+    var g = m.glass, sk = (((time - 3.5) % 9) + 9) % 9 / 5, sx = g[0] - 26 * u + (g[2] - g[0] + 52 * u) * sk;
+    var cl = function (v) { return n1(Math.max(g[0], Math.min(g[2], v))); };
+    // the aviation lamp at the tip: a slow swell, never a blink
+    var lamp = 0.5 - 0.5 * Math.cos(time * 2.1); lamp *= lamp;
+    return h("g", { opacity: p.opacity == null ? 1 : p.opacity },
+      m.back,
+      h("polygon", { points: cl(sx + 6 * u) + "," + n1(g[1]) + " " + cl(sx + 22 * u) + "," + n1(g[1]) + " " + cl(sx + 16 * u) + "," + n1(g[1] + g[3]) + " " + cl(sx) + "," + n1(g[1] + g[3]), fill: "#ffffff", opacity: 0.34 }),
+      h("g", { transform: "translate(" + n1(cx) + "," + n1(ly) + ")" },
+        h("rect", { x: n1(-7.5 * u), y: 0, width: n1(15 * u), height: n1(20 * u), fill: DAY.towerWhite }),
+        h("rect", { x: n1(-7.5 * u), y: 0, width: n1(4 * u), height: n1(20 * u), fill: DAY.towerWhiteShade }),
+        h("rect", { x: n1(-2 * u), y: n1(4 * u), width: n1(7.4 * u), height: n1(9 * u), fill: DAY.towerGlass })),
+      m.front,
+      h("circle", { cx: n1(cx), cy: n1(m.tipY), r: n1(3.4 * u), fill: DAY.towerLamp }),
+      h("circle", { cx: n1(cx), cy: n1(m.tipY), r: n1(3.4 * u), fill: DAY.towerLampLit, opacity: lamp.toFixed(3) }));
   }
+  /* (the round 2 building kit stood here; the city is drawn by the round 3 kit above the Tower) */
   /* ---- round 2 sky: the sun, its shafts of light, built clouds ---- */
   DAY.cloudLit = "#ffffff"; DAY.cloudShadeFlat = "#cfdff3";   // a cloud is two flat colours: lit, and one shade
   DAY.sunCore = "#ffe27a";
@@ -1063,31 +1787,33 @@
     }
     return out;
   }
-  /* Three broad shafts of light fanning from a point beyond the sun's corner of the frame. Plain white,
-     hard edges, behind the clouds and every building. They breathe and sway very slowly. */
+  /* ---- round 3 sky set: one sun, one fan of shafts, one cloud field, one flock and one mountain range,
+     used by every scene ---- */
+  DAY.shaft = "#ffffff"; DAY.sunHalo = "#ffedb2";
+  var SUN_R = 42;                         // the sun's disc: the same size and finish in every scene
+  /* Four shafts of light that fan from the sun itself (the sun is drawn over the point where they meet):
+     clearly unequal widths, uneven gaps, steep to shallow. [start angle, width (radians), strength, phase].
+     Plain white, hard edges, behind the clouds and every building. They sway and breathe very slowly;
+     `k` (0..1) scales that motion (the map scene holds its sky still). */
+  var SHAFTS = [[1.84, 0.12, 0.115, 0], [2.15, 0.27, 0.098, 1.9], [2.49, 0.13, 0.09, 3.7], [2.79, 0.2, 0.084, 5.2]];
   function LightShafts(p) {
-    var ox = p.ox, oy = p.oy, time = p.time, far = 1500;
-    var sway = Math.sin(time * 0.11) * 0.006;
-    return h("g", null, [[2.131, 2.282, 0.1, 0], [2.394, 2.556, 0.08, 1.9], [2.657, 2.76, 0.065, 3.7]].map(function (s) {
-      var a0 = s[0] + sway, a1 = s[1] + sway * 1.4, o = s[2] * (0.86 + 0.14 * Math.sin(time * 0.17 + s[3]));
-      return h("polygon", { points: ox + "," + oy + " " + (ox + Math.cos(a0) * far * 2).toFixed(1) + "," + (oy + Math.sin(a0) * far * 2).toFixed(1) + " " + (ox + Math.cos(a1) * far * 2).toFixed(1) + "," + (oy + Math.sin(a1) * far * 2).toFixed(1), fill: "#ffffff", opacity: o.toFixed(3) });
+    var ox = p.cx, oy = p.cy, time = p.time, k = p.k == null ? 1 : p.k, far = 2600;
+    var sway = (Math.sin(time * 0.29) * 0.012 + Math.sin(time * 0.13 + 1.1) * 0.008) * k;
+    return h("g", null, SHAFTS.map(function (s, i) {
+      var a0 = s[0] + sway * (1 + i * 0.22), a1 = a0 + s[1] * (1 + 0.07 * k * Math.sin(time * 0.23 + s[3]));
+      var o = s[2] * (1 - 0.16 * k * (0.5 + 0.5 * Math.sin(time * 0.41 + s[3] * 1.7)));
+      return h("polygon", { points: ox + "," + oy + " " + (ox + Math.cos(a0) * far).toFixed(1) + "," + (oy + Math.sin(a0) * far).toFixed(1) + " " + (ox + Math.cos(a1) * far).toFixed(1) + "," + (oy + Math.sin(a1) * far).toFixed(1), fill: DAY.shaft, opacity: o.toFixed(3) });
     }));
   }
+  /* The sun: a bloom that bleeds into the sky, one flat halo, the disc and a lighter core. */
   function SkySun(p) {
-    var cx = p.cx, cy = p.cy, r = p.r, time = p.time;
-    var pulse = 0.5 + 0.5 * Math.sin(time * 0.55);
+    var cx = p.cx, cy = p.cy, r = SUN_R, pulse = Math.sin(p.time * 0.5);
     return h("g", null,
-      h("circle", { cx: cx, cy: cy, r: r * 4.6 + pulse * r * 0.15, fill: "url(#" + p.gid + ")" }),
-      h("circle", { cx: cx, cy: cy, r: r * 1.16 + pulse * r * 0.03, fill: "rgba(255,236,170,0.34)" }),
-      h("circle", { cx: cx, cy: cy, r: r * 0.8, fill: DAY.sun }),
-      h("circle", { cx: cx, cy: cy, r: r * 0.52, fill: DAY.sunCore })
+      h("circle", { cx: cx, cy: cy, r: (r * 7.4 + pulse * 7).toFixed(1), fill: "url(#" + p.gid + ")" }),
+      h("circle", { cx: cx, cy: cy, r: (r * 1.34 + pulse * 1.2).toFixed(1), fill: DAY.sunHalo, opacity: 0.78 }),
+      h("circle", { cx: cx, cy: cy, r: r, fill: DAY.sun }),
+      h("circle", { cx: cx, cy: cy, r: r * 0.7, fill: DAY.sunCore })
     );
-  }
-  function RoofBeacon(p) {
-    var x = p.x, y = p.y, time = p.time, phase = p.phase || 0;
-    return h("g", null,
-      h("rect", { x: x - 1.5, y: y - 7, width: 3, height: 7, fill: "#33425C" }),
-      h("circle", { cx: x, cy: y - 9, r: 2.4, fill: "#e16347", opacity: 0 }));
   }
 
   function FloatingParticles(p) {
@@ -1105,57 +1831,231 @@
     }));
   }
 
-  /* A built cumulus (round 2). A cloud is a list of round lobes standing on a flat base, drawn back to
-     front. Every lobe is two discs: its shade, then the same disc in white moved up and to the right,
-     toward the sun, so each lobe keeps a crisp crescent of shade on the side away from it; where a
-     front lobe overlaps a back one, that crescent is what separates them. The base is treated the same
-     way, which gives the flat underside its shade. Two flat colours, no gradient.
-     Local space: x 0..w, the underside at y = 0, the cloud above it. `kind` picks one of the four builds
-     (default: by width, so the scenes that only pass a width still get different clouds). */
-  var CLOUD_KINDS = [
-    // base [x0, x1, height], then lobes [cx, cy, r] in units of w, back to front
-    { base: [0, 1, 0.125], lobes: [[0.5, -0.222, 0.19], [0.3, -0.158, 0.142], [0.71, -0.148, 0.132], [0.135, -0.094, 0.082], [0.87, -0.084, 0.072], [0.43, -0.112, 0.098]] },
-    { base: [0, 1, 0.1], lobes: [[0.34, -0.142, 0.128], [0.57, -0.118, 0.104], [0.185, -0.082, 0.07], [0.75, -0.086, 0.074], [0.895, -0.058, 0.046]] },
-    { base: [0.06, 0.94, 0.13], lobes: [[0.57, -0.335, 0.165], [0.4, -0.232, 0.16], [0.7, -0.2, 0.15], [0.24, -0.128, 0.112], [0.83, -0.108, 0.094], [0.53, -0.124, 0.108]] },
-    { base: [0.08, 0.92, 0.115], lobes: [[0.43, -0.168, 0.152], [0.65, -0.124, 0.11], [0.25, -0.094, 0.08]] }
-  ];
-  var _cloudMemo = {};
-  function CloudShape(kind, w) {
-    var key = kind + "|" + w;
-    if (_cloudMemo[key]) return _cloudMemo[key];
-    var k = CLOUD_KINDS[kind], d = w * 0.024, r1 = function (v) { return Math.round(v * 10) / 10; };
-    var bx = k.base[0] * w, bw = (k.base[1] - k.base[0]) * w, bh = k.base[2] * w, kids = [];
-    kids.push(h("rect", { x: r1(bx - d * 0.6), y: r1(-bh), width: r1(bw), height: r1(bh), rx: r1(bh / 2), fill: DAY.cloudShadeFlat }));
-    kids.push(h("rect", { x: r1(bx), y: r1(-bh - d), width: r1(bw), height: r1(bh), rx: r1(bh / 2), fill: DAY.cloudLit }));
-    k.lobes.forEach(function (l) {
-      var cx = l[0] * w, cy = l[1] * w - d, r = l[2] * w;
-      kids.push(h("circle", { cx: r1(cx - d * 0.62), cy: r1(cy + d * 0.78), r: r1(r), fill: DAY.cloudShadeFlat }));
-      kids.push(h("circle", { cx: r1(cx), cy: r1(cy), r: r1(r), fill: DAY.cloudLit }));
-    });
-    return _cloudMemo[key] = h("g", { "data-cache": "cloud-" + key, "data-box": r1(-d) + " " + r1(-w * 0.56) + " " + r1(w + d * 2) + " " + r1(w * 0.58) }, kids);
-  }
-  function Cloud(p) {
-    var w = p.w == null ? 240 : p.w, o = p.o == null ? 0.94 : p.o, edge = p.edge == null ? 1 : p.edge;
-    var kind = p.kind == null ? Math.round(w / 7) % CLOUD_KINDS.length : p.kind;
-    // callers anchor a cloud a little above its underside (as the first drawing did)
-    return h("g", { opacity: (o * DAY.cloudO * clamp01(edge)).toFixed(3) },
-      h("g", { transform: "translate(0, " + (p.kind == null ? Math.round(w * 0.1) : 0) + ")" }, CloudShape(kind, Math.round(w))));
-  }
-  /* small day-sky birds: two-arc glyphs drifting slowly; flap via time */
-  function DayBirds(p) {
-    var seed = p.seed, count = p.count == null ? 4 : p.count, time = p.time,
-      span = p.span == null ? 2200 : p.span, yBase = p.yBase == null ? 150 : p.yBase;
-    return h("g", null, range(count, function (i) {
-      var rx = random(seed + "-bx" + i), ry = random(seed + "-by" + i), rs = random(seed + "-bs" + i);
-      var x = ((rx * span + time * (14 + rs * 10)) % (span + 280)) - 140;
-      var y = yBase + ry * 190 + Math.sin(time * 0.7 + i * 2.2) * 9;
-      var flap = Math.sin(time * 7 + i * 1.9) * 3.4;
-      var s = 0.85 + rs * 0.5;
-      return h("g", { transform: "translate(" + x + ", " + y + ") scale(" + s + ")", opacity: 0.5 },
-        h("path", { d: "M-7,0 Q-3.5," + (-3.2 - flap) + " 0,0 Q3.5," + (-3.2 - flap) + " 7,0", fill: "none", stroke: "#2e4159", strokeWidth: 1.7, strokeLinecap: "round" }));
-    }));
+  /* The air low on the horizon: three broad flat bands, each paler than the one above it, with long slow
+     edges. The same shapes at the same height in every scene. */
+  DAY.skyAir = ["#b4dcf4", "#c1e3f6", "#cfeaf9"];
+  var _skyAir = null;
+  function SkyAir() {
+    if (_skyAir) return _skyAir;
+    return _skyAir = h("g", { "data-cache": "sky-air", "data-box": "0 480 1920 600" },
+      h("path", { d: "M-10,514C420,492 900,522 1300,506S1750,498 1930,510V1090H-10Z", fill: DAY.skyAir[0] }),
+      h("path", { d: "M-10,630C380,642 760,614 1180,630S1700,642 1930,624V1090H-10Z", fill: DAY.skyAir[1] }),
+      h("path", { d: "M-10,744C500,730 980,754 1400,740S1800,732 1930,746V1090H-10Z", fill: DAY.skyAir[2] }));
   }
 
+  /* Clouds (round 3). Four species, seven builds:
+       0  a towering cumulus, taller than it is wide
+       1  the broad flat-based fair-weather cumulus      2  a smaller humped one
+       3  a long thin high streak (cirrus)               4  the streak that lies across the sun
+       5, 6  scraps
+     A lobed cloud is built in tiers from the bottom up. Every lobe is a disc; its shade is the same disc moved
+     down and to the left, away from the sun, by an amount that grows with the lobe (and with its own factor),
+     so no two crescents are alike. A tier's shade is drawn first and its white on top, so a crescent only
+     shows where a puff really turns away from the light: on the cloud's left flank, and where a higher puff
+     hangs over the one below it. The cloud stands on a flat slab in shade, its underside. Two flat colours.
+     Streaks are tapered flat shapes with no lobes and no shade. Local space: x 0..w, the underside at y = 0. */
+  DAY.cloudLit3 = "#ffffff"; DAY.cloudShade3 = "#b9caef";       // near plane: white and the one flat periwinkle
+  DAY.cloudFar = "#f1f7fd"; DAY.cloudFarShade = "#c6d6f2";      // far plane: both a step toward the sky
+  var CLOUDS = [
+    { ht: 1.2, base: [0.02, 0.98, 0.075], tiers: [
+      [[0.12, -0.13, 0.1, 1.4], [0.26, -0.17, 0.14], [0.44, -0.18, 0.15], [0.62, -0.18, 0.15], [0.78, -0.15, 0.125, 0.6], [0.9, -0.105, 0.08, 0.6]],
+      [[0.2, -0.33, 0.165, 1.3]],
+      [[0.5, -0.36, 0.215]],
+      [[0.8, -0.31, 0.15, 0.9], [0.9, -0.4, 0.075, 0.8]],
+      [[0.1, -0.46, 0.075, 1.4], [0.27, -0.58, 0.17, 1.3]],
+      [[0.58, -0.62, 0.205, 1.1]],
+      [[0.22, -0.8, 0.085, 1.4], [0.37, -0.85, 0.17, 1.2], [0.45, -0.98, 0.145]],
+      [[0.73, -0.74, 0.095, 0.9], [0.58, -0.88, 0.135]]
+    ] },
+    { ht: 0.6, base: [0.03, 0.97, 0.08], tiers: [
+      [[0.115, -0.115, 0.085, 1.4], [0.22, -0.15, 0.115, 1.2], [0.36, -0.165, 0.13], [0.52, -0.175, 0.14], [0.67, -0.155, 0.125, 0.7], [0.79, -0.125, 0.095, 0.6], [0.895, -0.09, 0.062, 0.6]],
+      [[0.27, -0.25, 0.125, 1.3]],
+      [[0.47, -0.335, 0.195, 1.1], [0.555, -0.47, 0.085], [0.385, -0.435, 0.1]],
+      [[0.68, -0.26, 0.135, 0.9]]
+    ] },
+    { ht: 0.68, base: [0.04, 0.96, 0.09], tiers: [
+      [[0.14, -0.13, 0.1, 1.4], [0.28, -0.17, 0.135, 1.1], [0.45, -0.185, 0.15], [0.62, -0.17, 0.14, 0.7], [0.77, -0.135, 0.11, 0.6], [0.885, -0.095, 0.068, 0.6]],
+      [[0.33, -0.31, 0.135, 1.3]],
+      [[0.54, -0.39, 0.185, 1.1], [0.43, -0.5, 0.1]],
+      [[0.73, -0.28, 0.115, 0.9]]
+    ] },
+    { ht: 0.08, streaks: [[0, 0, 1, 0.026, -0.008], [0.1, -0.024, 0.5, 0.02, 0.006], [0.46, 0.02, 0.5, 0.018, 0.004]] },
+    { ht: 0.08, streaks: [[0, 0, 1, 0.03, 0], [0.28, 0.03, 0.62, 0.02, -0.006], [0.08, -0.026, 0.4, 0.016, 0.004]] },
+    { ht: 0.56, base: [0.05, 0.95, 0.14], tiers: [
+      [[0.2, -0.17, 0.14, 1.3], [0.42, -0.2, 0.17], [0.63, -0.19, 0.16, 0.7], [0.82, -0.15, 0.115, 0.6]],
+      [[0.5, -0.34, 0.16, 1.2]]
+    ] },
+    { ht: 0.56, base: [0.08, 0.92, 0.16], tiers: [
+      [[0.25, -0.19, 0.16, 1.3], [0.5, -0.21, 0.18], [0.73, -0.17, 0.14, 0.6]],
+      [[0.42, -0.36, 0.14, 1.2]]
+    ] }
+  ];
+  function skyR(v) { return Math.round(v * 10) / 10; }
+  function skyDisc(cx, cy, r) {
+    r = skyR(r);
+    return "M" + skyR(cx - r) + "," + skyR(cy) + "a" + r + "," + r + " 0 1,1 " + skyR(r * 2) + ",0a" + r + "," + r + " 0 1,1 " + skyR(-r * 2) + ",0z";
+  }
+  var _cloud3Memo = {};
+  function CloudShape(kind, w, far) {
+    var key = kind + "|" + w + "|" + (far ? 1 : 0);
+    if (_cloud3Memo[key]) return _cloud3Memo[key];
+    var k = CLOUDS[kind], lit = far ? DAY.cloudFar : DAY.cloudLit3, shade = far ? DAY.cloudFarShade : DAY.cloudShade3, kids = [];
+    if (k.streaks) {
+      var ds = "";
+      k.streaks.forEach(function (s) {
+        var x = s[0] * w, y = s[1] * w, L = s[2] * w, t = s[3] * w, dy = s[4] * w;
+        ds += "M" + skyR(x) + "," + skyR(y) + "C" + skyR(x + L * 0.22) + "," + skyR(y - t) + " " + skyR(x + L * 0.62) + "," + skyR(y - t * 1.15) + " " + skyR(x + L) + "," + skyR(y + dy) +
+          "C" + skyR(x + L * 0.7) + "," + skyR(y + dy + t * 0.3) + " " + skyR(x + L * 0.3) + "," + skyR(y + t * 0.5) + " " + skyR(x) + "," + skyR(y) + "Z";
+      });
+      kids.push(h("path", { d: ds, fill: lit, fillOpacity: 0.82 }));
+    } else {
+      k.tiers.forEach(function (tier, ti) {
+        var sh = "", li = "";
+        if (ti === 0) {                     // the flat underside the cloud stands on, and the white that closes the gaps between the lowest puffs
+          var x0 = k.base[0] * w, x1 = k.base[1] * w, bh = k.base[2] * w, br = skyR(bh / 2), fr = skyR(bh * 0.45);
+          sh += "M" + skyR(x0 + bh / 2) + "," + skyR(-bh) + "H" + skyR(x1 - bh / 2) + "a" + br + "," + br + " 0 0,1 0," + skyR(bh) + "H" + skyR(x0 + bh / 2) + "a" + br + "," + br + " 0 0,1 0," + skyR(-bh) + "z";
+          li += "M" + skyR(x0 + bh * 1.1) + "," + skyR(-bh * 1.5) + "H" + skyR(x1 - bh * 1.1) + "a" + fr + "," + fr + " 0 0,1 0," + skyR(bh * 0.9) + "H" + skyR(x0 + bh * 1.1) + "a" + fr + "," + fr + " 0 0,1 0," + skyR(-bh * 0.9) + "z";
+        }
+        tier.forEach(function (l) {
+          var cx = l[0] * w, cy = l[1] * w, r = l[2] * w, off = r * 0.23 * (l[3] == null ? 1 : l[3]);
+          sh += skyDisc(cx - off * 0.66, cy + Math.min(off * 0.75, Math.max(0, -(cy + r))), r);
+          li += skyDisc(cx, cy, r);
+        });
+        kids.push(h("path", { d: sh, fill: shade }), h("path", { d: li, fill: lit }));
+      });
+    }
+    return _cloud3Memo[key] = h("g", { "data-cache": "cloud3-" + key, "data-box": skyR(-w * 0.08) + " " + skyR(-(k.ht + 0.06) * w) + " " + skyR(w * 1.16) + " " + skyR((k.ht + 0.12) * w) }, kids);
+  }
+  /* The cloud field: the same maths in every scene. A list is [x at time 0, underside y, width, species];
+     plane 0 is the far one, 1 the near one. The wind blows right to left at one speed per plane; `shift` is
+     extra travel on top of it (the expressway's scroll times a small parallax). A cloud wraps, and fades,
+     only at the ends of the field, which lie outside every camera position. */
+  var SKY_WIND = [3.2, 7], SKY_SPAN = 3600, SKY_X0 = -700;
+  function CloudField(list, plane, time, shift) {
+    return h("g", null, list.map(function (c) {
+      var wx = ((((c[0] - SKY_X0 - time * SKY_WIND[plane] - shift) % SKY_SPAN) + SKY_SPAN) % SKY_SPAN) + SKY_X0;
+      var ed = clamp01(Math.min((wx - SKY_X0) / 60, (SKY_X0 + SKY_SPAN - wx) / 60));
+      return h("g", { transform: "translate(" + wx.toFixed(2) + ", " + c[1] + ")", opacity: ed.toFixed(3) }, CloudShape(c[3], c[2], plane === 0));
+    }));
+  }
+  /* Each scene's sky, composed: a tower of cumulus standing behind the skyline, one or two fair-weather
+     clouds, a high streak passing behind them (and behind Mt Fuji), a thin streak lying across the foot of
+     the sun, a scrap or two. No cumulus covers the sun while a scene holds. */
+  var SKY_WORLD = {
+    far: [[706, 250, 620, 3], [1560, 128, 560, 4], [1336, 505, 200, 2], [1754, 520, 250, 1], [66, 420, 96, 6]],
+    near: [[950, 590, 340, 0], [135, 262, 450, 1], [625, 300, 92, 5], [1989, 388, 420, 1], [1879, 300, 84, 6]]
+  };
+  var SKY_TRANSIT = {
+    far: [[85, 212, 700, 3], [1585, 112, 560, 4], [1585, 432, 210, 2]],
+    near: [[1128, 575, 320, 0], [-26, 318, 420, 1], [1464, 190, 290, 2], [664, 120, 88, 5]]
+  };
+  var SKY_FINALE = {
+    far: [[78, 372, 680, 3], [1478, 160, 560, 4]],
+    near: [[154, 236, 430, 1], [1610, 418, 280, 2], [1894, 300, 88, 6], [644, 250, 92, 5]],
+    landFar: [[1728, 560, 220, 2]], landNear: [[974, 640, 340, 0]]     // these two rise with the land
+  };
+
+  /* Birds (round 3): small filled silhouettes, a body and two wings, nothing thinner than 3 px. One loose
+     group that flaps three beats and then glides, every bird on its own phase, and one kite that soars in
+     slow circles and rarely flaps. They tilt as they rise, fall and turn. All of them are one path. They
+     are the only dark things in the sky, so each scene keeps them to the right of the headline or above it. */
+  DAY.bird = "#34496b";
+  // wing swing through one flap-then-glide cycle (u in cycles): three beats that swell and die away, then held
+  function birdWing(u, lag) {
+    var c = u - Math.floor(u), F = 0.56;
+    if (c >= F) return 0;
+    var e = Math.sin(Math.PI * c / F);
+    return e * e * Math.sin(c / F * Math.PI * 6 - lag);
+  }
+  // one bird at (x, y): a1 = how far the arm is raised, a2 = the hand beyond the wrist, tilt = bank
+  function birdD(x, y, s, a1, a2, tilt) {
+    var co = Math.cos(tilt) * s, si = Math.sin(tilt) * s;
+    function P(px, py) { return skyR(x + px * co - py * si) + "," + skyR(y + px * si + py * co); }
+    var wx = 1.6 + 9 * Math.cos(a1), wy = -0.6 - 9 * Math.sin(a1), tx = wx + 11 * Math.cos(a2), ty = wy - 11 * Math.sin(a2);
+    return "M" + P(1.3, -2.7) + "Q" + P(wx, wy - 3.3) + " " + P(tx, ty) + "Q" + P(wx - 0.8, wy + 3) + " " + P(1.3, 2.4) + "Z" +
+      "M" + P(-1.3, 2.4) + "Q" + P(0.8 - wx, wy + 3) + " " + P(-tx, ty) + "Q" + P(-wx, wy - 3.3) + " " + P(-1.3, -2.7) + "Z" +
+      "M" + P(0, -5.4) + "Q" + P(3.6, -1.6) + " " + P(2, 2.8) + "L" + P(2.6, 7) + "L" + P(0, 5.6) + "L" + P(-2.6, 7) + "L" + P(-2, 2.8) + "Q" + P(-3.6, -1.6) + " " + P(0, -5.4) + "Z";
+  }
+  var BIRD_FORM = [[0, 0], [-48, 24], [40, 32], [-96, -12], [88, -6], [-22, 60]];
+  // per scene: the group [x at time 0, y, speed (px a second, + = flying right), birds], the kite [centre x, y, radius x, y, size]
+  var BIRD_SETS = {
+    w: { group: [1315, 225, 14, 5], kite: [1730, 290, 78, 18, 1.3] },
+    t: { group: [1397, 262, -14, 5], kite: [900, 214, 72, 16, 1.3] },   // the kite circles clear of Fuji's summit
+    n: { group: [1156, 205, 14, 5], kite: [1250, 430, 86, 20, 1.3] }
+  };
+  function DayBirds(p) {
+    var set = BIRD_SETS[p.set], g = set.group, kt = set.kite, time = p.time, back = p.back || 0, d = "";
+    function wrap(x) { return ((((x - (p.shift || 0) + 500) % 2920) + 2920) % 2920) - 500 + back; }
+    var gx = wrap(g[0] + g[2] * time), gy = g[1] + Math.sin(time * 0.27 + 1) * 16;
+    for (var i = 0; i < g[3]; i++) {
+      var r = random(p.set + "-ba" + i), r2 = random(p.set + "-bb" + i), f = BIRD_FORM[i];
+      var u = time / (2.7 + r * 1.3) + r2 * 5, c = u - Math.floor(u);
+      d += birdD(gx + f[0] + Math.sin(time * 0.43 + r * 9) * 9,
+        gy + f[1] + Math.sin(time * 0.31 + r2 * 9) * 6 + Math.cos(c * 2 * Math.PI) * 2.4,
+        0.74 + r * 0.34, 0.26 + 0.78 * birdWing(u, 0), -0.16 + 0.95 * birdWing(u, 0.85),
+        Math.cos(time * 0.27 + 1) * 0.2 + Math.cos(time * 0.43 + r * 9) * 0.1);
+    }
+    var a = time * 0.42 + 0.8, dep = Math.sin(a), ku = time / 7.4 + 0.3;
+    d += birdD(wrap(kt[0]) + Math.cos(a) * kt[2], kt[1] + dep * kt[3], kt[4] * (1 + dep * 0.1),
+      0.2 + 0.45 * birdWing(ku, 0), -0.14 + 0.55 * birdWing(ku, 0.85), Math.sin(a + 0.5) * 0.4);
+    return h("path", { d: d, fill: DAY.bird });
+  }
+
+  /* The distant mountain range (round 3; it replaces the two soft hill curves). A jagged far ridge and a
+     lower, longer near ridge, pale and cool, each in two flat tones: the sun is top right, so every left
+     face is one tone down. Far ridge: [x, height] corners; a summit shades everything from the valley on
+     its left to a broken line running down from its top. Near ridge: a smooth line through its points.
+     The same range stands low in scenes 03 and 05, where Mt Fuji rises behind it. Static, built once. */
+  DAY.rangeFar = "#a9c2e6"; DAY.rangeFarShade = "#93b1dc"; DAY.rangeNear = "#9ab6e0"; DAY.rangeNearShade = "#84a4d4";
+  var RANGE_FAR = [
+    [-640, 30], [-560, 84], [-490, 140], [-430, 112], [-350, 190], [-290, 160], [-230, 206], [-170, 150],
+    [-120, 118], [-40, 96], [30, 150], [78, 132], [150, 214], [205, 188], [262, 236], [330, 168], [392, 122], [450, 146],
+    [520, 104], [600, 172], [668, 150], [742, 258], [800, 226], [846, 244], [930, 300], [1004, 232], [1052, 252], [1118, 198],
+    [1160, 236], [1210, 276], [1290, 128], [1372, 164], [1440, 118], [1530, 206], [1590, 182], [1660, 270], [1730, 214], [1790, 232], [1880, 150],
+    [1950, 110], [2030, 178], [2100, 146], [2190, 226], [2260, 196], [2330, 246], [2420, 160], [2500, 120], [2600, 60]
+  ];
+  var RANGE_NEAR = [[-660, 60], [-480, 84], [-300, 110], [-140, 70], [20, 112], [190, 78], [380, 128], [560, 92], [700, 60], [900, 104], [1090, 138], [1280, 86], [1470, 66], [1640, 118], [1830, 96], [2010, 132], [2200, 84], [2390, 110], [2620, 64]];
+  var _rangeMemo = {};
+  function MountainRange(p) {
+    var key = p.x + "|" + p.baseY + "|" + p.s;
+    if (_rangeMemo[key]) return _rangeMemo[key];
+    var s = p.s, by = p.baseY, F = RANGE_FAR, N = RANGE_NEAR, i, j, a, b;
+    function X(v) { return skyR(p.x + v * s); }
+    function Y(v) { return skyR(by - v * s); }
+    var fb = "M" + X(F[0][0]) + "," + by, fs = "";
+    for (i = 0; i < F.length; i++) fb += "L" + X(F[i][0]) + "," + Y(F[i][1]);
+    fb += "L" + X(F[F.length - 1][0]) + "," + by + "Z";
+    for (i = 1; i < F.length - 1; i++) {
+      if (!(F[i][1] > F[i - 1][1] && F[i][1] >= F[i + 1][1])) continue;            // a summit
+      a = i - 1; while (a > 0 && F[a - 1][1] < F[a][1]) a--;                         // the valley on its left
+      b = i + 1; while (b < F.length - 1 && F[b + 1][1] < F[b][1]) b++;              // and on its right
+      var px = F[i][0], ph = F[i][1], lx = F[a][0], rw = F[b][0] - px;
+      fs += "M" + X(lx + (px - lx) * 0.3) + "," + by + "L" + X(lx) + "," + Y(F[a][1]);
+      for (j = a + 1; j <= i; j++) fs += "L" + X(F[j][0]) + "," + Y(F[j][1]);
+      fs += "L" + X(px + rw * 0.2) + "," + Y(ph * 0.66) + "L" + X(px + rw * 0.04) + "," + Y(ph * 0.5) + "L" + X(px + rw * 0.34) + "," + by + "Z";
+    }
+    var P = N.map(function (q) { return [p.x + q[0] * s, by - q[1] * s]; });
+    function seg(n) {                       // the smooth line from point n to point n + 1
+      var p0 = P[n - 1] || P[n], p1 = P[n], p2 = P[n + 1], p3 = P[n + 2] || p2;
+      return "C" + skyR(p1[0] + (p2[0] - p0[0]) / 6) + "," + skyR(p1[1] + (p2[1] - p0[1]) / 6) + " " + skyR(p2[0] - (p3[0] - p1[0]) / 6) + "," + skyR(p2[1] - (p3[1] - p1[1]) / 6) + " " + skyR(p2[0]) + "," + skyR(p2[1]);
+    }
+    var nb = "M" + skyR(P[0][0]) + "," + by + "L" + skyR(P[0][0]) + "," + skyR(P[0][1]), ns = "";
+    for (i = 0; i < P.length - 1; i++) nb += seg(i);
+    nb += "L" + skyR(P[P.length - 1][0]) + "," + by + "Z";
+    for (i = 1; i < N.length - 1; i++) {
+      if (!(N[i][1] > N[i - 1][1] && N[i][1] > N[i + 1][1])) continue;
+      a = i - 1; while (a > 0 && N[a - 1][1] < N[a][1]) a--;
+      var wl = P[i][0] - P[a][0];
+      ns += "M" + skyR(P[a][0] + wl * 0.2) + "," + by + "L" + skyR(P[a][0]) + "," + skyR(P[a][1]);
+      for (j = a; j < i; j++) ns += seg(j);
+      ns += "Q" + skyR(P[i][0] - wl * 0.02) + "," + skyR((P[i][1] + by) / 2) + " " + skyR(P[i][0] + wl * 0.22) + "," + by + "Z";
+    }
+    return _rangeMemo[key] = h("g", { "data-cache": "range-" + key, "data-box": X(-670) + " " + Y(310) + " " + skyR(3300 * s) + " " + skyR(312 * s) },
+      h("path", { d: fb, fill: DAY.rangeFar }), h("path", { d: fs, fill: DAY.rangeFarShade }),
+      h("path", { d: nb, fill: DAY.rangeNear }), h("path", { d: ns, fill: DAY.rangeNearShade }));
+  }
+  // the range stands in front of whatever is handed in (Mt Fuji), in one group
+  function RangeOver(p, behind) { return h("g", null, behind, MountainRange(p)); }
   /* Mt. Fuji, redrawn for round 2 (same place, width and height as before).
      Built in "cone space": f = -1..1 across the mountain at height v (0 summit, 1 base), so a
      constant f is a gully line and everything drawn along one fans out with the cone.
@@ -1534,17 +2434,20 @@
      grey tone; the covered prefectures sit on it in the film's teal family (deepest where we deliver
      most), each separated from its neighbour by a crisp pale seam, so the service area reads as a set of
      real prefecture shapes instead of one orange blob with lines on it. Vermilion is kept scarce: only
-     the routes, the depots' fascia line and the head office's card tab.
+     the routes and the depots' fascia line.
      Sequence (all inside the timings the player already drives):
        plate   mapIn 0-26  the silhouette settles, its edge and shadow opening out under it
        prefs   4-56        each prefecture is wiped in by a band growing outward from the hub, in rank
                            order of distance from Itabashi, so the colour spreads like ink from Tokyo
        routes  34-78       seven curved corridors draw from the hub with a long soft landing, then light
                            up with flowing dashes and one travelling highlight each
-       depots  60-78       three miniature Sanpou depots land with weight, overshoot and settle, their
-                           name cards sliding out on a leader afterwards
+       depots  24-80       three miniature Sanpou depots arrive one at a time, head office first. Each
+                           pops in larger than it rests (a quick rise, one overshoot under 4 %, a clean
+                           settle), is set down onto its own place as it eases to its resting size, and
+                           then its name card comes out of it. All three are down and named by frame 80:
+                           the frame the player holds, and the frame scene 05 starts from.
      Never frozen while it holds: on all seven corridors the dashes flow outward and a highlight travels
-     the whole way, and the three anchor rings breathe, each on its own phase.
+     the whole way. The depots stand still once they are down, as buildings do.
      Engine: the node list is the same shape on every frame; every id is prefixed nm4; the only clip is a
      clipPath with one rect child; no masks, filters or blur. */
   DAY.map = {
@@ -1559,9 +2462,12 @@
     route: "#e16347",       // the route line keeps the brand vermilion
     routeCase: "#ffffff",   // white casing so a route reads over any prefecture tone
     flow: "#ffffff",
-    depot: "#f8fbfd", depotShade: "#d7e5f0", depotRoof: "#e5eef5", depotDock: "#9fbdd4",
+    // the mini depots: white lit front, periwinkle return, navy slab / base / outline, vermilion fascia
+    depotLit: "#fbfdff", depotShade: "#c1cfea", depotFasciaShade: "#bb5340",
+    depotBay: "#2c4469", depotShutter: "#b3c2dc", depotGlass: "#8ebfe8", depotGlassLit: "#d2e7f8",
+    depotCast: "rgba(19,38,63,0.24)",
     ink: "#13263f",
-    card: "#ffffff", cardLine: "rgba(19,38,63,0.20)",
+    card: "#ffffff",
   };
   // the four neighbours that touch our area and still fit inside the map box, so the plate's outline is
   // all real coast and real prefecture border — the other 20 grey shapes are dropped with their 33k of
@@ -1582,7 +2488,9 @@
      were found by searching each polygon for the point furthest from its border that also clears
      everything else (tools/… scratch search, 2026-11-14). */
   var MAP_LABEL = {
-    TOKYO: { x: 456.4, y: 791.3, f: 11.5 }, SAITAMA: { x: 461.4, y: 756.5, f: 11.5 },
+    // 埼玉 moved west (it stood where 入間営業所 really is): now in the open part of west Saitama,
+    // clear of the routes, the depots, their cards and the 入間 depot while it is enlarged
+    TOKYO: { x: 456.4, y: 791.3, f: 11.5 }, SAITAMA: { x: 425.0, y: 733.8, f: 11.5 },
     KANAGAWA: { x: 451.5, y: 830.6, f: 14 }, CHIBA: { x: 565.7, y: 851.7, f: 15 },
     IBARAKI: { x: 581.4, y: 715.6, f: 15 }, TOCHIGI: { x: 523.7, y: 628.1, f: 15 },
     GUNMA: { x: 411.4, y: 665.9, f: 15 }, NIIGATA: { x: 397.0, y: 552.7, f: 15 },
@@ -1595,19 +2503,44 @@
   // one corridor per direction: the bearing each route leaves the hub on. Swept for the widest possible
   // fan — the closest two corridors stay 14 map units (23 stage px) apart, so none crowds another.
   var ROUTE_DEP = { CHIBA: 48, IBARAKI: -36, TOCHIGI: -66, NIIGATA: -96, GUNMA: -132, SAITAMA: -170, KANAGAWA: 122 };
-  /* The three bases are only 38 map units apart in reality, so the three depots cannot stand on their own
-     spots without becoming one clump. Each keeps a dot where it really is and its building is lifted off
-     that dot on a stem of its own length and direction — 48 u east, 44 u north, 40 u west — which leaves
-     43.7 map units (71 stage px) of clear air between the three illustrations. Each card sits against its
-     own building (4.8-7.5 u from it), fully on covered land, never on the grey, never over another depot's
-     dot or stem, and 22 u from the next card. Measured by the scratch layout solver, 2026-11-14. */
+  /* The three bases, each standing on its real place (map units; 1 u = 1.63 stage px).
+       本社（板橋）   stands on its own point in the north of Tokyo: the point is under its roof, so the
+                     seven routes come out from behind the head office (no dot: the building is on it)
+       志木営業所    stands on its point in Saitama: the dot shows just under its base line
+       入間営業所    stands in Saitama beside its point, its near wall 9 u west of the dot and joined to
+                     it by a stub: the Saitama corridor runs over the point's own spot, and Tokyo
+                     begins 8 u south of it
+     Positions were set against the corridors and the prefecture borders (scratch solver, 2026-11-14):
+     every corner of both branch depots is inside Saitama, the head office's base is inside Tokyo.
+     The bases are only 16 u and 25 u apart, so a depot can be no wider than 18 u at rest. Each one
+     therefore arrives ENLARGED (big) about its own place (px = the pivot on its base line), lifted a
+     little (lift) so it clears what is already down, and is set down as it eases to resting size; only
+     one is ever enlarged at a time. t0 = the frame its arrival starts.
+     Cards: 本社 to the east (the open wedge between the Ibaraki and Chiba corridors), 入間 to the west,
+     志木 on a short post above its roof, in the widest gap of the fan (two corridors pass behind it:
+     there is no spot in Saitama next to 志木 that clears them all). card = [x, y, width], side = the
+     edge it grows from: r = from its left edge rightwards, l = from its right edge leftwards, u = from
+     the post outwards. */
   var MAP_BASES = [
-    { id: "itabashi", nm: "本社（板橋）", bld: [552, 768], w: 22, hq: true, card: [572, 786], t0: 0 },
-    { id: "shiki", nm: "志木営業所", bld: [487, 726], w: 19, hq: false, card: [487, 696], t0: 0.17 },
-    { id: "iruma", nm: "入間営業所", bld: [428, 766], w: 19, hq: false, card: [428, 736], t0: 0.32 },
+    { id: "itabashi", nm: "本社（板橋）", hq: true, w: 23, cx: 508.5, by: 791.5, px: 505.4, big: 2.2, lift: [0, -2], t0: 24,
+      card: [522.8, 778.6, 62], side: "r" },
+    { id: "shiki", nm: "志木営業所", hq: false, w: 17.6, cx: 489.2, by: 766.5, px: 491.9, big: 2.0, lift: [0, -4], t0: 40,
+      card: [460, 731.5, 53], side: "u", post: 489.2 },
+    { id: "iruma", nm: "入間営業所", hq: false, w: 17.6, cx: 449.2, by: 768, px: 458, big: 1.9, lift: [-3.5, -0.5], t0: 56,
+      card: [384.6, 753.5, 53], side: "l" },
   ];
-  var CARD_F = 10, CARD_H = 18;
-
+  var CARD_F = 9, CARD_H = 12.5;
+  // one depot's arrival, in frames from its t0: pop 0-9, set down 9-19, card 17-24. The next one starts
+  // at 16, and passes its own resting size at 18, when this one is within 1 % of rest.
+  var DEPOT_SETTLE = 9, DEPOT_DOWN = 19, DEPOT_CARD = [17, 24];
+  /* 0 -> 1 as a well damped spring (damping ratio 0.72): 95 % at 4 frames, ONE overshoot of 3.8 % at 6,
+     back within 0.2 % by 10 and exactly 1 from 14. Not a bounce: the second swing is under 0.2 %. */
+  function depotPop(a) {
+    if (a <= 0) return 0;
+    var g = 1 - Math.exp(-0.5432 * a) * (Math.cos(0.5236 * a) + 1.0375 * Math.sin(0.5236 * a));
+    return g + (1 - g) * clamp01((a - 10) / 4);
+  }
+  var mr2 = function (v) { return Math.round(v * 100) / 100; };
   var _mapInit = null;
   function mapInit() {
     if (_mapInit) return _mapInit;
@@ -1675,36 +2608,58 @@
     return _mapPlate;
   }
 
-  /* a miniature Sanpou depot: white body with a navy outline, a shaded left return, a parapet roof, the
-     house vermilion fascia line and dock shutters under a canopy. Drawn with its base on (0,0) so it can
-     be scaled about the ground as it lands. */
+  /* A miniature Sanpou depot, drawn with its base line on y = 0 and centred on x = 0 so it can be scaled
+     about its own place. A small version of the warehouse of scene 02: a white volume with a lit front
+     and a shaded left return (the return's far edge is foreshortened: lines above eye level fall, lines
+     below it rise), a navy roof slab with nothing on it, the vermilion fascia line carried round the
+     corner a tone down, dock bays on a navy base course with their shutters rolled half up, one navy
+     outline. The head office is wider, has three bays and carries a glazed office floor at its sunlit
+     end. Nothing is thinner than 1.9 u (3.1 stage px) at resting size. No lettering.
+     Returns { art: the building, cast: its flat shadow on the map, top: height of the main roof }. */
   var _depotMemo = {};
   function MiniDepot(w, hq) {
     var mk = w + "|" + (hq ? 1 : 0);
     if (_depotMemo[mk]) return _depotMemo[mk];
-    var C = DAY.map, H = w * 0.64, R = w * 0.15, SW = w * 0.08, hw = w / 2;
-    var ink = C.ink, bays = hq ? 3 : 2, bw = w * 0.21, gap = (w * 0.84 - bays * bw) / (bays + 1);
-    var dockY = -H * 0.44, kids = [
-      h("rect", { x: -hw, y: -H, width: w, height: H, fill: C.depot, stroke: ink, strokeWidth: SW, strokeLinejoin: "round" }),
-      h("rect", { x: -hw + SW * 0.5, y: -H + SW * 0.5, width: w * 0.19, height: H - SW, fill: C.depotShade }),
-      h("rect", { x: -hw, y: -H + SW * 0.4, width: w, height: w * 0.11, fill: C.route }),
-      h("polygon", { points: (-hw - R * 0.45) + "," + (-H) + " " + (hw + R * 0.45) + "," + (-H) + " " + (hw * 0.84) + "," + (-H - R) + " " + (-hw * 0.84) + "," + (-H - R), fill: C.depotRoof, stroke: ink, strokeWidth: SW, strokeLinejoin: "round" }),
-      h("rect", { x: -hw * 0.94, y: dockY - w * 0.07, width: w * 0.94, height: w * 0.07, fill: C.depotShade }),
-    ];
+    var C = DAY.map, hw = w / 2, SW = 1.9, SL = 2.25, T = hq ? 11 : 10.6, OV = SW / 2;
+    var rw = hq ? 4.4 : 4.2, fx = -hw + rw, eye = -3.3, drop = 1;
+    // y of a horizontal line of the front (height y) where it meets x on the return
+    var farY = function (y, x) { return y + drop * ((fx - x) / rw) * (y - eye) / (-T - eye); };
+    var P = function (a) { return a.map(function (q) { return mr2(q[0]) + "," + mr2(q[1]); }).join(" "); };
+    var R = function (x, y, rwd, rh) { return "M" + mr2(x) + "," + mr2(y) + "h" + mr2(rwd) + "v" + mr2(rh) + "h" + mr2(-rwd) + "z"; };
+    var yF0 = -T + (hq ? 2.2 : 2), yF1 = yF0 + 2.2, yB = -2.2;
+    var bays = hq ? 3 : 2, inner = hw - SW / 2 - fx, pier = 1.9, bw = (inner - pier * (bays + 1)) / bays;
+    var dBay = "", dShut = "";
     for (var i = 0; i < bays; i++) {
-      var bx = -w * 0.42 + gap + i * (bw + gap);
-      kids.push(h("rect", { x: bx, y: dockY, width: bw, height: -dockY - SW * 0.5, fill: C.depotDock }));
-      kids.push(h("rect", { x: bx, y: dockY, width: bw, height: w * 0.04, fill: ink, opacity: 0.4 }));
+      var bx = fx + pier + i * (bw + pier);
+      dBay += R(bx, yF1, bw, yB - yF1);
+      dShut += R(bx, yF1, bw, 1.9);
     }
-    kids.push(h("rect", { x: -hw, y: -SW * 0.7, width: w, height: SW * 0.7, fill: ink, opacity: 0.6 }));
-    if (hq) {   // the head office: a taller block on the sunlit right end
-      kids.push(h("rect", { x: hw - w * 0.34, y: -H * 1.46, width: w * 0.34, height: H * 0.5, fill: C.depot, stroke: ink, strokeWidth: SW, strokeLinejoin: "round" }));
-      kids.push(h("rect", { x: hw - w * 0.29, y: -H * 1.33, width: w * 0.24, height: H * 0.17, fill: C.depotDock }));
+    var art = [
+      h("polygon", { points: P([[fx, 0], [-hw, farY(0, -hw)], [-hw, farY(-T, -hw)], [fx, -T]]), fill: C.depotShade }),
+      h("rect", { x: mr2(fx), y: -T, width: mr2(hw - fx), height: T, fill: C.depotLit }),
+      h("rect", { x: mr2(fx), y: mr2(yF0), width: mr2(hw - fx), height: 2.2, fill: C.route }),
+      h("polygon", { points: P([[fx, yF0], [-hw, farY(yF0, -hw)], [-hw, farY(yF1, -hw)], [fx, yF1]]), fill: C.depotFasciaShade }),
+      h("path", { d: dBay, fill: C.depotBay }),
+      h("path", { d: dShut, fill: C.depotShutter }),
+      h("polygon", { points: P([[hw, 0], [hw, yB], [fx, yB], [-hw, farY(yB, -hw)], [-hw, farY(0, -hw)], [fx, 0]]), fill: C.ink }),
+      // the outline: the two walls. The slab closes the top and the base course the bottom, in the same navy.
+      h("path", { d: "M" + hw + "," + (-T) + "V0 M" + (-hw) + "," + mr2(farY(0, -hw)) + "V" + mr2(farY(-T, -hw)), fill: "none", stroke: C.ink, strokeWidth: SW }),
+      h("polygon", { points: P([[hw + OV, -T], [hw + OV, -T - SL], [fx, -T - SL], [-hw - OV, farY(-T - SL, -hw - OV)], [-hw - OV, farY(-T, -hw - OV)], [fx, -T]]), fill: C.ink }),
+    ];
+    if (hq) {   // the office floor: a glazed front split by one diagonal reflection, a shaded return, its own slab
+      var ox = hw - 9.4, oy = -T - SL, oh = 3.8, gx = ox + SW / 2 + 1.9;
+      art.push(
+        h("rect", { x: mr2(ox), y: mr2(oy - oh), width: mr2(gx - ox), height: oh, fill: C.depotShade }),
+        h("rect", { x: mr2(gx), y: mr2(oy - oh), width: mr2(hw - gx), height: oh, fill: C.depotGlass }),
+        h("polygon", { points: P([[gx, oy - oh], [hw, oy - oh], [gx, oy]]), fill: C.depotGlassLit }),   // the sky, as one diagonal
+        h("path", { d: "M" + mr2(ox) + "," + mr2(oy) + "V" + mr2(oy - oh) + " M" + hw + "," + mr2(oy) + "V" + mr2(oy - oh), fill: "none", stroke: C.ink, strokeWidth: SW }),
+        h("rect", { x: mr2(ox - OV), y: mr2(oy - oh - 2), width: mr2(hw - ox + 2 * OV), height: 2, fill: C.ink })
+      );
     }
-    _depotMemo[mk] = kids;
-    return kids;
+    // one flat shadow on the map, falling down-left, hard-edged
+    var cast = h("polygon", { points: P([[hw + 0.6, 0], [hw - 1.8, 2.9], [-hw - 2.8, 2.9], [-hw - 0.4, 0]]), fill: C.depotCast });
+    return _depotMemo[mk] = { art: art, cast: cast, top: T + SL };
   }
-
   function CoverageMap(p) {
     var prefProgress = p.prefProgress, routeProgress = p.routeProgress, pinProgress = p.pinProgress,
       flowTime = p.flowTime, mapIn = p.mapIn == null ? 1 : p.mapIn;
@@ -1761,34 +2716,60 @@
           return h("text", { x: L.x, y: mr1(L.y + L.f * 0.36 + (1 - e) * 4), textAnchor: "middle",
             fontFamily: FONTS.jp, fontWeight: 700, fontSize: L.f, fill: C.ink, opacity: e * 0.92 }, cp.jp);
         }),
-        MAP_BASES.map(function (b, j) {
-          var B = JRMAP.bases[b.id], k = clamp01((pinProgress - b.t0) * 1.55);
-          // lands with weight: a damped spring about the ground, a small overshoot, then settles
-          var s = k <= 0 ? 0 : 1 - Math.exp(-5 * k) * Math.cos(7.8 * k);
-          var sy = Math.max(0.001, s), sx = 1 + (1 - s) * 0.45;
-          var cE = easeOutQuart(clamp01((k - 0.5) / 0.5));
-          var pp = (flowTime * 0.46 + j * 0.33) % 1;
-          var ring = b.hq ? C.route : C.ink;
-          var cw = b.nm.length * CARD_F + 18, cx = b.card[0], cy = b.card[1];
-          // the connector leaves the card at whichever edge faces its own building
-          var vx = b.bld[0] - cx, vy = b.bld[1] - cy;
-          var tt = Math.min(vx ? (cw / 2) / Math.abs(vx) : 1e9, vy ? (CARD_H / 2) / Math.abs(vy) : 1e9);
-          var lx1 = cx + vx * tt, ly1 = cy + vy * tt, lx2 = b.bld[0], ly2 = b.bld[1];
-          var llen = Math.max(0.1, Math.hypot(lx2 - lx1, ly2 - ly1));
+        // --- the three bases: place dots and stubs first, then the buildings, then the name cards ---
+        (function () {
+          var f = p.depotFrame == null ? 999 : p.depotFrame;
+          var st = MAP_BASES.map(function (b) {
+            var a = f - b.t0, D = MiniDepot(b.w, b.hq);
+            var down = easeInOutCubic(clamp01((a - DEPOT_SETTLE) / (DEPOT_DOWN - DEPOT_SETTLE)));
+            var cl = clamp01((a - DEPOT_CARD[0]) / (DEPOT_CARD[1] - DEPOT_CARD[0]));
+            return { a: a, D: D, down: down, cl: cl,
+              s: Math.max(0.001, depotPop(a) * (b.big - (b.big - 1) * down)),
+              ox: b.lift[0] * (1 - down), oy: b.lift[1] * (1 - down) };
+          });
           return h("g", null,
-            h("circle", { cx: B.x, cy: B.y, r: 4 + pp * 13, fill: "none", stroke: ring, strokeWidth: 1.8, opacity: cE * (1 - pp) * 0.4 }),
-            h("line", { x1: B.x, y1: B.y, x2: b.bld[0], y2: b.bld[1], stroke: C.ink, strokeWidth: 1.9, opacity: cE * 0.55 }),
-            h("circle", { cx: B.x, cy: B.y, r: 2.6, fill: C.ink, opacity: cE }),
-            h("ellipse", { cx: b.bld[0], cy: b.bld[1] + 1.5, rx: b.w * 0.62 * sx, ry: b.w * 0.11, fill: "rgba(24,46,72,0.3)", opacity: Math.min(1, s * 1.4) }),
-            h("g", { transform: "translate(" + b.bld[0] + "," + b.bld[1] + ") scale(" + mr1(sx) + "," + mr1(sy) + ")" }, MiniDepot(b.w, b.hq)),
-            h("path", { d: "M" + mr1(lx1) + "," + mr1(ly1) + " L" + mr1(lx2) + "," + mr1(ly2), fill: "none", stroke: C.ink, strokeWidth: 1.7,
-              opacity: cE * 0.58, strokeDasharray: mr1(llen) + " " + mr1(llen), strokeDashoffset: mr1(llen * (1 - cE)) }),
-            h("g", { transform: "translate(0," + mr1((1 - cE) * -7) + ")", opacity: cE },
-              h("rect", { x: cx - cw / 2, y: cy - CARD_H / 2, width: cw, height: CARD_H, rx: 4, fill: C.card, stroke: C.cardLine, strokeWidth: 1 }),
-              h("rect", { x: cx - cw / 2 + 3.5, y: cy - 5.5, width: 3.4, height: 11, rx: 1.7, fill: b.hq ? C.route : "#7d92a8" }),
-              h("text", { x: cx - cw / 2 + 11, y: cy + 3.6, fontFamily: FONTS.jp, fontWeight: 700, fontSize: CARD_F, fill: C.ink }, b.nm))
+            MAP_BASES.map(function (b, j) {
+              var B = JRMAP.bases[b.id], s = st[j], hw = b.w / 2;
+              var dk = easeOutCubic(clamp01((s.a + 3) / 4));               // the place lights up first
+              var lk = clamp01((s.a - 13) / 6);                             // then the stub to the building
+              // the stub runs from the place to the nearest point of the resting building's wall
+              var wx = Math.max(b.cx - hw, Math.min(b.cx + hw, B.x)), wy = Math.min(b.by - 1.4, B.y);
+              return h("g", null,
+                h("line", { x1: B.x, y1: B.y, x2: mr2(B.x + (wx - B.x) * lk), y2: mr2(B.y + (wy - B.y) * lk), stroke: C.ink, strokeWidth: 1.9, opacity: lk > 0 ? 1 : 0 }),
+                h("circle", { cx: B.x, cy: B.y, r: b.hq ? 0 : mr2(3.9 * dk), fill: C.card }),
+                h("circle", { cx: B.x, cy: B.y, r: b.hq ? 0 : mr2(2 * dk), fill: C.ink }));
+            }),
+            MAP_BASES.map(function (b, j) {
+              var s = st[j];
+              var tf = "translate(" + mr2(b.px + s.ox) + "," + mr2(b.by + s.oy) + ") scale(" + (Math.round(s.s * 1000) / 1000) + ") translate(" + mr2(b.cx - b.px) + ",0)";
+              var op = mr2(clamp01(s.a / 1.5));
+              return h("g", null,
+                h("g", { transform: tf, opacity: op }, s.D.cast),
+                h("g", { "data-depot": b.id, transform: tf, opacity: op }, s.D.art));
+            }),
+            MAP_BASES.map(function (b, j) {
+              var s = st[j], W = b.card[2], x0 = b.card[0], y0 = b.card[1];
+              var pk = b.side === "u" ? easeOutCubic(clamp01(s.cl / 0.4)) : 0;        // the post goes up first
+              var r = easeOutQuart(b.side === "u" ? clamp01((s.cl - 0.25) / 0.75) : s.cl);
+              // the visible part of the plate: it grows out of the edge that touches its building
+              var gx = b.side === "u" ? b.post : b.side === "l" ? x0 + W : x0;
+              var vx = mr2(gx - (gx - x0) * r), vw = mr2(W * r);
+              var roof = b.by - s.D.top, pb = y0 + CARD_H + 1;
+              return h("g", null,
+                h("clipPath", { id: "nm4c" + j }, h("rect", { x: vx, y: y0, width: vw, height: CARD_H })),
+                h("line", { x1: b.post || 0, y1: mr2(roof + 0.6), x2: b.post || 0, y2: mr2(roof + 0.6 - (roof + 0.6 - pb) * pk), stroke: C.ink, strokeWidth: 1.9, opacity: pk > 0 ? 1 : 0 }),
+                // until it starts the card has no size at all (its text would otherwise still have a box):
+                // it is folded onto the far end of where it will lie, a spot no depot ever covers
+                h("g", { "data-card": b.id, opacity: mr2(clamp01(r * 6)), transform: r > 0 ? "translate(0,0) scale(1)" : "translate(" + mr2(b.side === "u" ? gx : 2 * x0 + W - gx) + "," + y0 + ") scale(0.001)" },
+                  h("rect", { x: vx, y: y0 + 1.9, width: vw, height: CARD_H, rx: 2.4, fill: C.rim }),
+                  h("rect", { x: vx, y: y0, width: vw, height: CARD_H, rx: 2.4, fill: C.card }),
+                  h("g", { clipPath: "url(#nm4c" + j + ")" },
+                    // textLength pins the name's width (9.3 u a character), so it sits the same in its plate at any zoom
+                    h("text", { x: x0 + W / 2, y: mr2(y0 + CARD_H / 2 + CARD_F * 0.36), textAnchor: "middle", textLength: mr2(b.nm.length * 9.3), lengthAdjust: "spacing",
+                      fontFamily: FONTS.jp, fontWeight: 700, fontSize: CARD_F, fill: C.ink }, b.nm))));
+            })
           );
-        })
+        })()
       )
     );
   }
@@ -1954,56 +2935,41 @@
     var cardBob = Math.sin(time * 1.1) * 5;
     var title1 = clamp01((frame - 8) / 34) * (1 - panK);
     var title2 = clamp01((frame - (T_WORLD.panEnd + 6)) / 34);
-    var skylineDeep = makeSkylineTier("skd", 2400, { w: [152, 96, 204, 124, 168, 108], base: 236, amp: 214, hf: [0.92, 0.5, 0.74, 0.34, 1, 0.6], g: [22, 30, 16, 34] });
-    var skylineFar = makeSkylineTier("skf", 2620, { w: [122, 178, 96, 152, 198, 110], base: 184, amp: 232, hf: [0.82, 0.46, 1, 0.6, 0.72, 0.35], g: [28, 40, 20, 46, 32] });
-    var skylineMid = makeSkylineTier("skm", 3000, { w: [188, 132, 224, 148, 112, 206], base: 102, amp: 176, hf: [0.68, 1, 0.42, 0.84, 0.55, 0.9], g: [42, 66, 30, 86, 52] });
-    // the sky is composed, not scattered: [x at t = 0, underside y, width, build]. Near clouds drift at one
-    // speed, the small distant ones at another, behind the whole skyline. The field is wider than both
-    // camera positions together, so a cloud wraps (and fades) only where it cannot be seen, and none of
-    // them crosses the sun while scenes 01 and 02 hold.
-    var CLOUD_SPAN = 3600, CLOUD_X0 = -700;
-    var cloudsNear = [[110, 215, 470, 2], [760, 330, 380, 0], [1160, 160, 390, 1], [1930, 350, 480, 0], [2380, 300, 340, 1], [-520, 262, 420, 3]];
-    var cloudsFar = [[-30, 480, 240, 3], [940, 455, 210, 1], [1590, 470, 230, 3], [2300, 462, 250, 0]];
-    var cloudAt = function (c, sp) {
-      var wx = ((((c[0] - CLOUD_X0 + time * sp) % CLOUD_SPAN) + CLOUD_SPAN) % CLOUD_SPAN) + CLOUD_X0;
-      var ed = Math.min((wx - CLOUD_X0) / 60, (CLOUD_X0 + CLOUD_SPAN - wx) / 60, 1);
-      return h("g", { transform: "translate(" + wx.toFixed(2) + ", " + c[1] + ")" }, Cloud({ w: c[2], kind: c[3], o: sp < 4 ? 0.82 : 1.04, edge: ed }));
-    };
+    var city = cityWorld();
+    // the sky is composed once for the whole film: SKY_WORLD, drawn by CloudField (see the round 3 sky set).
+    // It runs on its own clock. While scene 02 holds, the player lets ambient time run on (1.878 s); when
+    // the trucks then leave, it hands this scene frame / 30 again, which is that much earlier, and the whole
+    // sky would jump back. So from the departure on the sky adds that time back (eased in over frames the
+    // site only ever plays with its own clock): clouds, birds and shafts carry straight through the seam.
+    var skyK = clamp01((frame - 300) / 91), skyTime = tOverride != null ? tOverride : frame / fps + 1.878 * skyK * skyK * (3 - 2 * skyK);
     return h("div", { style: { position: "absolute", inset: 0, background: "#eaf5fc", overflow: "hidden" } },
       h("div", { style: { position: "absolute", inset: 0, background: DAY.sky } }),
-      h("div", { style: { position: "absolute", inset: 0, background: "radial-gradient(38% 32% at 92% 7%, rgba(255,240,200,0.46) 0%, rgba(255,240,200,0) 70%), radial-gradient(56% 40% at 8% 100%, rgba(22,41,63,0.085) 0%, rgba(22,41,63,0) 72%)", pointerEvents: "none" } }),
       h("svg", { width: 1920, height: 1080, viewBox: "0 0 1920 1080", xmlns: "http://www.w3.org/2000/svg", style: { position: "absolute", inset: 0 } },
         h("defs", null,
           h("clipPath", { id: "clipT1" }, h("rect", { x: -20000, y: -2000, width: 20000 + truck1X, height: 4000 })),
           [0, 1, 2].map(function (i) { return h("clipPath", { id: "clipB" + i }, h("rect", { x: -20000, y: -2000, width: 20000 + dockRear(i), height: 4000 })); }),
-          HazeDef("wHaze0", DAY.hazeK[0]), HazeDef("wHaze1", DAY.hazeK[1]), HazeDef("wHaze2", DAY.hazeK[2]),
+          HazeDef("wHazeFar", CITY_HAZE[0][0]), HazeDef("wHazeNear", CITY_HAZE[1][0]),
           GlowDef("wSun", DAY.sunGlow, 0.5)
         ),
-        // the sun sits clear of Tokyo Tower's antenna while scene 1 holds (tower at screen x ~1624 there)
-        LightShafts({ ox: 2060, oy: -120, time: time }),
-        SkySun({ cx: 1772, cy: 104, r: 52, time: time, gid: "wSun" }),
-        h("g", { transform: "translate(" + (-cam * 0.08) + ", 0)" }, cloudsFar.map(function (c) { return cloudAt(c, 2.6); })),
-        h("g", { transform: "translate(" + (-cam * 0.12) + ", 0)" },
-          h("path", { d: "M-300," + GROUND + " C300," + (GROUND - 150) + " 800," + (GROUND - 60) + " 1400," + (GROUND - 130) + " C2000," + (GROUND - 195) + " 2600," + (GROUND - 55) + " 3200," + (GROUND - 120) + " C3800," + (GROUND - 180) + " 4400," + (GROUND - 70) + " 5200," + (GROUND - 140) + " L5200," + GROUND + " Z", fill: DAY.hill }),
-          h("path", { d: "M-300," + GROUND + " C200," + (GROUND - 62) + " 700," + (GROUND - 112) + " 1300," + (GROUND - 60) + " C1900," + (GROUND - 26) + " 2500," + (GROUND - 118) + " 3100," + (GROUND - 66) + " C3700," + (GROUND - 34) + " 4400," + (GROUND - 108) + " 5200," + (GROUND - 56) + " L5200," + GROUND + " Z", fill: DAY.hillNear })
-        ),
-        h("g", { transform: "translate(" + (-cam * 0.18) + ", 0)" }, skylineDeep.map(function (b, i) { return { b: b, i: i }; }).filter(function (o) { var vx = o.b.x - cam * 0.18; return vx + o.b.w > -240 && vx < 2160; }).map(function (o) {
-          return CityBuilding({ x: o.b.x, baseY: GROUND, w: o.b.w, h: o.b.h, dz: o.b.dz, land: o.b.land, seed: "skd" + o.i, fi: o.i, faces: [DAY.deep], detail: -1, cap: DAY.deepTop });
-        })),
-        h("rect", { x: 0, y: GROUND - 470, width: 1920, height: 470, fill: "url(#wHaze0)" }),
+        SkyAir(),
+        // the shafts fan from the sun; the sun sits clear of Tokyo Tower's antenna while scene 1 holds (tower at screen x ~1624 there)
+        LightShafts({ cx: 1772, cy: 104, time: skyTime }),
+        SkySun({ cx: 1772, cy: 104, time: skyTime, gid: "wSun" }),
+        h("g", { transform: "translate(" + (-cam * 0.08) + ", 0)" }, CloudField(SKY_WORLD.far, 0, skyTime, 0)),
+        h("g", { transform: "translate(" + (-cam * 0.12) + ", 0)" }, MountainRange({ x: 194, baseY: GROUND, s: 1.4 })),
+        h("g", { transform: "translate(" + (-cam * 0.18) + ", 0)" }, CityRow(city.deep, -cam * 0.18)),
         h("g", { transform: "translate(" + (-cam * 0.32) + ", 0)" },
-          cloudsNear.map(function (c) { return cloudAt(c, 4.5); }),
-          DayBirds({ seed: "w-birds", count: 4, time: time, span: 2300, yBase: 120 }),
-          skylineFar.map(function (b, i) { return { b: b, i: i }; }).filter(function (o) { var vx = o.b.x - cam * 0.32; return vx + o.b.w > -240 && vx < 2160; }).map(function (o) { return CityBuilding({ x: o.b.x, baseY: GROUND, w: o.b.w, h: o.b.h, dz: o.b.dz, land: o.b.land, seed: "skf" + o.i, fi: o.i, faces: DAY.far, detail: 0, cap: DAY.farCap }); }),
-          skylineFar.filter(function (b) { return b.h > 340; }).map(function (b, i) { return RoofBeacon({ x: b.x + b.w / 2, y: GROUND - b.h, time: time, phase: i * 1.7 }); }),
+          CloudField(SKY_WORLD.near, 1, skyTime, 0),
+          DayBirds({ set: "w", time: skyTime, shift: cam * 0.1, back: cam * 0.32 }),
+          CityRow(city.farBack, -cam * 0.32), CityRow(city.far, -cam * 0.32), CityCranes(city.far, skyTime), CityLights(city.farLights, skyTime),
           TokyoTower({ cx: 1560, baseY: GROUND, h: 770, time: time, opacity: 0.95 })
         ),
-        h("rect", { x: 0, y: GROUND - 430, width: 1920, height: 430, fill: "url(#wHaze1)" }),
+        CityHaze("wHazeFar", GROUND, 0),
         h("g", { transform: "translate(" + (-cam * 0.52) + ", 0)" },
-          skylineMid.map(function (b, i) { return { b: b, i: i }; }).filter(function (o) { var vx = o.b.x - cam * 0.52; return vx + o.b.w > -240 && vx < 2160; }).map(function (o) { return CityBuilding({ x: o.b.x, baseY: GROUND, w: o.b.w, h: o.b.h, dz: o.b.dz, land: o.b.land, seed: "skm" + o.i, fi: o.i, faces: DAY.mid, detail: 1, cap: DAY.midCap }); }),
+          CityRow(city.nearBack, -cam * 0.52), CityCranes(city.nearBack, skyTime), CityRow(city.near, -cam * 0.52), CityLights(city.nearLights, skyTime),
           UtilityPoles(-120, 12, 360, GROUND, 176)
         ),
-        h("rect", { x: 0, y: GROUND - 300, width: 1920, height: 300, fill: "url(#wHaze2)" }),
+        CityHaze("wHazeNear", GROUND, 1),
         h("g", { transform: "translate(" + (-cam) + ", 0)" },
           // paving with its sunlit edge and tactile strip, the kerb, the carriageway and its markings
           h("rect", { x: -400, y: GROUND, width: WORLD_W + 800, height: 16, fill: DAY.walk }),
@@ -2127,40 +3093,36 @@
     var cardEnter = spring({ frame: frame - T_TRANSIT.cardIn, fps: fps, config: { damping: 13, mass: 0.9 } });
     var chartK = clamp01((frame - T_TRANSIT.chartSweep[0]) / (T_TRANSIT.chartSweep[1] - T_TRANSIT.chartSweep[0]));
     var cardBob = Math.sin(time * 1.1) * 5;
-    var farCity = makeSkylineTier("t-far", 6680, { w: [112, 172, 96, 202, 132, 152], base: 128, amp: 148, hf: [0.85, 0.45, 1, 0.62, 0.75, 0.3], g: [26, 38, 18, 44] });
-    var midCity = makeSkylineTier("t-mid", 6620, { w: [142, 182, 122, 232, 152, 192], base: 88, amp: 108, hf: [0.7, 1, 0.4, 0.85, 0.55, 0.92], g: [48, 72, 34, 92, 58] });
+    var city = cityTransit();
     var TILE = 7000, GTILE = 2700;
     var wrap = function (v, tile) { return -(((v % tile) + tile) % tile); };
     var convoy = [{ x: 120, scale: 1.8, lag: 0 }, { x: 620, scale: 1.88, lag: 8 }, { x: 1120, scale: 1.8, lag: 16 }, { x: 1600, scale: 1.72, lag: 24 }];
     return h("div", { style: { position: "absolute", inset: 0, background: "#eaf5fc", overflow: "hidden" } },
-      h("div", { style: { position: "absolute", inset: 0, background: DAY.skyT } }),
-      h("div", { style: { position: "absolute", inset: 0, background: "radial-gradient(38% 32% at 92% 7%, rgba(255,240,200,0.46) 0%, rgba(255,240,200,0) 70%), radial-gradient(56% 40% at 8% 100%, rgba(22,41,63,0.085) 0%, rgba(22,41,63,0) 72%)", pointerEvents: "none" } }),
+      h("div", { style: { position: "absolute", inset: 0, background: DAY.sky } }),
       h("svg", { width: 1920, height: 1080, viewBox: "0 0 1920 1080", xmlns: "http://www.w3.org/2000/svg", style: { position: "absolute", inset: 0 } },
-        h("defs", null, HazeDef("tHaze0", DAY.hazeK[1]), HazeDef("tHaze1", DAY.hazeK[2]), GlowDef("tSun", DAY.sunGlow, 0.5)),
-        SkySun({ cx: 1795, cy: 88, r: 46, time: time, gid: "tSun" }),
-        DayBirds({ seed: "t-birds", count: 3, time: time, span: 2200, yBase: 150 }),
-        [{ y: 110, w: 280, sp: 9 }, { y: 196, w: 220, sp: 9 }, { y: 70, w: 250, sp: 9 }].map(function (c, i) {
-          var wx = ((c.sp * time * 4 + i * 760) % 2420) - 250;
-          var ed = Math.min((wx + 250) / 210, (2170 - wx) / 210, 1);
-          return h("g", { transform: "translate(" + wx + ", " + c.y + ")" }, Cloud({ w: c.w, o: 0.92, edge: ed }));
-        }),
-        h("g", null,
-          h("path", { d: "M0," + (ROAD_Y - 128) + " C320," + (ROAD_Y - 158) + " 680," + (ROAD_Y - 132) + " 1080," + (ROAD_Y - 156) + " C1420," + (ROAD_Y - 176) + " 1700," + (ROAD_Y - 140) + " 1920," + (ROAD_Y - 154) + " L1920," + ROAD_Y + " L0," + ROAD_Y + " Z", fill: DAY.hill }),
+        h("defs", null, HazeDef("tHazeFar", CITY_HAZE[0][0]), HazeDef("tHazeNear", CITY_HAZE[1][0]), GlowDef("tSun", DAY.sunGlow, 0.5)),
+        SkyAir(),
+        LightShafts({ cx: 1795, cy: 88, time: time }),
+        SkySun({ cx: 1795, cy: 88, time: time, gid: "tSun" }),
+        // the same sky as scenes 01 and 02: one wind, with the road's scroll on top of it as a small parallax
+        CloudField(SKY_TRANSIT.far, 0, time, scroll * 0.012),
+        CloudField(SKY_TRANSIT.near, 1, time, scroll * 0.035),
+        RangeOver({ x: -200, baseY: ROAD_Y, s: 0.95 },
           FujiMountain({ cx: 440, baseY: 742, w: 1480, ht: 596 })
         ),
         [0, 1].map(function (rep) {
-          var off = wrap(scroll * 0.18, TILE) + rep * TILE;
-          return h("g", { transform: "translate(" + off + ", 0)" },
-            farCity.map(function (b, i) { return { b: b, i: i }; }).filter(function (o) { return o.b.x + off + o.b.w > -240 && o.b.x + off < 2160; }).map(function (o) { return CityBuilding({ x: o.b.x, baseY: ROAD_Y, w: o.b.w, h: o.b.h + 110, dz: o.b.dz, land: o.b.land, seed: "tf" + o.i, fi: o.i, faces: DAY.far, detail: 0, cap: DAY.farCap }); }));
+          var off = wrap(scroll * 0.18, CITY_TILE) + rep * CITY_TILE;
+          return h("g", { transform: "translate(" + off + ", 0)" }, CityRow(city.farBack, off), CityRow(city.far, off));
         }),
-        h("rect", { x: 0, y: ROAD_Y - 420, width: 1920, height: 420, fill: "url(#tHaze0)" }),
+        CityCranes(city.far, time, -scroll * 0.18, CITY_TILE),
+        CityHaze("tHazeFar", ROAD_Y, 0),
         [0, 1].map(function (rep) {
-          var off = wrap(scroll * 0.42, TILE) + rep * TILE;
-          return h("g", { transform: "translate(" + off + ", 0)" },
-            midCity.map(function (b, i) { return { b: b, i: i }; }).filter(function (o) { return o.b.x + off + o.b.w > -240 && o.b.x + off < 2160; }).map(function (o) { return CityBuilding({ x: o.b.x, baseY: ROAD_Y, w: o.b.w, h: o.b.h + 50, dz: o.b.dz, land: o.b.land, seed: "tc" + o.i, fi: o.i, faces: DAY.mid, detail: 1, cap: DAY.midCap }); }));
+          var off = wrap(scroll * 0.42, CITY_TILE) + rep * CITY_TILE;
+          return h("g", { transform: "translate(" + off + ", 0)" }, CityRow(city.nearBack, off), CityRow(city.near, off));
         }),
-        h("rect", { x: 0, y: ROAD_Y - 260, width: 1920, height: 260, fill: "url(#tHaze1)" }),
-        DayBirds({ seed: "t-birds", count: 3, time: time, span: 2100, yBase: 105 }),
+        CityCranes(city.nearBack, time, -scroll * 0.42, CITY_TILE), CityLights(city.lights, time, -scroll * 0.42, CITY_TILE),
+        CityHaze("tHazeNear", ROAD_Y, 1),
+        DayBirds({ set: "t", time: time, shift: scroll * 0.05 }),
         (function () {
           var px = ((time * 38) % 2640) - 360;
           var pb = Math.sin(time * 0.85) * 5;
@@ -2372,41 +3334,29 @@
     var flash = clamp01((frame - T_NETWORK.logo[0]) / (T_NETWORK.logo[1] - T_NETWORK.logo[0]));
     var taglineK = interpolate(frame, [T_NETWORK.tagline[0], T_NETWORK.tagline[1]], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.cubic) });
     var statsK = clamp01((frame - T_NETWORK.stats[0]) / (T_NETWORK.stats[1] - T_NETWORK.stats[0]));
-    // hand-curated skyline: height rhythm frames Fuji (left), the airport,
-    // the warehouse, and keeps a clear corridor around Tokyo Tower
-    var CITY_DEEP = [
-      { x: 34, w: 100, h: 275, k: 0 }, { x: 236, w: 92, h: 330, k: 2 },
-      { x: 352, w: 82, h: 238, k: 2 }, { x: 452, w: 78, h: 206, k: 0 },
-      { x: 548, w: 104, h: 305, k: 1 }, { x: 688, w: 88, h: 255, k: 0 },
-      { x: 790, w: 72, h: 212, k: 1 },
-      { x: 936, w: 100, h: 365, k: 3 }, { x: 1072, w: 94, h: 430, k: 2 },
-      { x: 1206, w: 88, h: 264, k: 0 }, { x: 1318, w: 96, h: 318, k: 2 },
-      { x: 1444, w: 86, h: 284, k: 1 },
-      { x: 1548, w: 102, h: 385, k: 1 }, { x: 1700, w: 90, h: 305, k: 0 },
-      { x: 1826, w: 96, h: 435, k: 3 }
-    ];
-    var CITY_BACK = [
-      { x: 118, w: 122, h: 372 }, { x: 606, w: 130, h: 421 },
-      { x: 856, w: 118, h: 348 }, { x: 998, w: 126, h: 470 },
-      { x: 1542, w: 128, h: 445 }, { x: 1732, w: 122, h: 323 }
-    ];
-    var CITY_FRONT = [
-      { x: 678, w: 112, h: 214 }, { x: 986, w: 120, h: 262 },
-      { x: 1652, w: 132, h: 238 }, { x: 1794, w: 118, h: 287 }
-    ];
+    var city = cityFinale();
     return h("div", { style: { position: "absolute", inset: 0, background: "#eaf5fc", overflow: "hidden" } },
-      h("div", { style: { position: "absolute", inset: 0, background: DAY.skyN } }),
+      h("div", { style: { position: "absolute", inset: 0, background: DAY.sky } }),
       h("svg", { width: 1920, height: 1080, viewBox: "0 0 1920 1080", xmlns: "http://www.w3.org/2000/svg", style: { position: "absolute", inset: 0 } },
         h("defs", null,
-          h("radialGradient", { id: "haloSoft" }, h("stop", { offset: "0", stopColor: "rgba(255,255,255,0.22)" }), h("stop", { offset: "0.7", stopColor: "rgba(255,255,255,0.09)" }), h("stop", { offset: "1", stopColor: "rgba(255,255,255,0)" })),
-          h("radialGradient", { id: "sunGlow" }, h("stop", { offset: "0", stopColor: "rgba(255,224,130,0.55)" }), h("stop", { offset: "0.55", stopColor: "rgba(255,228,150,0.22)" }), h("stop", { offset: "1", stopColor: "rgba(255,232,170,0)" })),
-          HazeDef("horizHaze", DAY.hazeK[0])
+          h("radialGradient", { id: "nHalo" }, h("stop", { offset: "0", stopColor: "rgba(255,255,255,0.22)" }), h("stop", { offset: "0.7", stopColor: "rgba(255,255,255,0.09)" }), h("stop", { offset: "1", stopColor: "rgba(255,255,255,0)" })),
+          GlowDef("nSun", DAY.sunGlow, 0.5),
+          HazeDef("nHazeFar", CITY_HAZE[0][0]), HazeDef("nHazeNear", CITY_HAZE[1][0])
         ),
         h("g", { opacity: 0.5 - recede * 0.3 },
           
           
         ),
-        h("ellipse", { cx: 960, cy: 520, rx: 940, ry: 500, fill: "url(#haloSoft)" }),
+        SkyAir(),
+        h("ellipse", { cx: 960, cy: 520, rx: 940, ry: 500, fill: "url(#nHalo)" }),
+        // the sky the map floats in is the finale's sky. It holds still while the map is up (the player's
+        // clock steps back when scene 05 begins) and starts to move as the land comes in. The sun and its
+        // shafts come out once the dissolve from the expressway is over, so two suns are never seen at once.
+        h("g", { opacity: clamp01((frame - 24) / 12).toFixed(3) },
+          LightShafts({ cx: 1652, cy: 136, time: time, k: recede }),
+          SkySun({ cx: 1652, cy: 136, time: time * recede, gid: "nSun" })),
+        CloudField(SKY_FINALE.far, 0, time * recede, 0),
+        CloudField(SKY_FINALE.near, 1, time * recede, 0),
         range(30, function (i) {
           var x = random("n-star-x" + i) * 1920, y = 30 + random("n-star-y" + i) * 900;
           var tw = 0.25 + 0.6 * (0.5 + 0.5 * Math.sin(time * (0.5 + random("n-star-t" + i)) + i));
@@ -2414,24 +3364,6 @@
         }),
         FloatingParticles({ seed: "network", x: 80, y: 120, width: 1760, height: 840, time: time, count: 28, baseOpacity: 0.4 }),
         h("g", { opacity: recede },
-          (function () {
-            var pulse = 0.5 + 0.5 * Math.sin(time * 0.55);
-            var p2 = 0.5 + 0.5 * Math.sin(time * 0.55 + 1.3);
-            return h("g", null,
-              h("circle", { cx: 1652, cy: 136, r: 190 + pulse * 24, fill: "url(#sunGlow)", opacity: 0.7 + pulse * 0.3 }),
-              (function () {
-                var d = "";
-                for (var i = 0; i < 12; i++) {
-                  var a = (i * 30 + time * 4) * Math.PI / 180;
-                  var r0 = 74, r1 = 74 + (i % 2 ? 15 : 25) + pulse * 5;
-                  d += "M" + (1652 + Math.cos(a) * r0) + "," + (136 + Math.sin(a) * r0) + "L" + (1652 + Math.cos(a) * r1) + "," + (136 + Math.sin(a) * r1);
-                }
-                return null;
-              })(),
-              h("circle", { cx: 1652, cy: 136, r: 60, fill: "rgba(255,236,170,0.32)" }),
-              h("circle", { cx: 1652, cy: 136, r: 46, fill: DAY.sun }),
-              h("circle", { cx: 1652, cy: 136, r: 46, fill: "none", stroke: "rgba(255,255,255,0.55)", strokeWidth: 2 }));
-          })(),
           range(26, function (i) {
             var x = random("n2-star-x" + i) * 1920, y = 24 + random("n2-star-y" + i) * 420;
             var tw = 0.3 + 0.7 * (0.5 + 0.5 * Math.sin(time * (0.6 + random("n2-star-t" + i) * 1.2) + i * 2));
@@ -2445,52 +3377,18 @@
               h("line", { x1: sx, y1: sy, x2: sx + 64, y2: sy - 28, stroke: "rgba(245, 236, 234,0.5)", strokeWidth: 1.8, strokeLinecap: "round" }),
               h("circle", { cx: sx, cy: sy, r: 2, fill: "#fff" }));
           })(),
-          h("ellipse", { cx: 960, cy: 1000, rx: 1150, ry: 150, fill: "url(#haloSoft)" }),
-          [{ y: 104, w: 330, sp: 10 }, { y: 226, w: 235, sp: 7 }, { y: 70, w: 265, sp: 12 }, { y: 172, w: 185, sp: 5.5 }, { y: 296, w: 150, sp: 4.2 }].map(function (c, i) {
-            var wx = ((c.sp * time * 4 + i * 560) % 2400) - 240;
-            var ed = Math.min((wx + 240) / 210, (2160 - wx) / 210, 1);
-            var by = Math.sin(time * 0.4 + i * 1.7) * 6;
-            return h("g", { transform: "translate(" + wx + ", " + (c.y + by) + ")" }, Cloud({ w: c.w, o: 0.92, edge: ed }));
-          }),
-          DayBirds({ seed: "n-birds", count: 3, time: time, span: 2300, yBase: 210 }),
+          h("ellipse", { cx: 960, cy: 1000, rx: 1150, ry: 150, fill: "url(#nHalo)" }),
+          CloudField(SKY_FINALE.landFar, 0, time * recede, 0),
+          CloudField(SKY_FINALE.landNear, 1, time * recede, 0),
+          DayBirds({ set: "n", time: time }),
           FujiMountain({ cx: 380, baseY: 1008, w: 2020, ht: 706, capT: 0.3 }),
-          CITY_DEEP.map(function (b, i) {
-            var bx = b.x, bw = b.w, top = 988 - b.h, bh = b.h + 22;
-            var kind = b.k;
-            var els = [];
-            if (kind === 1) {                       // setback crown
-              var inset = bw * 0.17, sh = bh * 0.2;
-              els.push(h("rect", { x: bx + inset, y: top, width: bw - inset * 2, height: sh + 4, fill: DAY.cityDeep }));
-              els.push(h("rect", { x: bx + inset, y: top - 3, width: bw - inset * 2, height: 3, fill: DAY.cityDeepTop }));
-              els.push(h("rect", { x: bx, y: top + sh, width: bw, height: bh - sh, fill: DAY.cityDeep }));
-              els.push(h("rect", { x: bx, y: top + sh - 3, width: bw, height: 3, fill: DAY.cityDeepTop }));
-            } else if (kind === 3) {                // chamfered crown
-              els.push(h("path", { d: "M" + bx + "," + (top + bw * 0.34) + " L" + (bx + bw) + "," + top + " L" + (bx + bw) + "," + (top + bh) + " L" + bx + "," + (top + bh) + " Z", fill: DAY.cityDeep }));
-            } else {
-              els.push(h("rect", { x: bx, y: top, width: bw, height: bh, fill: DAY.cityDeep }));
-              els.push(h("rect", { x: bx, y: top - 3, width: bw, height: 3, fill: DAY.cityDeepTop }));
-            }
-            if (kind === 2) {                       // rooftop mast
-              els.push(h("rect", { x: bx + bw / 2 - 1.6, y: top - 28, width: 3.2, height: 28, fill: DAY.cityDeepTop }));
-            }
-            var gridTop = (kind === 1 ? top + bh * 0.2 : kind === 3 ? top + bw * 0.36 : top) + 10;
-            var gridH = top + bh - gridTop - 8;
-            var cols = Math.max(2, Math.round(bw / 27)), rows = Math.max(3, Math.floor(gridH / 36));
-            var gx = (bw - 16) / cols, gy2 = gridH / rows;
-            (function () {
-              var d = "";
-              for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) d += "M" + (bx + 9 + c * gx) + "," + (gridTop + r * gy2) + "h" + (gx * 0.46) + "v" + (gy2 * 0.48) + "h" + (-gx * 0.46) + "z";
-              els.push(h("path", { d: d, fill: DAY.cityWin }));
-            })();
-            els.push(h("rect", { x: bx, y: top, width: bw * 0.14, height: bh, fill: DAY.shade }));
-            els.push(h("rect", { x: bx + bw - 3, y: top, width: 3, height: bh, fill: DAY.rim }));
-            return h("g", null, els);
-          }),
-          h("rect", { x: 0, y: 758, width: 1920, height: 252, fill: "url(#horizHaze)" }),
+          MountainRange({ x: -60, baseY: 1008, s: 0.78 }),
+          CityRow(city.far, 0),
+          CityHaze("nHazeFar", 1008, 0),
           TokyoTower({ cx: 1360, baseY: 1008, h: 840, time: time, opacity: 0.97 }),
-          CITY_BACK.map(function (b, i) { return CityBuilding({ x: b.x, baseY: 1010, w: b.w, h: b.h, seed: "c4b" + i, fi: i, faces: DAY.cityBack, detail: 1, cap: DAY.cityBackCap }); }),
-          CITY_FRONT.map(function (b, i) { return CityBuilding({ x: b.x, baseY: 1010, w: b.w, h: b.h, seed: "c4f" + i, fi: i, faces: DAY.cityFront, detail: 1, cap: DAY.cityFrontCap }); }),
-          h("circle", { cx: 1652, cy: 136, r: 980, fill: "url(#sunGlow)", opacity: 0.13 }),
+          CityRow(city.back, 0), CityCranes(city.back, time), CityRow(city.front, 0), CityLights(city.lights, time),
+          CityHaze("nHazeNear", 1010, 1),
+          h("circle", { cx: 1652, cy: 136, r: 980, fill: "url(#nSun)", opacity: 0.13 }),
           Airport(time),
           h("rect", { x: 744, y: 922, width: 432, height: 84, rx: 4, fill: DAY.office, stroke: "rgba(22,41,63,0.18)", strokeWidth: 1.5 }),
           h("rect", { x: 744, y: 916, width: 432, height: 9, rx: 4, fill: "#d6dfe9", stroke: "rgba(22,41,63,0.15)", strokeWidth: 1 }),
@@ -2540,7 +3438,7 @@
         )
       ),
       h("div", { style: { position: "absolute", left: 535, top: 12, width: 850, height: 1056, opacity: mapIn * (1 - recede), transform: "scale(" + ((0.95 + 0.05 * mapIn) * (1 - recede * 0.08)) + ") translate(" + (recede * -36) + "px, " + ((1 - mapIn) * 34) + "px)", transformOrigin: "46% 46%", maskImage: "radial-gradient(72% 66% at 48% 50%, rgba(0,0,0,1) 58%, rgba(0,0,0,0.6) 76%, rgba(0,0,0,0) 93%)" } },
-        CoverageMap({ prefProgress: prefK, routeProgress: routeK, pinProgress: pinK, flowTime: time, mapIn: mapIn })
+        CoverageMap({ prefProgress: prefK, routeProgress: routeK, pinProgress: pinK, depotFrame: frame, flowTime: time, mapIn: mapIn })
       ),
       recede < 0.96 ? h("div", { style: { opacity: 1 - recede, transform: "translateX(" + (recede * 60) + "px)" } },
         KpiCard({
@@ -2617,6 +3515,7 @@
   /* scene-index seek beats used by the page scaffold (master frames). */
   var SCENES = [0, T_WORLD.panEnd, TRANSIT_START + SLIDE, NETWORK_START + 34];
 
+  root.JourneyPort._components.city = { row: cityRow, draw: CityRow, cranes: CityCranes, look: CITY_LOOK, size: SKYLINE_SIZE, world: cityWorld, transit: cityTransit, finale: cityFinale };
   root.JourneyPort.renderMaster = renderMaster;
   root.JourneyPort.mount = mount;
   root.JourneyPort.SCENES = SCENES;

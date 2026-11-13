@@ -127,6 +127,15 @@ Round 3 (started 2026-11-14, brief in `PROMPT-FOR-FABLE.md`):
   shafts, clouds, city kit and skyline, Tower, window light, Fuji's size) → 2 scenes 01-02 → 3 the Sanpou
   warehouse → 4 scene 03 → 5 scene 04 → 6 scene 05 → 7 the seams and the motion pass → 8 the last look.
   The owner wants all the drawing approved first and the motion built after it.
+- **Pass 1 is drawn and shown (2026-11-14), waiting for the owner's verdict and two size picks** (how tall
+  the city stands, how big Fuji is: `evidence/2026-11-14-r3-pass1/options-*.jpg`). It also holds two things
+  the owner pulled forward: the supplier building redrawn modern and a little bigger, and the three map
+  depots. What is new and what is still old is listed at the end of `CHANGES.md`. Do not start pass 2 before
+  the owner answers.
+- How the passes are drawn: one fresh Fable helper per element with a self-contained brief, each in its own
+  trial side built by `sh tools/build-side.sh <side> round2/parts/<part>.js`, two at a time at most; a cheaper
+  model for engineering. The main session reviews the frames, merges the parts, runs the checks
+  (`check-viewer`, `motion-check`, `contrast-check`, `sha256sum -c`) and shows the owner.
 - A part file's anchors are used up by its first splice. To change something already spliced, write a new
   part whose anchors match the file as it is now; to try something, build a sample side from a fresh copy of
   `round2/js` and point its build script at the part in `round2/parts/` (never a second copy of the part).
@@ -160,5 +169,7 @@ webapp-testing, `watch` (claude-video: Gemini engine has a key; Google returned 
 
 ## Working with the owner
 
-Plain words, short answers, no jargon. Show sample frames, don't describe them. Ask before choosing between
+Plain words, short answers, no jargon. Show sample frames, don't describe them. With every frame, say in
+one line exactly which elements in that picture are new and which are still old (the owner asked for this on
+2026-11-14, so he judges the new work and not the leftovers). Ask before choosing between
 directions. One commit per pass in this folder's own git repo, with before/after evidence.

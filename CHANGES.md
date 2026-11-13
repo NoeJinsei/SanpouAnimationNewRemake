@@ -402,3 +402,43 @@ again, not re-textured.
 
 All five scenes on one sheet for colour drift; dead code removed in one deliberate pass; the leftover
 mismatches fixed. Full verification and one commit.
+
+### Owner's additions during pass 1 (2026-11-14)
+
+- **Supplier building roof gear: removed now** (water tank, both condensers, stair head, handrail, vent), before
+  pass 1 is shown, because it was the first thing the eye landed on (`round2/parts/r3-supplier-roof.js`).
+- **Supplier building redraw pulled forward into pass 1**, in the owner's words: "more modern and attractive in
+  its design, not like a super high tech, but a modern general looking warehouse look, and make it a bit bigger
+  in size of its building". (He calls the scene 01 supplier building "the warehouse".) Bigger means about 12 to
+  15 percent, grown to the left and up so the dock and the truck stay where they are.
+- **The three depot buildings on the map**: polished now too, and sized as they pop up so they never overlap
+  each other. The rest of the map still waits for pass 5.
+- **Every frame shown carries one line saying which elements are new and which are still old.**
+
+### Pass 1 as drawn (2026-11-14): shown to the owner, waiting for the verdict and two size picks
+
+In `round2/js` (parts `r3-sky`, `r3-tower`, `r3-supplier-roof`, `r3-city`, `r3-supplier`, `r3-sky-fix`, `r3-depots`,
+applied in that order). Evidence in `evidence/2026-11-14-r3-pass1/`: `three-way-scene01/02/03/05.jpg` (original,
+frozen round 2, new), `options-city-height.jpg`, `options-fuji-size.jpg`, `depots/`, and one folder per part.
+
+- **New in this pass:** the sky family, the sun, the light shafts, four cloud species on two planes, the birds,
+  the mountain range; the city (nine Tokyo building types, hand-composed skylines for scenes 01/02, 03 and 05,
+  the finale's back row through the kit, two haze bands everywhere, the window light, the crane); Tokyo Tower;
+  the supplier building (modern, about 12 percent wider and its office corner 15 percent taller, roof clean);
+  the three map depots and how they arrive.
+- **Still old in these frames:** the truck, parcels, street, lamps, poles, vending machines and foreground rail
+  (round 2); the Sanpou warehouse, the expressway and its gantry and signs, the airport, terminal, plane,
+  office block, the finale's road and little trucks (original drawings); the map apart from its depots
+  (round 2's teal map); Mt Fuji's drawing (approved, unchanged).
+- **Owner picks, on the option sheets:** how tall the city stands (`SKYLINE_SIZE`: A = 1 / 1 as drawn,
+  B = 1.12 / 1.15, C = 1.25 / 1.3) and how big Fuji is (1 = the size it was approved at, 2 = the trial about a
+  fifth bigger, which is what the frames show, 3 = a step bigger again). `tools/size-options.py` rebuilds them.
+- **Checked on the working copy:** `original/` intact; 0 console errors over 22 moments and three framings;
+  draw 1.69 ms a frame against frozen round 2's 1.74 in the same run; no frozen steps and no pops in scenes
+  01, 03 and 05; copy contrast: headline 9.0, sub-copy 9.9, caption lead 5.1 (all pass AA). The unfilled
+  progress track measures about 1:1 where it crosses pale sky, on the original too; it is the site's own
+  chrome and is carried as an open item.
+- **Known, to settle in a later pass:** the city's cast shadows are see-through navy overlays, which breaks the
+  one-step shadow rule on paper (convert to solid tones in the last look); the canvas engine has not been run
+  on the new parts; scene 04's sky holds the finale's sun and clouds still (motion pass); scene 02 shows two
+  cranes.
