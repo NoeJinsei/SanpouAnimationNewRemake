@@ -235,3 +235,50 @@ the expressway (03) are still the ORIGINAL drawings - nothing has been done to t
 Built as `samples/city-v2` (viewer side "City rebuilt"); `samples/city-v2/build.sh` rebuilds it from
 `round2/js` + `round2/parts/city2.js`. 0 console errors over 22 moments and three framings, deterministic,
 and it draws at **1.97 ms a frame against the original's 2.57 ms**.
+
+## The owner's direction after seeing the rebuilt city (2026-11-14) — round 3
+
+Verbatim, so nothing is lost in paraphrase:
+
+> For the city background and the scene you built, the 2d (slightly 3d ish) is still fine, but I was
+> expecting a more drastic change in its designs, with its buildings and other elements, including the
+> airport / terminal, the plane, roads, and the trucks at the bottom as well.
+>
+> The redesign of the warehouse looks better, but it looks a bit old school (especially with the a bit too
+> detailed elements on its roof, I know those are there and personally I like it but this is a animation for
+> a logistics company, and we dont really want it to show those on it I think. I want it to make it look more
+> modern looking warehouse, but the windows and the bottom docking section actually looks pretty solid, but I
+> want to ask Fable to make it more neat / clean and modern but still with improved design choice. For the
+> buildings as well, in the background, I want to make them a bit bigger / taller, same for the fuji mountain
+> as well.
+>
+> Make sure in the animation, I want the lightings / reflections (subtle) from the windows from the buildings
+> in the background is also added as well as a minor touch in it. For the truck, two wheels is fine for now,
+> since fable asked if I wanted 3.
+>
+> (tokyo tower's legs at the bottom could be further improved I think, along with its general design, make
+> sure all of the other elements including these are redesigned in full details and with better structure and
+> also have very smooth scene transitions between each scenes.
+>
+> Tha map scnen too, dont use red as its base, use some other color that would be more appropriate to the
+> flow of the animation scene, with the dots of the three company indicators changed to the mini warehouse
+> illustration with appropriate animation when it pops up as well.
+
+What this settles:
+
+| | |
+|---|---|
+| The slightly-3d look | **Kept.** The oblique volume introduced in the city rebuild is the right language. What is not enough is how far the designs themselves travel. |
+| Truck wheels | **Closed.** Two axles, twin rear tyres. Do not revisit. |
+| Supplier building roof | The plant, tanks, condensers and ducts come **off**. Real, but they date the drawing and they are not what a logistics company shows. |
+| Supplier building windows + dock | **Keep the arrangement** — the owner likes them. Draw them neater, cleaner and more modern. |
+| Background buildings | **Bigger and taller**, and the designs themselves changed far more, not only their layout. |
+| Mt Fuji | **Bigger and taller.** Its drawing was approved on 2026-11-14 and its colour is settled; only its scale changes. |
+| Window light | Subtle lighting and reflections on the background buildings' windows, as a **minor** touch in motion — never a twinkle field. |
+| Tokyo Tower | The legs at the bottom and the general structure redesigned in full. |
+| Scene seams | **"Very smooth scene transitions between each scenes"** — the owner has now asked for the seams to be worked on, which answers the open question about whether they may be redesigned. |
+| The map's base colour | **Not red.** A colour that fits the flow of the scene, which dissolves out of a blue sky and back into one. Vermilion stays a scarce accent at most. |
+| The three base markers | **Not dots.** A mini warehouse illustration each, with a real pop-in. |
+
+Still untouched and still the original drawings: the warehouse of scene 02, the expressway of scene 03, the
+airport, terminal, plane, office block and road traffic of scene 05.

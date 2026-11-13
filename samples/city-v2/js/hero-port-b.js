@@ -730,6 +730,7 @@
      that breaks the tier's band, some gaps are negative so neighbours overlap, and each plot sits
      at one of three depths INSIDE its tier. The array comes back sorted back to front, ready to
      draw, carrying its depth so the building can be drawn as a volume at that distance. */
+  var TALLER = 1.22;                                               // how much taller the city stands than the original
   function makeSkylineTier(seed, span, opt) {
     var WS = [1, 0.46, 1.3, 0.72, 1.08, 0.56, 1.46, 0.86];        // plot widths: slivers beside slabs
     var HS = [1, 0.38, 0.8, 1.24, 0.52, 0.96, 0.26, 1.12, 0.68, 1.38];
@@ -741,7 +742,9 @@
       var hf = opt.hf[i % opt.hf.length] * HS[i % HS.length];
       var land = i % 7 === 3;                                      // a landmark, slim and tall
       var lb = opt.base < 150 ? 1.55 : 1.22;                       // the near tier carries the towers
-      var hgt = Math.round(opt.base * (land ? 1.06 : 0.84) + opt.amp * hf * (land ? lb : 1));
+      // the owner asked for a taller city: one factor, so every tier grows together and the skyline
+      // keeps its proportions against the Tower and Fuji
+      var hgt = Math.round(TALLER * (opt.base * (land ? 1.06 : 0.84) + opt.amp * hf * (land ? lb : 1)));
       if (land) w = Math.max(46, Math.round(w * 0.6));
       if (hgt < 46) hgt = 46;
       if (x + w > span + 110) break;
@@ -1978,7 +1981,7 @@
         }),
         h("g", null,
           h("path", { d: "M0," + (ROAD_Y - 128) + " C320," + (ROAD_Y - 158) + " 680," + (ROAD_Y - 132) + " 1080," + (ROAD_Y - 156) + " C1420," + (ROAD_Y - 176) + " 1700," + (ROAD_Y - 140) + " 1920," + (ROAD_Y - 154) + " L1920," + ROAD_Y + " L0," + ROAD_Y + " Z", fill: DAY.hill }),
-          FujiMountain({ cx: 460, baseY: 742, w: 1240, ht: 470 })
+          FujiMountain({ cx: 440, baseY: 742, w: 1480, ht: 596 })
         ),
         [0, 1].map(function (rep) {
           var off = wrap(scroll * 0.18, TILE) + rep * TILE;
@@ -2218,13 +2221,13 @@
       { x: 1826, w: 96, h: 435, k: 3 }
     ];
     var CITY_BACK = [
-      { x: 118, w: 122, h: 305 }, { x: 606, w: 130, h: 345 },
-      { x: 856, w: 118, h: 285 }, { x: 998, w: 126, h: 385 },
-      { x: 1542, w: 128, h: 365 }, { x: 1732, w: 122, h: 265 }
+      { x: 118, w: 122, h: 372 }, { x: 606, w: 130, h: 421 },
+      { x: 856, w: 118, h: 348 }, { x: 998, w: 126, h: 470 },
+      { x: 1542, w: 128, h: 445 }, { x: 1732, w: 122, h: 323 }
     ];
     var CITY_FRONT = [
-      { x: 678, w: 112, h: 175 }, { x: 986, w: 120, h: 215 },
-      { x: 1652, w: 132, h: 195 }, { x: 1794, w: 118, h: 235 }
+      { x: 678, w: 112, h: 214 }, { x: 986, w: 120, h: 262 },
+      { x: 1652, w: 132, h: 238 }, { x: 1794, w: 118, h: 287 }
     ];
     return h("div", { style: { position: "absolute", inset: 0, background: "#eaf5fc", overflow: "hidden" } },
       h("div", { style: { position: "absolute", inset: 0, background: DAY.skyN } }),
@@ -2285,7 +2288,7 @@
             return h("g", { transform: "translate(" + wx + ", " + (c.y + by) + ")" }, Cloud({ w: c.w, o: 0.92, edge: ed }));
           }),
           DayBirds({ seed: "n-birds", count: 3, time: time, span: 2300, yBase: 210 }),
-          FujiMountain({ cx: 400, baseY: 1008, w: 1700, ht: 560, capT: 0.3 }),
+          FujiMountain({ cx: 380, baseY: 1008, w: 2020, ht: 706, capT: 0.3 }),
           CITY_DEEP.map(function (b, i) {
             var bx = b.x, bw = b.w, top = 988 - b.h, bh = b.h + 22;
             var kind = b.k;
