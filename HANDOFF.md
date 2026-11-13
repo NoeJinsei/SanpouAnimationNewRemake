@@ -132,17 +132,22 @@ Order: finish one scene before starting the next, and after each one look at a s
 together to catch colour drift. The scenes share components and one palette, so a change in scene 01 shows up
 in scene 05 — that is wanted, but it has to be checked.
 
+## The owner's round 2 direction
+
+`CHANGES.md` ends with the round 2 brief: what Mt Fuji, the background city, the airport and its plane, and
+the map scene each become, in the owner's words with the reason each one reads as it does today. Read it
+before planning any scene.
+
 ## Still waiting on the owner
 
 - Scene 02 (round 1): interior brightness, whether to keep the forklift in bay 02, whether the ground should
   say more. These may be moot if scene 02 is redrawn from scratch.
-- Scene 03 (round 1): cloud drift direction, cap size. **Fuji's colour is decided in direction: the owner wants
-  the blue body clearly darker, "like the typical fuji mountain illustrations that is out there" (2026-11-13).**
+- Scene 03 (round 1): cloud drift direction. **Fuji's colour is settled: body `#5f93c9`, shade `#4d7db2`
+  (the owner picked it from the rendered options on 2026-11-13); its shape was rejected as "janky / basic" and
+  is redrawn in round 2 - see the round 2 brief in CHANGES.md.**
   It is one colour for the whole film (`DAY.fuji` with `DAY.fujiShade`), so it applies to every scene at once.
-  Four options were rendered for the owner to pick from (`evidence/2026-11-13-fuji/`): today's `#a6cae9`,
-  then `#7fb0dc`, `#5f93c9` and `#4a7ab5`, each with a shade one step down. Watch the depth rule as it gets
-  darker: at `#4a7ab5` the mountain is darker than some of the city in front of it, which reads as wrong
-  because far things should stay lighter. Record the chosen value here once the owner says.
+  Do not go darker than the chosen value: at `#4a7ab5` the mountain reads darker than the city in front of it,
+  which breaks the rule that distant things stay lighter. The options are in `evidence/2026-11-13-fuji/`.
 - ~~The parked truck at the dock: engine running or switched off?~~ **Answered 2026-11-13: the engines are
   running at the dock.** So a parked truck shows a faint exhaust wisp and a trace of engine movement. Note for
   whoever draws it: the original's exhaust puffs are multiplied by `run` (the truck's speed), so they vanish
