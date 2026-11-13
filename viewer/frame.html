@@ -38,6 +38,13 @@
   function load(src) { return new Promise(function (ok, no) { var s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = function () { no(new Error("script not found: " + src)); }; document.body.appendChild(s); }); }
   function text(url) { return fetch(url).then(function (r) { if (!r.ok) throw new Error(url + " -> " + r.status); return r.text(); }); }
   window.addEventListener("error", function (e) { if (!window.heroFrame) fail(e.error || e.message); });
+  // this page loads the hero's files next to it, so it only works when the folder is served over http
+  if (location.protocol !== "http:" && location.protocol !== "https:") {
+    return fail(new Error("Open this through the local server, not as a file.\n\n"
+      + "  1. in the project folder:  python -m http.server 8791 --bind 127.0.0.1\n"
+      + "  2. open:  http://127.0.0.1:8791/viewer.html\n\n"
+      + "(this page was opened as \"" + location.protocol + "\", so the hero's files next to it cannot be found)"));
+  }
 
   Promise.all([text("../sides.json").then(JSON.parse), text("../original/site/hero-section.html")]).then(function (r) {
     var side = r[0].sides.filter(function (s) { return s.id === sideId; })[0];
