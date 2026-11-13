@@ -390,59 +390,224 @@
 
   /* ---- scenery.tsx ---- */
   var SUPPLIER_W = 340, SUPPLIER_DOCK = { x: 252, y: -22 };
-  function SupplierBuilding(p) {
-    var x = p.x, y = p.y, scale = p.scale == null ? 1.9 : p.scale;
-    return h("g", { transform: "translate(" + x + ", " + y + ") scale(" + scale + ") translate(0, -278)" },
-      h("ellipse", { cx: 170, cy: 282, rx: 196, ry: 10, fill: "rgba(10,20,36,0.25)" }),
-      h("rect", { x: 0, y: 64, width: 340, height: 214, rx: 5, fill: "#7e94b6", stroke: "#42536e", strokeWidth: 3.4 }),
-      h("rect", { x: 0, y: 64, width: 340, height: 52, rx: 5, fill: "#93a8c4" }),
-      h("line", { x1: 0, y1: 116, x2: 340, y2: 116, stroke: "rgba(16,31,54,0.5)", strokeWidth: 2 }),
-      h("rect", { x: -9, y: 54, width: 358, height: 16, rx: 2.5, fill: COLORS.ink2 }),
-      h("rect", { x: 36, y: 34, width: 66, height: 22, rx: 2, fill: "#33425C", stroke: COLORS.ink, strokeWidth: 2 }),
-      h("rect", { x: 46, y: 26, width: 12, height: 10, fill: "#3D4D6B" }),
-      h("rect", { x: 232, y: 40, width: 84, height: 16, rx: 2, fill: "#33425C", stroke: COLORS.ink, strokeWidth: 2 }),
-      h("rect", { x: 22, y: 78, width: 150, height: 22, rx: 4, fill: "#e9f1f9", stroke: "rgba(22,41,63,0.3)", strokeWidth: 1.4 }),
-      h("rect", { x: 30, y: 85, width: 86, height: 8, rx: 4, fill: "#68809f" }),
-      h("rect", { x: 124, y: 85, width: 38, height: 8, rx: 4, fill: "#8ea4bf" }),
-      [0, 1].map(function (rr) {
-        return [0, 1, 2].map(function (c) {
-          var warm = (rr === 0 && c === 1);
-          return h("g", null,
-            h("rect", { x: 21 + c * 56, y: 125 + rr * 44, width: 48, height: 38, rx: 3, fill: "#54698c" }),
-            h("rect", { x: 24 + c * 56, y: 128 + rr * 44, width: 42, height: 32, rx: 2.5, fill: warm ? DAY.warm : "#cde2f4" }),
-            h("rect", { x: 24 + c * 56, y: 128 + rr * 44, width: 42, height: 13, rx: 2.5, fill: "rgba(255,255,255,0.45)" }),
-            h("line", { x1: 45 + c * 56, y1: 128 + rr * 44, x2: 45 + c * 56, y2: 160 + rr * 44, stroke: "rgba(22,41,63,0.3)", strokeWidth: 1.6 }),
-            h("line", { x1: 24 + c * 56, y1: 144 + rr * 44, x2: 66 + c * 56, y2: 144 + rr * 44, stroke: "rgba(22,41,63,0.22)", strokeWidth: 1.4 })
-          );
-        });
-      }),
-      h("g", null,
-        [206, 262].map(function (wx, wi) {
-          return h("g", null,
-            h("rect", { x: wx - 3, y: 125, width: 48, height: 38, rx: 3, fill: "#54698c" }),
-            h("rect", { x: wx, y: 128, width: 42, height: 32, rx: 2.5, fill: wi === 1 ? DAY.warm : "#cde2f4" }),
-            h("rect", { x: wx, y: 128, width: 42, height: 13, rx: 2.5, fill: "rgba(255,255,255,0.45)" }),
-            h("line", { x1: wx + 21, y1: 128, x2: wx + 21, y2: 160, stroke: "rgba(22,41,63,0.3)", strokeWidth: 1.6 }),
-            h("line", { x1: wx, y1: 144, x2: wx + 42, y2: 144, stroke: "rgba(22,41,63,0.22)", strokeWidth: 1.4 })
-          );
-        })
-      ),
-      h("rect", { x: 206, y: 186, width: 100, height: 92, rx: 2.5, fill: "#6d829f" }),
-      h("rect", { x: 206, y: 186, width: 100, height: 92, rx: 2.5, fill: "none", stroke: "rgba(16,31,54,0.6)", strokeWidth: 2 }),
-      h("rect", { x: 198, y: 176, width: 116, height: 11, rx: 2.5, fill: "#3A4A66" }),
-      h("rect", { x: 198, y: 171, width: 116, height: 6, rx: 3, fill: "#44557A" }),
-      h("rect", { x: 210, y: 270, width: 10, height: 8, rx: 1.5, fill: "#1A2434" }),
-      h("rect", { x: 292, y: 270, width: 10, height: 8, rx: 1.5, fill: "#1A2434" }),
-      h("rect", { x: 246, y: 180, width: 20, height: 5, rx: 2.5, fill: "#c9d2dc" }),
-      h("rect", { x: 216, y: 246, width: 28, height: 30, rx: 1.5, fill: COLORS.paper, stroke: COLORS.ink, strokeWidth: 2 }),
-      h("rect", { x: 228, y: 246, width: 3.4, height: 30, fill: COLORS.verm }),
-      h("rect", { x: 250, y: 254, width: 24, height: 22, rx: 1.5, fill: "#C9CDD4", stroke: COLORS.ink, strokeWidth: 2 }),
-      h("rect", { x: 150, y: 232, width: 30, height: 46, rx: 2, fill: "#5b6d88", stroke: "#3a4a64", strokeWidth: 2 }),
-      h("rect", { x: 172, y: 252, width: 3.4, height: 8, rx: 1.7, fill: "rgba(245, 236, 234,0.4)" }),
+  /* The supplier's building, round 2 (same place, width, height and dock point as before).
+     Colours: blue-grey for a third party's building; each surface has a light / base / shade set. */
+  DAY.supInk = "#26344f"; DAY.supRoof = "#1f2c47"; DAY.supRoofLip = "#3a4d74";
+  DAY.supWall = "#9db1ce"; DAY.supWallLight = "#bccbe0"; DAY.supWallShade = "#7a8fb4";
+  DAY.supBand = "#5f79a5"; DAY.supBandShade = "#4c6591";
+  DAY.supPlinth = "#566b91"; DAY.supPlinthLight = "#6f85aa"; DAY.supPlinthShade = "#465a7f";
+  DAY.supFrame = "#4c6187"; DAY.supFrameShade = "#3f5378";
+  DAY.supGlass = "#c6dcf1"; DAY.supGlassHi = "#e6f1fb"; DAY.supGlassShade = "#a3bddb";
+  DAY.supWarmHi = "#ffeabf"; DAY.supWarmShade = "#f0c275";
+  DAY.supBlind = "#f1f5fa"; DAY.supBlindShade = "#d3dde9";
+  DAY.supSill = "#c4d1e3"; DAY.supSillShade = "#a5b6cf";
+  DAY.supPlate = "#eaf1f9"; DAY.supPlateShade = "#c9d7e9"; DAY.supBar1 = "#60789b"; DAY.supBar1Shade = "#506789"; DAY.supBar2 = "#8ea4bf"; DAY.supBar2Shade = "#7a90ad";
+  DAY.supSteel = "#ced8e6"; DAY.supSteelLine = "#b4c1d5"; DAY.supSteelShade = "#aebbd0"; DAY.supSteelLineShade = "#98a8c1";
+  DAY.supSteelBar = "#95a6c0"; DAY.supSteelBarShade = "#8091ad";
+  DAY.supDoor = "#566c92"; DAY.supDoorShade = "#475b80"; DAY.supDoorKick = "#8799b6";
+  DAY.supCanopy = "#2a3a59"; DAY.supCanopyLip = "#44587f"; DAY.supCanopyUnder = "#1f2c47";
+  DAY.supDock = "#7388ab"; DAY.supRubber = "#1a2434";
+  DAY.supPale = "#e6edf5"; DAY.supPaleShade = "#c6d2e2";
+  DAY.supPlant = "#8397b8"; DAY.supPlantLight = "#a3b5cf"; DAY.supPlantShade = "#6c81a5"; DAY.supRail = "#3d4f72"; DAY.supRailPale = "#5a6f95";
+  DAY.supSafety = "#f2c14e"; DAY.supSafetyShade = "#d8a53a";
+  DAY.supPallet = "#4f73b3"; DAY.supPalletDark = "#3d5b93";
+  DAY.supCarton = "#d9dfe8"; DAY.supCartonShade = "#c1cad8"; DAY.supPaperShade = "#dfe6ef";
+  DAY.supGroundShade = "#a9b1bc";
 
-    );
+  // A cast shadow is one flat polygon. What it covers on a surface is that polygon clipped to the surface and
+  // filled with the surface's own shade tone, so every material it crosses steps exactly one tone down.
+  function _clipPoly(poly, x0, y0, x1, y1) {
+    function cut(pts, inside, isect) {
+      var o = [];
+      for (var i = 0; i < pts.length; i++) {
+        var a = pts[i], b = pts[(i + 1) % pts.length], ia = inside(a), ib = inside(b);
+        if (ia) o.push(a);
+        if (ia !== ib) o.push(isect(a, b));
+      }
+      return o;
+    }
+    function ix(X) { return function (a, b) { return [X, a[1] + (b[1] - a[1]) * (X - a[0]) / (b[0] - a[0])]; }; }
+    function iy(Y) { return function (a, b) { return [a[0] + (b[0] - a[0]) * (Y - a[1]) / (b[1] - a[1]), Y]; }; }
+    var q = cut(poly, function (v) { return v[0] >= x0; }, ix(x0));
+    if (q.length) q = cut(q, function (v) { return v[0] <= x1; }, ix(x1));
+    if (q.length) q = cut(q, function (v) { return v[1] >= y0; }, iy(y0));
+    if (q.length) q = cut(q, function (v) { return v[1] <= y1; }, iy(y1));
+    return q;
+  }
+  function _polyD(q) {
+    if (q.length < 3) return "";
+    var d = "";
+    for (var i = 0; i < q.length; i++) d += (i ? "L" : "M") + Math.round(q[i][0] * 10) / 10 + "," + Math.round(q[i][1] * 10) / 10;
+    return d + "Z";
   }
 
+  /* Local units, ground at y 278, wall 0..340 wide (x 1.9 on screen). A two-storey office-over-dock building:
+     three pilasters make two bays (office on the left, dock on the right), a floor band, a plinth, a fascia
+     under a dark coping, plant on the roof. One sun, top right: everything proud of the wall throws a flat
+     shadow down and to the left. Static, so it is built once. */
+  var _supMemo = {};
+  function SupplierBuilding(p) {
+    var x = p.x, y = p.y, scale = p.scale == null ? 1.9 : p.scale, mk = x + "|" + y + "|" + scale;
+    if (_supMemo[mk]) return _supMemo[mk];
+    var D = DAY, out = [], last = [];
+    var G = 278, W = SUPPLIER_W, TOP = 67, FL = 166, GF = 174, PL = 262;   // ground, width, wall top, floor band top, ground-storey top, plinth top
+    var SL = 1;                                                            // a cast shadow runs this far left per unit down
+    function R(rx0, ry0, w, hh, fill, rr) { return h("rect", { x: rx0, y: ry0, width: w, height: hh, rx: rr, fill: fill }); }
+    function rd(rx0, ry0, w, hh) { return "M" + rx0 + "," + ry0 + "h" + w + "v" + hh + "h" + (-w) + "z"; }
+    function band(xa, xb) { return [[xa, TOP], [xb, TOP], [xb - (290 - TOP) * SL, 290], [xa - (290 - TOP) * SL, 290]]; }
+    function off(rx0, ry0, w, hh, d) { var dx = d * 0.8 * SL; return [[rx0 - dx, ry0 + d], [rx0 + w - dx, ry0 + d], [rx0 + w - dx, ry0 + hh + d], [rx0 - dx, ry0 + hh + d]]; }
+
+    // windows: [x, y, w, h, lights, per-light { warm, blind }]
+    var WINS = [
+      [28, 108, 144, 46, 4, [{ blind: 13 }, {}, { blind: 22 }, { warm: 1 }]],     // office ribbon, upper floor
+      [28, 190, 66, 26, 2, [{}, {}]],                                                   // high strip over the stores, ground floor
+      [229, 100, 54, 46, 2, [{ blind: 16 }, { warm: 1 }]]                            // over the dock
+    ];
+    var SH = [
+      [[0, TOP], [W, TOP], [W, TOP + 7], [0, TOP + 7]],                              // under the coping
+      band(122, 180), band(82, 100),                                                 // two bands of cast shadow across the office bay
+      [[194, 164], [322, 164], [306, 192], [178, 192]],                              // under the dock canopy
+      [[133, 211], [175, 211], [168, 222], [126, 222]],                              // under the door canopy
+      [[184, TOP], [184, PL], [179.5, PL], [179.5, TOP + 6]],                        // beside the middle pilaster
+      [[330, TOP], [330, PL], [325.5, PL], [325.5, TOP + 6]],                        // beside the corner pilaster
+      [[10, GF], [330, GF], [330, GF + 3.5], [10, GF + 3.5]],                        // under the floor band
+      [[13, 78], [13, PL], [9.5, PL], [9.5, 82]],                                    // beside the downpipe
+      off(30, 87, 120, 16, 3), off(98, 188, 27, 25, 5)                              // behind the name plate and the wall unit
+    ];
+    WINS.forEach(function (w) { var sy = w[1] + w[3] + 3.5; SH.push([[w[0] - 3, sy], [w[0] + w[2] + 3, sy], [w[0] + w[2] + 0.5, sy + 3], [w[0] - 5.5, sy + 3]]); });
+    // one diagonal of sky across the glass, on the same lines through every pane
+    var REFL = [];
+    for (var k = 0; k < 6; k++) { REFL.push([[58 + k * 62, 60], [76 + k * 62, 60], [76 + k * 62 - 220, 280], [58 + k * 62 - 220, 280]], [[84 + k * 62, 60], [90 + k * 62, 60], [90 + k * 62 - 220, 280], [84 + k * 62 - 220, 280]]); }
+
+    function castD(x0, y0, x1, y1) { var d = ""; for (var i = 0; i < SH.length; i++) d += _polyD(_clipPoly(SH[i], x0, y0, x1, y1)); return d; }
+    function surf(sx, sy, w, hh, fill, shade) {                                      // a flat surface and whatever shadow falls on it
+      out.push(R(sx, sy, w, hh, fill));
+      var d = castD(sx, sy, sx + w, sy + hh);
+      if (d) out.push(h("path", { d: d, fill: shade }));
+    }
+    function glass(gx, gy, w, hh, warm, blind) {                                     // a pane set back in its frame
+      var g = warm ? [D.warm, D.supWarmHi, D.supWarmShade] : [D.supGlass, D.supGlassHi, D.supGlassShade], hi = "";
+      out.push(R(gx, gy, w, hh, g[0]));
+      REFL.forEach(function (q) { hi += _polyD(_clipPoly(q, gx, gy, gx + w, gy + hh)); });
+      if (hi) out.push(h("path", { d: hi, fill: g[1] }));
+      out.push(h("path", { d: castD(gx, gy, gx + w, gy + hh) + rd(gx, gy, w, 2.6) + rd(gx + w - 2.2, gy, 2.2, hh), fill: g[2] }));
+      if (blind) {
+        out.push(R(gx, gy, w, blind, D.supBlind));
+        out.push(h("path", { d: castD(gx, gy, gx + w, gy + blind) + rd(gx, gy, w, 2.6) + rd(gx + w - 2.2, gy, 2.2, blind) + rd(gx, gy + blind - 2.2, w, 2.2), fill: D.supBlindShade }));
+      }
+    }
+    function carton(cx0, cy0, w, hh, fill, shade, tape) {
+      out.push(h("rect", { x: cx0, y: cy0, width: w, height: hh, rx: 1, fill: fill, stroke: COLORS.ink, strokeWidth: 1.6 }));
+      out.push(R(cx0 + 0.8, cy0 + 0.8, 3.4, hh - 1.6, shade));
+      if (tape) out.push(R(cx0 + w * 0.46, cy0 + 0.8, 3.6, hh - 1.6, COLORS.verm));
+    }
+
+    /* ---- ground: one flat contact shadow, falling toward the viewer's left ---- */
+    out.push(h("path", { d: "M-14," + G + "L343," + G + "L338," + (G + 7) + "L-22," + (G + 7) + "Z", fill: D.supGroundShade }));
+
+    /* ---- roof plant, standing behind the parapet (the coping is painted over its feet) ---- */
+    // stair head
+    out.push(R(22, 30, 74, 30, D.supInk, 2), R(24, 32, 70, 28, D.supPlant), R(24, 32, 11, 28, D.supPlantShade), R(20, 27, 78, 5.4, D.supRoof, 1.5), R(20, 27, 78, 2, D.supRoofLip, 1));
+    out.push(R(62, 38, 22, 22, D.supFrame), h("path", { d: rd(65, 41.5, 16, 2.4) + rd(65, 47, 16, 2.4) + rd(65, 52.5, 16, 2.4), fill: D.supPlantShade }));
+    // handrail along the roof edge
+    (function () { var d = rd(100, 45, 114, 2.6); for (var i = 0; i < 6; i++) d += rd(100 + i * 22.3, 45, 2.6, 14); out.push(h("path", { d: d, fill: D.supRailPale })); })();
+    // water tank: a cylinder lying on two saddles, lit along its top
+    out.push(h("path", { d: rd(135, 50, 7, 9) + rd(162, 50, 7, 9), fill: D.supRail }));
+    out.push(R(122, 29, 60, 24, D.supInk, 12), R(124, 31, 56, 20, D.supPale, 10));
+    out.push(h("path", { d: "M124.8,45L179.2,45A10,10 0 0 1 170,51L134,51A10,10 0 0 1 124.8,45Z", fill: D.supPaleShade }));
+    out.push(h("path", { d: rd(141, 31, 2.6, 20) + rd(160.4, 31, 2.6, 20), fill: D.supPaleShade }), R(147.5, 26.4, 9, 5, D.supRail, 1.2));
+    // two condensers, and a vent
+    [222, 264].forEach(function (cx0) {
+      out.push(R(cx0 - 2, 32, 40, 28, D.supInk, 2), R(cx0, 34, 36, 26, D.supPlant), R(cx0, 34, 36, 2.6, D.supPlantLight), R(cx0, 34, 6, 26, D.supPlantShade));
+      out.push(h("circle", { cx: cx0 + 20, cy: 47, r: 9.4, fill: D.supInk }), h("circle", { cx: cx0 + 20, cy: 47, r: 7, fill: D.supPlantShade }));
+    });
+    out.push(R(310.5, 44, 5, 16, D.supRail), R(306, 40, 14, 5, D.supRail, 2));
+
+    /* ---- the wall: ink behind it for the outline, then panels, structure and plinth ---- */
+    out.push(R(-3.2, 60, W + 6.4, G - 60 + 1.8, D.supInk, 3));
+    surf(10, TOP, 174, FL - TOP, D.supWall, D.supWallShade); surf(196, TOP, 134, FL - TOP, D.supWall, D.supWallShade);
+    surf(10, GF, 174, PL - GF, D.supWall, D.supWallShade); surf(196, GF, 134, PL - GF, D.supWall, D.supWallShade);
+    surf(0, FL, W, GF - FL, D.supWallLight, D.supWall);                              // floor band
+    surf(0, TOP, 10, PL - TOP, D.supWallLight, D.supWall); surf(184, TOP, 12, PL - TOP, D.supWallLight, D.supWall); surf(330, TOP, 10, PL - TOP, D.supWallLight, D.supWall);   // pilasters
+    surf(0, TOP, W, 17, D.supBand, D.supBandShade);                                  // fascia under the coping
+    surf(0, PL, W, G - PL, D.supPlinth, D.supPlinthShade);                           // plinth
+    out.push(R(0, PL, W, 2.4, D.supPlinthLight));
+
+    /* ---- office bay ---- */
+    // downpipe with its head, brackets and shoe
+    surf(13, 76, 5, PL - 72, D.supWallLight, D.supWall);
+    out.push(R(13, 76, 1.8, PL - 72, D.supWallShade), R(10.5, 70, 10, 9, D.supFrame, 1.5));
+    out.push(h("path", { d: rd(11, 120, 9, 2.6) + rd(11, 182, 9, 2.6) + rd(11, 240, 9, 2.6) + rd(13, PL + 4, 12, 3.2), fill: D.supFrame }));
+    // name plate: no lettering, two bars stand in for a name
+    surf(30, 87, 120, 16, D.supPlate, D.supPlateShade); surf(38, 91.5, 64, 7, D.supBar1, D.supBar1Shade); surf(110, 91.5, 30, 7, D.supBar2, D.supBar2Shade);
+    // windows
+    WINS.forEach(function (w) {
+      surf(w[0], w[1], w[2], w[3], D.supFrame, D.supFrameShade);
+      var pw = (w[2] - 3 * (w[4] + 1)) / w[4];
+      for (var i = 0; i < w[4]; i++) glass(w[0] + 3 + i * (pw + 3), w[1] + 3, pw, w[3] - 6, w[5][i].warm, w[5][i].blind);
+      surf(w[0] - 3, w[1] + w[3], w[2] + 6, 3.5, D.supSill, D.supSillShade);
+    });
+    // wall unit on its bracket, beside the high strip of windows
+    out.push(R(96.5, 213, 30, 2.8, D.supCanopy), R(98, 188, 27, 25, D.supPale, 2), R(98, 188, 5.5, 25, D.supPaleShade));
+    out.push(h("circle", { cx: 110, cy: 200.5, r: 8, fill: D.supFrame }), h("circle", { cx: 110, cy: 200.5, r: 2.8, fill: D.supPale }));
+    out.push(h("path", { d: rd(119.5, 193, 4, 2.4) + rd(119.5, 199, 4, 2.4) + rd(119.5, 205, 4, 2.4), fill: D.supPaleShade }));
+    // staff door under its own small canopy, with a call panel beside it
+    surf(136, 216, 34, G - 216, D.supFrame, D.supFrameShade); surf(139, 219, 28, G - 219, D.supDoor, D.supDoorShade);
+    glass(143, 224, 20, 22, 0, 0);
+    out.push(R(139, 267, 28, 11, D.supDoorKick), R(160.5, 249, 2.8, 10, D.supPale, 1.4));
+    out.push(R(133, 206, 42, 6.4, D.supCanopy, 1), R(133, 206, 42, 2.2, D.supCanopyLip, 1), R(149, 212.4, 8, 3, D.supPale, 1));
+    out.push(R(174, 238, 7.5, 13, D.supPale, 1), R(175.8, 240.4, 4, 3.4, D.supFrame));
+
+    /* ---- dock bay ---- */
+    // roller shutter: hood and guides, the curtain with its slats, the bottom bar
+    surf(200, 176, 112, 80, D.supFrame, D.supFrameShade); surf(204, 184, 104, 66, D.supSteel, D.supSteelShade);
+    (function () {
+      var lit = "", dark = "";
+      for (var i = 1; i < 8; i++) { var ly = 184 + i * 8.25 - 0.8; lit += rd(204, ly, 104, 1.6); dark += castD(204, ly, 308, ly + 1.6); }
+      out.push(h("path", { d: lit, fill: D.supSteelLine }), h("path", { d: dark, fill: D.supSteelLineShade }));
+    })();
+    surf(204, 250, 104, 6, D.supSteelBar, D.supSteelBarShade);
+    out.push(R(249, 251.6, 14, 2.8, D.supFrame, 1.4));
+    // the dock itself: a raised sill with a safety edge, rubber bumpers and a leveller
+    out.push(R(196, 256, 120, G - 256, D.supDock), R(196, 256, 5, G - 256, D.supPlinth), R(196, 256, 120, 3.6, D.supSafety));
+    out.push(R(208, 263.5, 10, 11.5, D.supRubber, 1.5), R(294, 263.5, 10, 11.5, D.supRubber, 1.5));
+    out.push(R(230, 259.6, 52, 7, D.supSteelBar), R(230, 264.6, 52, 2, D.supSteelBarShade));   // the lip of the dock leveller, folded down
+    // canopy hung from the wall on two rods
+    out.push(h("path", { d: "M210.4,128L213.4,130.4L200.6,161L197.6,161Z M303.6,128L300.6,130.4L313.4,161L316.4,161Z" + rd(207, 124.6, 9.4, 6) + rd(297.6, 124.6, 9.4, 6), fill: D.supCanopy }));
+    out.push(R(192, 160, 130, 10.4, D.supCanopy, 1.5), R(192, 160, 130, 3, D.supCanopyLip, 1.5), R(193.5, 168, 127, 2.4, D.supCanopyUnder));
+
+    /* ---- coping: the dark line that closes the building against the sky ---- */
+    out.push(R(-7, 56, W + 14, 11.4, D.supRoof, 2), R(-7, 56, W + 14, 3.2, D.supRoofLip, 1.6));
+
+    /* ---- things that say the place works ---- */
+    // pallets, three high
+    (function () {
+      var deck = "", feet = "";
+      for (var i = 0; i < 3; i++) { var py = G - 7.2 * (i + 1); deck += rd(26, py, 38, 2.5) + rd(26, py + 4.7, 38, 2.5); feet += rd(27, py + 2.5, 6, 2.2) + rd(42, py + 2.5, 6, 2.2) + rd(57, py + 2.5, 6, 2.2); }
+      out.push(h("path", { d: feet, fill: D.supPalletDark }), h("path", { d: deck, fill: D.supPallet }));
+    })();
+    // roll cage with two cartons in it
+    carton(78.5, 250, 21, 19, D.supCarton, D.supCartonShade); carton(80, 234.5, 17, 15.5, COLORS.paper, D.supPaperShade);
+    out.push(h("path", { d: rd(74, 226, 2.6, 46) + rd(101.4, 226, 2.6, 46) + rd(74, 226, 30, 2.6) + rd(74, 244, 30, 2.2) + rd(72.5, 269.4, 33, 3), fill: D.supPale }));
+    out.push(h("circle", { cx: 78, cy: 275.2, r: 2.8, fill: D.supInk }), h("circle", { cx: 100, cy: 275.2, r: 2.8, fill: D.supInk }));
+    // guide posts either side of the dock
+    [188.5, 316.5].forEach(function (bx) {
+      out.push(R(bx, 239, 7.4, G - 239, D.supSafety, 2), R(bx, 241, 2.4, G - 241, D.supSafetyShade));
+      out.push(h("path", { d: rd(bx, 249, 7.4, 7.2) + rd(bx, 263.4, 7.4, 7.2), fill: D.supInk }));
+    });
+    // cartons waiting on the dock; the middle is left clear, parcels start there
+    carton(208, 228, 26, 28, COLORS.paper, D.supPaperShade, true);
+    carton(271, 236, 25, 20, D.supCarton, D.supCartonShade); carton(275, 221.4, 18, 14.6, D.supCarton, D.supCartonShade);
+
+    /* ---- kept last and separate: the parts a motion pass may turn or switch (static for now) ---- */
+    [222, 264].forEach(function (cx0) {
+      last.push(h("g", { transform: "translate(" + (cx0 + 20) + ", 47)" },
+        h("path", { d: rd(-7, -1.3, 14, 2.6) + rd(-1.3, -7, 2.6, 14), fill: D.supPlantLight }), h("circle", { cx: 0, cy: 0, r: 2.4, fill: D.supInk })));
+    });
+    last.push(h("g", null, R(241, 170.4, 30, 4.4, D.supCanopyUnder, 1.5), R(244, 171.6, 24, 3.2, D.supPale, 1.4)));
+
+    return _supMemo[mk] = h("g", { transform: "translate(" + x + ", " + y + ") scale(" + scale + ") translate(0, -278)", "data-cache": "supplier-" + mk, "data-box": "-24 22 376 266" }, out, last);
+  }
   function makeSkylineTier(seed, span, opt) {
     // designed rhythm, not randomness: widths, heights and gaps step through
     // repeating cycles (different lengths, so the pattern doesn't visibly
@@ -459,213 +624,299 @@
     return arr;
   }
 
+  /* Tokyo Tower, redrawn for round 2 (same place and height). Built as the structure is, bottom to top:
+     four legs flaring to the ground with the arch between them and a girder over it; three braced panels
+     up to the main deck; the two-storey main deck; five braced panels tapering to the top deck, painted
+     in bands of international orange and white; the top deck; the banded mast with its antenna bars; the
+     needle. One light, sun top right: the left members and the far face of the lattice are a tone down
+     (orange pushed toward navy, white toward periwinkle), the right members carry the light.
+     t = height above the ground as a fraction of the whole tower. Static except the beacon at the tip. */
+  var _ttMemo = {};
   function TokyoTower(p) {
-    // Open-framework Tokyo Tower (same geometry as before) with the lattice
-    // BATCHED: all struts/braces merge into a few <path> nodes per colour and
-    // stroke weight, so the tower costs ~16 DOM nodes instead of ~140.
-    var cx = p.cx, baseY = p.baseY, H = p.h == null ? 620 : p.h, time = p.time, opacity = p.opacity == null ? 0.95 : p.opacity;
-    var RED = "#e4553b", WHT = "#f2f6fa", GRAY = "#9aa6b4", GRAYL = "#ccd5df", WIN = "#3a4757";
-    var q = function (a, b, c, t) { return (1 - t) * (1 - t) * a + 2 * (1 - t) * t * b + t * t * c; };
-    var yG = baseY;
-    var yDeckB = baseY - H * 0.278, yDeckT = baseY - H * 0.332;
-    var yBodyT = baseY - H * 0.655;
-    var yNdl = baseY - H * 0.862, yTip = baseY - H;
-    var yArch = baseY - H * 0.19;
-    var swE = Math.max(1.6, H * 0.0092);
-    var swS = Math.max(1.05, H * 0.0047);
-    var SEG = {};
-    var seg = function (x1, y1, x2, y2, col, w) { var k = col + "|" + w; SEG[k] = (SEG[k] || "") + "M" + x1 + "," + y1 + "L" + x2 + "," + y2; };
-    // mid body
-    var midHW = function (t) { return q(H * 0.06, H * 0.034, H * 0.0165, t); };
-    var midY = function (t) { return yDeckT - t * (yDeckT - yBodyT); };
-    var MB = 7, BAND0 = 0.2, BAND1 = 0.52;
-    for (var mi = 0; mi <= MB; mi++) {
-      var mt = mi / MB, my = midY(mt), mw = midHW(mt);
-      if (mi < MB) {
-        var mt1 = (mi + 1) / MB, my1 = midY(mt1), mw1 = midHW(mt1);
-        var mc = (mt + mt1) / 2, mcol = (mc > BAND0 && mc < BAND1) ? WHT : RED;
-        seg(cx - mw, my, cx + mw1, my1, mcol, swS);
-        seg(cx + mw, my, cx - mw1, my1, mcol, swS);
+    var cx = p.cx, baseY = p.baseY, H = p.h, time = p.time || 0, u = H / 770;
+    var key = cx + "|" + baseY + "|" + H;
+    if (!_ttMemo[key]) {
+      var r1 = function (v) { return Math.round(v * 10) / 10; };
+      var Y = function (t) { return baseY - t * H; };
+      var hwL = function (t) { return 137 * u * Math.exp(-2.72 * t); };                       // the legs: a flare
+      var hwU = function (t) { return (40 - (t - 0.455) / 0.265 * 25.5) * u; };               // above the deck: a straight taper
+      var RED = "#e4553b", REDS = mix(RED, "#1d3156", 0.3), REDL = mix(RED, "#ffffff", 0.2);
+      var WHT = "#f4f7fb", WHTS = "#c9d6e8", GRY = "#b4bfcc", GRYS = "#8793a5", GLS = "#34445e";
+      var F = { red: "", reds: "", redl: "", wht: "", whts: "", gry: "", grys: "", gls: "" }, S = { red: "", reds: "", wht: "", whts: "" };
+      var poly = function (k, pts) { F[k] += "M" + pts.map(function (q) { return r1(q[0]) + "," + r1(q[1]); }).join("L") + "z"; };
+      var rect = function (k, x, y, w, hh) { poly(k, [[x, y], [x + w, y], [x + w, y + hh], [x, y + hh]]); };
+      var seg = function (k, x0, y0, x1, y1) { S[k] += "M" + r1(x0) + "," + r1(y0) + "L" + r1(x1) + "," + r1(y1); };
+
+      // legs: two solid members that flare, the left in shade, the right in the sun with a lit edge
+      var tl = [0, 0.05, 0.11, 0.2, 0.275, 0.34, 0.4], wl = function (t) { return (22 - 24 * t) * u; };
+      [-1, 1].forEach(function (sd) {
+        var outer = tl.map(function (t) { return [cx + sd * hwL(t), Y(t)]; }), inner = tl.map(function (t) { return [cx + sd * (hwL(t) - wl(t)), Y(t)]; });
+        poly(sd < 0 ? "reds" : "red", outer.concat(inner.reverse()));
+        if (sd > 0) poly("redl", tl.map(function (t) { return [cx + hwL(t), Y(t)]; }).concat(tl.slice().reverse().map(function (t) { return [cx + hwL(t) - 4.2 * u, Y(t)]; })));
+        rect("reds", cx + sd * 137 * u - (sd < 0 ? 5 : 27) * u, baseY - 7 * u, 32 * u, 7 * u);
+      });
+      // the arch between the legs, the girder over it, and the struts that hang it from the girder
+      var ax = 116 * u, apex = Y(0.185), gy = Y(0.2);
+      for (var k = -3; k <= 3; k++) { var dx = k * 26 * u; seg("reds", cx + dx, gy, cx + dx, apex + 0.185 * H * Math.pow(Math.abs(dx) / ax, 2.3)); }
+      rect("red", cx - hwL(0.2), gy - 3 * u, hwL(0.2) * 2, 6.4 * u);
+      // braced panels from the girder up to the main deck: the far face first, then the near face
+      var panel = function (t0, t1, hw, front, back) {
+        var a = hw(t0), b = hw(t1), y0 = Y(t0), y1 = Y(t1), ym = (y0 + y1) / 2;
+        seg(back, cx, y0, cx, y1); seg(back, cx - (a + b) / 2 + 3 * u, ym, cx + (a + b) / 2 - 3 * u, ym);
+        seg(front, cx - a + 3 * u, y0, cx + b - 3 * u, y1); seg(front, cx + a - 3 * u, y0, cx - b + 3 * u, y1);
+        seg(front, cx - b, y1, cx + b, y1);
+      };
+      [[0.2, 0.275], [0.275, 0.34], [0.34, 0.4]].forEach(function (q) { panel(q[0], q[1], hwL, "red", "reds"); });
+
+      // above the main deck: five panels, bottom to top orange, orange, white, white, orange
+      var tu = [0.455, 0.508, 0.561, 0.614, 0.667, 0.72], band = ["red", "red", "wht", "wht", "red"];
+      for (var i = 0; i < 5; i++) {
+        var t0 = tu[i], t1 = tu[i + 1], c = band[i], cs = c + "s", ew = 6.4 * u;
+        panel(t0, t1, hwU, c, cs);
+        poly(cs, [[cx - hwU(t0), Y(t0)], [cx - hwU(t1), Y(t1)], [cx - hwU(t1) + ew, Y(t1)], [cx - hwU(t0) + ew, Y(t0)]]);
+        poly(c, [[cx + hwU(t0), Y(t0)], [cx + hwU(t1), Y(t1)], [cx + hwU(t1) - ew, Y(t1)], [cx + hwU(t0) - ew, Y(t0)]]);
       }
-      seg(cx - mw, my, cx + mw, my, (mt >= BAND0 && mt <= BAND1) ? WHT : RED, swS * 1.2);
+
+      // main deck: roof, upper windows, a white band, lower windows, the skirt; its left end in shade
+      var dT = Y(0.455), dw = 72 * u;
+      poly("grys", [[cx - 52 * u, dT + 42 * u], [cx + 52 * u, dT + 42 * u], [cx + 44 * u, dT + 52 * u], [cx - 44 * u, dT + 52 * u]]);
+      rect("gry", cx - dw - 2 * u, dT, dw * 2 + 4 * u, 8 * u);
+      rect("gls", cx - dw, dT + 8 * u, dw * 2, 13 * u);
+      rect("wht", cx - dw, dT + 21 * u, dw * 2, 7 * u);
+      rect("gls", cx - dw, dT + 28 * u, dw * 2, 9 * u);
+      rect("gry", cx - dw, dT + 37 * u, dw * 2, 6 * u);
+      for (var m = 1; m < 9; m++) rect("gry", cx - dw + m * dw * 2 / 9 - 1.7 * u, dT + 8 * u, 3.4 * u, 13 * u);
+      rect("grys", cx - dw - 2 * u, dT, 16 * u, 8 * u); rect("whts", cx - dw, dT + 21 * u, 14 * u, 7 * u); rect("grys", cx - dw, dT + 37 * u, 14 * u, 6 * u);
+
+      // top deck, the banded mast with its antenna bars, the needle
+      var tdT = Y(0.742);
+      rect("gry", cx - 25 * u, tdT, 50 * u, 6 * u); rect("gls", cx - 23 * u, tdT + 6 * u, 46 * u, 6 * u); rect("grys", cx - 20 * u, tdT + 12 * u, 40 * u, 5 * u);
+      var tm = [0.742, 0.776, 0.808, 0.84, 0.872], mw = function (t) { return (8.6 - (t - 0.742) / 0.13 * 3.2) * u; }, mc = ["wht", "red", "wht", "red"];
+      for (var j = 0; j < 4; j++) {
+        var a0 = mw(tm[j]), a1 = mw(tm[j + 1]), y0 = Y(tm[j]), y1 = Y(tm[j + 1]);
+        poly(mc[j], [[cx - a0, y0], [cx + a0, y0], [cx + a1, y1], [cx - a1, y1]]);
+        poly(mc[j] + "s", [[cx - a0, y0], [cx - a0 * 0.3, y0], [cx - a1 * 0.3, y1], [cx - a1, y1]]);
+      }
+      [0.79, 0.824, 0.856].forEach(function (t) { rect("gry", cx - 17 * u, Y(t), 34 * u, 3.6 * u); });
+      poly("gry", [[cx - 3 * u, Y(0.872)], [cx + 3 * u, Y(0.872)], [cx + 1.5 * u, Y(1)], [cx - 1.5 * u, Y(1)]]);
+
+      var sw = r1(4 * u), kids = [];
+      ["reds", "whts"].forEach(function (k2) { kids.push(h("path", { d: S[k2], fill: "none", stroke: k2 === "reds" ? REDS : WHTS, strokeWidth: r1(3.4 * u) })); });
+      kids.push(h("path", { d: F.reds, fill: REDS }), h("path", { d: F.whts, fill: WHTS }));
+      kids.push(h("path", { d: S.red, fill: "none", stroke: RED, strokeWidth: sw }), h("path", { d: S.wht, fill: "none", stroke: WHT, strokeWidth: sw }));
+      kids.push(h("path", { d: "M" + r1(cx - ax) + "," + r1(baseY) + "C" + r1(cx - ax) + "," + r1(Y(0.12)) + " " + r1(cx - 52 * u) + "," + r1(apex) + " " + r1(cx) + "," + r1(apex) + "C" + r1(cx + 52 * u) + "," + r1(apex) + " " + r1(cx + ax) + "," + r1(Y(0.12)) + " " + r1(cx + ax) + "," + r1(baseY), fill: "none", stroke: RED, strokeWidth: r1(7 * u) }));
+      kids.push(h("path", { d: F.red, fill: RED }), h("path", { d: F.redl, fill: REDL }), h("path", { d: F.wht, fill: WHT }),
+        h("path", { d: F.gls, fill: GLS }), h("path", { d: F.gry, fill: GRY }), h("path", { d: F.grys, fill: GRYS }));
+      _ttMemo[key] = h("g", { "data-cache": "tower-" + key, "data-box": r1(cx - 145 * u) + " " + r1(baseY - H - 2) + " " + r1(290 * u) + " " + r1(H + 4) }, kids);
     }
-    var edgePaths = [];
-    var edgeSeg = function (t0, t1, col) {
-      var pl = "", pr = "";
-      for (var k = 0; k <= 6; k++) {
-        var tt = t0 + (t1 - t0) * k / 6, cmd = k ? "L" : "M";
-        pl += cmd + (cx - midHW(tt)) + "," + midY(tt);
-        pr += cmd + (cx + midHW(tt)) + "," + midY(tt);
-      }
-      edgePaths.push(h("path", { d: pl + pr, stroke: col, strokeWidth: swE * 0.8, fill: "none", strokeLinecap: "round" }));
+    var blink = 0.25 + 0.75 * (0.5 + 0.5 * Math.sin(time * Math.PI));
+    return h("g", { opacity: p.opacity == null ? 1 : p.opacity },
+      _ttMemo[key],
+      h("circle", { cx: cx, cy: baseY - H, r: (3 * u).toFixed(1), fill: "#ffb3a0", opacity: blink.toFixed(3) }));
+  }
+  /* ---- round 2 city: a kit of Tokyo buildings, chosen per slot (not one box at every size) ----
+     office   concrete frame, punched windows with sills (or ribbon glazing), a shopfront, roof box / mast
+     glass    curtain-wall tower: banded glass, one diagonal reflection, a set-back crown
+     mansion  apartment block: rows of balconies in shadow, stair head and water tank on the roof
+     stepped  a tower that sets back twice as it rises, vertical glazing, a mast
+     pencil   a slim building on a narrow plot: one wide window a floor, a blade sign, a roof board
+     block    a low wide block: ribbon glazing, rooftop plant, a billboard frame
+     The far tier (detail 0) draws the same kinds with fewer, broader marks; the deep tier (detail -1) is
+     silhouettes with a few bands. Every tone is mixed from the slot's own facade colour, so a building
+     keeps its tier's distance: contrast falls with it. One light: the left return of every volume is in
+     shade, the right edge catches the sun, windows reflect the sky at their top. Signs carry blocks, never
+     lettering. Static, so each building is built once. */
+  var CITY_CYCLE = ["office", "glass", "mansion", "stepped", "glass"];
+  var _cbMemo = {};   // one drawing per building
+  function cityKind(fi, w, hgt, detail) {
+    if (detail < 0) return ["flat", "stepped", "flat", "crown"][fi % 4];
+    if (w <= 118) return detail > 0 ? "pencil" : (fi % 2 ? "glass" : "stepped");
+    if (w >= 196 && hgt / w < 1.25) return "block";
+    return CITY_CYCLE[fi % CITY_CYCLE.length];
+  }
+  function CityBuilding(p) {
+    var detail = p.detail == null ? 1 : p.detail;
+    var _mk = p.seed + "|" + p.x + "|" + p.baseY + "|" + p.w + "|" + p.h + "|" + detail + "|" + (p.fi == null ? -1 : p.fi) + "|" + (p.kind || "");
+    if (_cbMemo[_mk]) return _cbMemo[_mk];
+    var x = p.x, baseY = p.baseY, w = p.w, hgt = p.h, seed = p.seed, top = baseY - hgt;
+    var fi = p.fi == null ? Math.floor(random(seed + "-f") * 997) : p.fi;
+    var face = p.faces[fi % p.faces.length], kind = p.kind || cityKind(fi, w, hgt, detail);
+    var c = detail > 0 ? 1 : detail === 0 ? 0.62 : 0.5, NAVY = "#1d3156";
+    var col = {
+      body: face, side: mix(face, NAVY, 0.2 * c), deep: mix(face, NAVY, 0.42 * c),
+      glass: detail < 0 ? mix(face, "#ffffff", 0.42) : mix(face, DAY.glass, 0.25 + 0.7 * c), warm: DAY.warm,
+      over: face, lite: detail < 0 ? (p.cap || mix(face, "#ffffff", 0.3)) : mix(face, "#ffffff", 0.34 * c),
+      board: mix(face, "#ffffff", 0.66), cap: detail < 0 ? face : (p.cap || mix(face, NAVY, 0.36 * c))
     };
-    edgeSeg(0, BAND0, RED); edgeSeg(BAND0, BAND1, WHT); edgeSeg(BAND1, 1, RED);
-    // lower section
-    var lowHW = function (t) { return q(H * 0.068, H * 0.085, H * 0.178, t); };
-    var lowY = function (t) { return yDeckB + t * (yG - yDeckB); };
-    var tArch = (yArch - yDeckB) / (yG - yDeckB);
-    var archPts = [];
-    for (var ai = 0; ai <= 16; ai++) {
-      var ta = ai / 16;
-      archPts.push([q(0, H * 0.03, H * 0.098, ta), q(yArch, yArch + (yG - yArch) * 0.55, yG, ta)]);
-    }
-    var archX = function (y) {
-      for (var k2 = 1; k2 < archPts.length; k2++) {
-        if (archPts[k2][1] >= y) {
-          var p0 = archPts[k2 - 1], p1 = archPts[k2];
-          var f2 = (y - p0[1]) / Math.max(0.001, p1[1] - p0[1]);
-          return p0[0] + (p1[0] - p0[0]) * f2;
+    col.wall = mix(face, DAY.glass, 0.16 + 0.3 * c); col.sheen = mix(col.wall, "#ffffff", 0.26); col.hi = mix(col.glass, "#ffffff", 0.5);
+    var ORDER = ["body", "side", "deep", "wall", "glass", "sheen", "hi", "warm", "over", "lite", "board", "cap"], L = {};
+    ORDER.forEach(function (k) { L[k] = ""; });
+    var r1 = function (v) { return Math.round(v * 10) / 10; };
+    var R = function (k, rx, ry, rw, rh) { if (rw > 0.5 && rh > 0.5) L[k] += "M" + r1(rx) + "," + r1(ry) + "h" + r1(rw) + "v" + r1(rh) + "h" + r1(-rw) + "z"; };
+    var fp = detail > 0 ? 34 : detail === 0 ? 24 : 40;                 // a storey; smaller with distance
+    var sw = detail > 0 ? Math.max(8, Math.min(18, w * 0.1)) : detail === 0 ? Math.max(5, Math.min(10, w * 0.07)) : 0;
+    var rnd = function (k) { return random(seed + "-" + k); };
+    var floors = function (y0, y1) { var n = Math.max(1, Math.round((y1 - y0) / fp)); return { n: n, h: (y1 - y0) / n }; };
+
+    // one volume: its body, its shaded return on the left, the sunlit edge on the right, its coping
+    var volume = function (vx, vy, vw, vh, coping) {
+      R("body", vx, vy, vw, vh);
+      if (sw) { R("side", vx, vy, Math.min(sw, vw * 0.2), vh); R("lite", vx + vw - 3, vy, 3, vh); }
+      if (coping) R("cap", vx - 2, vy - coping + 2, vw + 4, coping);
+      var s = sw ? Math.min(sw, vw * 0.2) : 0;
+      return { x: vx + s, y: vy, w: vw - s, h: vh };
+    };
+    // --- window logics; each fills the lit front `f` between y0 and y1 ---
+    var punched = function (f, y0, y1) {
+      var fl = floors(y0, y1), cols = Math.max(1, Math.round((f.w - 10) / (fp * 0.94))), cw = (f.w - 10) / cols, ww = cw * 0.6, wh = fl.h * 0.5;
+      for (var r = 0; r < fl.n; r++) {
+        var wy = y0 + r * fl.h + fl.h * 0.2;
+        if (detail > 0) {
+          for (var q = 0; q < cols; q++) {
+            var wx = f.x + 5 + q * cw + (cw - ww) / 2;
+            R("deep", wx - 2, wy - 2, ww + 4, wh + 4);
+            if (rnd("w" + r + "-" + q) < DAY.warmP) R("warm", wx, wy, ww, wh); else { R("glass", wx, wy, ww, wh); R("hi", wx, wy, ww, wh * 0.4); }
+          }
+          R("lite", f.x + 3, wy + wh + 4, f.w - 8, 3);
+        } else {
+          var segs = Math.max(1, Math.round(f.w / 58)), sg = (f.w - 8) / segs;
+          for (var s2 = 0; s2 < segs; s2++) R("glass", f.x + 4 + s2 * sg + 3, wy, sg - 6, wh);
         }
       }
-      return archPts[archPts.length - 1][0];
     };
-    seg(cx - lowHW(0), yDeckB, cx + lowHW(0), yDeckB, RED, swS * 1.3);
-    var FT = [0, tArch * 0.34, tArch * 0.67, tArch];
-    for (var fi = 0; fi < FT.length - 1; fi++) {
-      var u0 = FT[fi], u1 = FT[fi + 1];
-      var fy0 = lowY(u0), fy1 = lowY(u1), fw0 = lowHW(u0), fw1 = lowHW(u1);
-      seg(cx - fw0, fy0, cx, fy1, RED, swS);
-      seg(cx, fy0, cx - fw1, fy1, RED, swS);
-      seg(cx, fy0, cx + fw1, fy1, RED, swS);
-      seg(cx + fw0, fy0, cx, fy1, RED, swS);
-      seg(cx - fw1, fy1, cx + fw1, fy1, RED, swS * 1.2);
-    }
-    var LT = [tArch, 0.44, 0.58, 0.72, 0.86, 1];
-    [-1, 1].forEach(function (sgn) {
-      for (var g = 0; g < LT.length - 1; g++) {
-        var v0 = LT[g], v1 = LT[g + 1];
-        var gy0 = lowY(v0), gy1 = lowY(v1);
-        var o0 = lowHW(v0), o1 = lowHW(v1);
-        var in0 = archX(gy0), in1 = archX(gy1);
-        seg(cx + sgn * o0, gy0, cx + sgn * in1, gy1, RED, swS);
-        seg(cx + sgn * in0, gy0, cx + sgn * o1, gy1, RED, swS);
-        if (g < LT.length - 2) seg(cx + sgn * in1, gy1, cx + sgn * o1, gy1, RED, swS * 1.2);
+    var ribbons = function (f, y0, y1) {
+      var fl = floors(y0, y1), rh = fl.h * 0.44;
+      for (var r = 0; r < fl.n; r++) {
+        var wy = y0 + r * fl.h + fl.h * 0.22;
+        R("glass", f.x + 5, wy, f.w - 12, rh);
+        if (detail > 0) {
+          R("hi", f.x + 5, wy, f.w - 12, rh * 0.38);
+          var nm = Math.max(1, Math.round((f.w - 12) / 30));
+          for (var m = 1; m < nm; m++) R("over", f.x + 5 + m * (f.w - 12) / nm - 1.5, wy, 3, rh);
+        }
       }
-    });
-    var dE = "";
-    [-1, 1].forEach(function (sgn) { for (var k3 = 0; k3 <= 10; k3++) { var t3 = k3 / 10; dE += (k3 ? "L" : "M") + (cx + sgn * lowHW(t3)) + "," + lowY(t3); } });
-    var archD = (function () {
-      var d = "M" + (cx - archPts[16][0]) + "," + yG;
-      for (var k4 = 15; k4 >= 0; k4--) d += "L" + (cx - archPts[k4][0]) + "," + archPts[k4][1];
-      for (var k5 = 1; k5 <= 16; k5++) d += "L" + (cx + archPts[k5][0]) + "," + archPts[k5][1];
-      return d;
-    })();
-    var blink = 0.2 + 0.8 * (0.5 + 0.5 * Math.sin(time * Math.PI));
-    var deckHW = H * 0.09, deckH = yDeckB - yDeckT;
-    var yA0 = yBodyT - H * 0.018;
-    var rp = function (x0, y0, ww, hh) { return "M" + x0 + "," + y0 + "h" + ww + "v" + hh + "h" + (-ww) + "z"; };
-    var dWin = "", ww2 = (deckHW * 2 - H * 0.02) / 12;
-    for (var wi = 0; wi < 12; wi++) dWin += rp(cx - deckHW + H * 0.01 + wi * ww2 + ww2 * 0.2, yDeckT + deckH * 0.4, ww2 * 0.6, deckH * 0.3);
-    var dPost = "";
-    for (var ri = 0; ri < 9; ri++) { var px = cx - deckHW * 0.92 + deckHW * 1.84 * ri / 8; dPost += rp(px - H * 0.0016, yDeckT - H * 0.009, H * 0.0032, H * 0.009); }
-    seg(cx - deckHW * 0.92, yDeckT - H * 0.009, cx + deckHW * 0.92, yDeckT - H * 0.009, GRAY, swS * 0.9);
-    var lattice = [];
-    for (var key in SEG) { if (SEG.hasOwnProperty(key)) { var kp = key.split("|"); lattice.push(h("path", { d: SEG[key], stroke: kp[0], strokeWidth: parseFloat(kp[1]), fill: "none", strokeLinecap: "round" })); } }
-    return h("g", { opacity: opacity },
-      lattice,
-      edgePaths,
-      h("path", { d: dE, stroke: RED, strokeWidth: swE, fill: "none", strokeLinecap: "round" }),
-      h("path", { d: archD, stroke: RED, strokeWidth: swE * 0.9, fill: "none", strokeLinecap: "round" }),
-      [-1, 1].map(function (sg) {
-        var xi = cx + sg * H * 0.098, xo = cx + sg * H * 0.178;
-        return h("rect", { x: Math.min(xi, xo) - 2, y: yG - H * 0.008, width: Math.abs(xo - xi) + 4, height: H * 0.008, rx: 2, fill: RED });
-      }),
-      h("path", { d: dPost, fill: GRAY }),
-      h("rect", { x: cx - deckHW, y: yDeckT, width: deckHW * 2, height: deckH * 0.32, rx: H * 0.006, fill: GRAYL }),
-      h("rect", { x: cx - deckHW, y: yDeckT + deckH * 0.32, width: deckHW * 2, height: deckH * 0.46, fill: GRAY }),
-      h("path", { d: dWin, fill: WIN }),
-      h("rect", { x: cx - deckHW, y: yDeckT + deckH * 0.78, width: deckHW * 2, height: deckH * 0.22, rx: H * 0.004, fill: "#8d99a8" }),
-      h("rect", { x: cx - H * 0.026, y: yBodyT - H * 0.008, width: H * 0.052, height: H * 0.008, rx: H * 0.003, fill: GRAYL }),
-      h("rect", { x: cx - H * 0.02, y: yA0, width: H * 0.04, height: H * 0.0075, rx: H * 0.003, fill: GRAY }),
-      [[0, 0.5, RED], [0.5, 0.75, WHT], [0.75, 1, RED]].map(function (sg2) {
-        var f0 = sg2[0], f1 = sg2[1];
-        var y0 = yA0 - (yA0 - yNdl) * f0, y1 = yA0 - (yA0 - yNdl) * f1;
-        var w0 = H * (0.0095 - 0.0033 * f0), w1 = H * (0.0095 - 0.0033 * f1);
-        return h("path", { d: "M" + (cx - w0) + "," + y0 + " L" + (cx - w1) + "," + y1 + " L" + (cx + w1) + "," + y1 + " L" + (cx + w0) + "," + y0 + " Z", fill: sg2[2] });
-      }),
-      h("path", { d: "M" + (cx - H * 0.0028) + "," + yNdl + " L" + (cx - H * 0.0007) + "," + yTip + " L" + (cx + H * 0.0007) + "," + yTip + " L" + (cx + H * 0.0028) + "," + yNdl + " Z", fill: GRAY }),
-      h("circle", { cx: cx, cy: yTip, r: 2.2, fill: "#ffb3a0", opacity: blink })
-    );
-  }
-
-  /* kurzgesagt-style city building: saturated facade that separates from
-     the sky, parapet cap, right-edge shade for depth, a consistent grid of
-     framed window panes (light glass + rare warm ones), and small rooftop
-     units. `detail` 0 = far/hazy (simple), 1 = mid, 2 = front (richest). */
-  var _cbMemo = {};
-  function CityBuilding(p) {
-    var _mk = p.seed + "|" + p.x + "|" + p.baseY + "|" + p.w + "|" + p.h + "|" + (p.detail == null ? 1 : p.detail) + "|" + (p.fi == null ? -1 : p.fi);
-    if (_cbMemo[_mk]) return _cbMemo[_mk];
-    var x = p.x, baseY = p.baseY, w = p.w, hgt = p.h, seed = p.seed,
-      faces = p.faces, detail = p.detail == null ? 1 : p.detail, cap = p.cap == null ? "#4a6288" : p.cap;
-    var top = baseY - hgt;
-    // facade colour rotates through the palette by position, so neighbouring
-    // buildings are always distinct yet stay within the tier's family
-    var fi = p.fi == null ? Math.floor(random(seed + "-f") * faces.length) : p.fi;
-    var face = faces[fi % faces.length];
-    var mx = 10, myT = 16, myB = 12;
-    var pitchX = detail === 0 ? 33 : 27, pitchY = detail === 0 ? 48 : 37;
-    var cols = Math.max(1, Math.round((w - mx * 2) / pitchX));
-    var rows = Math.max(1, Math.round((hgt - myT - myB) / pitchY));
-    var px2 = (w - mx * 2) / cols, py2 = (hgt - myT - myB) / rows;
-    var cw = px2 * 0.52, ch = py2 * 0.5;
-    // windows batched into <=5 <path> nodes (frames / three glass colours /
-    // sky-reflection top) instead of 3 rects per window
-    var rp = function (rx, ry, rw, rh) { return "M" + rx + "," + ry + "h" + rw + "v" + rh + "h" + (-rw) + "z"; };
-    var dFrame = "", dWarm = "", dBright = "", dGlass = "", dTop = "", dCool = "";
-    if (hgt >= 46 && w >= 34) for (var r = 0; r < rows; r++) {
-      for (var c = 0; c < cols; c++) {
-        var wx = x + mx + c * px2 + (px2 - cw) / 2, wy = top + myT + r * py2 + (py2 - ch) / 2;
-        var rv = random(seed + "-w" + r + "-" + c);
-        if (detail > 0) dFrame += rp(wx - 1.6, wy - 1.6, cw + 3.2, ch + 3.2);
-        if (detail > 0 && rv < DAY.warmP) dWarm += rp(wx, wy, cw, ch);
-        else if (rv < DAY.warmP + DAY.litP) dBright += rp(wx, wy, cw, ch);
-        else if (rv < DAY.warmP + DAY.litP + DAY.coolP) dCool += rp(wx, wy, cw, ch);
-        else dGlass += rp(wx, wy, cw, ch);
-        dTop += rp(wx, wy, cw, ch * 0.42);
+    };
+    var balconies = function (f, y0, y1) {
+      var fl = floors(y0, y1), bays = Math.max(1, Math.round((f.w - 8) / 48)), bw = (f.w - 8) / bays, rh = fl.h * 0.5;
+      for (var r = 0; r < fl.n; r++) {
+        var ry = y0 + r * fl.h + fl.h * 0.08;
+        R("deep", f.x + 4, ry, f.w - 10, rh);
+        if (detail > 0) for (var b = 0; b < bays; b++) {
+          var gx = f.x + 4 + b * bw + bw * 0.16;
+          if (rnd("b" + r + "-" + b) < DAY.warmP) R("warm", gx, ry + 3, bw * 0.66, rh - 3); else { R("glass", gx, ry + 3, bw * 0.66, rh - 3); R("hi", gx, ry + 3, bw * 0.66, (rh - 3) * 0.34); }
+          if (b) R("over", f.x + 4 + b * bw - 2, ry, 4, rh);
+        }
+        R("lite", f.x + 1, ry + rh, f.w - 5, detail > 0 ? 4 : 3);                  // the balcony rail, in the sun
       }
-    }
-    var roofBox = p.fi == null ? random(seed + "-roof") > 0.5 : p.fi % 2 === 0;
-    var roofMast = p.fi == null ? random(seed + "-roof") > 0.78 : p.fi % 3 === 2;
-    var _out = h("g", null,
-      h("rect", { x: x, y: top, width: w, height: hgt, fill: face }),
-      dFrame ? h("path", { d: dFrame, fill: DAY.frame }) : null,
-      dGlass ? h("path", { d: dGlass, fill: DAY.glass }) : null,
-      dCool ? h("path", { d: dCool, fill: DAY.cool }) : null,
-      dBright ? h("path", { d: dBright, fill: DAY.lit }) : null,
-      dWarm ? h("path", { d: dWarm, fill: DAY.warm }) : null,
-      dTop ? h("path", { d: dTop, fill: DAY.refl }) : null,
-      h("rect", { x: x, y: top, width: w * 0.14, height: hgt, fill: DAY.shade }),
-      h("rect", { x: x + w - 3, y: top, width: 3, height: hgt, fill: DAY.rim }),
-      h("rect", { x: x - 2, y: top - 7, width: w + 4, height: 9, rx: 2, fill: cap }),
-      detail > 0 && roofBox ? h("rect", { x: x + w * 0.3, y: top - 19, width: 20, height: 12, rx: 1.5, fill: cap }) : null,
-      detail > 0 && roofMast ? h("rect", { x: x + w * 0.68, y: top - 34, width: 3.4, height: 27, rx: 1.5, fill: cap }) : null
-    );
-    _cbMemo[_mk] = _out;
-    return _out;
-  }
+    };
+    var strips = function (f, y0, y1) {
+      if (y1 - y0 < 16 || f.w < 22) return;
+      var cols = Math.max(2, Math.round((f.w - 8) / (detail > 0 ? 26 : 30))), cw = (f.w - 8) / cols;
+      for (var q = 0; q < cols; q++) { R("glass", f.x + 4 + q * cw + cw * 0.22, y0, cw * 0.56, y1 - y0); if (detail > 0) R("hi", f.x + 4 + q * cw + cw * 0.22, y0, cw * 0.56, Math.min(14, (y1 - y0) * 0.2)); }
+      if (detail >= 0) for (var yy = y0 + fp * (detail > 0 ? 1 : 2); yy < y1 - 6; yy += fp * (detail > 0 ? 1 : 2)) R("over", f.x + 3, yy, f.w - 8, 3);
+    };
+    var curtain = function (f, y0, y1) {
+      R("wall", f.x, y0, f.w - 3, y1 - y0);
+      var H = y1 - y0, x1 = f.x + f.w - 3;
+      L.sheen += "M" + r1(f.x + f.w * 0.46) + "," + r1(y0) + "L" + r1(x1) + "," + r1(y0) + "L" + r1(x1) + "," + r1(y0 + H * 0.3) + "L" + r1(f.x) + "," + r1(y0 + H * 0.8) + "L" + r1(f.x) + "," + r1(y0 + H * 0.52) + "z";
+      var stepY = fp * (detail > 0 ? 1 : 2);
+      for (var yy = y0 + stepY - 3; yy < y1 - 4; yy += stepY) R("over", f.x, yy, f.w - 3, 3);
+      var nm = Math.max(2, Math.round(f.w / (detail > 0 ? 34 : 56)));
+      for (var m = 1; m < nm; m++) R("over", f.x + m * (f.w - 3) / nm - 1.5, y0, 3, H);
+    };
+    // --- roof furniture ---
+    var mast = function (cx, y, hh) { R("cap", cx - 1.8, y - hh, 3.6, hh); R("cap", cx - 7, y - hh * 0.42, 14, 3); };
+    var box = function (bx, y, bw, bh) { R("cap", bx, y - bh, bw, bh); };
+    var tank = function (tx, y) { R("cap", tx, y - 25, 21, 15); R("cap", tx + 2, y - 10, 3, 10); R("cap", tx + 16, y - 10, 3, 10); };
+    var billboard = function (bx, y, bw, bh) {
+      R("cap", bx + bw * 0.18, y - 13, 3.4, 13); R("cap", bx + bw * 0.82 - 3.4, y - 13, 3.4, 13);
+      R("board", bx, y - 12 - bh, bw, bh); R("cap", bx + 5, y - 12 - bh * 0.5, bw * 0.55, Math.max(4, bh * 0.2));
+    };
 
+    var f, cx = x + w / 2;
+    if (kind === "office") {
+      f = volume(x, top, w, hgt, 8);
+      var gf = detail > 0 ? Math.min(40, hgt * 0.25) : 0;
+      if (gf) { R("deep", f.x + 5, baseY - gf + 9, f.w - 12, gf - 9); R("lite", f.x + 1, baseY - gf + 2, f.w - 5, 5); }
+      (fi % 4 < 2 ? punched : ribbons)(f, top + 10, baseY - gf - 4);
+      if (detail > 0 && fi % 2 === 0) box(x + w * 0.26, top - 6, 24, 12);
+      if (detail > 0 && fi % 3 === 2) mast(x + w * 0.7, top - 6, 30);
+    } else if (kind === "glass") {
+      var cr = detail > 0 ? 16 : 10;
+      R("cap", x + w * 0.14, top, w * 0.72, cr + 1);
+      f = volume(x, top + cr, w, hgt - cr, 0);
+      curtain(f, top + cr + 4, baseY);
+      R("lite", x, top + cr, w, 3);
+      if (fi % 3 === 1) mast(cx, top, detail > 0 ? 34 : 24);
+    } else if (kind === "mansion") {
+      f = volume(x, top, w, hgt, 7);
+      balconies(f, top + 8, baseY - 4);
+      box(x + w * 0.6, top - 5, w * 0.22, detail > 0 ? 16 : 10);
+      if (detail > 0) tank(x + w * 0.2, top - 5);
+    } else if (kind === "stepped") {
+      var v1 = volume(x, top + hgt * 0.4, w, hgt * 0.6, detail < 0 ? 0 : 6), v2 = volume(x + w * 0.11, top + hgt * 0.15, w * 0.78, hgt * 0.25 + 1, detail < 0 ? 0 : 6),
+        v3 = volume(x + w * 0.25, top, w * 0.5, hgt * 0.15 + 1, detail < 0 ? 0 : 6);
+      strips(v1, v1.y + 10, baseY - 6); strips(v2, v2.y + 9, v2.y + v2.h - 6); strips(v3, v3.y + 8, v3.y + v3.h - 6);
+      if (detail < 0) { R("lite", x, v1.y, w, 4); R("lite", x + w * 0.11, v2.y, w * 0.78, 4); R("lite", x + w * 0.25, top, w * 0.5, 4); }
+      else mast(cx, top - 4, detail > 0 ? 44 : 30);
+    } else if (kind === "pencil") {
+      f = volume(x, top, w, hgt, 7);
+      var fl = floors(top + 10, baseY - 6), wh = fl.h * 0.5;
+      for (var r = 0; r < fl.n; r++) { var wy = top + 10 + r * fl.h + fl.h * 0.2; R("deep", f.x + 5, wy - 2, f.w - 12, wh + 4); R("glass", f.x + 7, wy, f.w - 16, wh); R("hi", f.x + 7, wy, f.w - 16, wh * 0.38); }
+      var sh = Math.min(hgt * 0.5, 150), sy = top + hgt * 0.14;                       // the blade sign: blocks, never lettering
+      R("board", x + w + 1, sy, 13, sh);
+      for (var k = 0; k < 4; k++) R("cap", x + w + 4, sy + 6 + k * (sh - 8) / 4, 7, (sh - 8) / 4 - 7);
+      if (fi % 2 === 0) billboard(x + 5, top - 5, w - 10, 26); else box(x + w * 0.3, top - 5, 22, 12);
+    } else if (kind === "block") {
+      f = volume(x, top, w, hgt, 8);
+      ribbons(f, top + 10, baseY - 4);
+      box(x + w * 0.1, top - 6, w * 0.2, detail > 0 ? 13 : 9);
+      if (detail > 0) { box(x + w * 0.34, top - 6, w * 0.1, 8); if (fi % 2 === 0) billboard(x + w * 0.6, top - 6, w * 0.32, 28); else tank(x + w * 0.7, top - 6); }
+    } else {                                                                         // the deep tier: flat or crowned silhouettes
+      f = volume(x, top, w, hgt, 0);
+      R("lite", x, top, w, 4);
+      if (kind === "crown") { R("body", x + w * 0.2, top - 14, w * 0.6, 15); R("lite", x + w * 0.2, top - 14, w * 0.6, 4); R("body", cx - 2, top - 46, 4, 32); }
+      var fl2 = floors(top + 16, baseY - 10);
+      for (var r2 = 0; r2 < fl2.n; r2++) { var by = top + 16 + r2 * fl2.h + fl2.h * 0.25, half = (w - 22) / 2; R("glass", x + 10, by, kind === "crown" ? w - 20 : half - 5, fl2.h * 0.32); if (kind !== "crown") R("glass", x + 16 + half, by, half - 5, fl2.h * 0.32); }
+    }
+    var kids = [];
+    ORDER.forEach(function (k2) { if (L[k2]) kids.push(h("path", { d: L[k2], fill: col[k2] })); });
+    return _cbMemo[_mk] = h("g", null, kids);
+  }
+  /* ---- round 2 sky: the sun, its shafts of light, built clouds ---- */
+  DAY.cloudLit = "#ffffff"; DAY.cloudShadeFlat = "#cfdff3";   // a cloud is two flat colours: lit, and one shade
+  DAY.sunCore = "#ffe27a";
+  DAY.hillNear = "#cfdfee";
+  // mix two #rrggbb colours (t = 0 gives a, 1 gives b); every derived tone in round 2 comes from this, so
+  // shades stay in their colour family instead of being greyed by a translucent black
+  function mix(a, b, t) {
+    var out = "#";
+    for (var i = 1; i < 7; i += 2) {
+      var x = parseInt(a.substr(i, 2), 16), y = parseInt(b.substr(i, 2), 16), v = Math.round(x + (y - x) * t);
+      out += (v < 16 ? "0" : "") + v.toString(16);
+    }
+    return out;
+  }
+  /* Three broad shafts of light fanning from a point beyond the sun's corner of the frame. Plain white,
+     hard edges, behind the clouds and every building. They breathe and sway very slowly. */
+  function LightShafts(p) {
+    var ox = p.ox, oy = p.oy, time = p.time, far = 1500;
+    var sway = Math.sin(time * 0.11) * 0.006;
+    return h("g", null, [[2.131, 2.282, 0.1, 0], [2.394, 2.556, 0.08, 1.9], [2.657, 2.76, 0.065, 3.7]].map(function (s) {
+      var a0 = s[0] + sway, a1 = s[1] + sway * 1.4, o = s[2] * (0.86 + 0.14 * Math.sin(time * 0.17 + s[3]));
+      return h("polygon", { points: ox + "," + oy + " " + (ox + Math.cos(a0) * far * 2).toFixed(1) + "," + (oy + Math.sin(a0) * far * 2).toFixed(1) + " " + (ox + Math.cos(a1) * far * 2).toFixed(1) + "," + (oy + Math.sin(a1) * far * 2).toFixed(1), fill: "#ffffff", opacity: o.toFixed(3) });
+    }));
+  }
   function SkySun(p) {
     var cx = p.cx, cy = p.cy, r = p.r, time = p.time;
     var pulse = 0.5 + 0.5 * Math.sin(time * 0.55);
-    var p2 = 0.5 + 0.5 * Math.sin(time * 0.55 + 1.3);
     return h("g", null,
       h("circle", { cx: cx, cy: cy, r: r * 4.6 + pulse * r * 0.15, fill: "url(#" + p.gid + ")" }),
-      (function () {
-        var d = "";
-        for (var i = 0; i < 12; i++) {
-          var a = (i * 30 + time * 6) * Math.PI / 180;
-          var r0 = r * 1.3, r1 = r * (i % 2 ? 1.52 : 1.74) + pulse * r * 0.07;
-          d += "M" + (cx + Math.cos(a) * r0) + "," + (cy + Math.sin(a) * r0) + "L" + (cx + Math.cos(a) * r1) + "," + (cy + Math.sin(a) * r1);
-        }
-        return null;
-      })(),
-      h("circle", { cx: cx, cy: cy, r: r * 1.12, fill: "rgba(255,236,170,0.32)" }),
-      h("circle", { cx: cx, cy: cy, r: r * 0.78, fill: DAY.sun }),
-      h("circle", { cx: cx, cy: cy, r: r * 0.78, fill: "none", stroke: "rgba(255,255,255,0.55)", strokeWidth: 2 })
+      h("circle", { cx: cx, cy: cy, r: r * 1.16 + pulse * r * 0.03, fill: "rgba(255,236,170,0.34)" }),
+      h("circle", { cx: cx, cy: cy, r: r * 0.8, fill: DAY.sun }),
+      h("circle", { cx: cx, cy: cy, r: r * 0.52, fill: DAY.sunCore })
     );
   }
-
   function RoofBeacon(p) {
     var x = p.x, y = p.y, time = p.time, phase = p.phase || 0;
     return h("g", null,
@@ -688,27 +939,42 @@
     }));
   }
 
-  /* puffy flat-bottom day cloud (kurzgesagt-style): round lobes over a pill-shaped base, one flat
-     silhouette lit from above. The white lit layer, then the body nudged down (a sunlit crescent stays
-     on every lobe), then the shade on the underside, cut to the base's own rounded bottom so it never
-     reads as a separate bar. `edge` (0..1) lets callers fade wrap-around entry. */
+  /* A built cumulus (round 2). A cloud is a list of round lobes standing on a flat base, drawn back to
+     front. Every lobe is two discs: its shade, then the same disc in white moved up and to the right,
+     toward the sun, so each lobe keeps a crisp crescent of shade on the side away from it; where a
+     front lobe overlaps a back one, that crescent is what separates them. The base is treated the same
+     way, which gives the flat underside its shade. Two flat colours, no gradient.
+     Local space: x 0..w, the underside at y = 0, the cloud above it. `kind` picks one of the four builds
+     (default: by width, so the scenes that only pass a width still get different clouds). */
+  var CLOUD_KINDS = [
+    // base [x0, x1, height], then lobes [cx, cy, r] in units of w, back to front
+    { base: [0, 1, 0.125], lobes: [[0.5, -0.222, 0.19], [0.3, -0.158, 0.142], [0.71, -0.148, 0.132], [0.135, -0.094, 0.082], [0.87, -0.084, 0.072], [0.43, -0.112, 0.098]] },
+    { base: [0, 1, 0.1], lobes: [[0.34, -0.142, 0.128], [0.57, -0.118, 0.104], [0.185, -0.082, 0.07], [0.75, -0.086, 0.074], [0.895, -0.058, 0.046]] },
+    { base: [0.06, 0.94, 0.13], lobes: [[0.57, -0.335, 0.165], [0.4, -0.232, 0.16], [0.7, -0.2, 0.15], [0.24, -0.128, 0.112], [0.83, -0.108, 0.094], [0.53, -0.124, 0.108]] },
+    { base: [0.08, 0.92, 0.115], lobes: [[0.43, -0.168, 0.152], [0.65, -0.124, 0.11], [0.25, -0.094, 0.08]] }
+  ];
+  var _cloudMemo = {};
+  function CloudShape(kind, w) {
+    var key = kind + "|" + w;
+    if (_cloudMemo[key]) return _cloudMemo[key];
+    var k = CLOUD_KINDS[kind], d = w * 0.024, r1 = function (v) { return Math.round(v * 10) / 10; };
+    var bx = k.base[0] * w, bw = (k.base[1] - k.base[0]) * w, bh = k.base[2] * w, kids = [];
+    kids.push(h("rect", { x: r1(bx - d * 0.6), y: r1(-bh), width: r1(bw), height: r1(bh), rx: r1(bh / 2), fill: DAY.cloudShadeFlat }));
+    kids.push(h("rect", { x: r1(bx), y: r1(-bh - d), width: r1(bw), height: r1(bh), rx: r1(bh / 2), fill: DAY.cloudLit }));
+    k.lobes.forEach(function (l) {
+      var cx = l[0] * w, cy = l[1] * w - d, r = l[2] * w;
+      kids.push(h("circle", { cx: r1(cx - d * 0.62), cy: r1(cy + d * 0.78), r: r1(r), fill: DAY.cloudShadeFlat }));
+      kids.push(h("circle", { cx: r1(cx), cy: r1(cy), r: r1(r), fill: DAY.cloudLit }));
+    });
+    return _cloudMemo[key] = h("g", { "data-cache": "cloud-" + key, "data-box": r1(-d) + " " + r1(-w * 0.56) + " " + r1(w + d * 2) + " " + r1(w * 0.58) }, kids);
+  }
   function Cloud(p) {
     var w = p.w == null ? 240 : p.w, o = p.o == null ? 0.94 : p.o, edge = p.edge == null ? 1 : p.edge;
-    var hgt = w * 0.34, baseTop = -hgt * 0.14, baseH = hgt * 0.44;
-    var lobes = [[0.2, -0.16, 0.3], [0.44, -0.36, 0.44], [0.67, -0.2, 0.33], [0.84, -0.06, 0.22]];
-    var br = baseH * 0.44, bot = baseTop + baseH, sy = bot - baseH * 0.3;
-    var sx = br - Math.sqrt(br * br - (sy - (bot - br)) * (sy - (bot - br)));
-    var shadeD = "M" + sx + "," + sy + " L" + (w - sx) + "," + sy + " A" + br + "," + br + " 0 0 1 " + (w - br) + "," + bot +
-      " L" + br + "," + bot + " A" + br + "," + br + " 0 0 1 " + sx + "," + sy + " Z";
-    return h("g", { opacity: o * DAY.cloudO * clamp01(edge) },
-      lobes.map(function (lb) { return h("circle", { cx: w * lb[0], cy: hgt * lb[1], r: hgt * lb[2], fill: DAY.cloudTop }); }),
-      h("rect", { x: 0, y: baseTop, width: w, height: baseH, rx: baseH * 0.5, fill: DAY.cloudTop }),
-      lobes.map(function (lb) { return h("circle", { cx: w * lb[0] + hgt * lb[2] * 0.05, cy: hgt * lb[1] + hgt * lb[2] * 0.17, r: hgt * lb[2] * 0.95, fill: DAY.cloud }); }),
-      h("rect", { x: 0, y: baseTop + baseH * 0.12, width: w, height: baseH * 0.88, rx: baseH * 0.44, fill: DAY.cloud }),
-      h("path", { d: shadeD, fill: DAY.cloudShade })
-    );
+    var kind = p.kind == null ? Math.round(w / 7) % CLOUD_KINDS.length : p.kind;
+    // callers anchor a cloud a little above its underside (as the first drawing did)
+    return h("g", { opacity: (o * DAY.cloudO * clamp01(edge)).toFixed(3) },
+      h("g", { transform: "translate(0, " + (p.kind == null ? Math.round(w * 0.1) : 0) + ")" }, CloudShape(kind, Math.round(w))));
   }
-
   /* small day-sky birds: two-arc glyphs drifting slowly; flap via time */
   function DayBirds(p) {
     var seed = p.seed, count = p.count == null ? 4 : p.count, time = p.time,
@@ -1231,68 +1497,87 @@
     return { x: x2, y: y2, squash: 1, stretch: 1 + 0.04 * Math.sin(k5 * Math.PI), rot: 0, shadow: 0.8 * (1 - k5), op: 1, gy: groundY };
   }
 
+  /* ---- round 2 street furniture ---- */
+  DAY.poleLit = "#9fb2cb"; DAY.poleDark = "#4d5f7a"; DAY.lampLens = "#e3ebf4";
+  DAY.utilityLit = "#7f92b2"; DAY.utilityDark = "#3f5175"; DAY.wireFlat = "#6b7da0"; DAY.guardBand = "#cdb84f";
+  DAY.walkLit = "#d6dae0"; DAY.walkShade = "#a3abb6"; DAY.curbShade = "#7f8994"; DAY.tactile = "#dcc152";
+  DAY.roadLine = "#757b82"; DAY.roadDash = "#b9bdc1";
+  DAY.fgBand = "#222a37"; DAY.fgEdge = "#3b4759"; DAY.fgRail = "#1b2638"; DAY.fgRailLit = "#4b5b76";
+  /* A road lamp: a steel pole on a collar, a curved arm, a flat LED head. Off in daylight. */
+  var _slMemo = null;
   function Streetlight(x, y) {
-    return h("g", { transform: "translate(" + x + ", " + y + ")" },
-      h("rect", { x: -4, y: -200, width: 8, height: 200, rx: 3, fill: DAY.pole }),
-      h("rect", { x: -4, y: -200, width: 54, height: 7, rx: 3.5, fill: DAY.pole }),
-      h("rect", { x: 40, y: -196, width: 19, height: 8, rx: 4, fill: DAY.poleHead }));
+    if (!_slMemo) _slMemo = h("g", null,
+      h("rect", { x: -4, y: -192, width: 8, height: 192, fill: DAY.pole }),
+      h("rect", { x: 1, y: -192, width: 3, height: 180, fill: DAY.poleLit }),
+      h("path", { d: "M-4,-188 L-4,-193 Q-4,-205 9,-205 L54,-205 L54,-198 L12,-198 Q4,-198 4,-190 L4,-188 Z", fill: DAY.pole }),
+      h("rect", { x: -7, y: -18, width: 14, height: 18, rx: 2, fill: DAY.poleDark }),
+      h("rect", { x: -7, y: -18, width: 14, height: 4, rx: 2, fill: DAY.pole }),
+      h("rect", { x: 40, y: -200, width: 27, height: 9, rx: 3, fill: DAY.poleDark }),
+      h("rect", { x: 44, y: -193, width: 19, height: 3.2, rx: 1.5, fill: DAY.lampLens }));
+    return h("g", { transform: "translate(" + x + ", " + y + ")" }, _slMemo);
   }
-  /* 電柱: concrete utility poles with crossarms, a pole transformer every other pole,
-     and sagging lines between them (all wires batched into one path) */
+  /* 電柱: concrete utility poles as they stand in a Tokyo street: two crossarms with insulators, a pole
+     transformer on every other pole and a small lamp on the others, a yellow guard band at the foot, and
+     four lines sagging between them (three conductors and one heavier cable). Shapes are batched by colour. */
   var _upMemo = {};
   function UtilityPoles(x0, n, gap, baseY, ht) {
     var mk = x0 + "|" + n + "|" + gap + "|" + baseY + "|" + ht;
     if (_upMemo[mk]) return _upMemo[mk];
-    var dW = "", dC = "", poles = [];
+    var R = function (rx, ry, rw, rh) { return "M" + rx + "," + ry + "h" + rw + "v" + rh + "h" + (-rw) + "z"; };
+    var dShaft = "", dLit = "", dDark = "", dBand = "", dW = "", dC = "";
     for (var i = 0; i < n; i++) {
       var px = x0 + i * gap, top = baseY - ht;
-      poles.push(h("g", null,
-        h("path", { d: "M" + (px - 4.5) + "," + baseY + " L" + (px - 2.6) + "," + top + " L" + (px + 2.6) + "," + top + " L" + (px + 4.5) + "," + baseY + " Z", fill: DAY.utility }),
-        h("rect", { x: px - 22, y: top + 14, width: 44, height: 3.6, rx: 1.4, fill: DAY.utility }),
-        h("rect", { x: px - 15, y: top + 34, width: 30, height: 3.2, rx: 1.4, fill: DAY.utility }),
-        h("path", { d: "M" + (px - 20) + "," + (top + 13) + "v-4 M" + (px - 7) + "," + (top + 13) + "v-4 M" + (px + 7) + "," + (top + 13) + "v-4 M" + (px + 20) + "," + (top + 13) + "v-4", stroke: DAY.utility, strokeWidth: 2.4, strokeLinecap: "round" }),
-        i % 2 === 0 ? h("rect", { x: px + 4, y: top + 52, width: 11, height: 18, rx: 3.5, fill: DAY.utility }) : h("rect", { x: px + 3, y: top + 60, width: 6, height: 5, fill: DAY.utility }),
-        h("rect", { x: px - 3.5, y: baseY - ht * 0.42, width: 7, height: 10, rx: 1, fill: "#d8c35a", opacity: 0.55 })
-      ));
+      dShaft += "M" + (px - 5) + "," + baseY + "L" + (px - 3) + "," + top + "L" + (px + 3) + "," + top + "L" + (px + 5) + "," + baseY + "z";
+      dLit += "M" + (px + 1.6) + "," + baseY + "L" + (px + 0.4) + "," + (top + 2) + "L" + (px + 3) + "," + (top + 2) + "L" + (px + 5) + "," + baseY + "z";
+      dDark += R(px - 24, top + 12, 48, 5) + R(px - 17, top + 34, 34, 4.5);
+      [-22, -3, 16].forEach(function (o) { dLit += R(px + o, top + 4, 6, 8); });
+      if (i % 2 === 0) { dDark += R(px + 5, top + 50, 15, 23) + R(px + 1, top + 58, 5, 4); dLit += R(px + 5, top + 56, 15, 3.4) + R(px + 16, top + 50, 4, 23); }
+      else { dDark += R(px + 2, top + 62, 20, 3.6) + R(px + 17, top + 60, 11, 6.5); dLit += R(px + 19, top + 65, 7, 3); }
+      dBand += R(px - 5.4, baseY - 74, 10.8, 13);
       if (i < n - 1) {
         var nx = px + gap;
-        [-20, -7, 7, 20].forEach(function (o, k) { var yy = top + 9, sag = 16 + k * 2; dW += "M" + (px + o) + "," + yy + "Q" + (px + gap / 2 + o) + "," + (yy + sag) + " " + (nx + o) + "," + yy; });
-        dC += "M" + px + "," + (top + 40) + "Q" + (px + gap / 2) + "," + (top + 70) + " " + nx + "," + (top + 40);
+        [-19, 0, 19].forEach(function (o, k) { var yy = top + 4, sag = 16 + k * 3; dW += "M" + (px + o) + "," + yy + "Q" + (px + gap / 2 + o) + "," + (yy + sag) + " " + (nx + o) + "," + yy; });
+        dC += "M" + px + "," + (top + 38) + "Q" + (px + gap / 2) + "," + (top + 70) + " " + nx + "," + (top + 38);
       }
     }
     return _upMemo[mk] = h("g", null,
-      h("path", { d: dW, fill: "none", stroke: DAY.wire, strokeWidth: 1.3 }),
-      h("path", { d: dC, fill: "none", stroke: DAY.wire, strokeWidth: 2.6 }),
-      poles);
+      h("path", { d: dW, fill: "none", stroke: DAY.wireFlat, strokeWidth: 2 }),
+      h("path", { d: dC, fill: "none", stroke: DAY.wireFlat, strokeWidth: 3.2 }),
+      h("path", { d: dShaft, fill: DAY.utility }),
+      h("path", { d: dDark, fill: DAY.utilityDark }),
+      h("path", { d: dLit, fill: DAY.utilityLit }),
+      h("path", { d: dBand, fill: DAY.guardBand }));
   }
-  /* 自販機: a pair of plain (unbranded) vending machines on the pavement */
+  /* 自販機: a pair of plain (unbranded) vending machines on the pavement. Each is a cabinet with a shaded
+     left return and a lit top, a display of three shelves of cans, a button strip, a payment panel and a
+     delivery flap; one flat shadow on the paving. No lettering. */
   var _vmMemo = null;
   function VendingPair(x, baseY) {
     if (_vmMemo && _vmMemo.k === x + "|" + baseY) return _vmMemo.v;
-    var units = [{ dx: 0, body: "#f1f4f7", trim: "#c9d3de" }, { dx: 58, body: "#3f78b8", trim: "#2c5a8e" }];
-    var cans = ["#e16347", "#2a7f8c", "#f2c14e", "#7aa5d6", "#e9e4d8", "#5d8f4e"];
-    var out = h("g", null,
-      h("ellipse", { cx: x + 56, cy: baseY + 3, rx: 72, ry: 6, fill: "rgba(10,20,36,0.16)" }),
-      units.map(function (u) {
-        var ux = x + u.dx, top = baseY - 100;
-        var dots = "";
+    var units = [{ dx: 0, body: "#f1f4f7", shade: "#d3dce8", cap: "#ffffff", win: "#e4edf6", dark: "#33425c" }, { dx: 58, body: "#3f78b8", shade: "#2f5f97", cap: "#6297d0", win: "#e4edf6", dark: "#1c2d4a" }];
+    var cans = ["#e16347", "#2a7f8c", "#f2c14e", "#7aa5d6", "#5d8f4e"];
+    var out = h("g", { "data-cache": "vending-" + x + "|" + baseY, "data-box": (x - 20) + " " + (baseY - 102) + " 136 110" },
+      h("path", { d: "M" + (x - 16) + "," + (baseY + 6) + "L" + (x - 8) + "," + baseY + "L" + (x + 112) + "," + baseY + "L" + (x + 108) + "," + (baseY + 6) + "z", fill: DAY.walkShade }),
+      units.map(function (u, ui) {
+        var ux = x + u.dx, top = baseY - 100, dCans = ["", "", "", "", ""];
+        for (var r = 0; r < 3; r++) for (var c = 0; c < 5; c++) dCans[(c + r * 2 + ui * 3) % 5] += "M" + (ux + 11.5 + c * 7.4) + "," + (top + 13 + r * 14) + "h5v9h-5z";
         return h("g", null,
-          h("rect", { x: ux, y: top, width: 54, height: 100, rx: 3, fill: u.body }),
-          h("rect", { x: ux, y: top, width: 54, height: 100, rx: 3, fill: "none", stroke: u.trim, strokeWidth: 2 }),
-          h("rect", { x: ux + 5, y: top + 6, width: 44, height: 50, rx: 2, fill: "#fbfdff" }),
-          [0, 1, 2].map(function (r) {
-            return h("g", null,
-              h("rect", { x: ux + 6, y: top + 18 + r * 15, width: 42, height: 1.6, fill: "rgba(22,41,63,0.18)" }),
-              range(6, function (c) { return h("rect", { x: ux + 8 + c * 7, y: top + 9 + r * 15, width: 4.4, height: 8.6, rx: 1.6, fill: cans[(c + r * 2 + u.dx) % cans.length] }); }));
-          }),
-          h("rect", { x: ux + 6, y: top + 60, width: 30, height: 9, rx: 1.5, fill: "rgba(22,41,63,0.65)" }),
-          h("rect", { x: ux + 40, y: top + 60, width: 8, height: 14, rx: 1.5, fill: "rgba(22,41,63,0.35)" }),
-          h("rect", { x: ux + 6, y: top + 80, width: 42, height: 13, rx: 2, fill: "rgba(10,20,36,0.75)" }));
+          h("rect", { x: ux, y: top, width: 54, height: 98, rx: 3, fill: u.body }),
+          h("rect", { x: ux, y: top + 3, width: 6, height: 95, fill: u.shade }),
+          h("rect", { x: ux, y: top, width: 54, height: 6, rx: 3, fill: u.cap }),
+          h("rect", { x: ux + 9, y: top + 10, width: 40, height: 45, rx: 2, fill: u.win }),
+          h("path", { d: "M" + (ux + 9) + "," + (top + 22) + "h40v3h-40z M" + (ux + 9) + "," + (top + 36) + "h40v3h-40z M" + (ux + 9) + "," + (top + 50) + "h40v3h-40z", fill: u.shade }),
+          dCans.map(function (d, k) { return h("path", { d: d, fill: cans[k] }); }),
+          h("rect", { x: ux + 9, y: top + 58, width: 40, height: 4.5, rx: 2, fill: u.dark, opacity: 0.55 }),
+          h("rect", { x: ux + 34, y: top + 66, width: 14, height: 13, rx: 2, fill: u.dark }),
+          h("rect", { x: ux + 38.5, y: top + 70, width: 5, height: 5, rx: 1.5, fill: u.win }),
+          h("rect", { x: ux + 9, y: top + 66, width: 21, height: 5, rx: 2, fill: u.shade }),
+          h("rect", { x: ux + 9, y: top + 83, width: 38, height: 11, rx: 2, fill: u.dark }),
+          h("path", { d: "M" + (ux + 3) + "," + (baseY - 2) + "h9v2h-9z M" + (ux + 42) + "," + (baseY - 2) + "h9v2h-9z", fill: u.dark }));
       }));
     _vmMemo = { k: x + "|" + baseY, v: out };
     return out;
   }
-
   /* ---- Scene12World.tsx ---- */
   function sceneWorld(frame, tOverride) {
     // tOverride decouples ambient time from the choreography frame: hold `frame`
@@ -1341,7 +1626,18 @@
     var skylineDeep = makeSkylineTier("skd", 2400, { w: [152, 96, 204, 124, 168, 108], base: 236, amp: 214, hf: [0.92, 0.5, 0.74, 0.34, 1, 0.6], g: [22, 30, 16, 34] });
     var skylineFar = makeSkylineTier("skf", 2620, { w: [122, 178, 96, 152, 198, 110], base: 184, amp: 232, hf: [0.82, 0.46, 1, 0.6, 0.72, 0.35], g: [28, 40, 20, 46, 32] });
     var skylineMid = makeSkylineTier("skm", 3000, { w: [188, 132, 224, 148, 112, 206], base: 102, amp: 176, hf: [0.68, 1, 0.42, 0.84, 0.55, 0.9], g: [42, 66, 30, 86, 52] });
-    var clouds = range(7, function (i) { var span = (WORLD_W * 0.5) / 7; return { x: i * span + random("cl-x" + i) * span * 0.38, y: 50 + random("cl-y" + i) * 210, w: 220 + random("cl-w" + i) * 280, sp: 4.5 }; });
+    // the sky is composed, not scattered: [x at t = 0, underside y, width, build]. Near clouds drift at one
+    // speed, the small distant ones at another, behind the whole skyline. The field is wider than both
+    // camera positions together, so a cloud wraps (and fades) only where it cannot be seen, and none of
+    // them crosses the sun while scenes 01 and 02 hold.
+    var CLOUD_SPAN = 3600, CLOUD_X0 = -700;
+    var cloudsNear = [[110, 215, 470, 2], [760, 330, 380, 0], [1160, 160, 390, 1], [1930, 350, 480, 0], [2380, 300, 340, 1], [-520, 262, 420, 3]];
+    var cloudsFar = [[-30, 480, 240, 3], [940, 455, 210, 1], [1590, 470, 230, 3], [2300, 462, 250, 0]];
+    var cloudAt = function (c, sp) {
+      var wx = ((((c[0] - CLOUD_X0 + time * sp) % CLOUD_SPAN) + CLOUD_SPAN) % CLOUD_SPAN) + CLOUD_X0;
+      var ed = Math.min((wx - CLOUD_X0) / 60, (CLOUD_X0 + CLOUD_SPAN - wx) / 60, 1);
+      return h("g", { transform: "translate(" + wx.toFixed(2) + ", " + c[1] + ")" }, Cloud({ w: c[2], kind: c[3], o: sp < 4 ? 0.82 : 1.04, edge: ed }));
+    };
     return h("div", { style: { position: "absolute", inset: 0, background: "#eaf5fc", overflow: "hidden" } },
       h("div", { style: { position: "absolute", inset: 0, background: DAY.sky } }),
       h("div", { style: { position: "absolute", inset: 0, background: "radial-gradient(38% 32% at 92% 7%, rgba(255,240,200,0.46) 0%, rgba(255,240,200,0) 70%), radial-gradient(56% 40% at 8% 100%, rgba(22,41,63,0.085) 0%, rgba(22,41,63,0) 72%)", pointerEvents: "none" } }),
@@ -1353,26 +1649,19 @@
           GlowDef("wSun", DAY.sunGlow, 0.5)
         ),
         // the sun sits clear of Tokyo Tower's antenna while scene 1 holds (tower at screen x ~1624 there)
+        LightShafts({ ox: 2060, oy: -120, time: time }),
         SkySun({ cx: 1772, cy: 104, r: 52, time: time, gid: "wSun" }),
+        h("g", { transform: "translate(" + (-cam * 0.08) + ", 0)" }, cloudsFar.map(function (c) { return cloudAt(c, 2.6); })),
         h("g", { transform: "translate(" + (-cam * 0.12) + ", 0)" },
-          h("path", { d: "M-300," + GROUND + " C300," + (GROUND - 150) + " 800," + (GROUND - 60) + " 1400," + (GROUND - 130) + " C2000," + (GROUND - 195) + " 2600," + (GROUND - 55) + " 3200," + (GROUND - 120) + " C3800," + (GROUND - 180) + " 4400," + (GROUND - 70) + " 5200," + (GROUND - 140) + " L5200," + GROUND + " Z", fill: DAY.hill })
+          h("path", { d: "M-300," + GROUND + " C300," + (GROUND - 150) + " 800," + (GROUND - 60) + " 1400," + (GROUND - 130) + " C2000," + (GROUND - 195) + " 2600," + (GROUND - 55) + " 3200," + (GROUND - 120) + " C3800," + (GROUND - 180) + " 4400," + (GROUND - 70) + " 5200," + (GROUND - 140) + " L5200," + GROUND + " Z", fill: DAY.hill }),
+          h("path", { d: "M-300," + GROUND + " C200," + (GROUND - 62) + " 700," + (GROUND - 112) + " 1300," + (GROUND - 60) + " C1900," + (GROUND - 26) + " 2500," + (GROUND - 118) + " 3100," + (GROUND - 66) + " C3700," + (GROUND - 34) + " 4400," + (GROUND - 108) + " 5200," + (GROUND - 56) + " L5200," + GROUND + " Z", fill: DAY.hillNear })
         ),
-        h("g", { transform: "translate(" + (-cam * 0.18) + ", 0)" }, skylineDeep.filter(function (b) { var vx = b.x - cam * 0.18; return vx + b.w > -240 && vx < 2160; }).map(function (b, bi) {
-          var top = GROUND - b.h;
-          var cols = Math.max(2, Math.round(b.w / 40)), rows = Math.max(2, Math.floor((b.h - 24) / 52));
-          var gx = (b.w - 20) / cols, gy2 = (b.h - 30) / rows;
-          return h("g", null,
-            h("rect", { x: b.x, y: top, width: b.w, height: b.h, fill: DAY.deep }),
-            h("rect", { x: b.x, y: top, width: b.w, height: 4, fill: DAY.deepTop }),
-            (function () {
-              var d = "";
-              for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) d += "M" + (b.x + 11 + c * gx) + "," + (top + 14 + r * gy2) + "h" + (gx * 0.42) + "v" + (gy2 * 0.44) + "h" + (-gx * 0.42) + "z";
-              return h("path", { d: d, fill: DAY.deepWin });
-            })());
+        h("g", { transform: "translate(" + (-cam * 0.18) + ", 0)" }, skylineDeep.map(function (b, i) { return { b: b, i: i }; }).filter(function (o) { var vx = o.b.x - cam * 0.18; return vx + o.b.w > -240 && vx < 2160; }).map(function (o) {
+          return CityBuilding({ x: o.b.x, baseY: GROUND, w: o.b.w, h: o.b.h, seed: "skd" + o.i, fi: o.i, faces: [DAY.deep], detail: -1, cap: DAY.deepTop });
         })),
         h("rect", { x: 0, y: GROUND - 470, width: 1920, height: 470, fill: "url(#wHaze0)" }),
         h("g", { transform: "translate(" + (-cam * 0.32) + ", 0)" },
-          clouds.map(function (c) { var range2 = WORLD_W * 0.5, wx = (c.x + time * c.sp) % range2; var ed = Math.min(wx / 200, (range2 - wx) / 200, 1); return h("g", { transform: "translate(" + wx + ", " + c.y + ")" }, Cloud({ w: c.w, o: 0.92, edge: ed })); }),
+          cloudsNear.map(function (c) { return cloudAt(c, 4.5); }),
           DayBirds({ seed: "w-birds", count: 4, time: time, span: 2300, yBase: 120 }),
           skylineFar.map(function (b, i) { return { b: b, i: i }; }).filter(function (o) { var vx = o.b.x - cam * 0.32; return vx + o.b.w > -240 && vx < 2160; }).map(function (o) { return CityBuilding({ x: o.b.x, baseY: GROUND, w: o.b.w, h: o.b.h, seed: "skf" + o.i, fi: o.i, faces: DAY.far, detail: 0, cap: DAY.farCap }); }),
           skylineFar.filter(function (b) { return b.h > 340; }).map(function (b, i) { return RoofBeacon({ x: b.x + b.w / 2, y: GROUND - b.h, time: time, phase: i * 1.7 }); }),
@@ -1385,14 +1674,16 @@
         ),
         h("rect", { x: 0, y: GROUND - 300, width: 1920, height: 300, fill: "url(#wHaze2)" }),
         h("g", { transform: "translate(" + (-cam) + ", 0)" },
+          // paving with its sunlit edge and tactile strip, the kerb, the carriageway and its markings
           h("rect", { x: -400, y: GROUND, width: WORLD_W + 800, height: 16, fill: DAY.walk }),
-          h("line", { x1: -400, y1: GROUND + 3, x2: WORLD_W + 400, y2: GROUND + 3, stroke: "rgba(245, 236, 234,0.16)", strokeWidth: 2 }),
-          h("line", { x1: -400, y1: GROUND + 9, x2: WORLD_W + 400, y2: GROUND + 9, stroke: "rgba(226,196,74,0.55)", strokeWidth: 3, strokeDasharray: "14 3" }),
-          h("rect", { x: -400, y: GROUND + 16, width: WORLD_W + 800, height: 6, fill: DAY.curb }),
-          h("rect", { x: -400, y: GROUND + 22, width: WORLD_W + 800, height: 84, fill: DAY.road }),
-          h("line", { x1: -400, y1: GROUND + 27, x2: WORLD_W + 400, y2: GROUND + 27, stroke: "rgba(255,255,255,0.28)", strokeWidth: 2.5 }),
-          h("line", { x1: -400, y1: GROUND + 64, x2: WORLD_W + 400, y2: GROUND + 64, stroke: "rgba(255,255,255,0.6)", strokeWidth: 4, strokeDasharray: "26 32" }),
-          h("line", { x1: -400, y1: GROUND + 101, x2: WORLD_W + 400, y2: GROUND + 101, stroke: "rgba(255,255,255,0.28)", strokeWidth: 2.5 }),
+          h("rect", { x: -400, y: GROUND, width: WORLD_W + 800, height: 3, fill: DAY.walkLit }),
+          h("line", { x1: -400, y1: GROUND + 9.5, x2: WORLD_W + 400, y2: GROUND + 9.5, stroke: DAY.tactile, strokeWidth: 4, strokeDasharray: "16 5" }),
+          h("rect", { x: -400, y: GROUND + 16, width: WORLD_W + 800, height: 7, fill: DAY.curb }),
+          h("rect", { x: -400, y: GROUND + 20, width: WORLD_W + 800, height: 3, fill: DAY.curbShade }),
+          h("rect", { x: -400, y: GROUND + 23, width: WORLD_W + 800, height: 83, fill: DAY.road }),
+          h("line", { x1: -400, y1: GROUND + 29, x2: WORLD_W + 400, y2: GROUND + 29, stroke: DAY.roadLine, strokeWidth: 3 }),
+          h("line", { x1: -400, y1: GROUND + 64, x2: WORLD_W + 400, y2: GROUND + 64, stroke: DAY.roadDash, strokeWidth: 5, strokeDasharray: "30 34" }),
+          h("line", { x1: -400, y1: GROUND + 100, x2: WORLD_W + 400, y2: GROUND + 100, stroke: DAY.roadLine, strokeWidth: 3 }),
           h("rect", { x: -400, y: GROUND + 106, width: WORLD_W + 800, height: 194, fill: DAY.roadEdge }),
           range(11, function (i) { return Streetlight(-180 + i * 470, GROUND); }),
           VendingPair(1300, GROUND),
@@ -1425,9 +1716,14 @@
             );
           })
         ),
+        // the foreground: a pipe guard rail on the near kerb, the darkest thing in the picture, framing its foot
         h("g", { transform: "translate(" + (-cam * 1.07) + ", 0)" },
-          h("rect", { x: -600, y: 1022, width: WORLD_W * 1.1 + 1200, height: 58, fill: DAY.fence }),
-          range(30, function (i) { return h("rect", { x: i * 180, y: 1010, width: 11, height: 22, rx: 2, fill: DAY.fencePost }); })
+          h("rect", { x: -600, y: 1040, width: WORLD_W * 1.1 + 1200, height: 40, fill: DAY.fgBand }),
+          h("rect", { x: -600, y: 1040, width: WORLD_W * 1.1 + 1200, height: 4, fill: DAY.fgEdge }),
+          h("path", { d: range(30, function (i) { return "M" + (i * 180 - 5) + ",994h10v48h-10z"; }).join(""), fill: DAY.fgRail }),
+          h("rect", { x: -600, y: 997, width: WORLD_W * 1.1 + 1200, height: 9, fill: DAY.fgRail }),
+          h("rect", { x: -600, y: 997, width: WORLD_W * 1.1 + 1200, height: 3, fill: DAY.fgRailLit }),
+          h("rect", { x: -600, y: 1018, width: WORLD_W * 1.1 + 1200, height: 6, fill: DAY.fgRail })
         )
       ),
       h("div", { style: { opacity: 1 - panK } }, SceneTitle({ no: CONTENT.scenes.receiving.no, heading: CONTENT.scenes.receiving.heading, enter: title1 })),
