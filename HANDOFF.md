@@ -171,3 +171,26 @@ before planning any scene.
   keep the best model for the art.
 - Do not touch `C:\Users\RTX4070TI\Desktop\sanpou-site-v2`. The remake goes back to the site only when it is
   finished and approved, as a separate task.
+
+## The starting prompt for the round 2 session
+
+Open a session in this folder with **Fable 5.2** selected, and paste:
+
+> Read CLAUDE.md, then HANDOFF.md, then the round 2 brief at the end of CHANGES.md. This is round 2: a full
+> remake, not another polish pass. Round 1 was rejected because every element still read as the original with
+> shading added, so each one is redrawn from a blank page; what stays is the cast, the staging and the story.
+>
+> Before drawing anything, watch the reference film move rather than as stills: reference/motion-film/clip.mp4
+> with the watch skill (its Gemini engine returned HTTP 503 on 2026-11-13, so retry it and fall back to
+> --engine local), and read research/reference-motion-profile.md, which measures its timing frame by frame.
+>
+> Then start with Mt Fuji alone, to the brief: redraw it, render it in scene 03 and in scene 05 where it is
+> largest, and show me before you go further. I want to judge the level on one element before you spend a
+> session on a whole scene. Its colour is already settled: body #5f93c9, shade #4d7db2.
+>
+> Serve the folder first (python -m http.server 8791 --bind 127.0.0.1) and check with the project's own tools.
+> This account has a usage limit, so work with one or two agents at a time.
+>
+> Use the available skills and plugins for animation design and for animating (smoothness) to remake and
+> create the best version of this animation for our logistics company.
+
