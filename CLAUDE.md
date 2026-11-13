@@ -46,6 +46,13 @@ In `C:\Users\RTX4070TI\Desktop\sanpou-site-v2` (git, branch `main`, commit `7286
 - Gotchas: SVG ids must be unique per scene (two stages coexist during the dissolve); `FujiMountain` and the
   finale's lane loop use a local variable `L` (the palette is `DAY`); scenes must render in < ~1 ms/frame today.
 
+## Read `HANDOFF.md` first
+
+The owner watched round 1 end to end on 2026-11-13 and rejected the direction: the elements still looked like
+the originals with polish on them. The project is now a **full remake** — every element redrawn from a blank
+page, same cast and staging, much better drawing and much better motion, done in Fable 5.2.
+`HANDOFF.md` has the brief, what changed in the rules, and where everything is.
+
 ## Where the project stands (end of the first build session, 2026-11-13)
 
 Done (see `git log`, one commit per pass, evidence in `evidence/`):
@@ -71,13 +78,18 @@ Done (see `git log`, one commit per pass, evidence in `evidence/`):
   not smoother (numbers in the commit messages and `evidence/2026-11-13-renderer/`). Recommendation given to
   the owner: stay SVG/DOM, keep the canvas engine as a fallback. Check the owner's answer before building on it.
 
-Next:
+Round 1 is finished and is now reference material, not the basis for more polish: scene 01 approved and built
+with its motion pass, scenes 02 and 03 drawn as style frames in `samples/`, all three merged into
+`samples/preview` and recorded (`evidence/2026-11-13-preview/`). The owner rejected the direction after
+watching it; see `HANDOFF.md`.
 
-1. Owner's verdict on the scene 01 style frame (and the renderer). Apply notes (two rounds at most), then copy
-   the approved look into `remake/js/hero-port-b.js`.
-2. Scene 01 motion pass (secondary motion, eased landings; `STYLE.md` §5), verify, commit.
-3. Scenes 02 → 05 the same way: `CHANGES.md` rows (at most five a round) → style frame → owner OK → motion →
-   verify. After every scene check a sheet of all scenes for colour drift.
+Next (round 2, the full remake, in Fable 5.2):
+
+1. Watch the reference film move (`reference/motion-film/clip.mp4`, the `watch` skill), not just its frames.
+2. Scene 01 first: write what each element becomes in `CHANGES.md`, redraw the scene from a blank page inside
+   the existing scene function, show the owner the style frame beside the original, wait.
+3. Then its motion pass, then verify, then commit; then scene 02, and so on. After each scene, look at all
+   five together for colour drift.
 
 Usage: this account has a 5-hour usage limit; a burst of parallel agents exhausted it in the first session and
 killed work in progress. Use one or two agents at a time (a cheaper model for engineering, the best one for

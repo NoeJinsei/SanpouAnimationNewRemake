@@ -1,3 +1,6 @@
 shots/
 __pycache__/
 *.tmp
+
+# third-party reference media: study material, kept locally, never shipped (see reference/README.md)
+reference/motion-film/

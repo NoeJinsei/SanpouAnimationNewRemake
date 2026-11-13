@@ -11,13 +11,24 @@
 
 ## 0. What never changes (the "same game")
 
+Round 1 read this section as "keep the drawings and improve them", and the owner's verdict was that the result
+looked like the original with polish on it. It is now explicit: **every element is redrawn from a blank page**;
+what stays is the cast, the staging and the story. See `HANDOFF.md`.
+
 - Five scenes, their order, story, copy, facts, timings (`T_WORLD`, `T_TRANSIT`, `T_NETWORK`, the player's
   stops and dwell) and the camera path.
-- Layout: every element keeps its place and footprint. Anchors that must not move: ground lines, every building's
-  x / width / height / scale, the skyline tier arrays, parallax factors, truck positions and paths, Tokyo Tower,
-  Fuji, the sun, signs, the map. An upgrade happens inside an element's own footprint (roof gear and awnings may
-  reach a few pixels past it).
-- How trucks move (`truckMotion`: weight, pitch, speed-scaled shake) and the parcel arcs.
+- The cast: each scene still contains the same things (the checklists in `research/sceneNN-checklist.json`
+  are the list), and each one still sits in about the same part of the frame, at about the same size, in the
+  same depth plane, so the shot reads the same and the composition still works under the copy overlay.
+- **Not** the drawings themselves: silhouette, proportions, construction, materials and detail of every
+  element are expected to change, and to be clearly better. A building may gain a different roofline or window
+  rhythm, the warehouse may become better architecture, Fuji may be built differently as long as it is still
+  Fuji in that place and still the pale body with the white drip-hem cap the owner settled on.
+- Ground lines and the anchors that hold the staging together (the ground y, the skyline tier spacing, the
+  parallax factors, where the trucks stop, where the sun sits) stay unless the owner approves a change, because
+  the camera path and the copy overlay are built around them.
+- How trucks move (`truckMotion`: weight, pitch, speed-scaled shake) and the parcel arcs — the physics stays;
+  the quality of the motion around it should rise.
 - Daylight. One sun, top right. The single `DAY` palette object.
 - Already decided by the owner, keep off: floating dust, rotating sun spokes, stars, night lamps and glows, data
   cards, in-art titles, grid lines behind the map, any faint ellipse or stripe that reads as noise.
