@@ -861,3 +861,40 @@ new plane. The take-off roll is only 80 px (the stand is fixed). The airport, te
 road and little trucks are still the old drawings (next pass): the windsock stands under the wheels at
 36.9 s and the approach passes in front of the old control tower. The pale hills of `MountainRange` now show
 between the belt and the depot.
+
+
+## The batch of 2026-11-15, element 3: the routes on the map — dashed lines and a small truck on each
+
+The owner wanted a dotted or dashed line instead of a connected one, with a small truck running each
+corridor to its destination: "real models, drawn and sized for this, not dots with a box on them". Part
+`r4-map-routes` (six blocks, map code only) is in `round2/js`. Evidence: `evidence/2026-11-15-map-routes/`
+(`truck-model-6x.png`, `routes-old-new.jpg`, `routes-strip-desktop.jpg`, `routes-strip-phone.jpg`,
+`routes-strip-phone-close.jpg`, stills).
+
+- **The line.** The white casing is kept; on it, round-ended vermilion dashes 7.8 map units long and 3 apart
+  move outward from the head office at 22.9 units a second, so the direction of travel reads. The connected
+  core, the flowing highlight and the travelling head are gone.
+- **The truck**, designed at map size rather than shrunk from the big one: 17.7 x 11.6 map units, about
+  19 x 13 px on a 390 px phone (a branch depot is 19.5 units wide). A white box in a navy outline with the
+  vermilion stripe at its foot, a lower navy cab with one pane, a pale bumper, two wheels with pale hubs. No
+  lettering. Mirrored for corridors that run left, never rotated.
+- **The timetable** (site clock, first seen to arrival): Chiba 23230 to 24310 ms, Gunma 23490 to 24880,
+  Kanagawa 23650 to 24740, Niigata 23870 to 26080, Ibaraki 24200 to 25880, Tochigi 25350 to 26910, Saitama
+  25840 to 27220. A run takes 1.25 to 2.4 s with a soft start and a soft arrival; the truck stops with its
+  nose at the destination dot, stands 0.2 to 0.9 s and fades over 0.3 to 0.4 s while the next is on its way.
+  The loop is 3.78 s (1.89 s for Chiba and Kanagawa); two to five trucks are on the road at any moment.
+  Each truck comes out from behind the head-office depot once its corridor has drawn.
+- Everything else of the map is untouched: shapes, colours, names, wipe, depots, cards, water, the corridors'
+  geometry and drawing order, every timing.
+
+**Checks on `round2`.** `original/` intact; 0 console errors; draw (original / round2) 2.21 / 2.02 ms full,
+2.31 / 2.00 desktop, 1.95 / 1.94 phone (against the map before the routes, same sitting: 2.49 / 2.29,
+2.52 / 2.32, 2.25 / 2.05, so a little cheaper). The hold: 0 pops, frozen only in the player's dissolve lead
+(21800 to 21833); the map receding: only the step at 28700 ms that was there before. The clock step at
+27800 ms now changes 25 px of the picture (it was 4451). Every copy row passes contrast; scenes 01, 02, 03
+and 05 pixel-identical.
+
+**Known.** The tyre round each hub is 1.45 units, under the 3 px floor (the wheel as a whole is over it).
+Saitama's truck stops 24 units short of its dot, between 埼玉 and the 志木 name card (nearer, it would cover
+the name). Trucks pass behind the depots and the name cards. Tochigi's and Saitama's trucks leave about two
+seconds after their lines draw, so that nothing jumps when the scene's clock steps at 27800 ms.
