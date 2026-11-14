@@ -1,0 +1,127 @@
+{
+ "framing": "phone",
+ "throttle": 4,
+ "runs": 2,
+ "rows": [
+  {
+   "scene": "01",
+   "side": "original",
+   "median": 9.8,
+   "p95": 12.3,
+   "worst": 17.5,
+   "over16": 0.3,
+   "over33": 0,
+   "draw": 4.34,
+   "drawP95": 5.3,
+   "errors": false
+  },
+  {
+   "scene": "01",
+   "side": "round2",
+   "median": 10.8,
+   "p95": 14.3,
+   "worst": 24.8,
+   "over16": 1.7,
+   "over33": 0,
+   "draw": 3.38,
+   "drawP95": 4.1,
+   "errors": false
+  },
+  {
+   "scene": "02",
+   "side": "original",
+   "median": 10.7,
+   "p95": 12.7,
+   "worst": 29.9,
+   "over16": 1,
+   "over33": 0,
+   "draw": 4.28,
+   "drawP95": 5.8,
+   "errors": false
+  },
+  {
+   "scene": "02",
+   "side": "round2",
+   "median": 12,
+   "p95": 17,
+   "worst": 32.7,
+   "over16": 6.9,
+   "over33": 0,
+   "draw": 3.59,
+   "drawP95": 4.2,
+   "errors": false
+  },
+  {
+   "scene": "03",
+   "side": "original",
+   "median": 9.9,
+   "p95": 14.1,
+   "worst": 79.6,
+   "over16": 3.4,
+   "over33": 1,
+   "draw": 4.28,
+   "drawP95": 6.3,
+   "errors": false
+  },
+  {
+   "scene": "03",
+   "side": "round2",
+   "median": 9.9,
+   "p95": 17.3,
+   "worst": 83.8,
+   "over16": 6.2,
+   "over33": 1.1,
+   "draw": 3.57,
+   "drawP95": 4.5,
+   "errors": false
+  },
+  {
+   "scene": "04",
+   "side": "original",
+   "median": 9.8,
+   "p95": 15,
+   "worst": 34.5,
+   "over16": 1.4,
+   "over33": 0.2,
+   "draw": 4.75,
+   "drawP95": 8.1,
+   "errors": false
+  },
+  {
+   "scene": "04",
+   "side": "round2",
+   "median": 9.3,
+   "p95": 13.7,
+   "worst": 52.1,
+   "over16": 1,
+   "over33": 0.2,
+   "draw": 3.97,
+   "drawP95": 6.3,
+   "errors": false
+  },
+  {
+   "scene": "05",
+   "side": "original",
+   "median": 8.9,
+   "p95": 12.4,
+   "worst": 35.4,
+   "over16": 0.3,
+   "over33": 0.1,
+   "draw": 3.92,
+   "drawP95": 5.5,
+   "errors": false
+  },
+  {
+   "scene": "05",
+   "side": "round2",
+   "median": 9.1,
+   "p95": 12.2,
+   "worst": 21.8,
+   "over16": 0.8,
+   "over33": 0,
+   "draw": 3.19,
+   "drawP95": 4.2,
+   "errors": false
+  }
+ ]
+}

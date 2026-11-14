@@ -166,7 +166,7 @@ Round 3 (started 2026-11-14, brief in `PROMPT-FOR-FABLE.md`):
   Open for him: the shutter is up from the first frame (it could roll up), and which comes next, the trucks
   or the airport and plane.
 - **The company name on things (owner, 2026-11-14).** The characters are 三豊運輸 (never 株式会社, never
-  三豊運送). Two jobs wait for the elements they sit on: **the trucks** (his note of 2026-11-14 says "the trucks are
+  三豊運送). Both jobs below were done in the batch of 2026-11-15 (see that section): **the trucks** (his note of 2026-11-14 says "the trucks are
   next after the supplier dock", while the order above puts the airport and the plane there: ask him which
   comes first when the supplier dock is shown): on the box side 三豊運輸 becomes the big line and the roman SANPOU the small one under it, the way the scene 04
   card does it, because on a 390 px phone the truck is the only place the name is read (this replaces "truck
@@ -210,6 +210,36 @@ Round 3 (started 2026-11-14, brief in `PROMPT-FOR-FABLE.md`):
   professionally designed". The old `STYLE.md` rule is what produced them and has been rewritten. That is
   the third rejection traced to a rule written here (after the footprint rule and the skyline-layout rule) —
   each time the rule described a construction method instead of a result. Write rules as results.
+
+## The batch of 2026-11-15: drawn, merged, shown together, waiting for the owner's review
+
+All of it is in `round2/js` (parts `r4-*`, one commit each with its own evidence folder), and the pictures
+are gathered on one page: `evidence/2026-11-15-batch-review/index.html` (open it through the viewer's
+server: `http://127.0.0.1:8791/evidence/2026-11-15-batch-review/index.html`). `python tools/review-pack.py
+<outDir>` rebuilds the three-way pictures, the desktop and phone sheets, the scene-change strips and the
+loading strips; its new-versus-old lines are in the script. Details and check numbers are at the end of
+`CHANGES.md`. **Check the owner's verdict before building on any of it.**
+
+- **Clouds** (`r4-clouds`): one silhouette each, wide and low, one pale shade area; the skies composed again.
+- **The map's look** (`r4-map-look`): the panel is the sea in the film's blue, the service area Sanpou
+  white, moving shallow water off the Pacific coast; four option frames were judged at the real crops (the
+  rejected ones are `r4-map-opt-*.js` and on the review page). **Routes** (`r4-map-routes`): vermilion
+  dashes moving outward and a small truck on each corridor.
+- **Trucks** (`r4-truck`): redrawn; 三豊運輸 is the big line on the box, SANPOU the small one.
+- **Scene 05** (`r4-plane`, `r4-finale-ground`): the airliner and its 19 s cycle; the finale's skyline
+  composed again under its climb line (`y = 968 - 0.56 (x - 614)`: nothing may rise to within 30 px of it,
+  so think of that line before moving any roof in `cityFinale()`); the airport; the Sanpou depot with
+  三豊運輸 written downward on a navy band; two-axle road trucks.
+- **Values** (`r4-values`): `CITY_LOOK` and `CITY_HAZE` widened from navy to air.
+- **What a viewer really sees** (measured in this batch; design to it): desktop shows the full width and
+  about stage y 60 to 1020, with a dark band over the lower third and the caption over the lower left; a
+  390 px phone shows a strip of the stage at about 0.62 to 0.8 of its size: about x 648 to 1137 in scene 01,
+  the middle of the map in scene 04, **only x 942 to 1579 in scene 05**.
+- Still the original or round 2 drawings: scene 03's expressway, lamps, gantry, signs and fence; the
+  street, lamps, vending machines and foreground rail of scenes 01 and 02. The seams and the motion pass
+  are not done. Scene 03's caption still says 関東一円 (the owner's call).
+- Three scratch sides exist (`trial`, `trial2`, `trial3`) so helpers can build side by side. A helper
+  stopped by the usage limit is resumed with a message to it; its part file on disk survives.
 
 Usage: this account has a 5-hour usage limit; a burst of parallel agents exhausted it in the first session and
 killed work in progress. Use one or two agents at a time (a cheaper model for engineering, the best one for

@@ -959,3 +959,36 @@ there before; every copy row passes contrast (the desktop caption, which sits ov
 shapes seen straight-on, not side faces). The lane directions are swapped from the original. Two corners of
 the depot are within 3 px of the 30 px limit under the plane. The little road trucks' wheels do not spin.
 The terminal hides the city belt between x 146 and 560.
+
+
+## The batch of 2026-11-15: the final checks on the whole film, and the review page
+
+Everything in the batch is merged in `round2/js`: `r4-truck`, `r4-clouds`, `r4-map-look`, `r4-plane`,
+`r4-map-routes`, `r4-values`, `r4-finale-ground`, in that order. The pictures are gathered on
+`evidence/2026-11-15-batch-review/index.html` (three-way pictures of every scene with the new-versus-old
+line, the map's four option frames, the route trucks and the loading at both docks as strips, all five
+scenes at the desktop and phone crops, both scene changes round the map frame by frame, the numbers below).
+`python tools/review-pack.py <outDir>` rebuilds the pictures.
+
+**The numbers, on the finished working copy.**
+- `original/` intact; the website folder untouched.
+- `check-viewer`: 0 console errors over 22 moments at three framings; determinism, the site's real player,
+  rapid scene clicks and reduced motion pass. Draw (original / round2): 2.19 / 2.29 ms full, 2.22 / 1.96
+  desktop, 2.02 / 1.98 phone.
+- Frame pacing on the phone framing with the CPU slowed four times (`perf-table`, median of two runs,
+  original / round2): scene 01 9.8 / 10.8 ms, 02 10.7 / 12.0, 03 9.9 / 9.9, 04 9.8 / 9.3, 05 8.9 / 9.1;
+  frames over 16.7 ms 0.3 / 1.7 %, 1 / 6.9 %, 3.4 / 6.2 %, 1.4 / 1 %, 0.3 / 0.8 %; script time lower in
+  every scene (3.2 to 4.0 ms against 3.9 to 4.8). Nowhere near the 15 ms that drops the film to 30 fps.
+- `motion-check`: 0 frozen steps in scenes 01, 02, 03 and 05; scene 04 only the player's two-step dissolve
+  lead (its hold used to freeze). Two pops, both there before the batch: 14600 ms (1.16, the clock stepping
+  back at the 02 to 03 change) and 28700 ms (0.96, the same at 04 to 05).
+- `contrast-check`, whole film, desktop and phone: all 13 copy rows pass AA; the tightest is the caption's
+  lead line on desktop, 4.84 against 4.5, at 30000 ms (it sits over the new airport). The unfilled progress
+  track fails (about 1:1) as on the original.
+- `cloud-check`: 0 clouds below a roof in scenes 01, 02, 03, 05, the depot and airport counted.
+- `check-player-vs-glue`: the viewer's clock matches the site's player in every hold (phone).
+
+**For the owner to decide** (also on the review page): the depot's name is vertical; the map's prefecture
+names turn pale under the site's wash at the top of the frame and could go a step darker; a phone sees the
+map's moving water only as a thin strip; scene 02's phone crop cuts the name on both trucks; the truck has
+no roof deflector; scene 02's sky is sparse in the middle; scene 03's caption still says 関東一円.
