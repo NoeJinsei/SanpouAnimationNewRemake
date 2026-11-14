@@ -73,10 +73,28 @@ fantasy silhouettes.
   Shadow edges and light shafts share one direction in a scene.
 - **Outline**: the original's navy strokes stay at their weight on hero objects. Nothing in the background
   gains an outline.
-- **Clouds**: a cluster of round lobes on a flat base, pure white; one shade shape, the same cluster moved a
-  little down and to the left (away from the sun), in a single cloud-shade colour, so every lobe shows a crisp
-  shaded edge. A few big, composed clouds, not many small ones. Two depth planes at most, one speed per plane.
-  Clouds fade in and out only at the wrap edges.
+- **Clouds**: a fair-weather cumulus, drawn as ONE silhouette. The owner's verdict on 2026-11-15 was that
+  the clouds look "a bit odd … not that natural / professionally designed", and the rule that used to stand
+  here is why: it said "a cluster of round lobes on a flat base … one shade shape, the same cluster moved a
+  little down and to the left … so every lobe shows a crisp shaded edge", which is a recipe for a pile of
+  equal circles each ringed with its own crescent. You could count the balls. That rule is withdrawn.
+  What a cloud is now:
+  - **One silhouette, not a stack.** The white is a single shape; a viewer must not be able to count the
+    lobes that made it. No lobe gets its own outline or its own crescent.
+  - **Lobes of clearly different sizes and shapes.** No two neighbours the same radius, and not every lobe a
+    circle — the big forms are wider than they are tall. The largest sit near the cloud's shoulder, the
+    smallest at its edges.
+  - **Wider than tall**, about two to three times, with the mass low. A cloud as tall as it is wide reads as
+    a tower of bubbles.
+  - **Asymmetric**: the rising shoulder offset to one side, the other side trailing away lower and flatter.
+  - **The underside is the cloud's own base**, flat and a little uneven, not a rounded bar laid underneath
+    and sticking out past the lobes.
+  - **Shade is one or two large flat areas** inside the silhouette, on the side away from the sun, following
+    the big forms — never one crescent per lobe. Cool, and closer to white than the periwinkle `#b9caef`
+    that made the old crescents read as lavender rings.
+  A few big, composed clouds, not many small ones. Two depth planes at most, one speed per plane.
+  Clouds fade in and out only at the wrap edges, and no cloud base sits below the roofline of the tier it
+  stands in front of.
 - **Light shafts**: three (at most four) wedges fanning from a point outside the frame on the sun's side, of
   clearly different widths and uneven spacing, each wider than 100 px where it crosses the middle of the sky,
   hard edges, plain white at 7 to 12 % strength, behind the clouds and behind every building. They must read
