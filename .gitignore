@@ -4,3 +4,6 @@ __pycache__/
 
 # third-party reference media: study material, kept locally, never shipped (see reference/README.md)
 reference/motion-film/
+
+# owner-supplied warehouse operation references (2026-11-14): study material, never shipped
+reference/warehouse-ops/

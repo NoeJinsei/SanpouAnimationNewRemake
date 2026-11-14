@@ -52,3 +52,26 @@ Measured with ffmpeg on the 1920×1080 file: 30 fps, 900 frames, per-frame pictu
 
 Weaknesses to avoid (owner noted): inconsistent colour between scenes, oddly shaped buildings, a dark cyber
 palette that doesn't fit Sanpou.
+
+## Warehouse operation references (owner-supplied, 2026-11-14)
+
+Six stock illustrations the owner gave as a **reference point for the feel of a working depot** — his words:
+"Im not saying to copy these, but use these are a reference point for fable and create a original / unique
+version for our animation." Kept in `reference/warehouse-ops/`, gitignored like the motion film: study
+material, never shipped, nothing traced or lifted.
+
+| File | What it is | What to take from it |
+|---|---|---|
+| `01-isometric-warehouse-interior.webp` | isometric DC interior: deep racking, forklift in an aisle, pallets, a truck backed into a shutter with the load half in | the **inventory of a working depot** — racking bays, stacked pallets, a forklift mid-task, a part-loaded truck body |
+| `02-isometric-handling-equipment.webp` | isometric kit sheet: counterbalance forklifts, a walkie stacker, pallet trucks, a scale, a scissor lift, racking, drums, a container | **how handling equipment is built** — mast, forks, counterweight, wheels, overhead guard |
+| `03-flat-warehouse-banners.webp` | flat side-on banners: a gabled shed with two open bays full of pallets, an articulated lorry, a forklift, a lit interior | the **side-on staging** of bays full of goods behind an open shutter |
+| `04-flat-warehouse-and-trucks.png` | flat: a shed with an open bay, racking inside, a lorry alongside, a forklift loading a trailer | the clearest match to our camera: **one building, open bay, goods visible, vehicle alongside** |
+| `05-single-shed-open-bay.png` | a single clad shed, blue plinth and trim, roller door open on lit racking, pallets outside, a small box truck | **modern clad-shed construction** — profiled sheeting, a coloured plinth band, eaves, a roller door hood |
+| `06-isometric-forklift-aisle.webp` | isometric aisle: racking, cartons, forklifts, staff with tablets | depth of racking receding into the building |
+
+**What NOT to take.** Four of the six are isometric and our film is not — the owner asked on 2026-11-14 to go
+back to a **flat 2D** view. Take the content, never the projection. They are also full of **people and faces**,
+which are banned in this film; the work has to read as a working depot with no one in frame. Their palettes
+(primary red/yellow/green, brown interiors) are not ours; everything is drawn in `DAY`. They carry in-art
+lettering and lorem ipsum; our art carries no titles or captions. And none of their vehicles or buildings
+belongs to anyone we can identify — no other company's branding goes into our version.
