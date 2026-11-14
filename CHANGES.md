@@ -821,3 +821,43 @@ there before. Every copy row passes contrast (the unfilled track fails as on the
 coast has no moving water (it is under the copy on desktop). The map's layers carry `will-change`; Safari is
 untested. The routes are still the connected lines: the dashed routes and the small trucks are the next
 pass.
+
+
+## The batch of 2026-11-15, element 5a: the airliner of scene 05, its flight, and the sky it flies in
+
+The owner has raised the plane three times; at 38 s it flew into the side of a tower. Part `r4-plane`
+(four blocks: `cityFinale`, `JetPlane`, `AirportPlane`, and a back slot before Tokyo Tower) is in `round2/js`.
+Evidence: `evidence/2026-11-15-plane/` (`plane-old-new-2x.jpg`, `plane-gear-flaps.jpg`,
+`skyline-old-new.jpg` with the climb line drawn on it, `cycle-strip-desktop.jpg`, `cycle-strip-phone.jpg`,
+stills).
+
+- **The airliner.** A 224 px twin-jet (was 180) in flat side elevation: nose and tail cone, cockpit glazing,
+  eleven cabin windows, two doors, a tapered wing with a winglet and flap-track fairings, flaps that slide
+  and spoilers that stand, an engine on a pylon, fin and tailplane, a nose leg that swings forward behind
+  its door, bogie main legs that fold inward, a white strobe. The gear retracts by folding, not by fading.
+  Livery: white and periwinkle with a blue belly and tail; no vermilion, no lettering, no carrier.
+- **The cycle (19 s, same shape).** Touchdown at 29.8 s on the site clock, at the stand (x 474) 32.7 to
+  34.1 s, lift-off at x 554 at 36.1 s, then a straight climb `y = 968 - 0.56 (x - 614)` (29.2 degrees),
+  gone at 41.7 s. Gear compression on touchdown, a nose that settles, spoilers and flaps, a designed tyre
+  puff, a contact shadow that tightens. `AirportPlane` always returns the same node shape now (it returned
+  `null` off-screen before).
+- **Somewhere to fly.** The finale's skyline (`cityFinale()`, all three rows) is composed again under that
+  line: the low belt in front of Mt Fuji ends at x 606 in two rows (roofs y 810 to 900), there is open sky
+  over the depot, the buildings step up toward the Tower (792, 756, 724 at x 1052 to 1250), and the knot
+  right of the Tower steps up rightward (566, 492, 392) with the crane at x 1830. Gone: the glass tower at
+  x 942, the two billboard buildings, two far towers. Mt Fuji now stands whole. **In 139 measured moments
+  (every 50 ms of the climb) the plane is over no building; the nearest roof is 23 px away (the depot).**
+- **Behind Tokyo Tower.** The plane is drawn in front until x 1170 (39.3 s), then in a second slot before
+  the Tower (`AirportPlaneBack`), so it passes behind the Tower's open lattice between the two decks at 39.9
+  to 40.3 s. On a 390 px phone it crosses the visible strip from 37.9 to 40.9 s.
+
+**Checks on `round2`.** `original/` intact; 0 console errors; draw (original / round2) 2.41 / 2.22 ms full,
+2.40 / 2.26 desktop, 2.34 / 2.19 phone (2.24 against 2.32 before, same sitting); scene 05 0 frozen steps and
+the one step at 28700 ms that was there before; every copy row passes contrast; 0 clouds below a roof with
+the new roofs; scenes 01 to 04 pixel-identical.
+
+**Known.** `JetPlane` is also scene 03's far-off jet (never on screen on the site clock); it now draws the
+new plane. The take-off roll is only 80 px (the stand is fixed). The airport, terminal, windsock, depot,
+road and little trucks are still the old drawings (next pass): the windsock stands under the wheels at
+36.9 s and the approach passes in front of the old control tower. The pale hills of `MountainRange` now show
+between the belt and the depot.
