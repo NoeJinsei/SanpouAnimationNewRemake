@@ -146,16 +146,20 @@ Round 3 (started 2026-11-14, brief in `PROMPT-FOR-FABLE.md`):
   owner's verdict was the five changes recorded at the end of `CHANGES.md` (flat 2D, clouds up, the plane
   moved up, the warehouse, and his size picks postponed until he has seen it flat). It also held two things
   he pulled forward: the supplier building redrawn modern and a little bigger, and the three map depots.
-- **Pass 1 is re-shown flat (2026-11-14), waiting for the owner's verdict and his two size picks** (city
-  height A/B/C, Fuji size 1/2/3: `evidence/2026-11-14-r3-flat/options-*.jpg`). In `round2/js` after the pass 1
-  parts: `r3-flat-city`, `r3-flat-supplier`, `r3-flat-tower`, `r3-flat-depots`, `r3-flat-parcel`,
-  `r3-clouds-up`. What is flat, how the clouds were recomposed and the check results are at the end of
-  `CHANGES.md`. Whichever city height he picks gets its clouds composed by hand (the option builds only lift
-  them).
+- **Pass 1 was re-shown flat on 2026-11-14 and the owner picked the sizes: city height B, Fuji size 2**
+  (his answer to the flat frames; he asked for no changes). Both are in `round2/js`:
+  `SKYLINE_SIZE = { base: 1.12, amp: 1.15 }`, Fuji at the trial size (scene 03 `w: 1480, ht: 596`, scene 05
+  `w: 2020, ht: 706`), and the clouds composed by hand for that city height. Parts after the pass 1 ones:
+  `r3-flat-city`, `r3-flat-supplier`, `r3-flat-tower`, `r3-flat-depots`, `r3-flat-parcel`, `r3-clouds-up`,
+  `r3-size-pick`, `r3-clouds-b`. Details and check results are at the end of `CHANGES.md`; pictures in
+  `evidence/2026-11-14-r3-flat/` (`picked-scene01/03/05.jpg` are the chosen sizes). The sizes are closed:
+  do not reopen them.
 - **The Sanpou warehouse (scene 02) was started the same day**, as the owner asked, in trial side
   `r3-warehouse` (part `round2/parts/r3-warehouse.js`, evidence `evidence/2026-11-14-r3-warehouse/`): check
   whether it was finished, reviewed and shown before doing anything with it. When it is merged, run the cloud
   check again (a taller warehouse is a roof too) and lift scene 02's clouds if needed.
+- `trial` is a scratch viewer side (`sh tools/build-side.sh trial <part>`, `samples/trial/` is gitignored):
+  use it to try a part before splicing it into `round2/js`, instead of adding a side each time.
 - **Three checks added with the flat pass:** `node tools/cloud-check.mjs <side> --skip=7417-9139` (no cloud
   base below a roof; `--at=<ms> --roofs` prints every cloud and the roofline for composing; `--fit=<file>`
   with `python tools/cloud-lift.py` lifts clouds on a sample side), and `python tools/sheet.py` (stacks stills

@@ -1,3 +1,5 @@
+# NOTE: the sizes were picked on 2026-11-14 (city B = base 1.12 / amp 1.15, Fuji 2 = the trial size) and are
+# closed. Kept as the record of how the option pictures were built; the numbers below are the old options.
 # Builds trial sides that differ from the working copy only in how tall the city stands and how big
 # Mt Fuji is, so the owner can pick a size from real frames.
 #   python tools/size-options.py            -> writes parts into shots/size-options/ and prints the build lines

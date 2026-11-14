@@ -811,8 +811,7 @@
 
   /* How tall the city stands, for every tier in every scene. base multiplies every height; amp widens
      (or narrows) how far a building stands above or below its row's usual roofline. */
-  var SKYLINE_SIZE = { base: 1, amp: 1 };
-
+  var SKYLINE_SIZE = { base: 1.12, amp: 1.15 };   // the owner's pick on the flat frames (2026-11-14): "City B", a step taller
   DAY.cityAir = "#bcd8ef";          // the air between the tiers: every tone is mixed toward it with distance
   DAY.cityNavy = "#1b2f55";         // what a shaded tone is pushed toward
   DAY.cityWhite = "#ffffff";        // what a lit tone is pushed toward; the sheen that slides down glass
@@ -1931,9 +1930,11 @@
      two fair-weather clouds, a high streak (it may pass behind Mt Fuji), a thin streak lying across the
      foot of the sun, a scrap or two. No cumulus covers the sun while a scene holds. The lists keep their
      layout (one per line, numbers only): tools/cloud-lift.py rewrites the undersides for a taller city. */
+  // composed by hand for the city height the owner picked ("City B"): the towers now reach y 121-126 in
+  // scenes 01 and 02, so the tall cloud stands over the low roofs left of them and the streaks keep clear
   var SKY_WORLD = {
-    far: [[706, 180, 620, 3], [1560, 128, 560, 4], [66, 330, 96, 6]],
-    near: [[886, 350, 230, 0], [135, 262, 450, 1], [625, 300, 92, 5], [1595, 380, 300, 1], [1879, 300, 84, 6]]
+    far: [[60, 215, 620, 3], [1560, 90, 560, 4], [66, 330, 96, 6]],
+    near: [[696, 345, 230, 0], [135, 262, 450, 1], [1010, 230, 92, 5], [1571, 350, 130, 2], [1840, 300, 84, 6]]
   };
   var SKY_TRANSIT = {
     far: [[85, 212, 700, 3], [1585, 112, 560, 4]],
@@ -1941,7 +1942,7 @@
   };
   var SKY_FINALE = {
     far: [[78, 372, 680, 3], [1478, 160, 560, 4]],
-    near: [[154, 236, 430, 1], [960, 470, 260, 0], [1845, 372, 220, 2], [1500, 262, 88, 6], [644, 250, 92, 5]],
+    near: [[154, 236, 430, 1], [960, 425, 260, 0], [1895, 372, 220, 2], [1500, 262, 88, 6], [644, 250, 92, 5]],
     landFar: [],
     landNear: []
   };

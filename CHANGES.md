@@ -540,3 +540,16 @@ track still fails (about 1:1) as it does on the original.
 **Still open:** the canvas engine has not been run on the new parts; scene 04's sky holds the finale's sun and
 clouds still (motion pass); the building site's mesh is a large pale slab in scene 05; the glass sheen travels
 only about 100 px where a front-row building stands before the tower.
+
+## The owner's size picks (2026-11-14): city B, Fuji 2
+
+His answer to the flat re-show was "City B, Fuji 2", with no changes asked for. In `round2/js`:
+`SKYLINE_SIZE = { base: 1.12, amp: 1.15 }` (part `r3-size-pick`); Fuji stays at the size the frames showed
+(scene 03 `w: 1480, ht: 596`, scene 05 `w: 2020, ht: 706`). The clouds were then composed by hand for the
+taller city (part `r3-clouds-b`): in scenes 01 and 02 the towers now reach y 121 to 126, so the tall cloud
+stands over the low roofs left of them, the long streak passes behind the top-left cloud, the thin streak
+crosses the lower half of the sun, and scene 02 keeps one small cloud by Tokyo Tower; in scene 05 the tall
+cloud stands 45 px higher and the cloud on the right drifts in from the edge. Checks on `round2`: 0 clouds
+below a roof in scenes 01, 02, 03, 05; 0 console errors; draw (original / round2) 1.88 / 1.52 ms full,
+1.76 / 1.49 desktop, 1.79 / 1.62 phone; no frozen steps and no pops in scenes 01, 03, 05; copy contrast
+passes. Pictures: `evidence/2026-11-14-r3-flat/picked-scene01/03/05.jpg`. The sizes are closed.

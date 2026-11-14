@@ -7,3 +7,6 @@ reference/motion-film/
 
 # owner-supplied warehouse operation references (2026-11-14): study material, never shipped
 reference/warehouse-ops/
+
+# the scratch trial side (sh tools/build-side.sh trial <part>): rebuilt at will, never kept
+samples/trial/
