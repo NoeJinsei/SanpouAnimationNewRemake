@@ -772,3 +772,52 @@ there before (0.889 against 0.891); every copy row passes contrast.
 scene 01, which shares the list. The streaks now read as flat banks rather than wisps. The canvas engine
 was not run. Scene 05's roofs are being recomposed with the plane's corridor, so its cloud check is run
 again with that pass.
+
+
+## The batch of 2026-11-15, element 2: the map's look (scene 04) — background, colours, what moves
+
+The owner: "I want to have somekind of a cool moving elements behind the map scene / background that is
+fitting to the animation (with the context of being a logistics company). I want Fable to come up with its
+style, what it would be, and the coloring of the background and the map itself as well."
+Part `r4-map-look` (eight blocks) is in `round2/js`; it applies on its own and replaces what the floor parts
+`map-nosky`, `map-flat-plate`, `map-col-*` and `map-bg-*` did (those are not spliced). Evidence:
+`evidence/2026-11-15-map-look/`.
+
+**Four directions were built as option frames and judged at the desktop and phone crops**
+(`options-desktop.jpg`, `options-phone.jpg`; parts `r4-map-opt-*.js` are kept for the review):
+
+1. **Open water, white area — picked.** The only one that keeps the film's blue and white while giving the
+   map real ground.
+2. Open water, navy area: holds best under the site's pale wash, but turns near-black under the bottom band,
+   the darkest thing in the film.
+3. Working line (a pale panel with conveyors of cartons on the right): reads as decoration, and a phone sees
+   none of it.
+4. Open water with a freighter: rejected, a ship implies a service the company does not sell.
+
+**What scene 04 is now.**
+- **The panel is the sea**, in the film's own blue (`#5fabe4`), so the film never leaves its colour between
+  the expressway, the map and the finale. No sky, sun, shafts or clouds in scene 04.
+- **The service area is Sanpou white** (`#ffffff` running to `#d6e5f7`), the brightest thing on the panel,
+  with crisp seams (`#6f97cc`); the rest of Japan is a quiet blue-grey (`#a9bbdb`, seams `#98acd1`); names
+  `#2f4d78`; the depots' name cards are navy signs (`#1f3b66`). Vermilion is still the route's alone.
+- **All of Japan inside the frame is drawn** from the existing map data, so every edge is real coast and
+  the left of the panel is land, not a fade. The map's old CSS mask is gone, and so is the plate's edge
+  copy (flat 2D).
+- **What moves: the water.** A band of shallow water (`#b7d9f3`, a 39 px apron off the coast from Ibaraki
+  round to Kanagawa) leaves the coast and travels outward, growing 1.95 times about the head office and
+  fading into the sea. Three copies, one leaving every 3.78 s, each living 11.3 s, about 24 px a second.
+  Only transform and opacity change; nothing moves on the left, under the copy.
+- The prefecture shapes, the wipe, the depots, the routes and every timing are untouched.
+
+**Checks on `round2`.** `original/` intact; 0 console errors; draw (original / round2) 2.52 / 2.42 ms full,
+2.59 / 2.31 desktop, 2.39 / 2.36 phone; phone frame rate with the CPU slowed four times 75 fps against 78
+before. The hold of scene 04: 0 frozen steps from 21850 ms (before, it froze); the two steps at 21800 to
+21833 are the player's dissolve lead, as before; nine steps flagged as pops are one 8-bit level across a
+fading band (0.087 to 0.105), not visible. Into the map 0 pops; out of it the one step at 28700 ms that was
+there before. Every copy row passes contrast (the unfilled track fails as on the original). Scenes 01, 02,
+03 and 05 pixel-identical.
+
+**Known.** A phone sees the water only as a thin strip at its right edge (the map fills the phone). Niigata's
+coast has no moving water (it is under the copy on desktop). The map's layers carry `will-change`; Safari is
+untested. The routes are still the connected lines: the dashed routes and the small trucks are the next
+pass.
