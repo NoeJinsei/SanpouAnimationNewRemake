@@ -154,10 +154,12 @@ Round 3 (started 2026-11-14, brief in `PROMPT-FOR-FABLE.md`):
   `r3-size-pick`, `r3-clouds-b`. Details and check results are at the end of `CHANGES.md`; pictures in
   `evidence/2026-11-14-r3-flat/` (`picked-scene01/03/05.jpg` are the chosen sizes). The sizes are closed:
   do not reopen them.
-- **The Sanpou warehouse (scene 02) was started the same day**, as the owner asked, in trial side
-  `r3-warehouse` (part `round2/parts/r3-warehouse.js`, evidence `evidence/2026-11-14-r3-warehouse/`): check
-  whether it was finished, reviewed and shown before doing anything with it. When it is merged, run the cloud
-  check again (a taller warehouse is a roof too) and lift scene 02's clouds if needed.
+- **The Sanpou warehouse of scene 02 is drawn, merged and shown (2026-11-14), waiting for the owner's
+  verdict.** Parts `r3-warehouse` and `r3-clouds-b2` are in `round2/js`; evidence in
+  `evidence/2026-11-14-r3-warehouse/`; what it is, the constants it changed and the check results are at the
+  end of `CHANGES.md`. Open for him: the forklift stands in the right-hand wing, which the phone crop never
+  reaches. **Next, after his yes:** the same working feel at the supplier building's dock in scene 01 (reuse
+  the warehouse's conveyor, pallets, cartons and forklift), then the airport, the terminal and the plane.
 - `trial` is a scratch viewer side (`sh tools/build-side.sh trial <part>`, `samples/trial/` is gitignored):
   use it to try a part before splicing it into `round2/js`, instead of adding a side each time.
 - **Three checks added with the flat pass:** `node tools/cloud-check.mjs <side> --skip=7417-9139` (no cloud

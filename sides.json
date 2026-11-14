@@ -17,7 +17,7 @@
     {
       "id": "round2",
       "label": "Remake (round 3 working copy)",
-      "detail": "the working copy: round 3 pass 1 is in and flat (sky, clouds, city, Tokyo Tower, supplier building, map depots); the rest is still round 2 or the original",
+      "detail": "the working copy: flat pass 1 at the picked sizes (sky, clouds, city, Tokyo Tower, supplier building, map depots) and the Sanpou warehouse of scene 02; the rest is still round 2 or the original",
       "kind": "dom",
       "base": "round2/js/",
       "scripts": [
@@ -179,22 +179,6 @@
         "hero-port-b.js"
       ],
       "glue": "hero-glue.js"
-    },
-    {
-      "id": "r3-warehouse",
-      "label": "Trial: Sanpou warehouse",
-      "detail": "the working copy with the Sanpou warehouse of scene 02 redrawn as a working depot",
-      "kind": "dom",
-      "base": "samples/r3-warehouse/js/",
-      "scripts": [
-        "hero-flag.js",
-        "hero-port-a.js",
-        "hero-port-b.js"
-      ],
-      "glue": "hero-glue.js",
-      "schedule": {
-        "holdAmbient02": true
-      }
     },
     {
       "id": "trial",

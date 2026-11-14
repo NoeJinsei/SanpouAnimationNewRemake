@@ -553,3 +553,46 @@ cloud stands 45 px higher and the cloud on the right drifts in from the edge. Ch
 below a roof in scenes 01, 02, 03, 05; 0 console errors; draw (original / round2) 1.88 / 1.52 ms full,
 1.76 / 1.49 desktop, 1.79 / 1.62 phone; no frozen steps and no pops in scenes 01, 03, 05; copy contrast
 passes. Pictures: `evidence/2026-11-14-r3-flat/picked-scene01/03/05.jpg`. The sizes are closed.
+
+## The Sanpou warehouse of scene 02 (2026-11-14): drawn, merged, shown, waiting for the owner's verdict
+
+Change 4 of the verdict above, first half: the three-bay Sanpou warehouse, never redrawn before. In `round2/js`
+(parts `r3-warehouse`, then `r3-clouds-b2`). Evidence: `evidence/2026-11-14-r3-warehouse/`
+(`three-way-scene02-loading.jpg`, `three-way-scene02-hold.jpg`, `loading-in-six-stills.jpg`, the loading
+strips, `forklift-loop.jpg`, a desktop and a phone still, a crop of dock 03).
+
+- **The building, bigger and flat.** It was x 80 to 1448 with its roof at y 477. It now starts at x 42 and
+  runs off the right edge of the frame: a white insulated-panel hall to x 1288 (parapet y 439, navy base
+  course, the one vermilion fascia line, a slim canopy over the docks), a glazed office block at x 1288 to
+  1623 rising to y 300, and a low open wing beyond it. The name sign is the same two text nodes on a raised
+  navy band; bay plates 01, 02, 03.
+- **Three docks with room to work.** Doors 141 x 213 px at x 80, 604 and 1117; truck rears at 236, 760, 1273
+  and noses at 594, 1107, 1620, so every door is clear of its neighbour's cab (before, each cab covered most
+  of the next bay). Constants changed: `WAREHOUSE_W` 720 to 1020, `WAREHOUSE_BAYS` to [0, 276, 546], `BAY_W`
+  100 to 74, `BAY_Y` to -112; `Warehouse()` takes `time: skyTime`. `T_WORLD`, the camera, the truck drawing,
+  `B_SCALE`, `T_SCALE` and `WAREHOUSE_X` are untouched, so the trucks stand a little further apart than on the
+  site (the third by about 76 px less far right, the first about 200 px further left).
+- **Inside**: cool shade, racking in silhouette with stock on it, the sun on the floor.
+- **Loading**: a roller conveyor in each dock at the truck's floor height. Four cartons, 62 px apart, ride
+  at 5.4 px a frame into each truck from frames 320 / 327 / 335 and are all in by 379 (inside the old
+  `loadParcels` window of 308 to 388); a fifth stops on the conveyor. Eased over 10 frames, cut at the truck's
+  rear plane. No hops.
+- **The forklift**: white with a dark-glass cab (no operator to see or miss), in the open wing right of
+  truck 3, on a 14 s loop from the continuous sky clock, so it keeps working through the 1.9 s hold: it puts a
+  pallet on the rack, and on its next visit takes it down.
+- The small cloud that stood by Tokyo Tower in scene 02 was removed (behind the deck it read as a cloud stuck
+  on the tower).
+
+**Checks on `round2`.** `original/` intact; 0 console errors; draw (original / round2) 1.74 / 1.42 ms full,
+1.77 / 1.42 desktop, 1.71 / 1.60 phone, and against frozen round 2 1.59 / 1.45, 1.64 / 1.47, 1.63 / 1.39;
+scene 02 has 0 frozen steps and the one step at 14600 ms that the scene change always had; 0 pops while the
+trucks leave; scene 01 is pixel-identical to before; copy contrast passes (the unfilled progress track fails
+as on the original); clouds: 0 below a roof in scenes 01, 02, 03, 05, the warehouse and the supplier building
+now measured by their real outline (`tools/cloud-check.mjs`).
+
+**Known, for the owner to decide or for a later pass:** on a 390 px phone the crop shows dock 03 being loaded
+but never reaches the forklift (it stands in the right-hand wing); the departing trucks pass in front of the
+wing and hide the forklift as they go; an open truck door covers the right fifth of each doorway. The trucks
+are still round 2's drawing, the street, lamps and rail too. The supplier building's dock in scene 01 (the
+same working feel, using this conveyor, pallets and forklift) is the next thing, then the airport, the
+terminal and the plane.

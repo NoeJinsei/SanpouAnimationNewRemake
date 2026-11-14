@@ -56,15 +56,35 @@ async function measure(t) {
       clouds = [...document.querySelectorAll('g[data-cache^="cloud3-"]')].map((el, i) => ({ id: "cloud " + i, key: el.getAttribute("data-cache"), o: seen(el), ...box(el) }));
     }
     clouds = clouds.filter((c) => c.o > 0.5 && c.x1 > 0 && c.x0 < 1920 && c.bottom > 0 && c.top < 1080);
-    const roofs = [...document.querySelectorAll('g[data-city], g[data-roof], g[data-cache^="supplier-"], g[data-cache^="warehouse"]')]
-      .map((el) => ({ type: el.getAttribute("data-city") || el.getAttribute("data-roof") || (el.getAttribute("data-cache") || "").split("-")[0], o: seen(el), ...box(el) }))
+    let roofs = [...document.querySelectorAll("g[data-city], g[data-roof]")].map((el) => ({ type: el.getAttribute("data-city") || el.getAttribute("data-roof"), o: seen(el), ...box(el) }))
       .filter((b) => b.o > 0.5 && b.x1 > 0 && b.x0 < 1920 && b.bottom > b.top);
+    // The supplier building and the Sanpou warehouse have parts of different heights and are drawn as a few
+    // large shapes, so a box will not do: under each cloud, find the highest point of the building itself
+    // (point-in-shape tests down each 8 px column), and hand that back as a roof that belongs to that cloud.
+    const LIMIT = 40;                                   // how far below a cloud's underside a roof still matters
+    for (const g of document.querySelectorAll('g[data-cache^="supplier-"], g[data-cache^="wh-"]')) {
+      if (seen(g) <= 0.5) continue;
+      const gb = box(g), shapes = [...g.querySelectorAll("rect, path, polygon, circle, ellipse, line")].map((el) => ({ el, b: box(el), inv: el.getScreenCTM().inverse() }));
+      for (const c of clouds) {
+        if (c.pic !== gb.pic || Math.min(c.x1, gb.x1) - Math.max(c.x0, gb.x0) < 8 || gb.top > c.bottom + LIMIT) continue;
+        let top = Infinity;
+        for (const sh of shapes) {
+          const xa = Math.max(c.x0, sh.b.x0), xb = Math.min(c.x1, sh.b.x1);
+          if (xb - xa < 8 || sh.b.top > Math.min(top, c.bottom + LIMIT)) continue;
+          for (let x = xa + 1; x < xb; x += 8) for (let y = Math.max(sh.b.top, 0) + 0.5; y < Math.min(top, c.bottom + LIMIT); y += 3) {
+            const p = new DOMPoint(x + host.left, y + host.top).matrixTransform(sh.inv);
+            if (sh.el.isPointInFill(p) || sh.el.isPointInStroke(p)) { top = y; break; }
+          }
+        }
+        if (top < Infinity) roofs.push({ type: g.getAttribute("data-cache").split("-")[0], only: c.id, pic: gb.pic, x0: Math.max(c.x0, gb.x0), x1: Math.min(c.x1, gb.x1), top, bottom: gb.bottom, o: 1 });
+      }
+    }
     return { clouds, roofs };
   });
 }
 const under = (c, roofs) => {                    // the highest roof standing under a cloud (8 px of overlap counts)
   let best = null;
-  for (const b of roofs) if (b.pic === c.pic && Math.min(c.x1, b.x1) - Math.max(c.x0, b.x0) >= 8 && (!best || b.top < best.top)) best = b;
+  for (const b of roofs) if (b.pic === c.pic && (!b.only || b.only === c.id) && Math.min(c.x1, b.x1) - Math.max(c.x0, b.x0) >= 8 && (!best || b.top < best.top)) best = b;
   return best;
 };
 const r0 = (v) => Math.round(v);
