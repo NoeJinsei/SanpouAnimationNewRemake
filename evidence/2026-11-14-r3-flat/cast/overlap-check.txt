@@ -1,0 +1,80 @@
+== node overlap-check.mjs flat-cast   (every 100 ms, 21800-29000, 1920x1080 stage)
+   at rest: itabashi text x 1083.9-1174.9 inside plate x 1078.8-1180.0
+   at rest: shiki text x 981.6-1057.5 inside plate x 976.3-1062.8
+   at rest: iruma text x 858.6-934.5 inside plate x 853.3-939.8
+flat-cast (stage 1920x1080): 73 moments from 21800 to 29000 ms, every 100 ms; depot boxes read 169, card boxes read 154
+largest width of each depot on screen (px): itabashi 90.7, shiki 65.7, iruma 62.2
+A. visible boxes: 0 intersecting pair-moments
+B. plain getBoundingClientRect: 0 intersecting pair-moments
+smallest gap seen per pair (px, at ms):
+   depot itabashi / depot shiki      7.6  @28500
+   depot itabashi / card itabashi    2.8  @28500
+   depot shiki / card itabashi       35.3  @23100
+   depot itabashi / depot iruma      56.3  @28500
+   depot shiki / depot iruma         31.0  @28500
+   depot iruma / card itabashi       97.6  @28500
+   depot itabashi / card shiki       40.1  @28500
+   depot shiki / card shiki          11.7  @28500
+   depot iruma / card shiki          5.4  @23700
+   card itabashi / card shiki        51.6  @28500
+   depot itabashi / card iruma       88.6  @28500
+   depot shiki / card iruma          63.2  @28500
+   depot iruma / card iruma          2.8  @28500
+   card itabashi / card iruma        129.7  @28500
+   card shiki / card iruma           35.7  @28500
+C. prefecture names touched while the depots arrive: none
+   prefecture names touched at rest (24100-27800 ms): none
+exit code 0
+
+== node overlap-check.mjs flat-cast --every=10 --from=21800 --to=24300   (the arrival, every 10 ms)
+flat-cast (stage 1920x1080): 251 moments from 21800 to 24300 ms, every 10 ms; depot boxes read 418, card boxes read 272
+largest width of each depot on screen (px): itabashi 92.8, shiki 66.1, iruma 62.8
+A. visible boxes: 0 intersecting pair-moments
+B. plain getBoundingClientRect: 0 intersecting pair-moments
+smallest gap seen per pair (px, at ms):
+   depot itabashi / depot shiki      8.2  @23430
+   depot itabashi / card itabashi    2.1  @22940
+   depot shiki / card itabashi       35.1  @23080
+   depot itabashi / depot iruma      60.8  @23870
+   depot shiki / depot iruma         33.5  @23870
+   depot iruma / card itabashi       105.4  @23870
+   depot itabashi / card shiki       43.3  @23450
+   depot shiki / card shiki          12.6  @23440
+   depot iruma / card shiki          4.9  @23720
+   card itabashi / card shiki        55.7  @23560
+   depot itabashi / card iruma       95.7  @23990
+   depot shiki / card iruma          68.3  @23990
+   depot iruma / card iruma          2.1  @23830
+   card itabashi / card iruma        140.1  @23990
+   card shiki / card iruma           38.6  @23990
+C. prefecture names touched while the depots arrive: none
+   prefecture names touched at rest (24100-27800 ms): none
+exit code 0
+
+== node overlap-check.mjs flat-cast --framing=site --w=390 --h=844 --dpr=2   (phone)
+   at rest: itabashi text x 238.3-297.9 inside plate x 236.1-301.2
+   at rest: shiki text x 172.5-222.7 inside plate x 170.1-225.8
+   at rest: iruma text x 93.3-143.5 inside plate x 90.9-146.6
+flat-cast (site 390x844): 73 moments from 21800 to 29000 ms, every 100 ms; depot boxes read 169, card boxes read 154
+largest width of each depot on screen (px): itabashi 58.0, shiki 41.6, iruma 39.4
+A. visible boxes: 0 intersecting pair-moments
+B. plain getBoundingClientRect: 0 intersecting pair-moments
+smallest gap seen per pair (px, at ms):
+   depot itabashi / depot shiki      4.9  @28500
+   depot itabashi / card itabashi    1.8  @28500
+   depot shiki / card itabashi       22.3  @23100
+   depot itabashi / depot iruma      36.2  @28500
+   depot shiki / depot iruma         19.9  @28500
+   depot iruma / card itabashi       62.7  @28500
+   depot itabashi / card shiki       25.8  @28500
+   depot shiki / card shiki          7.5  @28500
+   depot iruma / card shiki          3.4  @23700
+   card itabashi / card shiki        33.2  @28500
+   depot itabashi / card iruma       57.0  @28500
+   depot shiki / card iruma          40.7  @28500
+   depot iruma / card iruma          1.8  @28500
+   card itabashi / card iruma        83.4  @28500
+   card shiki / card iruma           23.0  @28500
+C. prefecture names touched while the depots arrive: none
+   prefecture names touched at rest (24100-27800 ms): none
+exit code 0

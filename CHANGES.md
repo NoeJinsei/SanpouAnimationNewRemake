@@ -442,3 +442,101 @@ frozen round 2, new), `options-city-height.jpg`, `options-fuji-size.jpg`, `depot
   one-step shadow rule on paper (convert to solid tones in the last look); the canvas engine has not been run
   on the new parts; scene 04's sky holds the finale's sun and clouds still (motion pass); scene 02 shows two
   cranes.
+
+## The owner's verdict on pass 1 (2026-11-14): five changes
+
+His message, in full:
+
+> Five changes. Read the new "Warehouse operation references" section at the end of REFERENCES.md first.
+>
+> 1. BACK TO FLAT 2D. The background buildings look tilted, leaning right. Two things cause it: the top edges
+> slope down to the right instead of being level, and each building carries a thin second face down one side.
+> Take both off. Every building goes back to a straight-on flat elevation — level top edges, one face, no
+> receding side, nothing skewed. Keep everything else you drew: the nine building types, the recomposed
+> skyline, the crowns, the window light, the separation between near and far tiers. Depth comes from overlap,
+> from value and scale, and from the haze — not from a fake side face. Do the same everywhere else it crept
+> in, so the whole film shares one projection: the supplier building, the map depots, anything carrying an
+> oblique. This reverses what I said earlier about the slightly-3d look; I've now seen it across a whole
+> skyline and I don't want it.
+>
+> 2. THE CLOUDS SIT TOO LOW. In scene 05 a big cloud hangs with its base below the rooftops, so it reads as a
+> cloud parked in the middle of the city, and small ones sit down behind the skyline. Keep clouds in the sky —
+> no cloud base below the roofline of the tier it is in front of. And the two clouds inside the glass tower
+> read as clouds stuck in the building, not as a reflection: make them read as glass — faint, in the pane's
+> own tone family, skewed and clipped to the facade — or take them out.
+>
+> 3. THE PLANE. It has not changed, and it is the third time I have noticed. Move the airport, the terminal
+> and the plane up the order: do them straight after the warehouse, before the expressway.
+>
+> 4. THE WAREHOUSE. Bigger again. I want trucks standing at the docking and loading area, packages loading
+> into each truck with smooth animation, and a forklift working somewhere sensible. Six reference
+> illustrations are now in reference/warehouse-ops/ with notes in REFERENCES.md. They are a reference point
+> for the feel of a working depot — do not copy them, make an original version that is ours. Mind what the
+> notes say: most of them are isometric and we are going flat, they are full of people and we have none in
+> this film, and their palettes are not ours.
+>
+> Be explicit about which building you are doing. I mean the Sanpou warehouse with the three bays in scene 02,
+> which has never been redrawn — and I want the same working feel at the supplier building's dock in scene 01.
+> Say in one line which you are starting with before you start.
+>
+> 5. MY PICKS. I will choose the city height and the Fuji size once I have seen it flat — the tilt changes how
+> the whole thing reads. Re-show me pass 1 after the flattening, with the size options, and the line on each
+> picture saying what is new and what is still old.
+
+What this changes in the plan above:
+
+| Was | Is now |
+|---|---|
+| "The slightly-3d look: kept" (and every row that says volume, a return face, a side and a top, the oblique view) | **Flat 2D.** One straight-on elevation per object: level top edges, one face, no side face, no band down a side, no roof seen from above, no diagonal cast shadow that implies a side. Depth from overlap, value, scale, haze. Applies to the city, Tokyo Tower, the supplier building, the map depots, and everything still to come (vending machines, the Sanpou warehouse, the office block, the airport). |
+| Clouds: "the far plane passes behind the tall buildings", "a tower of cumulus standing behind the skyline" | **Clouds stay in the sky.** Every cloud's base clears the roofline beneath it in every scene and at every size option; nothing sits down behind the skyline. |
+| Glass tower: "cloud shapes reflected in the glass" | Glass reads as glass: flat tone bands and sheens clipped to the facade, no cloud that reads as an object inside the building. |
+| Order: shared art → scenes 01-02 → warehouse → scene 03 → 04 → 05 → seams and motion → last look | Shared art re-shown flat → **the Sanpou warehouse (scene 02)**, then the same working feel at the supplier's dock (scene 01) → **the airport, the terminal and the plane** → the rest of scenes 01-02 → scene 03 → scene 04 → the rest of scene 05 → seams and motion → last look. |
+| Sanpou warehouse: three bays "at the same places and sizes"; "interior brightness and the forklift in bay 02 (owner picks)" | **Bigger.** Trucks standing at the docks, packages loading into each truck with smooth animation (built with the drawing, not left to the motion pass), a forklift at work. A working depot with no people in frame. |
+| City height and Fuji size: picked on the oblique frames | Picked on the flat frames. |
+
+## Pass 1 re-shown flat (2026-11-14): waiting for the owner's verdict and two size picks
+
+Changes 1, 2 and 5 of the verdict above are done in `round2/js` (parts `r3-flat-city`, `r3-flat-supplier`,
+`r3-flat-tower`, `r3-flat-depots`, `r3-flat-parcel`, `r3-clouds-up`, applied in that order). Evidence:
+`evidence/2026-11-14-r3-flat/` (`three-way-scene01/02/03/05.jpg`, `three-way-map.jpg`, each with its
+new-versus-old line printed on the new panel; `options-city-height.jpg`, `options-fuji-size.jpg`;
+`site-desktop.jpg`, `site-phone.jpg`; `city/` with `types-1-9.jpg`; `cast/` with the depot overlap check).
+
+**What became flat.**
+- **The city**: all nine types are straight-on elevations with level tops and one face (glass tower, apartment
+  slab with balconies or the zigzag stair, stepped tower, pencil building with blade signs, podium and tower,
+  ribbon-window building, low block with roof gear, billboard building, building site with crane). The same
+  composed skylines, order and heights; each front widened into the space its side face used to fill. No lit
+  edge strip, no diagonal shadows from one building onto the next (so the see-through shadow overlays noted
+  after pass 1 are gone). Depth is by overlap, value (nearest row pushed toward navy, back rows paler) and haze.
+- **Glass towers**: the cloud shapes are out; glass reads through a sky band across the top and two diagonal
+  sheens one step lighter than the glass.
+- **Tokyo Tower**: one symmetric lattice, flat decks, a truss arch, the same height; its base is narrower
+  (about 234 px against 292 in scene 01) because the far pair of legs no longer shows beside the near pair.
+- **The supplier building**: two straight-on rectangles (slate office part, pale dock hall), same footprint
+  (x 174 to 926, top y 394), dock unmoved; the front face grew from 692 to 752 px.
+- **The map depots**: flat white fronts, same resting sizes, same arrival; 0 overlaps (stage, every 10 ms of
+  the arrival, and phone).
+- **The carton**: the shaded strip down its left side is gone.
+
+**The clouds.** Recomposed in every scene: the cumulus that stood behind the skyline is gone; each scene has
+one tall cloud high in a gap between the towers, fair-weather clouds, streaks and scraps, all above the roofs.
+`node tools/cloud-check.mjs round2 --skip=7417-9139` measures every cloud's underside against every roof under
+it (city buildings, the supplier building, the warehouse) at every sampled moment of scenes 01, 02, 03 and 05:
+**0 clouds below a roof**. The pan between scenes 01 and 02 is left out of the measurement (the city slides
+past the sky there). Clouds may still pass behind Mt Fuji and Tokyo Tower.
+
+**Size options** (`python tools/size-options.py`, then `tools/cloud-check.mjs --fit` and `tools/cloud-lift.py`
+on each taller-city option so its clouds clear the taller roofs too): city A as drawn / B a step taller /
+C two steps taller; Fuji 1 the approved size / 2 about a fifth bigger (what the frames show) / 3 a step bigger
+again. In B and C the lifted clouds crowd the sun or leave the top of the frame; whichever the owner picks gets
+its clouds composed by hand.
+
+**Checks on `round2`.** `original/` intact; 0 console errors; draw (original / round2) 2.40 / 1.97 ms full,
+2.56 / 2.21 desktop, 2.25 / 2.04 phone; no frozen steps and no pops in scenes 01, 03 and 05 (scene 04 keeps the
+site's own two held frames and the step at its end, as before); all copy passes contrast; the unfilled progress
+track still fails (about 1:1) as it does on the original.
+
+**Still open:** the canvas engine has not been run on the new parts; scene 04's sky holds the finale's sun and
+clouds still (motion pass); the building site's mesh is a large pale slab in scene 05; the glass sheen travels
+only about 100 px where a front-row building stands before the tower.

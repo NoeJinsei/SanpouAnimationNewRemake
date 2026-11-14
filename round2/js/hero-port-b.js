@@ -480,7 +480,7 @@
     return _parcelArt[size] = h("g", { transform: "translate(" + (-w / 2) + ", " + (-hh) + ")" },
       h("rect", { x: 0, y: 0, width: w, height: hh, rx: 2, fill: COLORS.paper }),
       h("rect", { x: 0, y: 0, width: w, height: hh * 0.14, rx: 2, fill: COLORS.white }),                    // top edge in the sun
-      h("rect", { x: 0, y: 0, width: w * 0.12, height: hh, rx: 2, fill: DAY.parcelShade }),                 // the side away from it
+      // flat 2D (owner, 2026-11-14): the carton is one face; the shaded strip down its left side is gone
       h("rect", { x: w * 0.19, y: hh * 0.24, width: w * 0.2, height: hh * 0.1, rx: hh * 0.05, fill: COLORS.inkSoft }),   // hand hole
       h("path", { d: up(w * 0.23) + up(w * 0.35), fill: "none", stroke: ink, strokeWidth: 2.4, strokeLinecap: "round", strokeLinejoin: "round", opacity: 0.45 }),
       h("rect", { x: w / 2 - tw / 2, y: 0, width: tw, height: hh, fill: COLORS.verm }),                     // tape over the seam
@@ -504,23 +504,23 @@
   }
   /* ---- scenery.tsx ---- */
   var SUPPLIER_W = 364, SUPPLIER_DOCK = { x: 252, y: -22 };
-  /* The supplier's building, round 3: drawn again from a blank page as a modern office-over-dock unit.
-     SUPPLIER_W is the width of its front. The front's right end, the ground line and the dock point are
-     where they were (so the truck and the parcels meet it as before); it has grown to the left and up.
+  /* The supplier's building, round 3, flat: a modern office-and-dock unit drawn as ONE straight-on elevation.
+     SUPPLIER_W is the width of the part of its front that is measured from the right end (the dock point,
+     the ground line and the right end are where they always were, so the truck and the parcels meet it as
+     before); the office front runs 32 units further left, over the width its return face used to take.
      SUPPLIER_DOCK is measured from SUPPLIER_X, as before.
      Colours: blue-grey for a third party's building. Every surface has a base and a shade (the base pushed
-     toward navy); the return face is one tone below the shade; pale aluminium carries the light. */
+     toward navy) for the strip of shade under whatever overhangs it; pale aluminium carries the light. */
   DAY.supInk = "#26344f";                                                              // the outline
-  DAY.supWall = "#abbdd9"; DAY.supWallLight = "#cfdbec"; DAY.supWallShade = "#889fc4"; // the hall: metal sandwich panels
+  DAY.supWall = "#abbdd9"; DAY.supWallShade = "#889fc4";                               // the hall: metal sandwich panels
   DAY.supJoint = "#96abcd"; DAY.supJointShade = "#768eb6";                             // their joints
-  DAY.supPod = "#6d87b3"; DAY.supPodLight = "#8ba3c8"; DAY.supPodShade = "#59729f";    // the office corner: slate panels
+  DAY.supBand = "#6d87b3"; DAY.supBandShade = "#59729f";                               // the hall's top band of panels
+  DAY.supPod = "#6d87b3"; DAY.supPodShade = "#59729f";                                 // the office part: slate panels
   DAY.supPodJoint = "#5f79a6"; DAY.supPodJointShade = "#4d6692";
-  DAY.supPodSide = "#4e6792"; DAY.supPodSideJoint = "#445b85";                         // its return face, away from the sun
-  DAY.supPlinth = "#4c628b"; DAY.supPlinthLight = "#677ea6"; DAY.supPlinthShade = "#3f547b"; DAY.supPlinthSide = "#384b70";   // base course
-  DAY.supAlu = "#e6edf6"; DAY.supAluLit = "#fafcfe"; DAY.supAluShade = "#c4d0e3"; DAY.supAluSide = "#aebdd5";                // copings, sills, sun shades, canopy edges
-  DAY.supFrame = "#3f5479"; DAY.supFrameShade = "#34476b"; DAY.supFrameSide = "#33456a";                                    // window and door frames
+  DAY.supPlinth = "#4c628b"; DAY.supPlinthLight = "#677ea6"; DAY.supPlinthShade = "#3f547b";   // base course
+  DAY.supAlu = "#e6edf6"; DAY.supAluLit = "#fafcfe"; DAY.supAluShade = "#c4d0e3";              // copings, sills, sun shades, canopies
+  DAY.supFrame = "#3f5479"; DAY.supFrameShade = "#34476b";                                    // window and door frames
   DAY.supGlass = "#c9def2"; DAY.supGlassHi = "#ecf5fd"; DAY.supGlassIn = "#b4cce7"; DAY.supGlassShade = "#a3bedd";          // glass, sky in it, what stands behind it, glass in shade
-  DAY.supGlassSide = "#89a7cc"; DAY.supGlassSideHi = "#a8c1e0";
   DAY.supWarmHi = "#ffeabf"; DAY.supWarmIn = "#f6cd84"; DAY.supWarmShade = "#f0c275";
   DAY.supBlind = "#eef3f9"; DAY.supBlindFold = "#dae3ef"; DAY.supBlindShade = "#cdd8e7";
   DAY.supPlate = "#eef3f9"; DAY.supPlateShade = "#ccd8e9"; DAY.supBar1 = "#5a739e"; DAY.supBar1Shade = "#4a628c"; DAY.supBar2 = "#9bafcb"; DAY.supBar2Shade = "#8499b8";
@@ -528,15 +528,14 @@
   DAY.supSteelBar = "#8fa1bd"; DAY.supSteelBarShade = "#7a8dab";
   DAY.supDoor = "#566f9b"; DAY.supDoorShade = "#475f8a";
   DAY.supCanopyUnder = "#2c3d5e";
-  DAY.supDock = "#7d92b5"; DAY.supDockShade = "#62789e"; DAY.supRubber = "#1a2434";
+  DAY.supDock = "#7d92b5"; DAY.supRubber = "#1a2434";
   DAY.supInside = "#3a4e75"; DAY.supInsideFloor = "#5b7199"; DAY.supInsideStock = "#6c83aa"; DAY.supInsidePale = "#aebcd2";
-  DAY.supSafety = "#f2c14e"; DAY.supSafetyShade = "#d8a53a";
+  DAY.supSafety = "#f2c14e";
   DAY.supPallet = "#4f73b3"; DAY.supPalletDark = "#35508a";
-  DAY.supCarton = "#d9dfe8"; DAY.supCartonShade = "#bfc9d8"; DAY.supCartonTape = "#a9b5c8"; DAY.supPaperShade = "#dfe6ef";
+  DAY.supCarton = "#d9dfe8"; DAY.supCartonTop = "#eef2f7"; DAY.supCartonTape = "#a9b5c8"; DAY.supPaperShade = "#dfe6ef";
   DAY.supGroundShade = "#a9b1bc";
 
-  // A cast shadow is one flat polygon. What it covers on a surface is that polygon clipped to the surface and
-  // filled with the surface's own shade tone, so every material it crosses steps exactly one tone down.
+  // A polygon clipped to a box, and a polygon as path data (the glass sheens here and the city's glazing use them).
   function _clipPoly(poly, x0, y0, x1, y1) {
     function cut(pts, inside, isect) {
       var o = [];
@@ -562,13 +561,17 @@
     return d + "Z";
   }
 
-  /* Local units (x 1.9 on screen), ground at y 278, the front runs x 0..W.
-     Two volumes under flat roofs with nothing on them: on the left the office corner, taller, in slate
-     panels, its ribbon of glazing wrapping onto the return face; on the right the dock hall, lower, in broad
-     horizontal bands of light metal panel, with a slim canopy over the dock. A darker base course runs under
-     both. The same oblique as the city: the left return recedes and tapers toward the eye line.
-     One sun, top right: whatever stands proud throws a flat shadow down and to the left, and two bands of
-     shadow from across the street lie over the wall; each takes what it crosses one tone down.
+  /* Local units (x 1.9 on screen), ground at y 278. The front runs x -32..W; every edge of the building is
+     vertical or horizontal and there is one face.
+     Two rectangles under level flat roofs with nothing on them, standing side by side: on the left the
+     office part, taller, in tall slate panels set out on the module of its glazing (a ribbon of five panes
+     under a slim sun shade, a strip of three below); on the right the dock hall, lower, in broad horizontal
+     bands of light metal panel under one darker band, with a slim canopy hung over the dock. A darker base
+     course runs under both.
+     Light, top right, shows three ways only: the flat tones themselves, a lighter top edge on what catches
+     it (copings, sills, the canopies), and a level strip of shade straight under whatever stands proud
+     (copings, sun shades, sills, canopies, the name plate); the strip takes each material it crosses exactly
+     one tone down.
      Static, so it is built once: one cached group, then the roller shutter as its own node (a motion pass
      can roll it up: the dock's inside is drawn behind it), then the cartons that stand in front of it. */
   var _supMemo = {};
@@ -576,38 +579,38 @@
     var x = p.x, y = p.y, scale = p.scale == null ? 1.9 : p.scale, mk = x + "|" + y + "|" + scale;
     if (_supMemo[mk]) return _supMemo[mk];
     var D = DAY, INK = D.supInk, out = [], shut = [], front = [];
-    var G = 278, W = SUPPLIER_W, OX = W - 340;             // ground; width of the front; how far it has grown to the left
-    var PW = 150, PT = 22, HT = 56, CAP = 6, BC = 262;     // office corner: width and top; hall top; coping height; base course top
-    var DP = 32, HZ = 236, PK = 0.1;                       // the return: its depth, the eye line, how fast it tapers
+    var G = 278, W = SUPPLIER_W, OX = W - 340;             // ground; the front's right end; where SUPPLIER_X falls
+    var XL = -32, PW = 150, PT = 22, HT = 56, CAP = 6, BC = 262;   // the front's left end; where the two parts meet; office top; hall top; coping height; base course top
     var WY = 94, WH = 54, FW = 1.6;                        // upper windows: head, height; frame width
+    var RX = -20, RW = 158, MOD = (RW - FW) / 5;           // the ribbon: left end, width; one pane plus one frame = the office's panel module
+    var BAND = 82;                                         // foot of the hall's top band of darker panels
     var LINE = Math.round(22 / scale) / 10;                // loose objects carry the parcels' ink line (2.2 px on screen)
     function r1(v) { return Math.round(v * 10) / 10; }
     function R(rx0, ry0, w, hh, fill, rr) { return h("rect", { x: r1(rx0), y: r1(ry0), width: r1(w), height: r1(hh), rx: rr, fill: fill }); }
     function rd(rx0, ry0, w, hh) { return "M" + r1(rx0) + "," + r1(ry0) + "h" + r1(w) + "v" + r1(hh) + "h" + r1(-w) + "z"; }
     function fill(list, d, colour) { if (d) list.push(h("path", { d: d, fill: colour })); }
-    function S(u, sy) { return [-DP * u, sy + (HZ - sy) * PK * u]; }                       // a point on the return: u 0 at the corner, 1 at the back
-    function side(u0, u1, ya, yb) { return _polyD([S(u0, ya), S(u1, ya), S(u1, yb), S(u0, yb)]); }
-    function band(a, b) { return [[a - 18, 18], [b - 18, 18], [b - 284, 284], [a - 284, 284]]; }   // a band of shadow lying across the front
-    function drop(rx0, ry0, w, hh, d) { return [[rx0 - d, ry0 + d], [rx0 + w - d, ry0 + d], [rx0 + w - d, ry0 + hh + d], [rx0 - d, ry0 + hh + d]]; }
 
+    // the strips of shade, each a level rectangle straight under what throws it: [x, y, width, height]
     var SH = [
-      [[0, PT + CAP], [PW, PT + CAP], [PW, PT + CAP + 3.4], [0, PT + CAP + 3.4]],        // under the two copings
-      [[PW, HT + CAP], [W, HT + CAP], [W, HT + CAP + 3.4], [PW, HT + CAP + 3.4]],
-      band(262, 312), band(170, 184),                                                    // from across the street
-      [[0, WY], [133, WY], [127, WY + 6.5], [0, WY + 6.5]],                              // under the sun shade over the ribbon
-      [[0, WY + WH + 3], [133, WY + WH + 3], [130, WY + WH + 6], [0, WY + WH + 6]],      // under its sill
-      [[236.5, WY], [323.5, WY], [317.5, WY + 6.5], [230.5, WY + 6.5]],                  // the same pair at the window over the dock
-      [[236.5, WY + WH + 3], [323.5, WY + WH + 3], [320.5, WY + WH + 6], [233.5, WY + WH + 6]],
-      [[20.5, 215], [95.5, 215], [92.5, 218], [17.5, 218]],                              // under the low strip window's sill
-      [[190, 174], [362, 174], [338, 198], [166, 198]],                                  // under the dock canopy
-      [[158, 209], [204, 209], [196, 217], [150, 217]],                                  // under the door canopy
-      drop(14, 50, 86, 16, 2.4),                                                         // behind the name plate
-      [[8, 263], [14, 263], [14, G], [8, G]],                                            // beside the pallets
-      [[227, 238], [232.3, 238], [232.3, 256], [227, 256]],                              // beside the cartons on the dock
-      [[289.5, 242], [296, 242], [296, 256], [289.5, 256]], [[294.5, 228], [301, 228], [301, 236], [294.5, 236]]
+      [XL, PT + CAP, PW - XL, 3.4], [PW, HT + CAP, W - PW, 3.4],        // under the two copings
+      [RX, WY, RW, 6],                                                  // under the sun shade over the ribbon
+      [RX - 2, WY + WH + 3, RW + 4, 2.8],                               // under its sill
+      [238, WY, 84, 6], [236, WY + WH + 3, 88, 2.8],                    // the same pair at the window over the dock
+      [RX - 1.5, 215, 3 * MOD + FW + 3, 2.8],                           // under the low strip window's sill
+      [204, 174, 158, 7],                                               // under the dock canopy
+      [158, 209, 46, 5.5],                                              // under the door canopy
+      [-16, 66, 88, 2.6],                                               // under the name plate
+      [162, 129, 38, 2.6]                                               // under the louvre's sill
     ];
-    function castD(x0, y0, x1, y1) { var d = ""; for (var i = 0; i < SH.length; i++) d += _polyD(_clipPoly(SH[i], x0, y0, x1, y1)); return d; }
-    // flat surfaces of one material, and whatever shadow falls on them
+    function castD(x0, y0, x1, y1) {
+      var d = "";
+      for (var i = 0; i < SH.length; i++) {
+        var s = SH[i], ax = Math.max(x0, s[0]), ay = Math.max(y0, s[1]), bx = Math.min(x1, s[0] + s[2]), by = Math.min(y1, s[1] + s[3]);
+        if (bx - ax > 0.05 && by - ay > 0.05) d += rd(ax, ay, bx - ax, by - ay);
+      }
+      return d;
+    }
+    // flat surfaces of one material, and whatever shade falls on them
     function tone(list, rects, colour, shade) {
       var d = "", s = "";
       rects.forEach(function (q) { d += rd(q[0], q[1], q[2], q[3]); s += castD(q[0], q[1], q[0] + q[2], q[1] + q[3]); });
@@ -615,7 +618,7 @@
     }
     /* glazing: n panes in a thin frame. Per pane: warm (a lit room), inside (what stands behind the glass, as
        [from, to, height] along the foot of the pane), hi (sky in the glass, as [offset, width, lean]: every pane
-       gets its own), blind (how far a roller blind is down). The reveal shades the head and the sun side. */
+       gets its own), blind (how far a roller blind is down). The window head shades the top of each pane. */
     function glaze(list, gx, gy, w, hh, n, spec) {
       var pw = (w - FW * (n + 1)) / n, y0 = gy + FW, ph = hh - 2 * FW, y1 = y0 + ph;
       var warm = "", dark = "", wdark = "", hi = "", whi = "", shade = "", wshade = "", blind = "", fold = "", bshade = "", frame = [[gx, gy, w, FW], [gx, gy + hh - FW, w, FW]];
@@ -629,13 +632,13 @@
           d = _polyD(_clipPoly([[px + a[0], y0], [px + a[0] + a[1], y0], [px + a[0] + a[1] - lean, y1], [px + a[0] - lean, y1]], px, y0, px1, y1));
           if (s.warm) whi += d; else hi += d;
         }
-        d = castD(px, y0, px1, y1) + rd(px, y0, pw, 2.2) + rd(px1 - 1.8, y0 + 2.2, 1.8, ph - 2.2);
+        d = castD(px, y0 + 2.2, px1, y1) + rd(px, y0, pw, 2.2);
         if (s.warm) wshade += d; else shade += d;
         if (s.blind) {
           blind += rd(px, y0, pw, s.blind);
           for (k = 8; k < s.blind - 4; k += 8) fold += rd(px, y0 + k, pw, 1.4);
           fold += rd(px, y0 + s.blind - 2.4, pw, 2.4);
-          bshade += castD(px, y0, px1, y0 + s.blind) + rd(px, y0, pw, 2.2) + rd(px1 - 1.8, y0 + 2.2, 1.8, s.blind - 2.2);
+          bshade += castD(px, y0 + 2.2, px1, y0 + s.blind) + rd(px, y0, pw, 2.2);
         }
       }
       list.push(R(gx, gy, w, hh, D.supGlass));
@@ -645,59 +648,56 @@
       fill(list, blind, D.supBlind); fill(list, fold, D.supBlindFold); fill(list, bshade, D.supBlindShade);
       tone(list, frame, D.supFrame, D.supFrameShade);
     }
-    function carton(list, cx0, cy0, w, hh) {                                              // a plain carton: shaded left side, a strip of tape
+    // the pale aluminium surround of an upper window: a sun shade over it, a sill under it, a slim cheek each side
+    function surround(gx, w) {
+      fill(out, rd(gx - 2, WY - 4, w + 4, 4) + rd(gx - 2, WY + WH, w + 4, 3) + rd(gx - 2, WY, 2, WH) + rd(gx + w, WY, 2, WH), D.supAlu);
+      out.push(R(gx - 2, WY - 4, w + 4, 1.4, D.supAluLit));
+    }
+    function carton(list, cx0, cy0, w, hh) {                                              // a plain carton: its top edge in the sun, a strip of tape
       list.push(h("rect", { x: cx0, y: cy0, width: w, height: hh, rx: 0.8, fill: D.supCarton, stroke: COLORS.ink, strokeWidth: LINE }));
-      list.push(R(cx0 + LINE / 2, cy0 + LINE / 2, 3.2, hh - LINE, D.supCartonShade), R(cx0 + w * 0.5 - 1.5, cy0 + LINE / 2, 3, hh - LINE, D.supCartonTape));
+      list.push(R(cx0 + LINE / 2, cy0 + LINE / 2, w - LINE, 2.4, D.supCartonTop), R(cx0 + w * 0.5 - 1.5, cy0 + LINE / 2, 3, hh - LINE, D.supCartonTape));
     }
 
-    /* ---- the ground: one flat contact shadow, lying to the left ---- */
-    fill(out, _polyD([[W + 3, G], [W, G + 3.6], [-80, G + 3.6], [-71, S(1, G)[1]], [-DP, S(1, G)[1]], [0, G]]), D.supGroundShade);
+    /* ---- the ground: one level strip of contact shade under the whole front ---- */
+    out.push(R(XL - 7, G, W - XL + 14, 3.6, D.supGroundShade));
 
-    /* ---- the outline: ink behind the whole silhouette (front, return, the step in the roof) ---- */
+    /* ---- the outline: ink behind the whole silhouette (two rectangles and the step between their roofs) ---- */
     (function () {
-      var OL = 2.4, OB = 1.2, st = (PT - S(1, PT)[1]) / DP, sb = (G - S(1, G)[1]) / DP, xl = -DP - OL;
-      var vt = OL * Math.sqrt(1 + st * st), vb = OB * Math.sqrt(1 + sb * sb);
-      fill(out, _polyD([[xl, PT + st * xl - vt], [(vt - OL) / st, PT - OL], [PW + OL, PT - OL], [PW + OL, HT - OL], [W + OL, HT - OL],
-        [W + OL, G + OB], [(OB - vb) / sb, G + OB], [xl, G + sb * xl + vb]]), INK);
+      var OL = 2.4, OB = 1.2;
+      fill(out, _polyD([[XL - OL, PT - OL], [PW + OL, PT - OL], [PW + OL, HT - OL], [W + OL, HT - OL], [W + OL, G + OB], [XL - OL, G + OB]]), INK);
     })();
 
-    /* ---- the return face of the office corner: in shade, the glazing carried round onto it ---- */
-    fill(out, side(0, 1, PT + CAP, BC), D.supPodSide);
-    fill(out, side(0, 1, 165.2, 166.8) + side(0.5, 0.55, PT + CAP, WY - 4) + side(0.5, 0.55, WY + WH + 3, BC), D.supPodSideJoint);
-    fill(out, side(0, 1, BC, G), D.supPlinthSide);
-    fill(out, side(0, 1, PT, PT + CAP) + side(0, 0.95, WY - 4, WY) + side(0, 0.95, WY + WH, WY + WH + 3), D.supAluSide);
-    fill(out, side(0, 0.9, WY, WY + WH), D.supFrameSide);
-    fill(out, side(0.06, 0.44, WY + FW, WY + WH - FW) + side(0.5, 0.85, WY + FW, WY + WH - FW), D.supGlassSide);
-    fill(out, _polyD([S(0.2, WY + FW), S(0.38, WY + FW), S(0.06, WY + 34), S(0.06, WY + 20)]) + _polyD([S(0.85, WY + 22), S(0.85, WY + 34), S(0.5, WY + WH - FW), S(0.5, WY + 44)]), D.supGlassSideHi);
-
-    /* ---- the fronts: slate panels on the office corner, light metal panels in broad bands on the hall ---- */
-    tone(out, [[0, PT + CAP, PW, BC - PT - CAP]], D.supPod, D.supPodShade);
-    tone(out, [[52, PT + CAP, 1.6, WY - 4 - PT - CAP], [104, PT + CAP, 1.6, WY - 4 - PT - CAP], [52, WY + WH + 3, 1.6, BC - WY - WH - 3], [104, WY + WH + 3, 1.6, BC - WY - WH - 3], [0, 165.2, PW, 1.6]], D.supPodJoint, D.supPodJointShade);
-    tone(out, [[PW, HT + CAP, W - PW, BC - HT - CAP]], D.supWall, D.supWallShade);
+    /* ---- the fronts: tall slate panels on the office part, light metal panels in broad bands on the hall ---- */
+    tone(out, [[XL, PT + CAP, PW - XL, BC - PT - CAP]], D.supPod, D.supPodShade);
+    (function () {
+      var j = [[XL, 165.2, PW - XL, 1.6]];
+      for (var i = 0; i <= 5; i++) j.push([RX + i * MOD, PT + CAP, FW, WY - 4 - PT - CAP], [RX + i * MOD, WY + WH + 3, FW, BC - WY - WH - 3]);
+      tone(out, j, D.supPodJoint, D.supPodJointShade);
+    })();
+    tone(out, [[PW, BAND, W - PW, BC - BAND]], D.supWall, D.supWallShade);
+    tone(out, [[PW, HT + CAP, W - PW, BAND - HT - CAP]], D.supBand, D.supBandShade);
     tone(out, [[PW, 93.2, W - PW, 1.6], [PW, 129.2, W - PW, 1.6], [PW, 165.2, W - PW, 1.6], [PW, 201.2, W - PW, 1.6], [PW, 237.2, W - PW, 1.6]], D.supJoint, D.supJointShade);
-    out.push(R(W - 3, HT + CAP, 3, BC - HT - CAP, D.supWallLight), R(PW - 3, PT + CAP, 3, HT - PT - CAP, D.supPodLight));   // the edges that face the sun
-    tone(out, [[0, BC, W, G - BC]], D.supPlinth, D.supPlinthShade);
-    out.push(R(0, BC, W, 1.8, D.supPlinthLight));
+    tone(out, [[XL, BC, W - XL, G - BC]], D.supPlinth, D.supPlinthShade);
+    out.push(R(XL, BC, W - XL, 1.8, D.supPlinthLight));
     // copings: a thin pale cap on each roof, its top edge in the sun
-    fill(out, rd(0, PT, PW, CAP) + rd(PW, HT, W - PW, CAP), D.supAlu);
-    fill(out, rd(0, PT, PW, 1.6) + rd(PW, HT, W - PW, 1.6), D.supAluLit);
+    fill(out, rd(XL, PT, PW - XL, CAP) + rd(PW, HT, W - PW, CAP), D.supAlu);
+    fill(out, rd(XL, PT, PW - XL, 1.6) + rd(PW, HT, W - PW, 1.6), D.supAluLit);
 
-    /* ---- office corner ---- */
+    /* ---- office part ---- */
     // name plate: no lettering, two bars stand in for a name
-    tone(out, [[14, 50, 86, 16]], D.supPlate, D.supPlateShade);
-    tone(out, [[20, 55, 46, 6]], D.supBar1, D.supBar1Shade); tone(out, [[70, 55, 22, 6]], D.supBar2, D.supBar2Shade);
-    // the ribbon: five panes from the corner, under a slim sun shade
-    glaze(out, 0, WY, 131.6, WH, 5, [
-      { blind: 16, hi: [[32, 8]], inside: [[0, 0.55, 12]] },
-      { hi: [[22, 3.4, 0.5], [31, 9, 0.5]], inside: [[0.35, 1, 17]] },
+    tone(out, [[-16, 50, 88, 16]], D.supPlate, D.supPlateShade);
+    tone(out, [[-10, 55, 47, 6]], D.supBar1, D.supBar1Shade); tone(out, [[41, 55, 23, 6]], D.supBar2, D.supBar2Shade);
+    // the ribbon: five panes across the front, under a slim sun shade
+    glaze(out, RX, WY, RW, WH, 5, [
+      { blind: 16, hi: [[38, 9]], inside: [[0, 0.55, 12]] },
+      { hi: [[27, 4, 0.5], [38, 10, 0.5]], inside: [[0.35, 1, 17]] },
       { blind: 31 },
-      { warm: 1, hi: [[36, 6]], inside: [[0, 0.45, 13]] },
-      { hi: [[44, 13, 0.9]], inside: [[0.5, 1, 21], [0, 0.5, 10]] }]);
-    tone(out, [[0, WY - 4, 133, 4], [0, WY + WH, 133, 3]], D.supAlu, D.supAluShade);
-    out.push(R(0, WY - 4, 133, 1.4, D.supAluLit));
-    // the low strip of windows over the stores
-    glaze(out, 22, 188, 72, 24, 3, [{ hi: [[20, 6]] }, { hi: [[9, 3, 0.5]] }, { hi: [[15, 4], [23, 3]] }]);
-    tone(out, [[20.5, 212, 75, 3]], D.supAlu, D.supAluShade);
+      { warm: 1, hi: [[43, 7]], inside: [[0, 0.45, 13]] },
+      { hi: [[50, 14, 0.9]], inside: [[0.5, 1, 21], [0, 0.5, 10]] }]);
+    surround(RX, RW);
+    // the low strip of windows over the stores: the ribbon's first three bays again
+    glaze(out, RX, 188, 3 * MOD + FW, 24, 3, [{ hi: [[24, 7]] }, { hi: [[11, 3.4, 0.5]] }, { hi: [[18, 5], [28, 3.4]] }]);
+    tone(out, [[RX - 1.5, 212, 3 * MOD + FW + 3, 3]], D.supAlu, D.supAluShade);
 
     /* ---- hall ---- */
     // the window over the dock: the ribbon's little brother, same head and sill
@@ -705,15 +705,18 @@
       { blind: 22, hi: [[38, 7]] },
       { hi: [[24, 4, 0.5], [33, 9, 0.5]], inside: [[0.2, 0.85, 14]] },
       { warm: 1, hi: [[42, 7]], inside: [[0.45, 1, 18]] }]);
-    tone(out, [[236.5, WY - 4, 87, 4], [236.5, WY + WH, 87, 3]], D.supAlu, D.supAluShade);
-    out.push(R(236.5, WY - 4, 87, 1.4, D.supAluLit));
+    surround(238, 84);
+    // a ventilation louvre over the staff door: slats in a frame, a sill
+    tone(out, [[164, 104, 34, 23]], D.supFrame, D.supFrameShade);
+    fill(out, rd(166.4, 106.6, 29.2, 3) + rd(166.4, 111.4, 29.2, 3) + rd(166.4, 116.2, 29.2, 3) + rd(166.4, 121, 29.2, 3), D.supSteelBar);
+    tone(out, [[162, 126.6, 38, 2.4]], D.supAlu, D.supAluShade);
     // staff door: a glazed leaf in a thin frame, a pull bar, a step, a slim canopy, a call panel beside it
     tone(out, [[164, 214, 34, G - 214]], D.supFrame, D.supFrameShade);
     tone(out, [[166, 216, 30, G - 216]], D.supDoor, D.supDoorShade);
     glaze(out, 169, 219.4, 24, 36, 1, [{ hi: [[27, 7]] }]);
     out.push(R(166, 268, 30, 10, D.supSteelBar), R(189.4, 257, 2.6, 9, D.supAlu, 1.3), R(161, 275, 40, 3, D.supPlinthLight));
     tone(out, [[158, 205, 46, 4]], D.supAlu, D.supAluShade);
-    out.push(R(158, 205, 46, 1.4, D.supAluLit), R(159.5, 209, 43, 1.8, D.supCanopyUnder));
+    out.push(R(158, 205, 46, 1.4, D.supAluLit));
     out.push(R(202.4, 236, 6.4, 11, D.supAlu, 1), R(204, 238, 3.2, 3.2, D.supFrame));
 
     /* ---- the dock ---- */
@@ -724,14 +727,12 @@
     // hood and guides
     tone(out, [[222, 176, 116, 8], [222, 184, 6, 72], [332, 184, 6, 72]], D.supFrame, D.supFrameShade);
     // the dock itself: a raised sill with a safety edge, rubber bumpers and the leveller's lip folded down
-    out.push(R(220, 256, 124, G - 256, D.supDock), R(220, 256, 4.6, G - 256, D.supDockShade), R(220, 256, 124, 3.6, D.supSafety));
+    out.push(R(220, 256, 124, G - 256, D.supDock), R(220, 256, 124, 3.6, D.supSafety));
     out.push(R(232, 263.5, 10, 11.5, D.supRubber, 1.5), R(318, 263.5, 10, 11.5, D.supRubber, 1.5));
     out.push(R(254, 259.6, 52, 7, D.supSteelBar), R(254, 264.6, 52, 2, D.supSteelBarShade));
-    // the canopy: a slim slab cantilevered from the wall; its end and its underside show how far it stands out
-    fill(out, _polyD([[202.8, 164.8], [363.2, 164.8], [363.2, 173], [347.4, 176.5], [186.8, 176.5], [186.8, 168.6]]), INK);
-    fill(out, _polyD([[204, 172], [362, 172], [346, 175.3], [188, 175.3]]), D.supCanopyUnder);
-    fill(out, _polyD([[204, 166], [204, 172], [188, 175.3], [188, 169.5]]), D.supAluSide);
-    out.push(R(204, 166, 158, 6, D.supAlu), R(204, 166, 158, 1.6, D.supAluLit), R(264, 172.6, 32, 2.4, D.supAlu, 1.2));
+    // the canopy: a slim slab seen edge on, its top edge in the sun, a dark drip edge under it
+    out.push(R(202.8, 163.8, 160.4, 11.4, INK));
+    out.push(R(204, 165, 158, 7, D.supAlu), R(204, 165, 158, 1.6, D.supAluLit), R(204, 172, 158, 2, D.supCanopyUnder));
 
     /* ---- the yard: few things, each with the same ink line ---- */
     // empty pallets, three high
@@ -742,14 +743,18 @@
       fill(out, deck, D.supPallet);
     })();
     // a roll cage with two cartons in it, one of them the kind being loaded
-    carton(out, 72, 250.6, 22, 19);
-    out.push(h("rect", { x: 74, y: 235.6, width: 18, height: 15, rx: 0.8, fill: COLORS.paper, stroke: COLORS.ink, strokeWidth: LINE }), R(74.6, 236.2, 3, 13.8, D.supPaperShade), R(81.4, 236.2, 3.2, 13.8, COLORS.verm));
-    out.push(h("path", { d: "M69.4,226V270.6M96.6,226V270.6M69.4,227.2H96.6M69.4,246H96.6M67.4,270.6H98.6", fill: "none", stroke: COLORS.ink, strokeWidth: r1(2 + 2 * LINE) }));
-    out.push(h("path", { d: "M69.4,227.2V270.6M96.6,227.2V270.6M69.4,227.2H96.6M69.4,246H96.6M68.6,270.6H97.4", fill: "none", stroke: D.supAlu, strokeWidth: 2 }));
-    out.push(h("circle", { cx: 72.4, cy: 275, r: 2.6, fill: COLORS.ink }), h("circle", { cx: 93.6, cy: 275, r: 2.6, fill: COLORS.ink }));
+    out.push(h("g", { transform: "translate(38, 0)" }, (function () {
+      var c = [];
+      carton(c, 72, 250.6, 22, 19);
+      c.push(h("rect", { x: 74, y: 235.6, width: 18, height: 15, rx: 0.8, fill: COLORS.paper, stroke: COLORS.ink, strokeWidth: LINE }), R(74.6, 236.2, 16.8, 2.2, COLORS.white), R(81.4, 236.2, 3.2, 13.8, COLORS.verm));
+      c.push(h("path", { d: "M69.4,226V270.6M96.6,226V270.6M69.4,227.2H96.6M69.4,246H96.6M67.4,270.6H98.6", fill: "none", stroke: COLORS.ink, strokeWidth: r1(2 + 2 * LINE) }));
+      c.push(h("path", { d: "M69.4,227.2V270.6M96.6,227.2V270.6M69.4,227.2H96.6M69.4,246H96.6M68.6,270.6H97.4", fill: "none", stroke: D.supAlu, strokeWidth: 2 }));
+      c.push(h("circle", { cx: 72.4, cy: 275, r: 2.6, fill: COLORS.ink }), h("circle", { cx: 93.6, cy: 275, r: 2.6, fill: COLORS.ink }));
+      return c;
+    })()));
     // guide posts either side of the dock
     [212.5, 344.5].forEach(function (bx) {
-      out.push(h("rect", { x: bx, y: 239, width: 7.4, height: G - 239, rx: 2, fill: D.supSafety, stroke: COLORS.ink, strokeWidth: LINE }), R(bx + LINE / 2, 241, 2.2, G - 241 - LINE / 2, D.supSafetyShade));
+      out.push(h("rect", { x: bx, y: 239, width: 7.4, height: G - 239, rx: 2, fill: D.supSafety, stroke: COLORS.ink, strokeWidth: LINE }));
       fill(out, rd(bx, 248.6, 7.4, 7) + rd(bx, 263, 7.4, 7), COLORS.ink);
     });
 
@@ -768,34 +773,40 @@
     carton(front, 296, 236, 26, 20); carton(front, 301, 222, 18, 14);
 
     return _supMemo[mk] = h("g", { transform: "translate(" + x + ", " + y + ") scale(" + scale + ") translate(" + (-OX) + ", " + (-G) + ")" },
-      h("g", { "data-cache": "supplier-" + mk, "data-box": "-84 14 456 274" }, out),
+      h("g", { "data-cache": "supplier-" + mk, "data-box": "-44 14 416 274" }, out),
       h("g", null, shut),
       h("g", null, front));
   }
   /* ================= round 3: the city, drawn again from a blank page =================
-     Nine Tokyo building types, each built from several volumes in the film's one oblique (the lit front
-     square to the picture, the shaded side going back to the left, the roof where the eye is above it),
-     each with its own window system:
-       G  a glass curtain-wall tower: chamfered shaded corner, banded glass, the sky and two clouds
-          reflected in it, a plant room behind the parapet
-       M  an apartment slab: rows of balconies in shadow (or, seen from its other side, open corridors
-          with a zigzag escape stair), a lift overrun and a water tank on the roof, a steel stair on
-          the end wall
-       S  a tower that steps back unevenly as it rises, with vertical window strips between piers
-       P  a pencil building on a narrow plot: one window a floor, a stack of blank blade signs, a blank
-          party wall with a pipe and an outside stair
-       D  a wide podium with an arcade, and a tower set back on it with a frame of two-storey bays
-       C  a corner building: a chamfered face, ribbon windows wrapping all three faces
-       L  a low block whose roof you look down on: tanks, a stair head, condensers, a fence
-       B  a building carrying a large blank billboard on a steel frame, and a blank wall sign
-       X  a building site: steel frame, half wrapped in pale mesh, a hoarding, a tower crane
+     Flat pass. Every building is one straight-on elevation: one face, level top edges, an outline made of
+     vertical and horizontal edges only. No side wall, no roof seen from above, no lit arris, no cast
+     shadow from one building on another. Depth is overlap (two rows a tier, three tiers), value (every
+     row a clear step toward the air colour), scale and the two haze bands.
+     Nine Tokyo building types, each with its own silhouette, crown and window system:
+       G  a glass curtain-wall tower: glass from edge to edge behind a mullion grid, a brighter band of
+          sky across its top, two diagonal sheens one small step lighter than the glass, a plant floor
+          with louvres, a plant room and an aerial on the roof
+       M  an apartment slab: rows of balconies (sunlit balustrades, dark openings, a sliding door a bay)
+          or, seen from its other side, open corridors with a zigzag escape stair in its own bay; a lift
+          overrun and a water tank on the roof
+       S  a tower that steps back unevenly as it rises: four stages, tall panes between piers, an aerial
+       P  a pencil building on a narrow plot: two panes a floor, floors behind blank signs, separate
+          blank blade signs on brackets, a stair head and an aerial
+       D  a wide podium with an arcade and a railed roof terrace, a tower of two-storey bays standing on it
+       C  a corner building: ribbon windows from end to end, a raised parapet with a blank plate over the
+          corner entrance and its canopy
+       L  a low block of shops under blank awnings; on its roof a fence, water tanks, a stair head
+       B  a building carrying a large blank billboard on a braced steel frame, and a blank wall sign
+       X  a building site: steel frame, upper floors wrapped in pale mesh, a hoarding (its tower crane is
+          drawn by CityCranes)
+     What is diagonal is only what is diagonal in a true elevation: stair flights, bracing, the crane's
+     jib and ties, and the sheens inside glass.
      A tier is two rows (deep tier: one). Inside a row nothing overlaps, so a row can be drawn in any
-     order; overlaps are between rows, and a front-row building throws one flat shadow, down and to the
-     left, on whatever stands behind it. Rows are COMPOSED by hand, building by building.
+     order; overlaps are between rows. Rows are COMPOSED by hand, building by building.
      Every building is drawn once and kept. What moves is drawn outside it, as pure functions of time:
      CityLights (a sheen sliding down one glass tower, single panes catching the sun, a lamp-lit room) and
-     CityCranes (the jib slewing, the trolley and the hook).
-     Colour: each wall material gives a lit front; shade is that colour pushed toward navy, light is it
+     CityCranes (the mast, the jib slewing, the trolley and the hook).
+     Colour: each wall material gives a face tone; shade is that colour pushed toward navy, light is it
      pushed toward white, and distance mixes everything toward the air colour. No outlines. */
 
   /* How tall the city stands, for every tier in every scene. base multiplies every height; amp widens
@@ -804,7 +815,8 @@
 
   DAY.cityAir = "#bcd8ef";          // the air between the tiers: every tone is mixed toward it with distance
   DAY.cityNavy = "#1b2f55";         // what a shaded tone is pushed toward
-  DAY.cityTile = "#abbdda";         // pale tile cladding (apartment slabs, low blocks)
+  DAY.cityWhite = "#ffffff";        // what a lit tone is pushed toward; the sheen that slides down glass
+  DAY.cityTile = "#a3b6d8";         // pale tile cladding (apartment slabs, low blocks)
   DAY.cityConcrete = "#7f96bf";     // concrete and panel walls
   DAY.cityDark = "#536c9d";         // dark panel walls
   DAY.cityCurtainFrame = "#3e6fb5"; // a curtain wall that reflects the sky: its frame
@@ -813,33 +825,32 @@
   DAY.cityNavyFrame = "#33507f";    // a dark curtain wall: its frame
   DAY.cityNavyGlass = "#47689f";    // ... its glass
   DAY.cityNavySky = "#6a93cb";      // ... the bright sky across its top
-  DAY.cityNavyCloud = "#b4d0ee";    // ... a cloud reflected in it
   DAY.cityMesh = "#d3deec";         // the mesh sheet round a building site
   DAY.cityPane = "#cfe2f4";         // window glass against a dark wall: it reflects the sky
   DAY.cityPaneSky = "#eef6fd";      // ... and the brightest part of that reflection
   DAY.cityPaneDark = "#5f7db0";     // window glass against a pale wall: the room behind shows
   DAY.cityPaneDarkSky = "#8fa9d2";  // ... the sky across its top
-  DAY.cityCloud = "#e6f1fb";        // a cloud reflected in glass; blank sign boards
+  DAY.cityBoard = "#e6f1fb";        // blank sign boards
   DAY.citySafety = "#f2c14e";       // safety yellow: the crane's jib tip and hook, the hoarding stripe
   DAY.cityWarmLit = "#fff1cf";      // a lamp-lit room at its brightest (its resting colour is DAY.warm)
-  DAY.cityCast = "24,42,86";        // a cast shadow (r,g,b), laid over a wall at the tier's own strength
 
   var CITY_MAT = {
     t: { f: DAY.cityTile, g: DAY.cityPaneDark, hi: DAY.cityPaneDarkSky },
     c: { f: DAY.cityConcrete, g: DAY.cityPane, hi: DAY.cityPaneSky },
     d: { f: DAY.cityDark, g: DAY.cityPane, hi: DAY.cityPaneSky },
-    g: { f: DAY.cityCurtainFrame, g: DAY.cityCurtain, hi: DAY.cityCurtainSky, cloud: DAY.cityCloud },
-    n: { f: DAY.cityNavyFrame, g: DAY.cityNavyGlass, hi: DAY.cityNavySky, cloud: DAY.cityNavyCloud },
+    g: { f: DAY.cityCurtainFrame, g: DAY.cityCurtain, hi: DAY.cityCurtainSky },
+    n: { f: DAY.cityNavyFrame, g: DAY.cityNavyGlass, hi: DAY.cityNavySky },
     m: { f: DAY.cityMesh, g: DAY.cityPaneDark, hi: DAY.cityPaneDarkSky, deep: 0.72 }
   };
   var CITY_MATS = { G: "g", M: "t", S: "c", P: "d", D: "c", C: "t", L: "t", B: "d", X: "m" };
-  // a tier's drawing: u = scale of every part, air = how far its tones go toward the air, lod = how much is drawn
+  // a tier's drawing: u = scale of every part, air = how far its tones go toward the air (below zero: toward navy,
+  // the nearest row carries the most weight), lod = how much is drawn
   var CITY_LOOK = {
-    near: { u: 1, air: 0, lod: 2 },
-    nearBack: { u: 0.94, air: 0.14, lod: 2 },
-    far: { u: 0.78, air: 0.4, lod: 1 },
-    farBack: { u: 0.72, air: 0.5, lod: 1 },
-    deep: { u: 0.6, air: 0.7, lod: 0 }
+    near: { u: 1, air: -0.08, lod: 2 },
+    nearBack: { u: 0.94, air: 0.2, lod: 2 },
+    far: { u: 0.78, air: 0.52, lod: 1 },
+    farBack: { u: 0.72, air: 0.62, lod: 1 },
+    deep: { u: 0.6, air: 0.78, lod: 0 }
   };
   // the two haze bands, the same in every scene: [strength at the ground, height]
   var CITY_HAZE = [[0.4, 430], [0.2, 270]];
@@ -849,75 +860,56 @@
   function cityPal(mat, air) {
     var key = mat + "|" + air;
     if (_cpMemo[key]) return _cpMemo[key];
-    var m = CITY_MAT[mat], W = "#ffffff", N = DAY.cityNavy, f = m.f, g = m.g;
-    var a = function (c) { return air ? mix(c, DAY.cityAir, air) : c; };
+    var m = CITY_MAT[mat], W = DAY.cityWhite, N = DAY.cityNavy, f = m.f, g = m.g;
+    var a = function (c) { return air > 0 ? mix(c, DAY.cityAir, air) : air < 0 ? mix(c, N, -air) : c; };
     return _cpMemo[key] = {
-      side: a(mix(f, N, 0.42)), sideGlass: a(mix(g, N, 0.45)), sideLite: a(mix(mix(f, N, 0.42), W, 0.5)),
-      mid: a(mix(f, N, 0.2)), midGlass: a(mix(g, N, 0.22)),
-      front: a(f), top: a(mix(f, W, 0.42)), deep: a(mix(f, N, m.deep || 0.6)),
-      glass: a(g), hi: a(m.hi), cloud: a(m.cloud || DAY.cityCloud), board: a(DAY.cityCloud),
-      trim: a(mix(f, N, 0.24)), lite: a(mix(f, W, 0.6)), safety: a(DAY.citySafety),
-      cast: "rgba(" + DAY.cityCast + "," + (0.24 * (1 - air)).toFixed(3) + ")"
+      front: a(f), shade: a(mix(f, N, 0.17)), deep: a(mix(f, N, m.deep || 0.6)),
+      glass: a(g), hi: a(m.hi), sheen: a(mix(g, m.hi, 0.42)), board: a(DAY.cityBoard),
+      lite: a(mix(f, W, 0.6)), trim: a(mix(f, N, 0.26)), safety: a(DAY.citySafety)
     };
   }
   // paint order inside one layer of a building
-  var CITY_KEYS = ["side", "sideGlass", "sideLite", "mid", "midGlass", "front", "top", "deep", "glass", "hi", "cloud", "board", "trim", "lite", "safety", "cast"];
+  var CITY_KEYS = ["front", "shade", "deep", "glass", "hi", "sheen", "board", "lite", "trim", "safety"];
 
-  /* The drawing board for one building. Local units: x along the front from its left corner, y up from
-     the ground, z back from the front. Depth goes left, and toward the eye line (E above the ground). */
+  /* The drawing board for one building: a flat elevation. Local units: x along the front from its left
+     edge, y up from the ground. Every shape of one tone goes into one path. */
   function cityCtx(X, baseY, u, lod) {
-    var E = 260 * u, KZ = 0.0016 / u, layers = [], cur, c = { u: u, lod: lod, E: E, t: Math.max(3, 3.6 * u), info: {} };
+    var layers = [], cur, c = { u: u, lod: lod, t: Math.max(3, 3.6 * u), cp: Math.max(3, 4 * u), info: {} };
+    var bx0 = 1e9, bx1 = -1e9, byT = 1e9;
     function r1(v) { return Math.round(v * 10) / 10; }
-    function px(x, z) { return X + x - (z || 0) * 0.9; }
-    function py(y, z) { return baseY - y - (z ? z * (y < E ? KZ * 1.75 * (E - y) : KZ * Math.max(E - y, -300 * u)) : 0); }
     function add(k, d) { cur[k] = (cur[k] || "") + d; }
-    c.px = px; c.py = py;
+    function ext(xa, xb, yt) { if (xa < bx0) bx0 = xa; if (xb > bx1) bx1 = xb; if (yt < byT) byT = yt; }
     c.layer = function () { cur = {}; layers.push(cur); };
     c.layer();
-    // a rectangle square to the picture, at depth z: x, y are its left and its foot
-    c.R = function (k, x, y, w, hh, z) {
+    // a rectangle: x, y are its left and its foot
+    c.R = function (k, x, y, w, hh) {
       if (w < 0.8 || hh < 0.8) return;
-      var yt = py(y + hh, z), yb = y <= 0 ? baseY : py(y, z);
-      add(k, "M" + r1(px(x, z)) + "," + r1(yt) + "h" + r1(w) + "v" + r1(yb - yt) + "h" + r1(-w) + "z");
+      var xa = r1(X + x), yt = r1(baseY - y - hh);
+      add(k, "M" + xa + "," + yt + "h" + r1(w) + "v" + r1(hh) + "h" + r1(-w) + "z");
+      ext(xa, xa + w, yt);
     };
     // n rectangles in a row with a gap between them
-    c.split = function (k, x, y, w, hh, n, gap, z) {
+    c.split = function (k, x, y, w, hh, n, gap) {
       var bw = (w - (n - 1) * gap) / n;
-      for (var i = 0; i < n; i++) c.R(k, x + i * (bw + gap), y, bw, hh, z);
+      for (var i = 0; i < n; i++) c.R(k, x + i * (bw + gap), y, bw, hh);
     };
-    // a bar with round ends
-    c.cap = function (k, x, y, w, hh, z) {
+    // a bar with round ends (a tank lying on its side)
+    c.cap = function (k, x, y, w, hh) {
       if (w < hh) w = hh;
-      var r = r1(hh / 2);
-      add(k, "M" + r1(px(x, z) + hh / 2) + "," + r1(py(y + hh, z)) + "h" + r1(w - hh) + "a" + r + "," + r + " 0 0 1 0," + r1(hh) + "h" + r1(hh - w) + "a" + r + "," + r + " 0 0 1 0," + r1(-hh) + "z");
+      var r = r1(hh / 2), xa = X + x, yt = baseY - y - hh;
+      add(k, "M" + r1(xa + hh / 2) + "," + r1(yt) + "h" + r1(w - hh) + "a" + r + "," + r + " 0 0 1 0," + r1(hh) + "h" + r1(hh - w) + "a" + r + "," + r + " 0 0 1 0," + r1(-hh) + "z");
+      ext(xa, xa + w, yt);
     };
-    // a disc; y is its centre
-    c.disc = function (k, x, y, r) {
-      r = r1(r);
-      add(k, "M" + r1(px(x, 0) - r) + "," + r1(py(y, 0)) + "a" + r + "," + r + " 0 1 1 " + r1(2 * r) + ",0a" + r + "," + r + " 0 1 1 " + r1(-2 * r) + ",0z");
-    };
-    // a polygon through [x, y, z] triples
+    // a polygon through x, y pairs: only for what is diagonal in a true elevation
     c.P = function (k, p) {
       var d = "";
-      for (var i = 0; i < p.length; i += 3) d += (i ? "L" : "M") + r1(px(p[i], p[i + 2])) + "," + r1(py(p[i + 1], p[i + 2]));
+      for (var i = 0; i < p.length; i += 2) { d += (i ? "L" : "M") + r1(X + p[i]) + "," + r1(baseY - p[i + 1]); ext(X + p[i], X + p[i], baseY - p[i + 1]); }
       add(k, d + "z");
     };
-    // a wall standing on the plan line (xa, za) -> (xb, zb), from y0 up to y1
-    c.W = function (k, xa, za, xb, zb, y0, y1) {
-      var ax = r1(px(xa, za)), bx = r1(px(xb, zb));
-      add(k, "M" + ax + "," + r1(py(y1, za)) + "L" + bx + "," + r1(py(y1, zb)) + "L" + bx + "," + r1(y0 <= 0 ? baseY : py(y0, zb)) + "L" + ax + "," + r1(y0 <= 0 ? baseY : py(y0, za)) + "z");
-    };
-    // a volume: its shaded side, its lit front, and its roof when the eye is above it
-    c.box = function (x, w, y0, y1, z, d, o) {
-      o = o || {}; z = z || 0;
-      c.W(o.side || "side", x, z + d, x, z, y0, y1);
-      c.R(o.front || "front", x, y0, w, y1 - y0, z);
-      if (y1 < E - 6 * u && !o.noTop) c.P("top", [x, y1, z, x + w, y1, z, x + w, y1, z + d, x, y1, z + d]);
-    };
-    // the arris that catches the sun: the right edge of a lit front
-    c.edge = function (x, y0, y1, z) { c.R("lite", x - c.t, y0, c.t, y1 - y0, z); };
+    // a point of the building in the tier's coordinates
+    c.at = function (x, y) { return [r1(X + x), r1(baseY - y)]; };
     // a pane the light layer may pick: kept in tier coordinates
-    c.pane = function (x, y, w, hh, z) { (c.info.panes = c.info.panes || []).push([r1(px(x, z)), r1(py(y + hh, z)), r1(w), r1(hh)]); };
+    c.pane = function (x, y, w, hh) { (c.info.panes = c.info.panes || []).push([r1(X + x), r1(baseY - y - hh), r1(w), r1(hh)]); };
     c.done = function (pal) {
       var kids = [];
       for (var i = 0; i < layers.length; i++) for (var j = 0; j < CITY_KEYS.length; j++) {
@@ -926,147 +918,148 @@
       }
       return kids;
     };
+    c.top = function () { return byT; };
+    c.box = function () { return Math.floor(bx0 - 1) + " " + Math.floor(byT - 1) + " " + Math.ceil(bx1 - bx0 + 3) + " " + Math.ceil(baseY - byT + 2); };
     return c;
   }
-  // how far back each type's shaded side runs, so a row can keep neighbours clear of each other
-  var CITY_DEPTH = {
-    G: function (w, u) { return Math.min(w * 0.42, 58 * u); },
-    M: function (w, u) { return 30 * u; },
-    S: function (w, u) { return Math.min(w * 0.36, 52 * u); },
-    P: function (w, u) { return 42 * u; },
-    D: function (w, u) { return 64 * u; },
-    C: function (w, u) { return Math.max(Math.min(w * 0.22, 40 * u) * 0.8 + 22 * u, w * 0.3); },
-    L: function (w, u) { return 60 * u; },
-    B: function (w, u) { return Math.min(w * 0.34, 46 * u); },
-    X: function (w, u) { return Math.min(w * 0.38, 58 * u); }
-  };
+  /* Roof gear: flat silhouettes standing on a level roofline at height y. */
+  function cityTank(c, x, y) {                       // a water tank on its legs
+    var u = c.u, t = c.t;
+    c.R("trim", x + 5 * u, y, t, 19 * u); c.R("trim", x + 25 * u - t, y, t, 19 * u);
+    c.cap("lite", x, y + 17 * u, 30 * u, 17 * u);
+  }
+  function cityAerial(c, x, y, hgt) {                // a television aerial: a pole and two cross arms
+    var u = c.u, t = c.t;
+    c.R("trim", x - t / 2, y, t, hgt);
+    c.R("trim", x - 9 * u, y + hgt * 0.56, 18 * u, t); c.R("trim", x - 5 * u, y + hgt * 0.8, 10 * u, t);
+  }
+  function cityRod(c, x, y, hgt) {                   // a lightning rod on its base
+    var u = c.u, t = c.t;
+    c.R("trim", x - 5 * u, y, 10 * u, 5 * u); c.R("trim", x - t / 2, y, t, hgt);
+  }
+  // the top of a wall: its coping in the sun, and the coping's shade on the wall under it
+  function cityCope(c, x, y, w) { c.R("lite", x, y - c.cp, w, c.cp); c.R("shade", x, y - 2 * c.cp, w, c.cp); }
+  function cityPlant(c, x, y, w, hh) {               // a plant room: a box, its louvre, its cap
+    var u = c.u;
+    c.R("shade", x, y, w, hh);
+    if (c.lod > 1) c.R("deep", x + 5 * u, y + hh * 0.3, w - 10 * u, hh * 0.32);
+    c.R("lite", x - 1.5 * u, y + hh - c.cp, w + 3 * u, c.cp);
+  }
 
   /* G: the glass tower */
   function cityG(c, w, hh, v) {
-    var u = c.u, lod = c.lod, t = c.t, FL = 30 * u * (lod ? 1 : 1.5), d = CITY_DEPTH.G(w, u), ch = Math.min(13 * u, w * 0.14);
-    var crown = lod ? FL * 1.15 : 0, top = hh - crown, lob = lod ? FL * 1.4 : 0, e = lod ? 6 * u : 0, i, y;
-    if (lod) c.box(w * (v % 2 ? 0.44 : 0.18), w * 0.4, hh - FL, hh + FL * 0.7, 16 * u, d * 0.4);     // plant room, behind the parapet
-    c.W("side", 0, d, 0, ch, 0, hh);
-    c.W("mid", 0, ch, ch, 0, 0, hh);                                                                // the chamfered corner
-    c.R("front", ch, 0, w - ch, hh);
-    var gx = ch + (lod ? 2 * u : 0), gw = w - gx - e, gh = top - lob;
-    c.R("glass", gx, lob, gw, gh);
-    // the bright sky across the top of the glass, its lower edge on the light's diagonal
-    c.P("hi", [gx, top, 0, gx + gw, top, 0, gx + gw, top - gh * 0.26, 0, gx, Math.max(lob, top - gh * 0.26 - gw * 0.85), 0]);
-    // clouds reflected in it, built like the sky's own (round lobes on a flat base); the floor bands cut them
-    var cloud = function (cx, k, sz) {
-      var yb = lob + Math.round(gh * k / FL) * FL + t / 2;
-      if (yb + sz * 0.54 > top - 2 * u) return;
-      c.cap("cloud", cx - sz / 2, yb, sz, sz * 0.2);
-      c.disc("cloud", cx - sz * 0.2, yb + sz * 0.2, sz * 0.19); c.disc("cloud", cx + sz * 0.06, yb + sz * 0.27, sz * 0.25); c.disc("cloud", cx + sz * 0.3, yb + sz * 0.17, sz * 0.15);
-    };
-    cloud(gx + gw * 0.53, v % 2 ? 0.6 : 0.68, gw * 0.8);
-    if (lod) cloud(gx + gw * 0.34, v % 2 ? 0.22 : 0.3, gw * 0.5);
+    var u = c.u, lod = c.lod, t = c.t, FL = 30 * u * (lod ? 1 : 1.5), i, j, y;
+    var crown = lod ? Math.min(FL * 1.3, hh * 0.16) : 0, lob = lod ? Math.min(FL * 1.5, hh * 0.2) : 0, top = hh - crown, gh = top - lob;
     if (lod) {
-      var step = FL * (lod > 1 ? 1 : 2);
-      if (v % 2) {                                                                                  // vertical fins
-        var nf = Math.max(3, Math.round(gw / ((lod > 1 ? 21 : 30) * u)));
-        for (i = 1; i < nf; i++) c.R("trim", gx + i * gw / nf - t / 2, lob, t, gh);
-        for (y = lob + FL * 4; y < top - FL * 2; y += FL * 4) c.R("trim", gx, y - t / 2, gw, t);
-      } else for (y = lob + step; y < top - 2; y += step) c.R("trim", gx, y - t / 2, gw, t);        // floor bands
-      c.W("sideGlass", 0, d - 4 * u, 0, ch + 4 * u, lob, top);
-      c.R("deep", gx, top + crown * 0.22, gw, crown * 0.42);                                        // louvres of the plant floor
-      c.R("lite", w - e, lob, e, hh - lob);                                                         // the corner that catches the sun
-      c.R("lite", ch, hh - 4 * u, w - ch, 4 * u);
-      c.split("deep", gx + 3 * u, 0, gw - 6 * u, lob - 8 * u, Math.max(2, Math.round(gw / (34 * u))), 6 * u);
-      c.R("lite", ch, lob - 8 * u, w - ch, 4 * u);
-      if (lod > 1) for (i = 0; i < 4; i++) c.pane(gx + (i % 3) * gw / 3 + 2 * u, lob + Math.round(gh * (0.3 + i * 0.14) / FL) * FL + t / 2, gw / 3 - 4 * u, FL - t);
+      cityPlant(c, w * (v % 2 ? 0.46 : 0.12), hh, w * 0.4, FL * 0.8);
+      if (Math.round(w / u) % 2) cityRod(c, w * (v % 2 ? 0.24 : 0.74), hh, FL * 1.7);             // on about every other tower, so the skyline is not a row of rods
     }
-    c.info.glass = [c.px(gx, 0), c.py(top, 0), gw, gh];
-  }
-  // an outside steel stair seen from its side, on the plane x: flights zigzag between depths za and zb, a
-  // landing at every turn, one post at the back
-  function cityStair(c, x, za, zb, n, fh, th) {
-    var u = c.u, l = 5 * u;
-    for (var i = 0; i < n; i++) {
-      var z0 = i % 2 ? zb : za, z1 = i % 2 ? za : zb, sy = i * fh + 3 * u, o = i % 2 ? -l : l;
-      c.P("sideLite", [x, sy, z0, x, sy + fh, z1, x, sy + fh + th, z1, x, sy + th, z0]);
-      c.P("sideLite", [x, sy + fh, z1 - o, x, sy + fh, z1 + o, x, sy + fh + th, z1 + o, x, sy + fh + th, z1 - o]);
-    }
-    c.R("sideLite", x - c.t / 2, 0, c.t, n * fh + 3 * u + th, zb + l);
-  }
-  /* M: the apartment slab. Even v: the balcony side, with the steel stair on the end wall. Odd v: the
-     corridor side, with the escape stair in its own bay at the lit end. */
-  function cityM(c, w, hh, v) {
-    var u = c.u, lod = c.lod, t = c.t, d = CITY_DEPTH.M(w, u), corridor = v % 2 === 1, core = lod ? 36 * u : 0;
-    var n = Math.max(3, Math.round((hh - 8 * u) / (30 * u * (lod ? 1 : 2)))), fh = (hh - 8 * u) / n, i, b, y0;
-    var zx = 6 * u, zw = w - core - 11 * u, nb = Math.max(1, Math.round(zw / (46 * u))), bw = zw / nb, ry0 = corridor ? 0.36 : 0.44;
-    if (lod) {                                                                                      // on the roof: lift overrun, water tank on legs
-      c.box(w - core + 3 * u, core - 7 * u, hh - fh, hh + fh * 0.8, 8 * u, 24 * u);
-      var tx = w - core - 46 * u;
-      if (tx > 10 * u) {
-        c.R("side", tx + 4 * u, hh - 8 * u, t, 20 * u, 12 * u); c.R("side", tx + 23 * u, hh - 8 * u, t, 20 * u, 12 * u);
-        c.box(tx, 31 * u, hh + 10 * u, hh + 27 * u, 12 * u, 14 * u, { front: "lite" });
+    c.R("front", 0, 0, w, hh);
+    c.R("glass", 0, lob, w, gh);                                                                    // glass from edge to edge
+    var sky = gh - Math.round(gh * 0.8 / FL) * FL;                                                  // the bright sky across its top, ending on a floor line
+    if (sky < gh * 0.1) sky = gh * 0.2;
+    c.R("hi", 0, top - sky, w, sky);
+    // a sheen: a band on the light's diagonal, one small step lighter than the glass, clipped to the glass
+    var sheen = function (yr, th) {
+      var q = _clipPoly([[w, yr], [w, yr - th], [0, yr - th - w * 0.85], [0, yr - w * 0.85]], 0, lob, w, top - sky), p = [];
+      for (j = 0; j < q.length; j++) p.push(q[j][0], q[j][1]);
+      if (p.length > 5) c.P("sheen", p);
+    };
+    var s0 = lob + (gh - sky) * (v % 2 ? 0.8 : 0.66) + w * 0.42;
+    sheen(s0, FL * 3.1);
+    if (lod) sheen(s0 - FL * 4, FL * 0.9);
+    if (lod) {
+      if (v % 2) {                                                                                  // vertical fins, a band every fourth floor
+        var nf = Math.max(3, Math.round(w / ((lod > 1 ? 21 : 30) * u)));
+        for (i = 1; i < nf; i++) c.R("trim", i * w / nf - t / 2, lob, t, gh);
+        for (y = lob + FL * 4; y < top - FL * 2; y += FL * 4) c.R("trim", 0, y - t / 2, w, t);
+      } else {                                                                                      // floor bands, a mullion every other bay
+        var step = FL * (lod > 1 ? 1 : 2), nv = Math.max(2, Math.round(w / (54 * u)));
+        for (y = lob + step; y < top - 2; y += step) c.R("trim", 0, y - t / 2, w, t);
+        for (i = 1; i < nv; i++) c.R("trim", i * w / nv - t / 2, lob, t, gh);
       }
+      c.R("deep", 6 * u, top + crown * 0.26, w - 12 * u, crown * 0.36);                             // the louvres of the plant floor
+      cityCope(c, 0, hh, w);
+      c.split("deep", 7 * u, 0, w - 14 * u, lob - 9 * u, Math.max(2, Math.round(w / (42 * u))), 7 * u);   // the lobby between its columns
+      c.R("lite", 0, lob - 9 * u, w, c.cp);                                                         // its canopy
     }
-    c.box(0, w, 0, hh, 0, d);
-    if (lod) c.edge(w, 0, hh);
+    c.info.glass = [c.at(0, top)[0], c.at(0, top)[1], w, gh];
+  }
+  /* M: the apartment slab. Even v: the balcony side. Odd v: the corridor side, with the escape stair in
+     its own open bay. The core (lift, stairs) is a bay inside the front, never at an end. */
+  function cityM(c, w, hh, v) {
+    var u = c.u, lod = c.lod, t = c.t, corridor = v % 2 === 1, i, b, r;
+    var n = Math.max(3, Math.round((hh - 8 * u) / (30 * u * (lod ? 1 : 2)))), fh = (hh - 8 * u) / n;
+    var mx = 7 * u, cw = lod ? (corridor ? 36 : 28) * u : 0, cx = Math.round(w * ((v >> 1) % 2 ? 0.24 : 0.6)), ry0 = corridor ? 0.36 : 0.44;
+    var runs = lod ? [[mx, cx - 4 * u - mx], [cx + cw + 4 * u, w - mx - cx - cw - 4 * u]] : [[mx, w - 2 * mx]];
+    if (lod) {                                                                                      // on the roof: the lift overrun, a water tank, an aerial
+      c.R("shade", cx - 3 * u, hh, cw + 6 * u, fh * 0.85); c.R("lite", cx - 4.5 * u, hh + fh * 0.85 - c.cp, cw + 9 * u, c.cp);
+      cityTank(c, cx > w * 0.5 ? w * 0.14 : w * 0.7, hh);
+      if (lod > 1 && Math.round(w / u) % 3 === 0) cityAerial(c, cx > w * 0.5 ? cx - 22 * u : cx + cw + 22 * u, hh, 42 * u);
+    }
+    c.R("front", 0, 0, w, hh);
     for (i = 1; i < n; i++) {
-      y0 = i * fh;
-      var ry = y0 + fh * ry0, rh = fh * (1 - ry0) - t;                                              // the open part above the balustrade
-      if (lod > 1) {
-        c.split("deep", zx, ry, zw, rh, nb, 4 * u);
-        for (b = 0; b < nb; b++) {
-          if (corridor) c.R("glass", zx + b * bw + bw * 0.34, ry, 11 * u, rh * 0.8);                // a flat's door
-          else { c.R("glass", zx + b * bw + 6 * u, ry, bw - 17 * u, rh * 0.7); if ((b + i) % 2) c.pane(zx + b * bw + 6 * u, ry, bw - 17 * u, rh * 0.7); }   // the sliding door, its head in the shade of the slab above
+      var y0 = i * fh, ry = y0 + fh * ry0, rh = fh * (1 - ry0) - t;                                 // the open part above the balustrade
+      for (r = 0; r < runs.length; r++) {
+        var rx = runs[r][0], rw = runs[r][1], nb = Math.max(1, Math.round(rw / (46 * u))), bw = (rw + 4 * u) / nb;
+        if (lod > 1 && !corridor) {
+          c.split("deep", rx, ry, rw, rh, nb, 4 * u);
+          for (b = 0; b < nb; b++) {                                                                // the sliding door, its head in the shade of the slab above
+            c.R("glass", rx + b * bw + 6 * u, ry, bw - 21 * u, rh * 0.72);
+            if ((b + i + r) % 2) c.pane(rx + b * bw + 6 * u, ry, bw - 21 * u, rh * 0.72);
+          }
+        } else {
+          c.R("deep", rx, ry, rw, rh);
+          if (lod > 1) for (b = 0; b < nb; b++) c.R("glass", rx + b * bw + bw * 0.3, ry, 11 * u, rh * 0.84);   // a flat's door
         }
-      } else c.R("deep", zx, ry, zw, rh);
-      if (lod) c.R("lite", zx - 2 * u, y0 + 3 * u, zw + 4 * u, ry - y0 - 3 * u);                    // the balustrade, in the sun
+        if (lod) c.R("lite", rx - 2 * u, y0 + 3 * u, rw + 4 * u, ry - y0 - 3 * u);                  // the balustrade, in the sun
+      }
     }
     if (!lod) return;
-    c.split("deep", zx, 0, zw, fh * 0.72, Math.max(2, nb), 7 * u);                                  // the open ground floor between its columns
-    c.R("lite", 0, hh - 4 * u, w, 4 * u);
-    var th = Math.max(t, 5 * u);
-    if (corridor) {
-      var sx = w - core + 2 * u, sw = core - 6 * u;                                                 // the stair bay: flights zigzag up it
-      c.R("deep", sx, fh * 0.2, sw, hh - fh * 0.2 - 9 * u);
+    for (r = 0; r < 2; r++) c.split("deep", runs[r][0], 0, runs[r][1], fh * 0.72, Math.max(1, Math.round(runs[r][1] / (62 * u))), 8 * u);   // the open ground floor between its columns
+    cityCope(c, 0, hh, w);
+    if (corridor) {                                                                                 // the stair bay: flights zigzag up it
+      var th = Math.max(t, 5 * u);
+      c.R("deep", cx, fh * 0.2, cw, hh - fh * 0.2 - 10 * u);
       for (i = 0; i < n - 1; i++) {
-        var a = i % 2 ? sw - 2 * u : 2 * u, e2 = i % 2 ? 2 * u : sw - 2 * u, fy = i * fh + fh * 0.2;
-        c.P("lite", [sx + a, fy, 0, sx + e2, fy + fh, 0, sx + e2, fy + fh + th, 0, sx + a, fy + th, 0]);
+        var a = i % 2 ? cw - 3 * u : 3 * u, e2 = i % 2 ? 3 * u : cw - 3 * u, fy = i * fh + fh * 0.2;
+        c.P("lite", [cx + a, fy, cx + e2, fy + fh, cx + e2, fy + fh + th, cx + a, fy + th]);
       }
-    } else {
-      c.R("trim", w - core - t / 2, 0, t, hh - 4 * u);                                              // the stair and lift core
-      if (lod > 1) for (i = 1; i < n; i++) c.R("glass", w - core + 12 * u, i * fh + fh * 0.3, 12 * u, fh * 0.44);
-      cityStair(c, -7 * u, d * 0.16, d * 0.9, n - 1, fh, Math.max(t, 6.5 * u));                                   // the steel stair standing off the end wall
-      if (lod > 1 && nb > 2 && n > 4) {                                                             // bedding aired over two balconies
-        c.R("board", zx + ((v >> 1) % nb) * bw + 12 * u, 2 * fh + 3 * u, 19 * u, fh * 0.44);
-        c.R("board", zx + ((v >> 1) + 2) % nb * bw + 9 * u, (n - 2) * fh + 3 * u, 19 * u, fh * 0.44);
-      }
-    }
+    } else if (lod > 1) for (i = 1; i < n; i++) c.R("glass", cx + cw / 2 - 6 * u, i * fh + fh * 0.3, 12 * u, fh * 0.44);   // the core's own windows
   }
-  /* S: the tower that steps back. Even v: the steps are on its shaded side, so each stage shows its
-     own shaded face; odd v: on its lit side. */
+  /* S: the tower that steps back. Even v: it steps back mostly on its left; odd v: on its right. */
   function cityS(c, w, hh, v) {
-    var u = c.u, lod = c.lod, t = c.t, FL = 30 * u, d = CITY_DEPTH.S(w, u);
+    var u = c.u, lod = c.lod, t = c.t, FL = 30 * u, s, b, f;
     var st = v % 2 ? [[0, 1, 0, 0.52], [0, 0.82, 0.52, 0.72], [0.15, 0.82, 0.72, 0.87], [0.15, 0.6, 0.87, 1]]
       : [[0, 1, 0, 0.5], [0.18, 1, 0.5, 0.71], [0.18, 0.8, 0.71, 0.87], [0.36, 0.8, 0.87, 1]];
-    for (var s = 0; s < 4; s++) {
-      var x = st[s][0] * w, sw = (st[s][1] - st[s][0]) * w, y0 = st[s][2] * hh, y1 = st[s][3] * hh, z = s * 5 * u;
-      c.box(x, sw, s ? y0 - FL : 0, y1, z, d * (1 - s * 0.15));
+    if (lod) cityRod(c, (st[3][0] + st[3][1]) / 2 * w, hh, FL * 1.6);
+    for (s = 0; s < 4; s++) {
+      var x = st[s][0] * w, sw = (st[s][1] - st[s][0]) * w, y0 = st[s][2] * hh, y1 = st[s][3] * hh;
+      c.R("front", x, y0, sw, y1 - y0);
       if (!lod) continue;
-      c.edge(x + sw, y0, y1, z);
-      var nb = Math.max(1, Math.round((sw - 8 * u) / (25 * u))), bw = (sw - 8 * u) / nb, step = FL * (lod > 1 ? 2 : 3), gap = Math.max(t, 5 * u);
-      var a = y0 + 9 * u, e = y1 - 11 * u, nfl = Math.max(1, Math.round((e - a) / step)), fl = (e - a + gap) / nfl;
-      for (var b = 0; b < nb; b++) for (var f = 0; f < nfl; f++) {                                  // tall panes between piers
-        var sx = x + 4 * u + b * bw + bw * 0.22, hiH = lod > 1 && f === nfl - 1 ? Math.min(15 * u, (fl - gap) * 0.4) : 0;
-        c.R("glass", sx, a + f * fl, bw * 0.56, fl - gap - hiH, z);
-        if (hiH) c.R("hi", sx, a + f * fl + fl - gap - hiH, bw * 0.56, hiH, z);
-        if (lod > 1 && s < 2 && (b + f) % 3 === 0) c.pane(sx, a + f * fl, bw * 0.56, fl - gap, z);
+      var pm = 5 * u, nb = Math.max(1, Math.round((sw - 2 * pm) / (25 * u))), bw = (sw - 2 * pm) / nb, step = FL * (lod > 1 ? 2 : 3), gap = Math.max(t, 5 * u);
+      var a = s ? y0 + 9 * u : 40 * u, e = y1 - 11 * u, nfl = Math.max(1, Math.round((e - a) / step)), fl = (e - a + gap) / nfl;
+      for (b = 0; b < nb; b++) for (f = 0; f < nfl; f++) {                                          // tall panes between piers
+        var sx = x + pm + b * bw + bw * 0.22, hiH = lod > 1 && f === nfl - 1 ? Math.min(15 * u, (fl - gap) * 0.4) : 0;
+        c.R("glass", sx, a + f * fl, bw * 0.56, fl - gap - hiH);
+        if (hiH) c.R("hi", sx, a + f * fl + fl - gap - hiH, bw * 0.56, hiH);
+        if (lod > 1 && s < 2 && (b + f) % 3 === 0) c.pane(sx, a + f * fl, bw * 0.56, fl - gap);
       }
-      c.R("lite", x - 1.5 * u, y1 - 4 * u, sw + 3 * u, 4 * u, z);
+      c.R("lite", x - 1.5 * u, y1 - c.cp, sw + 3 * u, c.cp); c.R("shade", x, y1 - 2 * c.cp, sw, c.cp);
+      if (!s) {                                                                                     // the ground floor: tall openings under a fascia
+        c.split("deep", pm + 3 * u, 0, sw - 2 * pm - 6 * u, 26 * u, Math.max(2, Math.round(sw / (48 * u))), 8 * u);
+        c.R("lite", 0, 29 * u, sw, c.cp);
+      }
     }
-    c.info.castTop = st[0][3] * hh;
   }
   /* P: the pencil building */
   function cityP(c, w, hh, v) {
-    var u = c.u, lod = c.lod, t = c.t, d = CITY_DEPTH.P(w, u), n = Math.max(4, Math.round((hh - 10 * u) / (31 * u * (lod ? 1 : 2)))), fh = (hh - 10 * u) / n, i, y0;
-    if (lod) c.box(w * 0.4, w * 0.52, hh - fh * 0.5, hh + 22 * u, 18 * u, 24 * u);                 // stair head
-    c.box(0, w, 0, hh, 0, d);
+    var u = c.u, lod = c.lod, t = c.t, n = Math.max(4, Math.round((hh - 10 * u) / (31 * u * (lod ? 1 : 2)))), fh = (hh - 10 * u) / n, i, y0;
+    if (lod) {                                                                                      // on the roof: the stair head, an aerial
+      c.R("shade", w * 0.08, hh, w * 0.5, 21 * u); c.R("lite", w * 0.08 - 1.5 * u, hh + 21 * u - c.cp, w * 0.5 + 3 * u, c.cp);
+      if (v % 2 === 0) cityAerial(c, w * 0.78, hh, 46 * u);
+    }
+    c.R("front", 0, 0, w, hh);
     for (i = 1; i < n; i++) {
       y0 = i * fh;
       if (lod > 1 && (i + v) % 4 === 2) {                                                           // a floor behind a blank sign
@@ -1078,87 +1071,95 @@
       } else c.R("glass", 5 * u, y0 + fh * 0.3, w - 10 * u, fh * 0.4);
     }
     if (!lod) return;
-    c.edge(w, 0, hh);
-    c.R("deep", 5 * u, 0, w - 10 * u, fh * 0.72); c.R("board", 2 * u, fh * 0.72, w - 4 * u, 7 * u);
-    var sn = Math.min(6, n - 2), sh = fh * 0.84;                                                    // the blade signs, blank
-    for (i = 0; i < sn; i++) {
-      var dark = (i * 2 + v) % 3 === 0;
-      c.R(dark ? "trim" : "board", w + 1.5 * u, fh * 1.3 + i * fh, 13.5 * u, sh);
-      c.R(dark ? "lite" : "trim", w + 8.2 * u - t / 2, fh * 1.3 + i * fh + 5 * u, t, sh - 10 * u);
+    c.R("deep", 5 * u, 0, w - 10 * u, fh * 0.72); c.R("board", 2 * u, fh * 0.72, w - 4 * u, 7 * u);   // the shop at its foot, a blank fascia
+    cityCope(c, 0, hh, w);
+    if (lod > 1) {                                                                                  // the blade signs: separate blank boards on brackets, sky between them
+      var sn = Math.min(4, Math.floor((n - 2) / 1.6)), sh = fh * 0.92;
+      for (i = 0; i < sn; i++) {
+        var sy = fh * 1.5 + i * fh * 1.6, dark = (i + v) % 2 === 0;
+        c.R(dark ? "trim" : "board", w + 3 * u, sy, 14 * u, sh);
+        c.R("trim", w, sy + sh * 0.5 - t / 2, 3 * u + 1, t);
+        if (!dark) c.R("trim", w + 10 * u - t / 2, sy + 5 * u, t, sh - 10 * u);
+      }
     }
-    c.R("lite", 0, hh - 4 * u, w, 4 * u);
-    c.R("sideLite", -t / 2, 0, t, hh - 9 * u, d * 0.26);                                            // a pipe down the party wall
-    cityStair(c, -6 * u, d * 0.42, d * 0.94, n - 1, fh, Math.max(t, 6 * u));                        // the outside stair at the back
   }
-  /* D: the podium and the tower set back on it */
+  /* D: the podium and the tower standing on it. Odd v: the tower stands toward the left. */
   function cityD(c, w, hh, v) {
-    var u = c.u, lod = c.lod, t = c.t, FL = 30 * u, ph = Math.min(hh * 0.42, 122 * u), pd = CITY_DEPTH.D(w, u);
-    var tw = w * 0.54, tx = v % 2 ? w * 0.05 : w * 0.41, tz = 18 * u, td = 40 * u, i, r, y;
-    c.box(0, w, 0, ph, 0, pd);
+    var u = c.u, lod = c.lod, t = c.t, FL = 30 * u, ph = Math.min(hh * 0.42, 122 * u), i, r, y;
+    var tw = w * 0.56, tx = v % 2 ? w * 0.07 : w * 0.37;
+    if (lod) { cityPlant(c, tx + tw * 0.16, hh, tw * 0.46, FL * 0.75); if (Math.round(w / u) % 2) cityRod(c, tx + tw * 0.82, hh, FL * 1.5); }
+    c.R("front", 0, 0, w, ph);
+    c.R("front", tx, ph, tw, hh - ph);
     if (lod) {
       var gf = ph * 0.38, nb = Math.max(2, Math.round((w - 16 * u) / (40 * u)));
       c.split("deep", 8 * u, 0, w - 16 * u, gf - 5 * u, nb, 8 * u);                                 // the arcade between its piers
-      c.R("lite", 3 * u, gf - 5 * u, w - 6 * u, 5 * u);
+      c.R("lite", 3 * u, gf - 5 * u, w - 6 * u, c.cp);
       c.split("glass", 8 * u, gf + (ph - gf) * 0.22, w - 16 * u, (ph - gf) * 0.5, lod > 1 ? Math.max(3, Math.round((w - 16 * u) / (21 * u))) : nb, lod > 1 ? 4 * u : 7 * u);
-      c.R("lite", 0, ph - 4 * u, w, 4 * u); c.edge(w, 0, ph);
-      if (lod > 1 && tx > 20 * u) { var sx = Math.max(3 * u, tx - 52 * u); c.P("cast", [tx, ph, tz, tx, ph, pd - 3 * u, sx, ph, pd - 3 * u, sx, ph, tz + 10 * u]); }   // the tower's shadow on the podium roof
+      cityCope(c, 0, ph, w);
+      if (lod > 1) {                                                                                // the rail of the roof terrace beside the tower
+        var rx = v % 2 ? tx + tw + 7 * u : 4 * u, rw = v % 2 ? w - 4 * u - rx : tx - 11 * u, np = Math.max(2, Math.round(rw / (26 * u)));
+        c.R("trim", rx, ph + 11 * u, rw, t);
+        for (i = 0; i <= np; i++) c.R("trim", rx + i * (rw - t) / np, ph, t, 11 * u);
+      }
     }
-    c.info.castTop = ph;
-    c.layer();
-    if (lod) c.box(tx + tw * 0.22, tw * 0.5, hh - FL, hh + FL * 0.6, tz + 14 * u, td * 0.4);
-    c.box(tx, tw, ph, hh, tz, td);
     var body = hh - ph - (lod ? FL * 1.1 : 0), rows = Math.max(1, Math.round(body / (FL * (lod ? 2 : 3)))), chh = body / rows;
     var nc = Math.max(2, Math.round(tw / (44 * u))), cw = tw / nc;
     for (r = 0; r < rows; r++) {
       y = ph + r * chh;
-      if (!lod) { c.R("glass", tx + 5 * u, y + chh * 0.25, tw - 10 * u, chh * 0.5, tz); continue; }
+      if (!lod) { c.R("glass", tx + 5 * u, y + chh * 0.25, tw - 10 * u, chh * 0.5); continue; }
       for (i = 0; i < nc; i++) {                                                                    // one two-storey bay of the frame
         var gx = tx + i * cw + 4 * u, gw2 = cw - 8 * u, hi = (i * 2 + r * 3 + v) % 5 === 0;
         if (lod > 1) {
           var p2 = (chh - 10 * u - t) / 2;
-          c.R("glass", gx, y + 5 * u, gw2, p2, tz); c.R(hi ? "hi" : "glass", gx, y + 5 * u + p2 + t, gw2, p2, tz);
-          if ((i + r) % 2) c.pane(gx, y + 5 * u + p2 + t, gw2, p2, tz);
-        } else c.R("glass", gx, y + 5 * u, gw2, chh - 10 * u, tz);
+          c.R("glass", gx, y + 5 * u, gw2, p2); c.R(hi ? "hi" : "glass", gx, y + 5 * u + p2 + t, gw2, p2);
+          if ((i + r) % 2) c.pane(gx, y + 5 * u + p2 + t, gw2, p2);
+        } else c.R("glass", gx, y + 5 * u, gw2, chh - 10 * u);
       }
-      c.W("sideGlass", tx, tz + td - 6 * u, tx, tz + 6 * u, y + 5 * u, y + chh - 5 * u);
     }
-    if (lod) { if (lod > 1) c.R("deep", tx + 5 * u, hh - FL * 0.9, tw - 10 * u, FL * 0.45, tz); c.R("lite", tx - u, hh - 4 * u, tw + 2 * u, 4 * u, tz); c.edge(tx + tw, ph, hh, tz); }
+    if (lod) { if (lod > 1) c.R("deep", tx + 5 * u, hh - FL * 0.9, tw - 10 * u, FL * 0.45); cityCope(c, tx, hh, tw); }
   }
-  /* C: the corner building */
+  /* C: the corner building. Its corner entrance is at the left end (v bit 1: at the right). */
   function cityC(c, w, hh, v) {
-    var u = c.u, lod = c.lod, t = c.t, cw = Math.min(w * 0.22, 40 * u), cz = cw * 0.8, d = CITY_DEPTH.C(w, u);
-    var gf = lod ? 40 * u : 0, n = Math.max(2, Math.round((hh - gf - 10 * u) / (30 * u * (lod ? 1 : 2)))), fh = (hh - gf - 10 * u) / n, crest = lod ? 16 * u : 0, i;
-    if (lod) c.box(w * 0.52, w * 0.34, hh - fh, hh + 19 * u, 16 * u, 24 * u);
-    c.W("side", 0, d, 0, cz, 0, hh);
-    c.W("mid", 0, cz, cw, 0, 0, hh + crest);                                                        // the chamfered face, with its raised parapet
-    c.R("front", cw, 0, w - cw, hh);
-    var fw = w - cw - 9 * u, ng = Math.max(1, Math.round(fw / (36 * u)));
-    for (i = 0; i < n; i++) {                                                                       // a ribbon window round all three faces
+    var u = c.u, lod = c.lod, t = c.t, cw = Math.min(w * 0.3, 56 * u), cx = (v >> 1) % 2 ? w - cw : 0, ox = cx ? 0 : cw, i;
+    var gf = lod ? 40 * u : 0, n = Math.max(2, Math.round((hh - gf - 10 * u) / (30 * u * (lod ? 1 : 2)))), fh = (hh - gf - 10 * u) / n, crest = lod ? 23 * u : 0;
+    if (lod) cityPlant(c, ox + (w - cw) * 0.36, hh, (w - cw) * 0.46, 19 * u);
+    c.R("front", 0, 0, w, hh);
+    if (lod) c.R("front", cx, hh, cw, crest);                                                       // the raised parapet over the corner
+    var fw = w - 10 * u, ng = Math.max(2, Math.round(fw / (36 * u)));
+    for (i = 0; i < n; i++) {                                                                       // a ribbon window from end to end
       var yb = gf + i * fh + fh * 0.3, bh = fh * 0.46;
-      c.W("sideGlass", 0, d - 5 * u, 0, cz + 3 * u, yb, yb + bh);
-      c.W("midGlass", cw * 0.08, cz * 0.92, cw * 0.92, cz * 0.08, yb, yb + bh);
       if (lod > 1) {
-        c.split("glass", cw + 3 * u, yb, fw, bh * 0.6, ng, t); c.split("hi", cw + 3 * u, yb + bh * 0.6, fw, bh * 0.4, ng, t);
-        if (i % 2 === 0) c.pane(cw + 3 * u + (i % ng) * (fw + t) / ng, yb, (fw - (ng - 1) * t) / ng, bh);
-      } else c.R("glass", cw + 3 * u, yb, fw, bh);
+        c.split("glass", 5 * u, yb, fw, bh * 0.6, ng, t); c.split("hi", 5 * u, yb + bh * 0.6, fw, bh * 0.4, ng, t);
+        c.R("lite", 3 * u, yb - t, w - 6 * u, t);
+        if (i % 2 === 0) c.pane(5 * u + (i % ng) * (fw + t) / ng, yb, (fw - (ng - 1) * t) / ng, bh);
+      } else c.R("glass", 5 * u, yb, fw, bh);
     }
     if (lod) {
-      c.W("deep", cw * 0.24, cz * 0.76, cw * 0.76, cz * 0.24, 0, gf - 10 * u);                      // the entrance, on the corner
-      c.W("lite", cw * 0.1, cz * 0.9, cw * 0.9, cz * 0.1, gf - 10 * u, gf - 5 * u);
-      c.split("deep", cw + 7 * u, 0, w - cw - 14 * u, gf - 12 * u, Math.max(1, ng), 7 * u);
+      c.R("deep", cx + cw * 0.22, 0, cw * 0.56, gf - 10 * u);                                       // the entrance, on the corner
+      c.R("lite", cx + cw * 0.08, gf - 10 * u, cw * 0.84, c.cp);                                    // its canopy
+      c.split("deep", ox + 7 * u, 0, w - cw - 14 * u, gf - 12 * u, Math.max(1, Math.round((w - cw) / (46 * u))), 7 * u);
       if (lod > 1) {
-        c.R("board", cw + 4 * u, gf - 12 * u, w - cw - 8 * u, 6 * u);
-        c.W("board", cw * 0.22, cz * 0.78, cw * 0.78, cz * 0.22, hh - 13 * u, hh + crest - 4 * u);  // a blank plate on the parapet
+        c.R("board", ox + 4 * u, gf - 12 * u, w - cw - 8 * u, 6 * u);
+        c.R("board", cx + cw * 0.16, hh - 9 * u, cw * 0.68, crest - u);                               // a blank plate on the parapet
       }
-      c.R("lite", cw, hh - 4 * u, w - cw, 4 * u); c.edge(w, 0, hh);
+      cityCope(c, ox, hh, w - cw); cityCope(c, cx, hh + crest, cw);
     }
-    c.info.castLeft = cw;
   }
-  /* L: the low block, seen from above its roof */
+  /* L: the low block. Odd v: its roof gear the other way round. */
   function cityL(c, w, hh, v) {
-    var u = c.u, lod = c.lod, t = c.t, d = CITY_DEPTH.L(w, u), n = Math.max(2, Math.round((hh - 6 * u) / (31 * u))), fh = (hh - 6 * u) / n, i, b;
+    var u = c.u, lod = c.lod, t = c.t, n = Math.max(2, Math.round((hh - 6 * u) / (31 * u))), fh = (hh - 6 * u) / n, i, b;
     var nb = Math.max(1, Math.round((w - 12 * u) / (52 * u))), bw = (w - 12 * u) / nb;
-    c.box(0, w, 0, hh, 0, d);
+    if (lod) {                                                                                      // what stands on the roof
+      var hx = w * (v % 2 ? 0.16 : 0.6), tx = w * (v % 2 ? 0.5 : 0.07);
+      c.R("shade", hx, hh, 34 * u, 28 * u); c.R("deep", hx + 20 * u, hh, 9 * u, 19 * u);            // the stair head and its door
+      c.R("lite", hx - 1.5 * u, hh + 28 * u - c.cp, 37 * u, c.cp);
+      for (i = 0; i < (w > 190 * u ? 2 : 1); i++) cityTank(c, tx + i * 40 * u, hh);                 // water tanks on legs
+      if (w > 215 * u) c.split("shade", w * (v % 2 ? 0.8 : 0.84) - 20 * u, hh, 38 * u, 12 * u, 2, 5 * u);   // condensers
+      c.R("trim", 2 * u, hh + 13 * u, w - 4 * u, t);                                                // the roof fence: a rail on posts
+      var np = Math.max(2, Math.round(w / (30 * u)));
+      for (i = 0; i <= np; i++) c.R("trim", 2 * u + i * (w - 4 * u - t) / np, hh, t, 13 * u);
+    }
+    c.R("front", 0, 0, w, hh);
     if (!lod) return;
     c.split("deep", 7 * u, 0, w - 14 * u, fh * 0.74, nb, 8 * u);                                    // shop fronts
     for (b = 0; b < nb; b++) if ((b + v) % 3 !== 1) c.R((b + v) % 2 ? "board" : "trim", 6 * u + b * bw + 2 * u, fh * 0.6, bw - 4 * u, 8 * u);   // blank awnings
@@ -1167,126 +1168,94 @@
       c.R("glass", wx, wy, ww, wh); c.R("glass", wx + bw * 0.42, wy, ww, wh);
       if (lod > 1) { c.R("lite", wx - 2 * u, wy - t, bw * 0.74 + 4 * u, t); if ((b + i) % 2 === 0) c.pane(wx, wy, ww, wh); }
     }
-    c.R("trim", w - 9 * u, 0, t, hh - 5 * u);                                                       // a downpipe
-    c.R("lite", 0, hh - 4 * u, w, 4 * u); c.edge(w, 0, hh);
-    if (hh >= c.E - 6 * u) return;
-    c.layer();                                                                                      // what stands on the roof
-    c.box(w * 0.6, 34 * u, hh, hh + 28 * u, 28 * u, 30 * u);                                        // stair head and its door
-    c.R("deep", w * 0.6 + 19 * u, hh, 10 * u, 20 * u, 28 * u);
-    for (i = 0; i < (w > 150 * u ? 2 : 1); i++) {                                                   // water tanks on legs
-      var tx = w * 0.1 + i * 45 * u;
-      c.R("side", tx + 6 * u, hh, t, 11 * u, 36 * u); c.R("side", tx + 25 * u, hh, t, 11 * u, 36 * u);
-      c.cap("lite", tx, hh + 9 * u, 36 * u, 19 * u, 36 * u); c.R("trim", tx + 16 * u, hh + 9 * u, t, 19 * u, 36 * u);
-    }
-    if (w > 180 * u) { c.box(w * 0.82, 22 * u, hh, hh + 13 * u, 46 * u, 12 * u); }                  // a condenser
-    c.R("trim", 2 * u, hh + 14 * u, w - 4 * u, t, 3 * u);                                           // the roof fence: a rail on posts
-    var np = Math.max(2, Math.round(w / (30 * u)));
-    for (i = 0; i <= np; i++) c.R("trim", 2 * u + i * (w - 4 * u - t) / np, hh, t, 14 * u, 3 * u);
+    cityCope(c, 0, hh, w);
   }
   /* B: the building under a billboard */
   function cityB(c, w, hh, v) {
-    var u = c.u, lod = c.lod, t = c.t, d = CITY_DEPTH.B(w, u), n = Math.max(3, Math.round((hh - 8 * u) / (31 * u * (lod ? 1 : 2)))), fh = (hh - 8 * u) / n, i;
-    var sg = lod ? 30 * u : 0, bwid = w * 0.94, bx = w * 0.03, bh = Math.min(78 * u, w * 0.56), by = hh + 15 * u;
-    c.box(0, w, 0, hh, 0, d);
+    var u = c.u, lod = c.lod, t = c.t, n = Math.max(3, Math.round((hh - 8 * u) / (31 * u * (lod ? 1 : 2)))), fh = (hh - 8 * u) / n, i;
+    var bwid = w * 0.92, bx = w * 0.04, bh = Math.min(80 * u, w * 0.5), gap = 25 * u, by = hh + gap;
+    // the billboard: a blank board on a braced steel frame, standing on the roof
+    var post = [bx + bwid * 0.12, bx + bwid * 0.5, bx + bwid * 0.88];
+    for (i = 0; i < 3; i++) c.R("trim", post[i] - t / 2, hh, t, gap + 2);
+    if (lod) for (i = 0; i < 2; i++) {
+      var xa = post[i * 2] + (i ? -t / 2 : t / 2), xb = post[1] + (i ? t / 2 : -t / 2);
+      c.P("trim", [xa, hh, xb, by - t, xb, by, xa, hh + t]);
+    }
+    c.R("board", bx, by, bwid, bh);
+    c.R("trim", bx, by, bwid, t); c.R("trim", bx, by + bh - t, bwid, t); c.R("trim", bx, by, t, bh); c.R("trim", bx + bwid - t, by, t, bh);
+    if (lod) {
+      c.cap("trim", bx + 11 * u, by + bh * 0.46, bwid * 0.5, bh * 0.24);
+      c.R("trim", bx + 11 * u, by + bh * 0.2, bwid * 0.3, Math.max(t, 6 * u)); c.R("trim", bx + 11 * u + bwid * 0.36, by + bh * 0.2, bwid * 0.2, Math.max(t, 6 * u));
+    }
+    c.R("front", 0, 0, w, hh);
+    var sgx = w * 0.6, sgw = lod ? Math.max(17 * u, w * 0.13) : 0, lx = 6 * u, lw = (lod ? sgx - 6 * u : w - 6 * u) - lx, rx = sgx + sgw + 6 * u, rw = w - 6 * u - rx;
     for (i = 1; i < n; i++) {
+      var wy = i * fh + fh * 0.26;
       if (lod > 1) {
-        c.split("glass", 6 * u, i * fh + fh * 0.26, w - sg - 10 * u, fh * 0.32, 2, 7 * u); c.split("hi", 6 * u, i * fh + fh * 0.58, w - sg - 10 * u, fh * 0.2, 2, 7 * u);
-        if (i % 2) c.pane(6 * u, i * fh + fh * 0.26, (w - sg - 17 * u) / 2, fh * 0.52);
-      } else c.R("glass", 6 * u, i * fh + fh * 0.28, w - sg - 10 * u, fh * 0.48);
+        c.split("glass", lx, wy, lw, fh * 0.32, 2, 7 * u); c.split("hi", lx, wy + fh * 0.32, lw, fh * 0.2, 2, 7 * u);
+        c.R("glass", rx, wy, rw, fh * 0.32); c.R("hi", rx, wy + fh * 0.32, rw, fh * 0.2);
+        if (i % 2) c.pane(lx, wy, (lw - 7 * u) / 2, fh * 0.52);
+      } else { c.R("glass", lx, wy, lw, fh * 0.5); if (lod) c.R("glass", rx, wy, rw, fh * 0.5); }
     }
     if (!lod) return;
-    c.split("deep", 6 * u, 0, w - 12 * u, fh * 0.72, 2, 8 * u); c.edge(w, 0, hh);
-    c.R("board", w - sg + 3 * u, hh * 0.24, sg - 9 * u, hh * 0.64);                                 // the wall sign, blank blocks
-    var bl = (hh * 0.64 - 8 * u) / 3;
-    for (i = 0; i < 3; i++) c.R("trim", w - sg + 8 * u, hh * 0.24 + 7 * u + i * bl, sg - 19 * u, bl - 6 * u);
-    c.R("lite", 0, hh - 4 * u, w, 4 * u);
-    // the billboard: a blank board on a steel frame, standing on the roof's edge
-    c.R("trim", bx + bwid * 0.14, hh - 2 * u, t + 1, 19 * u); c.R("trim", bx + bwid * 0.5 - t / 2, hh - 2 * u, t + 1, 19 * u); c.R("trim", bx + bwid * 0.86 - t, hh - 2 * u, t + 1, 19 * u);
-    c.W("side", bx, 9 * u, bx, 0, by, by + bh);
-    c.R("board", bx, by, bwid, bh);
-    c.R("trim", bx, by, bwid, t); c.R("trim", bx, by + bh - t, bwid, t);
-    c.cap("trim", bx + 9 * u, by + bh * 0.44, bwid * 0.52, bh * 0.26);
-    c.R("trim", bx + 9 * u, by + bh * 0.2, bwid * 0.3, Math.max(t, 6 * u)); c.R("trim", bx + 9 * u + bwid * 0.36, by + bh * 0.2, bwid * 0.2, Math.max(t, 6 * u));
+    c.split("deep", 6 * u, 0, w - 12 * u, fh * 0.72, 2, 8 * u);
+    c.R("board", sgx, hh * 0.24, sgw, hh * 0.62);                                                   // the wall sign, blank blocks
+    var bl = (hh * 0.62 - 8 * u) / 3;
+    for (i = 0; i < 3; i++) c.R("trim", sgx + 4.5 * u, hh * 0.24 + 7 * u + i * bl, sgw - 9 * u, bl - 6 * u);
+    cityCope(c, 0, hh, w);
   }
   /* X: the building site. v: bit 0 moves the crane's mast, bit 1 turns its jib to the left. */
+  var CITY_MAST = 150;                   // how far the crane's mast stands above the roofline, at scale 1
   function cityX(c, w, hh, v) {
-    var u = c.u, lod = c.lod, t = c.t, d = CITY_DEPTH.X(w, u), cell = 32 * u * (lod > 1 ? 1 : 1.6);
-    var nx = Math.max(2, Math.round(w / cell)), cwd = w / nx, ny = Math.max(3, Math.round(hh / cell)), chh = hh / ny, i, y;
-    var mz = d * 0.5, mx = w * (v % 2 ? 0.34 : 0.62), mt = hh + 165 * u, mb = hh - 24 * u, hw = 6.5 * u;
-    // the crane's mast, standing inside the frame: two chords and a zigzag web
-    if (lod > 1) {
-      c.R("lite", mx - hw, mb, t, mt - mb, mz); c.R("lite", mx + hw - t, mb, t, mt - mb, mz);
-      var seg = 15 * u, k = 0;
-      for (y = mb; y < mt - seg * 0.5; y += seg, k++) {
-        var xa = k % 2 ? mx + hw - t : mx - hw, xb = k % 2 ? mx - hw : mx + hw - t;
-        c.P("lite", [xa, y, mz, xa + t, y, mz, xb + t, y + seg, mz, xb, y + seg, mz]);
-      }
-    } else c.R("lite", mx - Math.max(2.5, 4 * u), mb, Math.max(5, 8 * u), mt - mb, mz);
-    c.layer();
-    // the steel frame: dark between floors, pale columns and beams
-    c.box(0, w, 0, hh, 0, d, { side: "deep", front: "deep", noTop: 1 });
+    var u = c.u, lod = c.lod, t = c.t, cell = 32 * u * (lod > 1 ? 1 : 1.6), i, y;
+    var nx = Math.max(2, Math.round(w / cell)), cwd = w / nx, ny = Math.max(3, Math.round(hh / cell)), chh = hh / ny;
+    // the steel frame: dark between the floors, pale columns and beams inside it (none down its two ends), every
+    // other column standing a stub above the last floor
+    c.R("deep", 0, 0, w, hh);
     if (lod) {
-      for (i = 0; i <= nx; i++) c.R("lite", Math.min(w - t, Math.max(0, i * cwd - t / 2)), 0, t, hh + (i % 2 ? 10 * u : 0));
+      for (i = 1; i < nx; i++) c.R("lite", i * cwd - t / 2, 0, t, hh + (i % 2 ? 12 * u : 0));
       for (i = 1; i <= ny; i++) c.R("lite", 0, i * chh - t, w, t);
     }
     c.layer();
-    // the mesh sheet: all of the upper floors, stepping down toward the lit corner
-    var m1 = Math.round(ny * 0.52) * chh, m2 = Math.round(ny * 0.26) * chh, m3 = chh * 0.55, x2 = Math.round(nx * 0.4) * cwd, x3 = Math.round(nx * 0.72) * cwd, mtop = hh + 7 * u;
+    // the mesh sheet: the upper floors up to the last one, whose steel is still bare; it steps down toward one end
+    var m1 = Math.round(ny * 0.52) * chh, m2 = Math.round(ny * 0.26) * chh, m3 = Math.min(chh * 0.55, 22 * u), x2 = Math.round(nx * 0.4) * cwd, x3 = Math.round(nx * 0.72) * cwd, mtop = hh - (lod ? chh : 0);
     c.R("front", 0, m1, w, mtop - m1); c.R("front", x2, m2, w - x2, m1 - m2 + 1); c.R("front", x3, m3, w - x3, m2 - m3 + 1);
-    c.W("side", 0, d, 0, 0, m1, mtop);
     if (lod) {
       for (i = 1; i < nx; i++) { var sx = i * cwd, sy = sx >= x3 - 1 ? m3 : sx >= x2 - 1 ? m2 : m1; c.R("trim", sx - t / 2, sy, t, mtop - sy); }
-      for (y = m1 + 2 * chh; y < hh - chh * 0.5; y += 2 * chh) c.R("trim", 0, y - t / 2, w, t);
+      for (y = m1 + 2 * chh; y < mtop - chh * 0.5; y += 2 * chh) c.R("trim", 0, y - t / 2, w, t);
       c.R("board", -3 * u, 0, w + 6 * u, 24 * u); c.R("safety", -3 * u, 15 * u, w + 6 * u, Math.max(t, 4 * u));   // the hoarding
     }
-    c.info.crane = [c.px(mx, mz), c.py(mt, mz), u, v];
+    var top = c.at(w * (v % 2 ? 0.34 : 0.62), hh + CITY_MAST * u);
+    c.info.crane = [top[0], top[1], u, v, lod];
   }
   var CITY_TYPES = { G: cityG, M: cityM, S: cityS, P: cityP, D: cityD, C: cityC, L: cityL, B: cityB, X: cityX };
 
-  /* A row, composed by hand: [type, x, width, height, variant, material] from left to right. x is where the
-     lit front starts, in the coordinates the row was composed in (dx moves them into the tier's own).
+  /* A row, composed by hand: [type, x, width, height, variant, material] from left to right. x is the
+     building's left edge, in the coordinates the row was composed in (dx moves them into the tier's own).
      ref is the row's usual roofline, for SKYLINE_SIZE. A building is pushed right if it would touch the
      one before it, so inside a row nothing overlaps and the drawing order cannot matter. */
   function cityRow(look, baseY, ref, dx, spec) {
     var items = [], cur = -1e9, u = look.u, S = SKYLINE_SIZE, i, j;
     for (i = 0; i < spec.length; i++) {
-      var e = spec[i], t = e[0], w = e[2];
-      var xl = CITY_DEPTH[t](w, u) * 0.9 + (t === "M" || t === "P" ? 9 * u : 0), xr = t === "P" ? 17 * u : 0;
-      var x = Math.round(Math.max(e[1] + dx, cur + xl + 2)), hh = Math.max(50, Math.round(e[3] * S.base + (e[3] - ref) * (S.amp - 1)));
-      items.push({ t: t, x: x, w: w, h: hh, v: e[4] || 0, m: e[5] || CITY_MATS[t], xl: xl, x0: x - xl - 3, x1: x + w + xr + 3, cast: [], node: null, info: null });
+      var e = spec[i], t = e[0], w = e[2], xr = t === "P" ? 17 * u : 0;
+      var x = Math.round(Math.max(e[1] + dx, cur + 2)), hh = Math.max(50, Math.round(e[3] * S.base + (e[3] - ref) * (S.amp - 1)));
+      items.push({ t: t, x: x, w: w, h: hh, v: e[4] || 0, m: e[5] || CITY_MATS[t], x0: x - 6, x1: x + w + xr + 6, node: null, info: null, top: 0 });
       cur = x + w + xr;
     }
     var N = 1;                                      // the most buildings ever in view at once
     for (i = 0; i < items.length; i++) { var n = 0; for (j = i; j < items.length && items[j].x0 < items[i].x1 + 1985; j++) n++; if (n > N) N = n; }
     return { look: look, baseY: baseY, items: items, N: N + 1, cranes: null };
   }
-  // a building in the front row throws a shadow on the one behind it: recorded on the back row before anything is drawn
-  function cityShade(back, front) {
-    back.items.forEach(function (B) {
-      front.items.forEach(function (F) {
-        var u = front.look.u, lx = F.x - B.x, a = F.xl + 26 * u, hh = F.h;
-        if (F.t === "D") {                                         // the tower first, then the podium's own corner
-          var tl = lx + (F.v % 2 ? 0.05 : 0.41) * F.w - 16 * u;
-          if (tl > 14 && tl - 60 * u < B.w - 6) B.cast.push([tl, hh, 60 * u]);
-          hh = Math.min(hh * 0.42, 122 * u);
-        } else if (F.t === "S") hh *= F.v % 2 ? 0.52 : 0.5;        // a stepped tower's corner is its lowest stage
-        if (lx > 14 && lx - a < B.w - 6 && hh > 60) B.cast.push([lx, hh + 2, a]);
-      });
-    });
-  }
+  // one building: drawn once and kept. data-city names its type (the crane and the light layer are not in it)
   function cityNode(it, row) {
     if (it.node) return it.node;
-    var look = row.look, c = cityCtx(it.x, row.baseY, look.u, look.lod), pal = cityPal(it.m, look.air), i, j;
+    var look = row.look, c = cityCtx(it.x, row.baseY, look.u, look.lod);
     CITY_TYPES[it.t](c, it.w, it.h, it.v);
-    if (it.cast.length && look.lod) {
-      var x0 = c.info.castLeft || 0, yT = c.info.castTop || it.h;
-      for (i = 0; i < it.cast.length; i++) {
-        var s = it.cast[i], q = _clipPoly([[s[0], 0], [s[0], s[1]], [s[0] - s[2], s[1] - s[2] * 0.85], [s[0] - s[2], 0]], x0, 0, it.w, yT);
-        if (q.length > 2) { var p = []; for (j = 0; j < q.length; j++) p.push(q[j][0], q[j][1], 0); c.P("cast", p); }
-      }
-    }
-    it.info = c.info;
-    return it.node = h("g", null, c.done(pal));
+    it.info = c.info; it.top = c.top();
+    return it.node = h("g", {
+      "data-city": it.t, "data-roof": row.baseY - it.h,
+      "data-cache": "city-" + [it.t, it.x, it.w, it.h, it.v, it.m, row.baseY, look.u, look.air].join("_"), "data-box": c.box()
+    }, c.done(cityPal(it.m, look.air)));
   }
   /* Draw a row. off is the tier's x offset on screen. Each building keeps its own slot in the list (its
      index modulo the slot count), so one entering or leaving the picture touches only its own slot and the
@@ -1300,9 +1269,10 @@
     }
     return out ? h("g", null, out) : CITY_EMPTY;      // a row wholly out of view (the far copy of scene 03's loop) is one empty group
   }
-  /* The tower cranes of a row: the arm (jib, counter-jib, ties, counterweight) is drawn once; slewing is
-     the arm's width changing as it turns away from us, very slowly. The trolley runs along the jib and the
-     hook rises and falls on its own slow phases. */
+  /* The tower cranes of a row, each standing behind its building site: the mast and the arm (jib,
+     counter-jib, ties, counterweight) are drawn once; slewing is the arm's width changing as it turns away
+     from us, very slowly. The trolley runs along the jib and the hook rises and falls on their own slow
+     phases. */
   var CITY_JIB = 185;                    // the jib's length at scale 1
   function cityArm(u, pal) {
     var t = Math.max(3, 3.6 * u), JL = CITY_JIB * u, CL = 54 * u, AP = 34 * u, steel = "", i;
@@ -1325,6 +1295,20 @@
       h("path", { d: R(-CL, 0, 15 * u, 15 * u), fill: pal.deep }),
       h("path", { d: R(JL - 15 * u, -t - 3 * u, 15 * u, t + 4 * u), fill: pal.safety }));
   }
+  // the mast from the crane's head down to the roofline: two chords and a zigzag web (one bar when far away)
+  function cityCraneMast(u, pal, lod) {
+    var t = Math.max(3, 3.6 * u), hw = 6.5 * u, len = CITY_MAST * u, seg = 15 * u, d = "", k = 0, y;
+    var n1 = function (v) { return Math.round(v * 10) / 10; };
+    var R = function (x, y0, w, hh) { return "M" + n1(x) + "," + n1(y0) + "h" + n1(w) + "v" + n1(hh) + "h" + n1(-w) + "z"; };
+    if (lod > 1) {
+      d = R(-hw, 0, t, len) + R(hw - t, 0, t, len);
+      for (y = len; y > seg * 0.5; y -= seg, k++) {
+        var xa = k % 2 ? hw - t : -hw, xb = k % 2 ? -hw : hw - t, y1 = Math.max(0, y - seg);
+        d += "M" + n1(xa) + "," + n1(y) + "h" + n1(t) + "L" + n1(xb + t) + "," + n1(y1) + "h" + n1(-t) + "z";
+      }
+    } else d = R(-Math.max(2.5, 4 * u), 0, Math.max(5, 8 * u), len);
+    return h("path", { d: d, fill: pal.lite });
+  }
   function cityCraneHead(u, pal) {
     var t = Math.max(3, 3.6 * u);
     return h("g", null,
@@ -1342,7 +1326,7 @@
         if (it.t !== "X") return;
         cityNode(it, row);
         var k = it.info.crane, pal = cityPal(it.m, row.look.air);
-        row.cranes.push({ x: k[0], y: k[1], u: k[2], dir: (k[3] >> 1) % 2 ? -1 : 1, ph: i * 1.7 + it.x * 0.003, pal: pal, arm: cityArm(k[2], pal), head: cityCraneHead(k[2], pal) });
+        row.cranes.push({ x: k[0], y: k[1], u: k[2], dir: (k[3] >> 1) % 2 ? -1 : 1, ph: i * 1.7 + it.x * 0.003, pal: pal, mast: cityCraneMast(k[2], pal, k[4]), arm: cityArm(k[2], pal), head: cityCraneHead(k[2], pal) });
       });
     }
     return h("g", null, row.cranes.map(function (k) {
@@ -1350,6 +1334,7 @@
       var tr = (0.36 + 0.3 * (0.5 + 0.5 * Math.sin(time * 0.083 + k.ph * 2.1))) * CITY_JIB * u * s;
       var drop = (44 + 22 * Math.sin(time * 0.097 + k.ph * 1.3)) * u;
       return h("g", { transform: "translate(" + cityAt(k.x, off, tile).toFixed(1) + "," + k.y + ")" },
+        k.mast,
         h("g", { transform: "scale(" + s.toFixed(4) + ",1)" }, k.arm),
         h("rect", { x: (tr - t / 2).toFixed(1), y: 0, width: t.toFixed(1), height: drop.toFixed(1), fill: k.pal.deep }),
         h("rect", { x: (tr - 4.5 * u).toFixed(1), y: drop.toFixed(1), width: (9 * u).toFixed(1), height: (8 * u).toFixed(1), fill: k.pal.safety }),
@@ -1358,25 +1343,37 @@
   }
   /* Window light: a thin layer over a tier, a pure function of time. def (in the coordinates the rows were
      composed in, dx as for the rows): sheen [[x, phase]] = the glass tower nearest x; glint [[x, height
-     above the ground, period, phase]] and warm [[x, height, phase]] = the pane nearest that point. */
+     above the ground, period, phase]] and warm [[x, height, phase]] = the pane nearest that point. A row
+     later in the list stands in front: nothing is lit behind it, and the sheen stops at its roofs. */
   function cityLights(rows, dx, def) {
-    var L = { sheen: [], glint: [], warm: [] };
+    var L = { sheen: [], glint: [], warm: [] }, taken = [];
+    rows.forEach(function (row) { row.items.forEach(function (it) { cityNode(it, row); }); });
+    // the top of whatever stands in front of the span x0..x1 of row number ri (a row later in the list is in front)
+    var cover = function (ri, x0, x1) {
+      var top = 1e9;
+      for (var j = ri + 1; j < rows.length; j++) rows[j].items.forEach(function (f) { if (f.x - 4 < x1 && f.x + f.w + 4 > x0 && f.top < top) top = f.top; });
+      return top;
+    };
     var near = function (x, y, glass, room) {
       var best = null, bd = 1e9;
-      rows.forEach(function (row) {
+      rows.forEach(function (row, ri) {
         row.items.forEach(function (it) {
           if (Math.abs(it.x + it.w / 2 - x) > 240) return;
-          cityNode(it, row);
-          if (glass) { var dg = Math.abs(it.x + it.w / 2 - x); if (it.info.glass && dg < bd) { bd = dg; best = it.info.glass; } return; }
+          if (glass) {                                 // the glass of a tower, down to the roofs in front of it
+            var dg = Math.abs(it.x + it.w / 2 - x), g = it.info.glass;
+            if (g && dg < bd) { bd = dg; best = [g[0], g[1], g[2], Math.min(g[3], cover(ri, g[0], g[0] + g[2]) - 3 - g[1])]; }
+            return;
+          }
           (it.info.panes || []).forEach(function (p) {
             var dd = Math.abs(p[0] + p[2] / 2 - x) + Math.abs(p[1] + p[3] / 2 - (row.baseY - y));
-            if (dd < bd && !(room && p[3] > p[2] * 1.6)) { bd = dd; best = p; }
+            if (dd < bd && !(room && p[3] > p[2] * 1.6) && taken.indexOf(p) < 0 && cover(ri, p[0], p[0] + p[2]) > p[1] + p[3]) { bd = dd; best = p; }
           });
         });
       });
+      if (best && !glass) taken.push(best);            // one light a pane
       return best;
     };
-    (def.sheen || []).forEach(function (s) { var g = near(s[0] + dx, 0, true); if (g) L.sheen.push({ g: g, ph: s[1] }); });
+    (def.sheen || []).forEach(function (s) { var g = near(s[0] + dx, 0, true); if (g && g[3] > 40) L.sheen.push({ g: g, ph: s[1] }); });
     (def.glint || []).forEach(function (s) { var p = near(s[0] + dx, s[1]); if (p) L.glint.push({ r: p, T: s[2], ph: s[3] }); });
     (def.warm || []).forEach(function (s) { var p = near(s[0] + dx, s[1], false, true); if (p) L.warm.push({ r: p, ph: s[2] }); });
     return L;
@@ -1386,10 +1383,10 @@
       // the sheen: two bands of sky sliding down the glass on the light's diagonal, 11 s of travel in every 20
       L.sheen.map(function (s) {
         var g = s.g, p = ((((time + s.ph) % 20) + 20) % 20) / 11;
-        if (p >= 1) return h("path", { d: "M0,0", fill: "#ffffff", opacity: 0 });
+        if (p >= 1) return h("path", { d: "M0,0", fill: DAY.cityWhite, opacity: 0 });
         var xl = cityAt(g[0], off, tile), xr = xl + g[2], sl = g[2] * 0.85, yr = g[1] - 130 - sl + (g[3] + sl + 150) * p;
         var band = function (a, b) { return _polyD(_clipPoly([[xr, yr + a], [xr, yr + b], [xl, yr + b + sl], [xl, yr + a + sl]], xl, g[1], xr, g[1] + g[3])); };
-        return h("path", { d: (band(0, 74) + band(92, 108)) || "M0,0", fill: "#ffffff", opacity: (0.3 * Math.pow(Math.sin(Math.PI * p), 0.7)).toFixed(3) });
+        return h("path", { d: (band(0, 74) + band(92, 108)) || "M0,0", fill: DAY.cityWhite, opacity: (0.24 * Math.pow(Math.sin(Math.PI * p), 0.7)).toFixed(3) });
       }),
       // single panes that catch the sun and let it go, each on its own slow phase
       L.glint.map(function (s) {
@@ -1415,29 +1412,29 @@
     if (_cityW) return _cityW;
     var c = {
       deep: cityRow(CITY_LOOK.deep, GROUND, 320, -36, [
-        ["M", -60, 130, 300, 0, "c"], ["G", 112, 72, 400, 0, "n"], ["S", 252, 96, 360, 0, "c"], ["D", 420, 150, 420, 0, "c"],
-        ["M", 640, 150, 320, 0, "c"], ["G", 850, 70, 410, 1, "n"], ["S", 1002, 90, 400, 0, "c"], ["G", 1128, 76, 500, 0, "n"],
-        ["S", 1448, 80, 470, 0, "c"], ["M", 1566, 140, 280, 0, "c"], ["D", 1794, 140, 430, 0, "c"], ["G", 1996, 76, 520, 0, "n"],
-        ["S", 2134, 96, 450, 0, "c"], ["M", 2290, 150, 330, 0, "c"], ["G", 2484, 70, 400, 1, "n"]]),
+        ["M", -82, 152, 300, 0, "c"], ["G", 85, 99, 400, 0, "n"], ["S", 224, 124, 360, 0, "c"], ["D", 385, 185, 420, 0, "c"],
+        ["M", 618, 172, 320, 0, "c"], ["G", 824, 96, 410, 1, "n"], ["S", 974, 118, 400, 0, "c"], ["G", 1099, 105, 500, 0, "n"],
+        ["S", 1422, 106, 470, 0, "c"], ["M", 1544, 162, 280, 0, "c"], ["D", 1759, 175, 430, 0, "c"],
+        ["G", 1967, 105, 520, 0, "n"], ["S", 2106, 124, 450, 0, "c"], ["M", 2268, 172, 330, 0, "c"],
+        ["G", 2458, 96, 400, 1, "n"]]),
       farBack: cityRow(CITY_LOOK.farBack, GROUND, 400, -64, [
-        ["G", 150, 96, 380, 1, "n"], ["S", 620, 110, 400, 0, "c"], ["G", 1226, 118, 612, 0, "g"], ["S", 1392, 100, 500, 0, "d"],
-        ["S", 2130, 110, 420, 1, "c"]]),
+        ["G", 114, 132, 380, 1, "n"], ["S", 586, 144, 400, 0, "c"], ["G", 1188, 156, 612, 0, "g"],
+        ["S", 1360, 132, 500, 0, "d"], ["S", 2096, 144, 420, 1, "c"]]),
       far: cityRow(CITY_LOOK.far, GROUND, 340, -64, [
-        ["S", 40, 118, 400, 1, "c"], ["M", 262, 170, 330, 0, "t"], ["D", 470, 210, 400, 0, "c"], ["C", 760, 120, 330, 0, "t"],
-        ["B", 932, 100, 300, 0, "d"], ["D", 1085, 190, 440, 0, "d"], ["M", 1306, 150, 340, 1, "t"], ["M", 1516, 180, 270, 0, "c"],
-        ["X", 1778, 130, 420, 0, "m"], ["S", 1975, 120, 500, 1, "d"], ["C", 2190, 130, 360, 0, "t"], ["M", 2360, 150, 300, 0, "c"],
-        ["G", 2524, 104, 470, 1, "g"]]),
+        ["S", 3, 155, 400, 1, "c"], ["M", 234, 198, 330, 0, "t"], ["D", 434, 255, 400, 0, "c"], ["C", 726, 154, 330, 0, "t"],
+        ["B", 901, 131, 300, 0, "c"], ["D", 1040, 235, 440, 0, "t"], ["M", 1278, 178, 340, 3, "c"],
+        ["M", 1488, 208, 270, 0, "t"], ["X", 1737, 171, 420, 0, "m"], ["S", 1938, 157, 500, 1, "c"],
+        ["C", 2154, 166, 360, 0, "t"], ["M", 2332, 178, 300, 0, "c"], ["G", 2512, 143, 470, 1, "g"]]),
       nearBack: cityRow(CITY_LOOK.nearBack, GROUND, 340, -104, [
-        ["C", 24, 176, 340, 0, "t"], ["S", 420, 150, 380, 0, "d"], ["G", 660, 118, 400, 1, "n"], ["C", 850, 150, 300, 0, "c"],
-        ["G", 1256, 124, 400, 0, "n"], ["S", 2060, 150, 390, 1, "c"], ["B", 2300, 120, 300, 0, "d"], ["G", 2570, 126, 600, 0, "n"],
-        ["X", 2747, 180, 430, 0, "m"], ["S", 3000, 140, 420, 0, "d"]]),
+        ["C", -24, 224, 340, 0, "c"], ["S", 376, 194, 380, 0, "d"], ["G", 615, 163, 400, 1, "n"], ["C", 808, 192, 300, 0, "c"],
+        ["G", 1209, 171, 400, 0, "n"], ["S", 2016, 194, 390, 1, "c"], ["B", 2263, 157, 300, 0, "d"],
+        ["G", 2522, 174, 600, 0, "n"], ["X", 2698, 229, 430, 0, "m"], ["S", 2956, 184, 420, 0, "c"]]),
       near: cityRow(CITY_LOOK.near, GROUND, 260, -104, [
-        ["L", -110, 190, 150, 0, "t"], ["P", 172, 54, 310, 0, "d"], ["M", 300, 230, 300, 1, "c"], ["B", 610, 130, 240, 0, "d"],
-        ["L", 800, 150, 130, 1, "t"], ["M", 1036, 204, 335, 0, "t"], ["P", 1412, 54, 300, 1, "c"], ["D", 1790, 250, 400, 1, "d"],
-        ["L", 2100, 180, 150, 0, "c"], ["C", 2330, 160, 260, 0, "t"], ["M", 2582, 210, 300, 1, "t"], ["L", 2826, 190, 140, 1, "c"],
-        ["B", 3060, 130, 250, 1, "d"]])
+        ["L", -164, 244, 150, 0, "t"], ["P", 156, 70, 310, 0, "d"], ["M", 264, 266, 300, 1, "t"], ["B", 570, 170, 240, 0, "c"],
+        ["L", 746, 204, 130, 1, "t"], ["M", 1000, 240, 335, 0, "c"], ["P", 1396, 70, 300, 1, "d"],
+        ["D", 1732, 308, 400, 1, "d"], ["L", 2046, 234, 150, 0, "t"], ["C", 2285, 205, 260, 0, "c"],
+        ["M", 2546, 246, 300, 1, "t"], ["L", 2794, 244, 140, 1, "c"], ["B", 3040, 170, 250, 1, "d"]])
     };
-    cityShade(c.farBack, c.far); cityShade(c.nearBack, c.near);
     c.farLights = cityLights([c.farBack, c.far], -64, { sheen: [[1285, 0]] });
     c.nearLights = cityLights([c.nearBack, c.near], -104, {
       sheen: [[2633, 10]],
@@ -1455,28 +1452,30 @@
     if (_cityT) return _cityT;
     var c = {
       farBack: cityRow(CITY_LOOK.farBack, ROAD_Y, 380, 0, [
-        ["G", 170, 92, 300, 0, "n"], ["S", 700, 100, 330, 0, "c"], ["G", 1130, 90, 320, 1, "g"], ["G", 1600, 112, 540, 0, "g"],
-        ["S", 1800, 100, 470, 0, "d"], ["G", 2030, 96, 430, 1, "n"], ["S", 2640, 100, 420, 0, "c"], ["G", 3190, 100, 470, 0, "g"],
-        ["S", 3480, 96, 380, 1, "d"]]),
+        ["G", 135, 127, 300, 0, "n"], ["S", 668, 132, 330, 0, "c"], ["G", 1096, 124, 320, 1, "g"],
+        ["G", 1562, 150, 540, 0, "g"], ["S", 1768, 132, 470, 0, "d"], ["G", 1994, 132, 430, 1, "n"],
+        ["S", 2608, 132, 420, 0, "c"], ["G", 3152, 138, 470, 0, "g"], ["S", 3449, 127, 380, 1, "d"]]),
       far: cityRow(CITY_LOOK.far, ROAD_Y, 300, 0, [
-        ["M", 60, 170, 280, 0, "t"], ["C", 290, 120, 320, 0, "c"], ["M", 470, 150, 250, 1, "c"], ["D", 670, 180, 340, 0, "c"],
-        ["S", 900, 110, 330, 0, "d"], ["C", 1060, 120, 300, 0, "t"], ["M", 1240, 170, 290, 0, "t"], ["B", 1480, 100, 290, 0, "d"],
-        ["D", 1700, 200, 470, 0, "d"], ["M", 1950, 160, 370, 0, "t"], ["S", 2160, 120, 500, 1, "c"], ["X", 2340, 130, 390, 0, "m"],
-        ["M", 2520, 170, 300, 1, "c"], ["C", 2740, 130, 340, 0, "t"], ["B", 2920, 100, 260, 0, "d"], ["D", 3090, 200, 420, 1, "c"],
-        ["M", 3340, 180, 280, 0, "t"], ["S", 3570, 110, 350, 0, "d"]]),
+        ["M", 32, 198, 280, 0, "c"], ["C", 256, 154, 320, 0, "t"], ["M", 442, 178, 250, 1, "c"], ["D", 625, 225, 340, 0, "t"],
+        ["S", 864, 146, 330, 0, "c"], ["C", 1026, 154, 300, 0, "t"], ["M", 1212, 198, 290, 0, "c"],
+        ["B", 1449, 131, 290, 0, "t"], ["D", 1655, 245, 470, 0, "c"], ["M", 1922, 188, 370, 0, "t"],
+        ["S", 2123, 157, 500, 1, "c"], ["X", 2299, 171, 390, 0, "m"], ["M", 2492, 198, 300, 1, "c"],
+        ["C", 2704, 166, 340, 0, "t"], ["B", 2889, 131, 260, 0, "c"], ["D", 3045, 245, 420, 1, "t"],
+        ["M", 3312, 208, 280, 0, "c"], ["S", 3534, 146, 350, 0, "t"]]),
       nearBack: cityRow(CITY_LOOK.nearBack, ROAD_Y, 320, 0, [
-        ["S", 130, 140, 330, 0, "d"], ["M", 730, 190, 290, 0, "c"], ["G", 1215, 110, 330, 1, "n"], ["S", 1500, 130, 330, 1, "c"],
-        ["G", 2040, 124, 450, 0, "n"], ["X", 2250, 180, 380, 0, "m"], ["S", 2560, 150, 420, 0, "d"], ["G", 2990, 120, 400, 1, "n"],
-        ["B", 3300, 120, 300, 0, "d"], ["S", 3560, 130, 340, 1, "c"]]),
+        ["S", 86, 184, 330, 0, "d"], ["M", 696, 224, 290, 0, "d"], ["G", 1173, 152, 330, 1, "n"],
+        ["S", 1458, 172, 330, 1, "d"], ["G", 1993, 171, 450, 0, "n"], ["X", 2201, 229, 380, 0, "m"],
+        ["S", 2516, 194, 420, 0, "c"], ["G", 2945, 165, 400, 1, "n"], ["B", 3263, 157, 300, 0, "d"],
+        ["S", 3518, 172, 340, 1, "c"]]),
       near: cityRow(CITY_LOOK.near, ROAD_Y, 240, 0, [
-        ["L", 40, 190, 160, 0, "t"], ["M", 280, 210, 300, 0, "t"], ["P", 570, 54, 320, 0, "d"], ["L", 690, 170, 150, 1, "c"],
-        ["C", 940, 160, 270, 0, "t"], ["L", 1160, 160, 160, 0, "c"], ["M", 1400, 215, 310, 1, "t"], ["P", 1700, 52, 310, 1, "c"],
-        ["L", 1830, 170, 150, 0, "t"], ["M", 2110, 200, 290, 0, "t"], ["L", 2390, 180, 140, 1, "c"], ["D", 2680, 250, 430, 0, "d"],
-        ["C", 3010, 160, 280, 0, "t"], ["M", 3250, 210, 300, 1, "c"], ["P", 3540, 54, 310, 0, "d"], ["L", 3640, 150, 150, 0, "t"]])
+        ["L", -14, 244, 160, 0, "t"], ["M", 244, 246, 300, 0, "c"], ["P", 554, 70, 320, 0, "d"], ["L", 643, 224, 150, 1, "c"],
+        ["C", 895, 205, 270, 0, "t"], ["L", 1106, 214, 160, 0, "c"], ["M", 1364, 251, 310, 1, "t"],
+        ["P", 1684, 68, 310, 1, "d"], ["L", 1776, 224, 150, 0, "t"], ["M", 2074, 236, 290, 0, "c"],
+        ["L", 2336, 234, 140, 1, "t"], ["D", 2622, 308, 430, 0, "d"], ["C", 2965, 205, 280, 0, "t"],
+        ["M", 3214, 246, 300, 1, "c"], ["P", 3524, 70, 310, 0, "d"], ["L", 3613, 204, 150, 0, "t"]])
     };
-    cityShade(c.farBack, c.far); cityShade(c.nearBack, c.near);
     c.lights = cityLights([c.nearBack, c.near], 0, {
-      sheen: [[2100, 4]],
+      sheen: [[1250, 4]],
       glint: [[385, 200, 13, 0.4], [597, 180, 17, 2.6], [1020, 170, 11, 4.4], [2790, 300, 15, 1.2], [2200, 210, 19, 3.3]],
       warm: [[1726, 200, 0.8], [2470, 80, 3.6]]
     });
@@ -1490,16 +1489,17 @@
     if (_cityN) return _cityN;
     var c = {
       far: cityRow(CITY_LOOK.far, 1008, 300, 0, [
-        ["M", 20, 150, 210, 0, "t"], ["S", 215, 100, 260, 0, "c"], ["M", 360, 170, 200, 1, "c"], ["C", 570, 110, 240, 0, "t"],
-        ["B", 725, 96, 200, 0, "d"], ["D", 860, 170, 340, 0, "c"], ["S", 1075, 110, 440, 0, "d"], ["M", 1275, 150, 230, 0, "t"],
-        ["S", 1500, 100, 430, 1, "c"], ["G", 1625, 104, 560, 0, "g"], ["D", 1775, 150, 470, 1, "d"]]),
+        ["M", -8, 178, 210, 0, "t"], ["S", 183, 132, 260, 0, "c"], ["M", 332, 198, 200, 1, "t"], ["C", 537, 143, 240, 0, "c"],
+        ["B", 696, 125, 200, 0, "t"], ["D", 823, 215, 340, 0, "c"], ["S", 1040, 146, 440, 0, "t"],
+        ["M", 1247, 178, 230, 0, "c"], ["S", 1468, 132, 430, 1, "t"], ["G", 1602, 143, 560, 0, "g"],
+        ["D", 1747, 195, 470, 1, "c"]]),
       back: cityRow(CITY_LOOK.nearBack, 1010, 300, 0, [
-        ["M", 150, 180, 190, 0, "t"], ["B", 395, 110, 170, 0, "d"], ["L", 560, 150, 130, 1, "c"], ["C", 800, 140, 250, 0, "t"],
-        ["G", 986, 118, 430, 0, "n"], ["P", 1150, 50, 300, 0, "d"], ["X", 1572, 150, 390, 1, "m"], ["S", 1778, 140, 430, 0, "d"]]),
+        ["M", 116, 214, 190, 0, "c"], ["B", 361, 144, 170, 0, "d"], ["L", 509, 201, 130, 1, "c"], ["C", 759, 181, 250, 0, "c"],
+        ["G", 942, 163, 430, 0, "n"], ["P", 1136, 65, 300, 0, "c"], ["X", 1523, 199, 390, 1, "m"],
+        ["S", 1734, 184, 430, 0, "d"]]),
       front: cityRow(CITY_LOOK.near, 1010, 220, 0, [
-        ["L", 1590, 165, 150, 0, "c"], ["C", 1815, 150, 240, 0, "t"]])
+        ["L", 1536, 219, 150, 0, "c"], ["C", 1771, 194, 240, 0, "t"]])
     };
-    cityShade(c.back, c.front);
     c.lights = cityLights([c.back, c.front], 0, {
       sheen: [[1045, 2]],
       glint: [[240, 130, 13, 0.4], [880, 150, 17, 2.6], [1180, 200, 11, 4.4], [1900, 150, 15, 1.2], [1660, 80, 19, 3.3]],
@@ -1507,38 +1507,37 @@
     });
     return _cityN = c;
   }
-  /* Tokyo Tower, round 3: drawn again from a blank page as the structure it is, in the city's one oblique
-     (the near face square to the picture, the far face behind it to the left and a tone down).
-     - The ground: one flat contact shadow; four splayed footings; the low podium building that stands
-       under the tower, between the legs.
-     - FOUR legs, each an open lattice column (two chords, bracing, struts). The near pair stands in
-       front of the podium, the far pair rises behind it. An arch with thickness, a shaded soffit and a
-       lit top edge is framed between the near legs and hung from the girder; the far arch shows behind.
-     - Above the girder: corner posts, one big X per panel with a gusset where it crosses, the lift
-       shaft up the middle.
-     - The two-storey main deck and the small top deck are boxes with glazing, a lit end, a shaded
-       return, and a shadow thrown on the lattice under them; then the antenna drum, the banded mast,
-       the needle and its lamp.
-     - Orange and white bands run over the whole height. Light is per FACE: everything on the near face
-       is the base colour (its right edges lit), everything on the far and left faces is one tone down
-       (orange pushed toward navy, white toward periwinkle).
-     Coordinates: t = height as a fraction of the tower, a = px right of a face's centre line,
-     d = depth (0 the near face, 1 the far face). Same props, place, height and footprint as before.
-     Two cached groups, with the moving parts between and after them, all pure functions of p.time:
-     a reflection crossing the main deck's glass, the lift car riding inside the lattice between the
-     podium roof and the main deck, the aviation lamp at the tip. */
+  /* Tokyo Tower, round 3: drawn again as ONE straight-on flat elevation, symmetric about its centre line.
+     The far face stands exactly behind the near face, so there is one lattice, not two. Depth is shown by
+     overlap and value only: what stands inside the tower (the lift shaft, the secondary bracing, the
+     podium, the decks' corbels) is drawn behind the lattice and a tone down.
+     - The ground: one level slab; a stepped footing under each leg; the low podium building that stands
+       under the tower, between the legs, the legs overlapping its ends.
+     - Two legs, each an open lattice column (two chords, X bracing, struts) you can see the sky through.
+       A trussed arch (two chords and the posts between them) springs from leg to leg and is hung from
+       the girder.
+     - Above the girder: corner posts, one big X per panel with a gusset where it crosses, a rail closing
+       each panel; behind them the lift shaft up the middle and a diamond of secondary bracing.
+     - The two-storey main deck and the small top deck are flat boxes with glazing, each carried on a
+       stepped corbel, each putting a level band of shade on the lattice just under it; then the antenna
+       drum, the banded mast stepping in as it rises, the needle and its lamp.
+     - Orange and white bands run over the whole height. Light shows as flat tone, a lighter top edge on
+       the girder and the rails, and the shade under the decks; nothing has a lit or a shaded side.
+     Coordinates: t = height as a fraction of the tower, a = px right of the centre line.
+     Same props, place, height and footprint as before. Two cached groups, with the moving parts between
+     and after them, all pure functions of p.time: a reflection crossing the main deck's glass, the lift
+     car riding inside the lattice between the podium roof and the main deck, the aviation lamp at the tip. */
   var _ttMemo = {};
-  DAY.towerOrange = "#e4553b";        // Tokyo Tower's own red-orange: the face toward the sun (nothing else uses it)
-  DAY.towerOrangeLit = "#f08a6c";     // its sunlit edges
-  DAY.towerOrangeShade = "#ab4a45";   // the faces away from the sun: orange pushed toward navy
+  DAY.towerOrange = "#e4553b";        // Tokyo Tower's own red-orange (nothing else uses it)
+  DAY.towerOrangeLit = "#f08a6c";     // top edges that catch the sun
+  DAY.towerOrangeShade = "#ab4a45";   // orange inside the tower and under the decks: pushed toward navy
   DAY.towerWhite = "#f5f8fc";         // white bands, deck panels, copings, footings
-  DAY.towerWhiteShade = "#c6d3e9";    // white away from the sun: periwinkle
+  DAY.towerWhiteShade = "#c6d3e9";    // white inside the tower and under the decks: periwinkle
   DAY.towerStone = "#dde4ed";         // the podium's wall
-  DAY.towerSteel = "#b3bfd1";         // roofs, skirts, the stone's shaded side, the contact shadow on the ground
-  DAY.towerSteelShade = "#8693aa";    // soffits and undersides
+  DAY.towerSteel = "#b3bfd1";         // roofs, skirts, shade on the stone, the ground slab
+  DAY.towerSteelShade = "#8693aa";    // the corbels under the decks
   DAY.towerGlass = "#364b70";         // deck and podium glazing
   DAY.towerGlassSky = "#7c9ac5";      // the sky reflected across the top of a pane
-  DAY.towerGlassShade = "#2a3b5b";    // glazing on a shaded face
   DAY.towerLamp = "#c23f2f";          // the aviation lamp, resting
   DAY.towerLampLit = "#ffc4b2";       // the aviation lamp, lit
   function TokyoTower(p) {
@@ -1546,18 +1545,15 @@
     var key = cx + "|" + baseY + "|" + H, m = _ttMemo[key];
     if (!m) {
       var r1 = function (v) { return Math.round(v * 10) / 10; };
-      var PLZ = 2 * u, HT = H - PLZ, HW0 = 115 * u, DEP = 0.2;         // ground in front of the feet; tower height; half width at the ground; the oblique
+      var PLZ = 2 * u, HT = H - PLZ, HW0 = 115 * u;                    // the ground slab; tower height; half width at the ground
       var T_G = 0.2, T_D0 = 0.42, T_D1 = 0.478, T_U1 = 0.737, T_U2 = 0.768;    // girder; main deck; top deck
       var Y = function (t) { return baseY - PLZ - t * HT; };
-      var hw = function (t) {                                          // half width of a face: a flare to the main deck, a straight taper above it
+      var hw = function (t) {                                          // half width: a flare to the main deck, a straight taper above it
         if (t <= T_D0) return HW0 * Math.exp(-2.867 * t);
         if (t <= T_D1) return (34.5 - (t - T_D0) / (T_D1 - T_D0) * 3.5) * u;
         return (31 - Math.min(1, (t - T_D1) / (T_U1 - T_D1)) * 18) * u;
       };
-      var sOf = function (t) { return 2 * DEP * hw(t); };              // how far left the far face sits
-      var rise = function (t) { return 0.065 * (0.26 - t) * HT * hw(t) / HW0; };   // and how far toward the eye line (t = 0.26)
-      var X = function (a, t, d) { return cx + sOf(t) * (0.5 - d) + a; };
-      var Yd = function (t, d) { return Y(t) - rise(t) * d; };
+      var both = function (fn) { fn(-1); fn(1); };                     // everything is drawn once each side of the centre line
 
       var lay = {};
       var add = function (k, q) {                                      // one closed shape into colour layer k, all wound one way so overlaps never cancel
@@ -1573,13 +1569,14 @@
         add(k, q); return q;
       };
       var box = function (k, x, y, w, hh) { add(k, [x, y, x + w, y, x + w, y + hh, x, y + hh]); };
-      var strip = function (k, fa, fb, t0, t1, d, n) {                 // the area between two edges a = fa(t), a = fb(t) of a face
+      var cbox = function (k, half, y, hh) { box(k, cx - half, y, 2 * half, hh); };      // a box centred on the tower's axis
+      var strip = function (k, fa, fb, t0, t1, n) {                    // the area between two edges a = fa(t), a = fb(t)
         var q = [], i, t;
-        for (i = 0; i <= n; i++) { t = t0 + (t1 - t0) * i / n; q.push(X(fa(t), t, d), Yd(t, d)); }
-        for (i = n; i >= 0; i--) { t = t0 + (t1 - t0) * i / n; q.push(X(fb(t), t, d), Yd(t, d)); }
+        for (i = 0; i <= n; i++) { t = t0 + (t1 - t0) * i / n; q.push(cx + fa(t), Y(t)); }
+        for (i = n; i >= 0; i--) { t = t0 + (t1 - t0) * i / n; q.push(cx + fb(t), Y(t)); }
         add(k, q); return q;
       };
-      var above = function (q, yc) {                                   // the part of a shape above the line y = yc (a shadow's straight edge)
+      var above = function (q, yc) {                                   // the part of a shape above the line y = yc (the level edge of a deck's shade)
         var o = [], n = q.length, i;
         for (i = 0; i < n; i += 2) {
           var x0 = q[i], y0 = q[i + 1], x1 = q[(i + 2) % n], y1 = q[(i + 3) % n], in0 = y0 <= yc, in1 = y1 <= yc;
@@ -1589,132 +1586,125 @@
         return o;
       };
 
-      /* ---- the ground under the tower: one flat contact shadow, falling a little to the left; the feet and the podium stand on it ---- */
-      var GA = HW0 + 10 * u, gL = X(-GA, 0, 1) - 12 * u;
-      add("gSh", [gL, baseY, X(GA, 0, -0.14), baseY, X(GA, 0, 1.1), Yd(0, 1.1), gL, Yd(0, 1.1)]);
+      /* ---- the ground under the tower: one level slab; the feet and the podium stand on it ---- */
+      cbox("gSh", HW0 + 22 * u, baseY - PLZ, PLZ);
 
-      /* ---- a leg: a lattice column from its footing to the girder (X bracing on the near pair, a quieter zigzag on the far pair) ---- */
-      var lw = function (t) { return (40 - 70 * t) * u; }, CO = 8 * u, CI = 6.4 * u, T_F = 0.016;
+      /* ---- behind the lattice, a tone down: the lift shaft up the middle and the secondary bracing ---- */
+      var lw = function (t) { return (40 - 70 * t) * u; }, CO = 8 * u, CI = 6.4 * u, T_F = 0.016;   // a leg: its width, its two chords, the top of its footing
       var LJ = [T_F, 0.08, 0.14, T_G];
-      var leg = function (k, sd, d, zig) {
-        strip(k, function (t) { return sd * hw(t); }, function (t) { return sd * (hw(t) - CO); }, T_F, T_G, d, 6);
-        strip(k, function (t) { return sd * (hw(t) - lw(t)); }, function (t) { return sd * (hw(t) - lw(t) + CI); }, T_F, T_G, d, 6);
-        for (var j = 0; j < 3; j++) {
-          var a = LJ[j], b = LJ[j + 1];
-          var oa = sd * (hw(a) - CO / 2), ob = sd * (hw(b) - CO / 2), ia = sd * (hw(a) - lw(a) + CI / 2), ib = sd * (hw(b) - lw(b) + CI / 2);
-          if (!zig || j % 2 === 0) bar(k, X(oa, a, d), Yd(a, d), X(ib, b, d), Yd(b, d), zig ? 3.6 * u : 3.4 * u);
-          if (!zig || j % 2 === 1) bar(k, X(ia, a, d), Yd(a, d), X(ob, b, d), Yd(b, d), zig ? 3.6 * u : 3.4 * u);
-          bar(k, X(oa, a, d), Yd(a, d), X(ia, a, d), Yd(a, d), 3.6 * u);
-        }
-      };
-      var footing = function (kb, ks, sd, d) {                         // splayed concrete under a leg, its left side in shade
-        var o0 = sd * (hw(0) + 8 * u), i0 = sd * (hw(0) - lw(0) - 8 * u), o1 = sd * (hw(T_F) + 2.5 * u), i1 = sd * (hw(T_F) - lw(T_F) - 2.5 * u);
-        var l0 = Math.min(o0, i0), r0 = Math.max(o0, i0), l1 = Math.min(o1, i1), r1b = Math.max(o1, i1);
-        add(kb, [X(l0, 0, d), Yd(0, d), X(r0, 0, d), Yd(0, d), X(r1b, T_F, d), Yd(T_F, d), X(l1, T_F, d), Yd(T_F, d)]);
-        if (ks) add(ks, [X(l0, 0, d), Yd(0, d), X(l0 + 10 * u, 0, d), Yd(0, d), X(l1 + 6 * u, T_F, d), Yd(T_F, d), X(l1, T_F, d), Yd(T_F, d)]);
-      };
-      /* ---- an arch framed between two legs: a band with thickness, its soffit a tone down, its sunward top edge lit ---- */
-      var T_A0 = 0.078, T_A1 = 0.168;
-      var archPt = function (th, d) { var t = T_A0 + (T_A1 - T_A0) * Math.sin(th), a = -Math.cos(th) * (hw(t) - lw(t)); return [X(a, t, d), Yd(t, d)]; };
-      var arch = function (k, ks, d, thick, soff, kl) {
-        var N = 26, inn = [], out = [], sof = [], lit = [], i, i0 = 14, i1 = 21;
-        for (i = 0; i <= N; i++) {
-          var th = Math.PI * i / N, q = archPt(th, d), q0 = archPt(Math.max(0, th - 0.02), d), q1 = archPt(Math.min(Math.PI, th + 0.02), d);
-          var tx = q1[0] - q0[0], ty = q1[1] - q0[1], n = Math.sqrt(tx * tx + ty * ty) || 1, nx = ty / n, ny = -tx / n;
-          inn.push(q[0], q[1]); out.unshift(q[0] + nx * thick, q[1] + ny * thick); sof.unshift(q[0] + nx * soff, q[1] + ny * soff);
-          if (i >= i0 && i <= i1) lit.push(q[0] + nx * (thick - 2.4 * u), q[1] + ny * (thick - 2.4 * u));
-        }
-        add(k, inn.concat(out));
-        if (ks) add(ks, inn.concat(sof));
-        if (kl) add(kl, lit.concat(out.slice(2 * (N - i1), 2 * (N - i0 + 1))));
-      };
-
-      /* ---- the far face and what is seen through the near one: all one tone down ---- */
-      [-1, 1].forEach(function (sd) { leg("oS", sd, 1, true); footing("wall", sd < 0 ? "stS" : null, sd, 1); });
-      arch("oS", null, 1, 6.5 * u, 0);
-      bar("oS", X(-hw(T_G), T_G, 1), Yd(T_G, 1), X(hw(T_G), T_G, 1), Yd(T_G, 1), 7 * u);
       var PW = function (t) { return (12 - 11 * (t - T_G)) * u; };                       // corner posts below the main deck
       var PU = function (t) { return (7.4 - 7 * (t - T_D1)) * u; };                      // and above it
       var JL = [T_G, 0.288, 0.345, T_D0], BL = ["o", "w", "o"];                          // panels and their bands, girder to main deck
       var JU = [T_D1, 0.5425, 0.607, 0.672, T_U1], BU = ["o", "w", "o", "w"];            // main deck to top deck
-      var farPanel = function (a, b, c, pw, core, rung) {              // far corner posts, the rung that shows on the left face, the lift shaft
-        [-1, 1].forEach(function (sd) { strip(c + "S", function (t) { return sd * hw(t); }, function (t) { return sd * (hw(t) - pw(t) * 0.82); }, a, b, 1, 3); });
-        if (rung) bar(c + "S", X(-hw(b), b, 1), Yd(b, 1), X(hw(b), b, 1), Yd(b, 1), rung);
-        strip(c + "S", function () { return -core; }, function () { return core; }, a, b, 0.5, 1);
-      };
-      for (var j = 0; j < 3; j++) farPanel(JL[j], JL[j + 1], BL[j], PW, 3 * u, j < 2 ? 4.4 * u : 0);
-      for (j = 0; j < 4; j++) farPanel(JU[j], JU[j + 1], BU[j], PU, 2.1 * u, j < 3 ? 3.8 * u : 0);
-      strip("oS", function () { return -3 * u; }, function () { return 3 * u; }, 0.07, T_G, 0.5, 1);                // the lift shaft, below the girder
+      strip("oS", function () { return -3 * u; }, function () { return 3 * u; }, 0.07, T_G, 1);
+      var j;
+      for (j = 0; j < 3; j++) (function (a, b, c) {                    // girder to main deck: the shaft, and a diamond between the posts
+        var tm = (a + b) / 2, e = hw(tm) - PW(tm) / 2;
+        strip(c + "S", function () { return -3 * u; }, function () { return 3 * u; }, a, b, 1);
+        both(function (sd) { bar(c + "S", cx + sd * e, Y(tm), cx, Y(b), 3.2 * u); bar(c + "S", cx + sd * e, Y(tm), cx, Y(a), 3.2 * u); });
+      })(JL[j], JL[j + 1], BL[j]);
+      for (j = 0; j < 4; j++) (function (a, b, c) {                    // main deck to top deck: the shaft, and one strut across the middle of each panel
+        var tm = (a + b) / 2, e = hw(tm) - PU(tm) / 2;
+        strip(c + "S", function () { return -2.1 * u; }, function () { return 2.1 * u; }, a, b, 1);
+        bar(c + "S", cx - e, Y(tm), cx + e, Y(tm), 2.6 * u);
+      })(JU[j], JU[j + 1], BU[j]);
+      both(function (sd) {                                             // in each leg: a strut across the middle of every bay
+        for (var i = 0; i < 3; i++) { var tm = (LJ[i] + LJ[i + 1]) / 2; bar("oS", cx + sd * (hw(tm) - CO / 2), Y(tm), cx + sd * (hw(tm) - lw(tm) + CI / 2), Y(tm), 3 * u); }
+      });
 
       /* ---- the podium: the low building under the tower, between the legs (no lettering) ---- */
-      var S0 = sOf(0), R0 = rise(0), PHW = 66 * u, PH = 46 * u, PD0 = 0.26, PD1 = 0.78;
-      var px = function (d) { return cx + S0 * (0.5 - d) - PHW; };                                                   // its left wall, at depth d
-      var py = function (hh, d) { return Y(0) - hh - R0 * d * (1 - hh / (0.26 * HT)); };
-      var pl = px(PD0), pr = pl + 2 * PHW, pb = py(0, PD0), pt = py(PH, PD0);
-      add("stB", [px(PD1), py(PH, PD1), pl, pt, pl, pb, px(PD1), py(0, PD1)]);                                       // left return
-      box("wall", pl, pt, pr - pl, pb - pt);
+      var PHW = 64 * u, PH = 46 * u, pl = cx - PHW, pr = cx + PHW, pb = Y(0), pt = pb - PH;
+      box("wall", pl, pt, pr - pl, PH);
       box("whB", pl - 2.5 * u, pt - 1 * u, pr - pl + 5 * u, 5.5 * u);                                                // coping
       box("stB", pl, pt + 4.5 * u, pr - pl, 2.8 * u);                                                                // and its shade on the wall
       var wy = pt + 12 * u, wh2 = 11.5 * u, wx0 = pl + 8 * u, wx1 = pr - 8 * u;
       box("gl", wx0, wy, wx1 - wx0, wh2); box("sky", wx0, wy, wx1 - wx0, 4.2 * u);                                   // upper floor: one ribbon of glass
       for (j = 1; j < 6; j++) box("whB", wx0 + (wx1 - wx0) * j / 6 - 1.5 * u, wy, 3 * u, wh2);
-      var cy2 = pt + 28.5 * u, ex0 = (pl + pr) / 2 - 36 * u;
+      var cy2 = pt + 28.5 * u, ex0 = cx - 36 * u;
       box("gl", ex0, cy2, 72 * u, 5.5 * u); box("sky", ex0, cy2 + 5.5 * u, 72 * u, pb - cy2 - 5.5 * u);              // the glazed entrance, the canopy's shade across its top
       for (j = 1; j < 4; j++) box("whB", ex0 + 72 * u * j / 4 - 1.5 * u, cy2, 3 * u, pb - cy2);
       box("whB", pl - 3 * u, cy2 - 3.8 * u, pr - pl + 6 * u, 3.8 * u);                                               // canopy
       box("stB", pl, cy2, ex0 - pl, 2.6 * u); box("stB", ex0 + 72 * u, cy2, pr - ex0 - 72 * u, 2.6 * u);
-      var stx = cx - 10 * u, sty = pt - 1 * u - 12 * u;                                                              // where the lift shaft meets the roof
-      box("wall", stx, sty, 20 * u, 12 * u); box("stB", stx, sty, 6 * u, 12 * u); box("whB", stx - 1.5 * u, sty - 2.6 * u, 23 * u, 2.6 * u);
+      var sty = pt - 1 * u - 12 * u;                                                                                 // where the lift shaft meets the roof
+      cbox("wall", 10 * u, sty, 12 * u); cbox("stB", 10 * u, sty + 9.4 * u, 2.6 * u); cbox("whB", 11.5 * u, sty - 2.6 * u, 2.6 * u);
 
-      /* ---- the decks: square boxes on the tower's axis. Front face, left return a tone down, soffit tapering in to the lattice ---- */
+      /* ---- the decks: flat boxes on the tower's axis, each on a stepped corbel that comes in to the lattice ---- */
       var glassRows = [];
       var deck = function (tb, tt, half, rows, panes, soffH) {
-        var dep = 2 * DEP * half, fall = dep * 0.2, x0 = cx + dep / 2 - half, x1 = x0 + 2 * half, xb = x0 - dep;
-        var y = Y(tt), tot = Y(tb) - Y(tt), sum = 0;
+        var x0 = cx - half, y = Y(tt), tot = Y(tb) - Y(tt), sum = 0, post = 3.2 * u;
         rows.forEach(function (r) { sum += r[0]; });
         rows.forEach(function (r) {
           var hh = r[0] / sum * tot, kd = r[1];
-          var kf = kd === "g" ? "gl" : kd === "w" ? "whB" : "stB", kr = kd === "g" ? "glS" : kd === "w" ? "wS" : "stS";
-          box(kf, x0, y, 2 * half, hh);
-          add(kr, [xb, y + fall, x0, y, x0, y + hh, xb, y + hh + fall]);
-          if (kd === "r") { box("whB", x0 - 1.5 * u, y, 2 * half + 3 * u, 2.6 * u); add("wS", [xb - 1.5 * u, y + fall, x0 - 1.5 * u, y, x0 - 1.5 * u, y + 2.6 * u, xb - 1.5 * u, y + 2.6 * u + fall]); }
+          box(kd === "g" ? "gl" : kd === "w" ? "whB" : "stB", x0, y, 2 * half, hh);
+          if (kd === "r") box("whB", x0 - 1.5 * u, y, 2 * half + 3 * u, 2.6 * u);                                    // the roof's coping
           if (kd === "g") {
             box("sky", x0, y, 2 * half, hh * 0.36);
-            for (var i = 1; i < panes; i++) box("w", x0 + i * 2 * half / panes - 1.6 * u, y, 3.2 * u, hh);          // mullions: in front of the moving reflection
-            box("w", x1 - 4 * u, y, 4 * u, hh); box("w", x0, y, 3.2 * u, hh);
-            box("wS", xb + dep / 2 - 1.5 * u, y + fall / 2, 3 * u, hh);
-            glassRows.push([x0 + 3.2 * u, y, x1 - 4 * u, hh]);
+            for (var i = 1; i < panes; i++) box("w", x0 + i * 2 * half / panes - post / 2, y, post, hh);             // mullions: in front of the moving reflection
+            box("w", x0, y, post, hh); box("w", x0 + 2 * half - post, y, post, hh);
+            glassRows.push([x0 + post, y, x0 + 2 * half - post, hh]);
           }
           y += hh;
         });
-        var tS = tb - soffH / HT;
-        add("stS", [xb + dep * 0.55, Y(tb) + fall * 0.45, x1 - 8 * u, Y(tb), X(hw(tS), tS, 0) + 2 * u, Y(tS), X(-hw(tS), tS, 1) - 2 * u, Y(tS)]);
+        var lat = hw(tb), s1 = lat + (half - lat) * 0.68, s2 = lat + (half - lat) * 0.3;
+        cbox("stS", s1, Y(tb), soffH / 2); cbox("stS", s2, Y(tb) + soffH / 2, soffH / 2);
       };
       var SOFF = 10 * u, SOFT = 6 * u;
-      deck(T_D0, T_D1, 60 * u, [[6, "r"], [13, "g"], [7, "w"], [11, "g"], [6, "s"]], 8, SOFF);
-      deck(T_U1, T_U2, 20 * u, [[4.5, "r"], [10, "g"], [5, "s"]], 4, SOFT);
+      deck(T_D0, T_D1, 66 * u, [[6, "r"], [13, "g"], [7, "w"], [11, "g"], [6, "s"]], 8, SOFF);
+      deck(T_U1, T_U2, 22 * u, [[4.5, "r"], [10, "g"], [5, "s"]], 4, SOFT);
 
-      /* ---- the near face: the base colour, its right edges lit ---- */
-      [-1, 1].forEach(function (sd) { leg("o", sd, 0, false); footing("w", "wA", sd, 0); });
-      strip("oL", function (t) { return hw(t) - 2.4 * u; }, function (t) { return hw(t); }, T_F, T_G, 0, 6);
-      strip("oL", function (t) { return -(hw(t) - lw(t)) - 2.2 * u; }, function (t) { return -(hw(t) - lw(t)); }, T_F, T_A0, 0, 3);
-      arch("o", "oA", 0, 11 * u, 4 * u, "oL");
+      /* ---- the lattice ---- */
+      both(function (sd) {
+        // a leg: two chords from its footing to the girder, three bays of X bracing, a strut at every joint
+        strip("o", function (t) { return sd * hw(t); }, function (t) { return sd * (hw(t) - CO); }, T_F, T_G, 6);
+        strip("o", function (t) { return sd * (hw(t) - lw(t)); }, function (t) { return sd * (hw(t) - lw(t) + CI); }, T_F, T_G, 6);
+        for (var i = 0; i < 3; i++) {
+          var a = LJ[i], b = LJ[i + 1];
+          var oa = sd * (hw(a) - CO / 2), ob = sd * (hw(b) - CO / 2), ia = sd * (hw(a) - lw(a) + CI / 2), ib = sd * (hw(b) - lw(b) + CI / 2);
+          bar("o", cx + oa, Y(a), cx + ib, Y(b), 3.4 * u);
+          bar("o", cx + ia, Y(a), cx + ob, Y(b), 3.4 * u);
+          bar("o", cx + oa, Y(a), cx + ia, Y(a), 3.6 * u);
+        }
+        // its footing: two steps of concrete, the lower one wider
+        var f0 = hw(T_F) - lw(T_F) - 3 * u, f1 = hw(T_F) + 3 * u, fy = Y(T_F), fh = Y(0) - fy;
+        box("w", cx + (sd < 0 ? -f1 : f0), fy, f1 - f0, fh * 0.56);
+        box("wA", cx + (sd < 0 ? -f1 - 4 * u : f0 - 4 * u), fy + fh * 0.56, f1 - f0 + 8 * u, fh * 0.44);
+      });
+      /* the arch between the legs: a truss of two chords and the posts between them */
+      var T_A0 = 0.078, T_A1 = 0.168, AD = 12 * u, AC = 3.2 * u;       // springing; crown; the truss's depth; its chords
+      var archPt = function (th) { var t = T_A0 + (T_A1 - T_A0) * Math.sin(th), a = -Math.cos(th) * (hw(t) - lw(t)); return [cx + a, Y(t)]; };
+      (function () {
+        var N = 22, pts = [], i;
+        for (i = 0; i <= N; i++) {
+          var th = Math.PI * i / N, q = archPt(th), q0 = archPt(Math.max(0, th - 0.02)), q1 = archPt(Math.min(Math.PI, th + 0.02));
+          var tx = q1[0] - q0[0], ty = q1[1] - q0[1], n = Math.sqrt(tx * tx + ty * ty) || 1;
+          pts.push([q[0], q[1], ty / n, -tx / n]);                     // a point of the inner edge and the way out from it
+        }
+        var ring = function (o0, o1) {
+          var a = [], b = [];
+          pts.forEach(function (e) { a.push(e[0] + e[2] * o0, e[1] + e[3] * o0); b.unshift(e[0] + e[2] * o1, e[1] + e[3] * o1); });
+          add("o", a.concat(b));
+        };
+        ring(0, AC); ring(AD - AC, AD);
+        for (i = 1; i < N; i++) { var e = pts[i]; bar("o", e[0] + e[2] * AC / 2, e[1] + e[3] * AC / 2, e[0] + e[2] * (AD - AC / 2), e[1] + e[3] * (AD - AC / 2), 2.6 * u); }
+      })();
       [-0.64, -0.3, 0.3, 0.64].forEach(function (lam) {                                                              // the hangers that carry the arch
-        var q = archPt(Math.acos(-lam), 0);
+        var q = archPt(Math.acos(-lam));
         bar("o", q[0], q[1] - 6 * u, q[0], Y(T_G), 3.6 * u);
       });
-      bar("o", X(-hw(T_G), T_G, 0), Y(T_G), X(hw(T_G), T_G, 0), Y(T_G), 7.4 * u);                                    // the girder over the arch
-      box("oL", X(-hw(T_G), T_G, 0), Y(T_G) - 3.7 * u, 2 * hw(T_G), 2.2 * u);
-      // a panel: two corner posts, one X, the rail that closes it. sh = the height above which a deck throws its shadow on it
-      var nearPanel = function (a, b, c, pw, xw, rail, sh, gus) {
+      bar("o", cx - hw(T_G), Y(T_G), cx + hw(T_G), Y(T_G), 7.4 * u);                                                 // the girder over the arch
+      cbox("oL", hw(T_G), Y(T_G) - 3.7 * u, 2.2 * u);
+      // a panel: two corner posts, one X, the rail that closes it. sh = the height above which a deck puts its shade on it
+      var panel = function (a, b, c, pw, xw, rail, sh, gus) {
         var parts = [];
-        [-1, 1].forEach(function (sd) { parts.push(strip(c, function (t) { return sd * hw(t); }, function (t) { return sd * (hw(t) - pw(t)); }, a, b, 0, 3)); });
-        if (c === "o") strip("oL", function (t) { return hw(t) - 2.4 * u; }, function (t) { return hw(t); }, a, sh || b, 0, 3);
+        both(function (sd) { parts.push(strip(c, function (t) { return sd * hw(t); }, function (t) { return sd * (hw(t) - pw(t)); }, a, b, 3)); });
         var ea = hw(a) - pw(a) / 2, eb = hw(b) - pw(b) / 2;
-        var P = [[X(-ea, a, 0), Y(a), X(eb, b, 0), Y(b)], [X(ea, a, 0), Y(a), X(-eb, b, 0), Y(b)]];
+        var P = [[cx - ea, Y(a), cx + eb, Y(b)], [cx + ea, Y(a), cx - eb, Y(b)]];
         P.forEach(function (q) { parts.push(bar(c, q[0], q[1], q[2], q[3], xw)); });
         if (sh) parts.forEach(function (q) { var s = above(q, Y(sh)); if (s.length > 4) add(c + "A", s); });
-        if (rail) bar(c, X(-hw(b), b, 0), Y(b), X(hw(b), b, 0), Y(b), rail);
+        if (rail) {
+          bar(c, cx - hw(b), Y(b), cx + hw(b), Y(b), rail);
+          if (c === "o") cbox("oL", hw(b), Y(b) - rail / 2, 1.6 * u);
+        }
         if (gus) {                                                     // the gusset plate where the X crosses
           var A = P[0], B = P[1], d1x = A[2] - A[0], d1y = A[3] - A[1], d2x = B[2] - B[0], d2y = B[3] - B[1];
           var den = d1x * d2y - d1y * d2x, s = ((B[0] - A[0]) * d2y - (B[1] - A[1]) * d2x) / den, gx = A[0] + d1x * s, gy = A[1] + d1y * s;
@@ -1722,21 +1712,17 @@
           add(c, [gx + d1x / n1 * gus, gy + d1y / n1 * gus, gx + d2x / n2 * gus, gy + d2y / n2 * gus, gx - d1x / n1 * gus, gy - d1y / n1 * gus, gx - d2x / n2 * gus, gy - d2y / n2 * gus]);
         }
       };
-      for (j = 0; j < 3; j++) nearPanel(JL[j], JL[j + 1], BL[j], PW, 4.8 * u, j < 2 ? 5.6 * u : 0, j === 2 ? T_D0 - (SOFF + 15 * u) / HT : 0, 7.5 * u);
-      for (j = 0; j < 4; j++) nearPanel(JU[j], JU[j + 1], BU[j], PU, 3.8 * u, j < 3 ? 4.6 * u : 0, j === 3 ? T_U1 - (SOFT + 9 * u) / HT : 0, 0);
+      for (j = 0; j < 3; j++) panel(JL[j], JL[j + 1], BL[j], PW, 4.8 * u, j < 2 ? 5.6 * u : 0, j === 2 ? T_D0 - (SOFF + 15 * u) / HT : 0, 7.5 * u);
+      for (j = 0; j < 4; j++) panel(JU[j], JU[j + 1], BU[j], PU, 3.8 * u, j < 3 ? 4.6 * u : 0, j === 3 ? T_U1 - (SOFT + 9 * u) / HT : 0, 0);
 
-      /* ---- above the top deck: the antenna drum, the banded mast with two collars, the needle, the lamp's lantern ---- */
+      /* ---- above the top deck: the antenna drum, the banded mast stepping in with two collars, the needle, the lamp's lantern ---- */
       var T_M = 0.8, MB = [T_M, 0.823, 0.846, 0.869, 0.892, 0.915], MC = ["o", "w", "o", "w", "o"];
-      var mh = function (t) { return (6.4 - (t - T_M) / 0.115 * 2.8) * u; };
-      box("w", cx - 8.5 * u, Y(T_M), 17 * u, Y(T_U2) - Y(T_M)); box("wA", cx - 8.5 * u, Y(T_M), 5.6 * u, Y(T_U2) - Y(T_M));
-      for (j = 0; j < 5; j++) {
-        var ma = MB[j], mb = MB[j + 1];
-        add(MC[j], [cx - mh(ma), Y(ma), cx + mh(ma), Y(ma), cx + mh(mb), Y(mb), cx - mh(mb), Y(mb)]);
-        add(MC[j] + "A", [cx - mh(ma), Y(ma), cx - mh(ma) * 0.3, Y(ma), cx - mh(mb) * 0.3, Y(mb), cx - mh(mb), Y(mb)]);
-      }
-      [T_M, 0.869].forEach(function (t) { box("wA", cx - 11 * u, Y(t) - 2.2 * u, 22 * u, 4.4 * u); });
-      add("wA", [cx - 2.5 * u, Y(0.915), cx + 2.5 * u, Y(0.915), cx + 1.7 * u, Y(0.99), cx - 1.7 * u, Y(0.99)]);
-      box("wA", cx - 3.6 * u, Y(0.99) - 1 * u, 7.2 * u, 3 * u);
+      cbox("w", 8.5 * u, Y(T_M), Y(T_U2) - Y(T_M));
+      cbox("wA", 8.5 * u, Y(T_M) + (Y(T_U2) - Y(T_M)) * 0.42, 2.4 * u);
+      for (j = 0; j < 5; j++) cbox(MC[j], (6.2 - j * 0.62) * u, Y(MB[j + 1]), Y(MB[j]) - Y(MB[j + 1]));
+      [T_M, 0.869].forEach(function (t) { cbox("wA", 11 * u, Y(t) - 2.2 * u, 4.4 * u); });
+      cbox("wA", 2.1 * u, Y(0.99), Y(0.915) - Y(0.99));
+      cbox("wA", 3.6 * u, Y(0.99) - 1 * u, 3 * u);
 
       var paint = function (list) { return list.map(function (e) { return h("path", { d: lay[e[0]], fill: e[1] }); }); };
       var bx = r1(cx - 162 * u) + " " + r1(baseY - H - 8 * u) + " " + r1(324 * u) + " " + r1(H + 10 * u);
@@ -1744,7 +1730,7 @@
         back: h("g", { "data-cache": "towerA-" + key, "data-box": bx }, paint([
           ["gSh", DAY.towerSteel], ["oS", DAY.towerOrangeShade], ["wS", DAY.towerWhiteShade],
           ["wall", DAY.towerStone], ["stB", DAY.towerSteel], ["stS", DAY.towerSteelShade],
-          ["glS", DAY.towerGlassShade], ["gl", DAY.towerGlass], ["sky", DAY.towerGlassSky], ["whB", DAY.towerWhite]])),
+          ["gl", DAY.towerGlass], ["sky", DAY.towerGlassSky], ["whB", DAY.towerWhite]])),
         front: h("g", { "data-cache": "towerB-" + key, "data-box": bx }, paint([
           ["o", DAY.towerOrange], ["w", DAY.towerWhite], ["oA", DAY.towerOrangeShade], ["wA", DAY.towerWhiteShade], ["oL", DAY.towerOrangeLit]])),
         glass: glassRows[0],                                           // the main deck's upper glazing: x0, y, x1, height
@@ -1764,10 +1750,10 @@
     return h("g", { opacity: p.opacity == null ? 1 : p.opacity },
       m.back,
       h("polygon", { points: cl(sx + 6 * u) + "," + n1(g[1]) + " " + cl(sx + 22 * u) + "," + n1(g[1]) + " " + cl(sx + 16 * u) + "," + n1(g[1] + g[3]) + " " + cl(sx) + "," + n1(g[1] + g[3]), fill: "#ffffff", opacity: 0.34 }),
-      h("g", { transform: "translate(" + n1(cx) + "," + n1(ly) + ")" },
+      h("g", { transform: "translate(" + n1(cx) + "," + n1(ly) + ")" },                      // the lift car: a white cab, its roof, one window
         h("rect", { x: n1(-7.5 * u), y: 0, width: n1(15 * u), height: n1(20 * u), fill: DAY.towerWhite }),
-        h("rect", { x: n1(-7.5 * u), y: 0, width: n1(4 * u), height: n1(20 * u), fill: DAY.towerWhiteShade }),
-        h("rect", { x: n1(-2 * u), y: n1(4 * u), width: n1(7.4 * u), height: n1(9 * u), fill: DAY.towerGlass })),
+        h("rect", { x: n1(-7.5 * u), y: 0, width: n1(15 * u), height: n1(3.6 * u), fill: DAY.towerWhiteShade }),
+        h("rect", { x: n1(-4 * u), y: n1(6.6 * u), width: n1(8 * u), height: n1(9 * u), fill: DAY.towerGlass })),
       m.front,
       h("circle", { cx: n1(cx), cy: n1(m.tipY), r: n1(3.4 * u), fill: DAY.towerLamp }),
       h("circle", { cx: n1(cx), cy: n1(m.tipY), r: n1(3.4 * u), fill: DAY.towerLampLit, opacity: lamp.toFixed(3) }));
@@ -1932,29 +1918,35 @@
      only at the ends of the field, which lie outside every camera position. */
   var SKY_WIND = [3.2, 7], SKY_SPAN = 3600, SKY_X0 = -700;
   function CloudField(list, plane, time, shift) {
-    return h("g", null, list.map(function (c) {
+    return h("g", { "data-sky": list.id || "" }, list.map(function (c) {
       var wx = ((((c[0] - SKY_X0 - time * SKY_WIND[plane] - shift) % SKY_SPAN) + SKY_SPAN) % SKY_SPAN) + SKY_X0;
       var ed = clamp01(Math.min((wx - SKY_X0) / 60, (SKY_X0 + SKY_SPAN - wx) / 60));
       return h("g", { transform: "translate(" + wx.toFixed(2) + ", " + c[1] + ")", opacity: ed.toFixed(3) }, CloudShape(c[3], c[2], plane === 0));
     }));
   }
-  /* Each scene's sky, composed: a tower of cumulus standing behind the skyline, one or two fair-weather
-     clouds, a high streak passing behind them (and behind Mt Fuji), a thin streak lying across the foot of
-     the sun, a scrap or two. No cumulus covers the sun while a scene holds. */
+  /* Each scene's sky, composed. The owner's rule (2026-11-14): clouds stay in the sky. Every cloud's
+     underside clears the roofs standing under it for as long as the scene rests on it, and nothing sits
+     down behind the skyline; `node tools/cloud-check.mjs <side>` measures it. So the cumulus that used to
+     stand behind the city is gone: each scene has one tall cloud high in a gap between the towers, one or
+     two fair-weather clouds, a high streak (it may pass behind Mt Fuji), a thin streak lying across the
+     foot of the sun, a scrap or two. No cumulus covers the sun while a scene holds. The lists keep their
+     layout (one per line, numbers only): tools/cloud-lift.py rewrites the undersides for a taller city. */
   var SKY_WORLD = {
-    far: [[706, 250, 620, 3], [1560, 128, 560, 4], [1336, 505, 200, 2], [1754, 520, 250, 1], [66, 420, 96, 6]],
-    near: [[950, 590, 340, 0], [135, 262, 450, 1], [625, 300, 92, 5], [1989, 388, 420, 1], [1879, 300, 84, 6]]
+    far: [[706, 180, 620, 3], [1560, 128, 560, 4], [66, 330, 96, 6]],
+    near: [[886, 350, 230, 0], [135, 262, 450, 1], [625, 300, 92, 5], [1595, 380, 300, 1], [1879, 300, 84, 6]]
   };
   var SKY_TRANSIT = {
-    far: [[85, 212, 700, 3], [1585, 112, 560, 4], [1585, 432, 210, 2]],
-    near: [[1128, 575, 320, 0], [-26, 318, 420, 1], [1464, 190, 290, 2], [664, 120, 88, 5]]
+    far: [[85, 212, 700, 3], [1585, 112, 560, 4]],
+    near: [[930, 370, 250, 0], [-26, 318, 420, 1], [1464, 190, 290, 2], [664, 120, 88, 5]]
   };
   var SKY_FINALE = {
     far: [[78, 372, 680, 3], [1478, 160, 560, 4]],
-    near: [[154, 236, 430, 1], [1610, 418, 280, 2], [1894, 300, 88, 6], [644, 250, 92, 5]],
-    landFar: [[1728, 560, 220, 2]], landNear: [[974, 640, 340, 0]]     // these two rise with the land
+    near: [[154, 236, 430, 1], [960, 470, 260, 0], [1845, 372, 220, 2], [1500, 262, 88, 6], [644, 250, 92, 5]],
+    landFar: [],
+    landNear: []
   };
-
+  // each list knows its own name (w-far, t-near, n-landFar ...), which CloudField writes on its group for the check
+  [["w", SKY_WORLD], ["t", SKY_TRANSIT], ["n", SKY_FINALE]].forEach(function (e) { for (var k in e[1]) e[1][k].id = e[0] + "-" + k; });
   /* Birds (round 3): small filled silhouettes, a body and two wings, nothing thinner than 3 px. One loose
      group that flaps three beats and then glides, every bird on its own phase, and one kite that soars in
      slow circles and rarely flaps. They tilt as they rise, fall and turn. All of them are one path. They
@@ -2462,10 +2454,9 @@
     route: "#e16347",       // the route line keeps the brand vermilion
     routeCase: "#ffffff",   // white casing so a route reads over any prefecture tone
     flow: "#ffffff",
-    // the mini depots: white lit front, periwinkle return, navy slab / base / outline, vermilion fascia
-    depotLit: "#fbfdff", depotShade: "#c1cfea", depotFasciaShade: "#bb5340",
+    // the mini depots, flat: one white front, navy roof slab / base course / outline, the vermilion fascia line
+    depotLit: "#fbfdff",
     depotBay: "#2c4469", depotShutter: "#b3c2dc", depotGlass: "#8ebfe8", depotGlassLit: "#d2e7f8",
-    depotCast: "rgba(19,38,63,0.24)",
     ink: "#13263f",
     card: "#ffffff",
   };
@@ -2609,56 +2600,54 @@
   }
 
   /* A miniature Sanpou depot, drawn with its base line on y = 0 and centred on x = 0 so it can be scaled
-     about its own place. A small version of the warehouse of scene 02: a white volume with a lit front
-     and a shaded left return (the return's far edge is foreshortened: lines above eye level fall, lines
-     below it rise), a navy roof slab with nothing on it, the vermilion fascia line carried round the
-     corner a tone down, dock bays on a navy base course with their shutters rolled half up, one navy
-     outline. The head office is wider, has three bays and carries a glazed office floor at its sunlit
-     end. Nothing is thinner than 1.9 u (3.1 stage px) at resting size. No lettering.
-     Returns { art: the building, cast: its flat shadow on the map, top: height of the main roof }. */
+     about its own place. A small version of the warehouse of scene 02 as ONE straight-on elevation: a
+     white front the full width of the building, a level navy roof slab with nothing on it, the vermilion
+     fascia line from wall to wall, dock bays between white piers on a navy base course with their
+     shutters rolled half up, one navy outline. The head office is wider, has three bays and carries a
+     glazed office floor (two panes, a diagonal of sky in each) at its right end.
+     Every edge is vertical or horizontal; the only diagonals are the two sheens inside the glass.
+     Nothing is thinner than 1.9 u (3.1 stage px) at resting size. No lettering.
+     It throws no shadow on the map: the old one was a translucent parallelogram lying to one side, which is
+     what a side face would throw. `cast` is kept in what is returned as a constant empty group, so the
+     node list of the map is the same shape as before.
+     Returns { art: the building, cast: an empty group, top: height of the main roof }. */
   var _depotMemo = {};
   function MiniDepot(w, hq) {
     var mk = w + "|" + (hq ? 1 : 0);
     if (_depotMemo[mk]) return _depotMemo[mk];
     var C = DAY.map, hw = w / 2, SW = 1.9, SL = 2.25, T = hq ? 11 : 10.6, OV = SW / 2;
-    var rw = hq ? 4.4 : 4.2, fx = -hw + rw, eye = -3.3, drop = 1;
-    // y of a horizontal line of the front (height y) where it meets x on the return
-    var farY = function (y, x) { return y + drop * ((fx - x) / rw) * (y - eye) / (-T - eye); };
     var P = function (a) { return a.map(function (q) { return mr2(q[0]) + "," + mr2(q[1]); }).join(" "); };
     var R = function (x, y, rwd, rh) { return "M" + mr2(x) + "," + mr2(y) + "h" + mr2(rwd) + "v" + mr2(rh) + "h" + mr2(-rwd) + "z"; };
     var yF0 = -T + (hq ? 2.2 : 2), yF1 = yF0 + 2.2, yB = -2.2;
-    var bays = hq ? 3 : 2, inner = hw - SW / 2 - fx, pier = 1.9, bw = (inner - pier * (bays + 1)) / bays;
+    var bays = hq ? 3 : 2, inner = w - SW, pier = 1.9, bw = (inner - pier * (bays + 1)) / bays;
+    var roll = Math.max(1.9, (yB - yF1) / 2);                 // how far down the shutters hang: half the opening
     var dBay = "", dShut = "";
     for (var i = 0; i < bays; i++) {
-      var bx = fx + pier + i * (bw + pier);
+      var bx = -hw + OV + pier + i * (bw + pier);
       dBay += R(bx, yF1, bw, yB - yF1);
-      dShut += R(bx, yF1, bw, 1.9);
+      dShut += R(bx, yF1, bw, roll);
     }
     var art = [
-      h("polygon", { points: P([[fx, 0], [-hw, farY(0, -hw)], [-hw, farY(-T, -hw)], [fx, -T]]), fill: C.depotShade }),
-      h("rect", { x: mr2(fx), y: -T, width: mr2(hw - fx), height: T, fill: C.depotLit }),
-      h("rect", { x: mr2(fx), y: mr2(yF0), width: mr2(hw - fx), height: 2.2, fill: C.route }),
-      h("polygon", { points: P([[fx, yF0], [-hw, farY(yF0, -hw)], [-hw, farY(yF1, -hw)], [fx, yF1]]), fill: C.depotFasciaShade }),
+      h("rect", { x: -hw, y: -T, width: w, height: T, fill: C.depotLit }),
+      h("rect", { x: -hw, y: mr2(yF0), width: w, height: 2.2, fill: C.route }),
       h("path", { d: dBay, fill: C.depotBay }),
       h("path", { d: dShut, fill: C.depotShutter }),
-      h("polygon", { points: P([[hw, 0], [hw, yB], [fx, yB], [-hw, farY(yB, -hw)], [-hw, farY(0, -hw)], [fx, 0]]), fill: C.ink }),
+      h("rect", { x: mr2(-hw - OV), y: yB, width: mr2(w + SW), height: -yB, fill: C.ink }),
       // the outline: the two walls. The slab closes the top and the base course the bottom, in the same navy.
-      h("path", { d: "M" + hw + "," + (-T) + "V0 M" + (-hw) + "," + mr2(farY(0, -hw)) + "V" + mr2(farY(-T, -hw)), fill: "none", stroke: C.ink, strokeWidth: SW }),
-      h("polygon", { points: P([[hw + OV, -T], [hw + OV, -T - SL], [fx, -T - SL], [-hw - OV, farY(-T - SL, -hw - OV)], [-hw - OV, farY(-T, -hw - OV)], [fx, -T]]), fill: C.ink }),
+      h("path", { d: "M" + hw + "," + (-T) + "V0 M" + (-hw) + "," + (-T) + "V0", fill: "none", stroke: C.ink, strokeWidth: SW }),
+      h("rect", { x: mr2(-hw - OV), y: mr2(-T - SL), width: mr2(w + SW), height: SL, fill: C.ink }),
     ];
-    if (hq) {   // the office floor: a glazed front split by one diagonal reflection, a shaded return, its own slab
-      var ox = hw - 9.4, oy = -T - SL, oh = 3.8, gx = ox + SW / 2 + 1.9;
+    if (hq) {   // the office floor: two panes of glass, the sky in each as one diagonal, its own slab
+      var ox = hw - 12, oy = -T - SL, oh = 3.8, g0 = ox + OV, g1 = hw - OV, pn = (g1 - g0 - SW) / 2, mx = (ox + hw) / 2;
       art.push(
-        h("rect", { x: mr2(ox), y: mr2(oy - oh), width: mr2(gx - ox), height: oh, fill: C.depotShade }),
-        h("rect", { x: mr2(gx), y: mr2(oy - oh), width: mr2(hw - gx), height: oh, fill: C.depotGlass }),
-        h("polygon", { points: P([[gx, oy - oh], [hw, oy - oh], [gx, oy]]), fill: C.depotGlassLit }),   // the sky, as one diagonal
-        h("path", { d: "M" + mr2(ox) + "," + mr2(oy) + "V" + mr2(oy - oh) + " M" + hw + "," + mr2(oy) + "V" + mr2(oy - oh), fill: "none", stroke: C.ink, strokeWidth: SW }),
+        h("rect", { x: mr2(g0), y: mr2(oy - oh), width: mr2(g1 - g0), height: oh, fill: C.depotGlass }),
+        h("polygon", { points: P([[g0, oy - oh], [g0 + pn, oy - oh], [g0, oy]]), fill: C.depotGlassLit }),
+        h("polygon", { points: P([[g1 - pn, oy - oh], [g1, oy - oh], [g1 - pn, oy]]), fill: C.depotGlassLit }),
+        h("path", { d: "M" + mr2(ox) + "," + mr2(oy) + "V" + mr2(oy - oh) + " M" + mr2(mx) + "," + mr2(oy) + "V" + mr2(oy - oh) + " M" + hw + "," + mr2(oy) + "V" + mr2(oy - oh), fill: "none", stroke: C.ink, strokeWidth: SW }),
         h("rect", { x: mr2(ox - OV), y: mr2(oy - oh - 2), width: mr2(hw - ox + 2 * OV), height: 2, fill: C.ink })
       );
     }
-    // one flat shadow on the map, falling down-left, hard-edged
-    var cast = h("polygon", { points: P([[hw + 0.6, 0], [hw - 1.8, 2.9], [-hw - 2.8, 2.9], [-hw - 0.4, 0]]), fill: C.depotCast });
-    return _depotMemo[mk] = { art: art, cast: cast, top: T + SL };
+    return _depotMemo[mk] = { art: art, cast: h("g", null), top: T + SL };
   }
   function CoverageMap(p) {
     var prefProgress = p.prefProgress, routeProgress = p.routeProgress, pinProgress = p.pinProgress,

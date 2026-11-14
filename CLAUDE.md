@@ -123,15 +123,43 @@ Round 3 (started 2026-11-14, brief in `PROMPT-FOR-FABLE.md`):
   frozen") is a plain copy of that state, never edited, used as the middle picture of every comparison.
   The `city-v2` and `map-v2` sides and their build scripts are gone. `CHANGES.md` ends with what each element
   becomes in round 3.
-- **Order and gates** (one at a time; stop and wait for the owner's yes at each): 1 the shared art (sky, sun,
-  shafts, clouds, city kit and skyline, Tower, window light, Fuji's size) → 2 scenes 01-02 → 3 the Sanpou
-  warehouse → 4 scene 03 → 5 scene 04 → 6 scene 05 → 7 the seams and the motion pass → 8 the last look.
-  The owner wants all the drawing approved first and the motion built after it.
-- **Pass 1 is drawn and shown (2026-11-14), waiting for the owner's verdict and two size picks** (how tall
-  the city stands, how big Fuji is: `evidence/2026-11-14-r3-pass1/options-*.jpg`). It also holds two things
-  the owner pulled forward: the supplier building redrawn modern and a little bigger, and the three map
-  depots. What is new and what is still old is listed at the end of `CHANGES.md`. Do not start pass 2 before
-  the owner answers.
+- **The film is FLAT 2D (owner, 2026-11-14, after seeing pass 1).** This reverses the "slightly-3d look"
+  he had kept. Every building is a straight-on elevation: level top edges, one face, no receding side face,
+  no thin band down one side, nothing skewed. Depth comes from overlap, value, scale and haze. It applies to
+  everything, drawn already or still to come. **Clouds stay in the sky:** no cloud base below the roofline
+  of the tier it is in front of, none sitting down behind the skyline; glass must read as glass (no cloud
+  shapes that look like objects inside a tower).
+- **Order and gates** (one at a time; stop and wait for the owner's yes at each), as the owner re-ordered it
+  on 2026-11-14: 1 the shared art (sky, sun, shafts, clouds, city kit and skyline, Tower, window light,
+  Fuji's size), re-shown flat → 2 **the Sanpou warehouse** (the three-bay building of scene 02, never redrawn
+  until now: bigger, trucks standing at the docks, packages loading into each truck with smooth animation,
+  a forklift at work; then the same working feel at the supplier building's dock in scene 01; references in
+  `reference/warehouse-ops/`, notes in `REFERENCES.md`) → 3 **the airport, the terminal and the plane**
+  (moved up: he has noticed three times that the plane has not changed) → 4 the rest of scenes 01-02 (truck,
+  street, lamps, props) → 5 scene 03 → 6 scene 04 → 7 the rest of scene 05 → 8 the seams and the motion pass
+  → 9 the last look. He wants the drawing approved first and the motion built after it, except the loading
+  at the docks, which he asked for with the warehouse.
+- When the owner says "the warehouse" check which building he means and say it back in one line before
+  starting: the **Sanpou warehouse** is the three-bay building in scene 02; the **supplier building** is the
+  one in scene 01.
+- **Pass 1 was drawn and shown (2026-11-14) in the oblique view** (`evidence/2026-11-14-r3-pass1/`); the
+  owner's verdict was the five changes recorded at the end of `CHANGES.md` (flat 2D, clouds up, the plane
+  moved up, the warehouse, and his size picks postponed until he has seen it flat). It also held two things
+  he pulled forward: the supplier building redrawn modern and a little bigger, and the three map depots.
+- **Pass 1 is re-shown flat (2026-11-14), waiting for the owner's verdict and his two size picks** (city
+  height A/B/C, Fuji size 1/2/3: `evidence/2026-11-14-r3-flat/options-*.jpg`). In `round2/js` after the pass 1
+  parts: `r3-flat-city`, `r3-flat-supplier`, `r3-flat-tower`, `r3-flat-depots`, `r3-flat-parcel`,
+  `r3-clouds-up`. What is flat, how the clouds were recomposed and the check results are at the end of
+  `CHANGES.md`. Whichever city height he picks gets its clouds composed by hand (the option builds only lift
+  them).
+- **The Sanpou warehouse (scene 02) was started the same day**, as the owner asked, in trial side
+  `r3-warehouse` (part `round2/parts/r3-warehouse.js`, evidence `evidence/2026-11-14-r3-warehouse/`): check
+  whether it was finished, reviewed and shown before doing anything with it. When it is merged, run the cloud
+  check again (a taller warehouse is a roof too) and lift scene 02's clouds if needed.
+- **Three checks added with the flat pass:** `node tools/cloud-check.mjs <side> --skip=7417-9139` (no cloud
+  base below a roof; `--at=<ms> --roofs` prints every cloud and the roofline for composing; `--fit=<file>`
+  with `python tools/cloud-lift.py` lifts clouds on a sample side), and `python tools/sheet.py` (stacks stills
+  under label bars: the three-way pictures with the new-versus-old line on them, and the option sheets).
 - How the passes are drawn: one fresh Fable helper per element with a self-contained brief, each in its own
   trial side built by `sh tools/build-side.sh <side> round2/parts/<part>.js`, two at a time at most; a cheaper
   model for engineering. The main session reviews the frames, merges the parts, runs the checks
