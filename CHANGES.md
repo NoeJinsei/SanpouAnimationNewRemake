@@ -919,3 +919,43 @@ crops of scenes 01 and 05 at full size, before left and after right).
 **Checks on `round2`.** `original/` intact; 0 console errors; draw (original / round2) 2.28 / 2.10 ms
 full, 2.37 / 2.12 desktop, 2.13 / 1.95 phone; all 13 copy rows pass contrast over the whole film at both
 framings (the two unfilled-track rows fail as on the original); 0 clouds below a roof.
+
+
+## The batch of 2026-11-15, element 5b: the ground of scene 05 — the airport, the Sanpou depot with its name, the road
+
+Part `r4-finale-ground` (two blocks: `Airport()` and the finale's ground in `sceneNetwork`) is in
+`round2/js`. Evidence: `evidence/2026-11-15-finale-ground/` (`scene05-old-new.jpg`, `depot-old-new-2x.jpg`,
+`airport-old-new-2x.jpg`, `phone-name-crop.png`, `ground-life-strip.jpg`, desktop, phone and full stills).
+
+- **What decides the design:** a 390 px phone shows only the strip round Tokyo Tower (stage x about 942 to
+  1579), and on desktop the lower third lies under the dark caption band. So what must be seen stands up
+  out of the bottom of the frame.
+- **The Sanpou depot** (x 750 to 1168): a low dock hall (two docks under a canopy, the vermilion fascia
+  line), an office with three ribbons of windows, an entrance and roof plant, and a stair core. **The name
+  三豊運輸 is written downward on a navy band on the core** (x 1100 to 1158, y 745 to 941), 46 px type, each
+  character 36 to 43 stage px tall, 23 to 28 px on a phone, inside the strip a phone sees. Vertical because
+  the phone's left edge drifts. The building steps up to the right under the plane's climb line: the plane
+  clears it by at least 30.5 px at every measured moment.
+- **The airport:** a control tower with a wing, a shaft lit on the right, a leaning glazed cab, a roof,
+  radar and lamp (top y 675); a terminal under one roof rising to the right, with seven glass bays, a
+  transom, a base and two jet bridges; an apron with a stair truck, a bowser and a baggage train; the runway
+  edge-on (y 968 to 982) with its paint, side line and eight edge lights; a windsock at x 727 in Tokyo
+  Tower's red and white that fills and flaps. The vermilion is off the terminal; nothing is branded.
+- **The road trucks:** two axles, white box, vermilion stripe, navy cab, no lettering; one speed per lane,
+  the far lane running right and the near lane left, so none slides through another.
+- **The ground stays alive through the hold:** the windsock and the radar (continuous), the lamp's pulse, a
+  baggage train (19 s), a dock shutter closing at 35.8 to 38.0 s, a truck pulling out of the depot at
+  38.8 s (two trucks alternate on a 76 s round), through traffic (38 s).
+
+**Checks on `round2`.** `original/` intact; 0 console errors; draw (original / round2) 2.19 / 2.29 ms
+full, 2.22 / 1.96 desktop, 2.02 / 1.98 phone (2.02 against 2.28 before this pass, same sitting); the plane
+overlaps nothing at every 100 ms of 28500 to 30500 and 36000 to 39000 (tower cab 51.6 px clear, terminal
+roofline 29.0, windsock 10.0, depot 30.5); scene 05 0 frozen steps and the one step at 28700 ms that was
+there before; every copy row passes contrast (the desktop caption, which sits over the airport, 5.31 to
+5.40; its lead was 6.31); 0 clouds below a roof, the depot and airport now counted as roofs; scenes 01 to
+04 pixel-identical.
+
+**Known.** The name is vertical. The control cab's glass leans and the terminal roof is a curve (both real
+shapes seen straight-on, not side faces). The lane directions are swapped from the original. Two corners of
+the depot are within 3 px of the 30 px limit under the plane. The little road trucks' wheels do not spin.
+The terminal hides the city belt between x 146 and 560.
