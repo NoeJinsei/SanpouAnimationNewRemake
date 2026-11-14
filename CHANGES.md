@@ -596,3 +596,41 @@ wing and hide the forklift as they go; an open truck door covers the right fifth
 are still round 2's drawing, the street, lamps and rail too. The supplier building's dock in scene 01 (the
 same working feel, using this conveyor, pallets and forklift) is the next thing, then the airport, the
 terminal and the plane.
+
+
+## Every piece of lettering in the film, checked (2026-11-14)
+
+The owner, on seeing the new warehouse: "the sanpou name should be in jp using the correct characters.
+Check on other elements and scenes as well." Every string in `round2/js/hero-port-b.js` that reaches the
+screen was listed and read against the company facts in `CONTEXT.md` and against the live site.
+
+**The characters.** 三豊運輸 — confirmed: `CONTEXT.md` (有限会社三豊運輸, never 株式会社) and 143 occurrences
+on the live site, with no variant spelling anywhere.
+
+| Where | Scene | Said | Verdict |
+|---|---|---|---|
+| Warehouse fascia | 02 | `Sanpou` (latin 27) ｜ `物流センター` | **wrong** — the company's own building named in roman letters only |
+| Truck box side | 01, 02, 03 | `Sanpou` (latin 12.5) over `三豊運輸` (jp 7.5) | both present, but the roman name is the big one; on a phone it is the only name on screen |
+| Finale depot | 05 | nothing | the vermilion fascia says Sanpou, no name on it |
+| Scene 04 brand card | 04 | `三豊運輸` (54) over `SANPOU UNYU　SINCE 1975` | right way round |
+| Dock bay numbers | 02 | `01 02 03` | fine |
+| Expressway signs | 03 | `関越自動車道 / KAN-ETSU EXPWY`, `新潟 / Niigata`, `前橋 / Maebashi`, `板橋 出口 / ITABASHI EXIT` | right: real Japanese road signs carry both |
+| Map labels, base cards, legend | 04 | 新潟 群馬 栃木 茨城 埼玉 東京 千葉 神奈川, 本社（板橋）志木営業所 入間営業所 | right |
+| Finale panels and tagline | 05 | 主要拠点, 物流拠点, 対応都県, 大切な荷物を、きょうも確実に。 | right |
+
+**The sign, fixed.** `round2/parts/r3-sign-jp.js` — one block, the two `text.push` lines of the fascia.
+It now reads 「三豊運輸　物流センター」: `CONTENT.brand.nameJp` in `FONTS.jp` at 26 px with 1.5 letter
+spacing, so four kanji sit between y -176.5 and -202.5 inside the band at -169..-209 and end 27 units before
+the rule at x 171. Built as side `trial`: 0 console errors, draw 1.49 ms against 1.75. Not spliced into
+`round2/js` — the Fable session has that file. Evidence: `evidence/2026-11-14-lettering/`.
+
+**Two things found while reading, for the owner.**
+
+1. **「関東一円」 is in the film twice**, and `CONTEXT.md` says never to use it (the company covers
+   関東1都6県 and 新潟市方面, areas and never 関東一円). One of the two is on screen: scene 03's caption
+   「関東一円から新潟へ、毎日定時で。」 (line 3447). The other, `CONTENT.brand.commitBody` (line 220), is
+   defined and never drawn. On the live site the wording appears only inside this animation file — the rest
+   of the site says 1都6県 in 27 places. Copy is not changed without the owner, so it is left as it is.
+2. **The truck lettering.** The roman name is the big one and 三豊運輸 the small one under it. On a 390 px
+   phone the warehouse sign is outside the crop, so the truck is the only place the name is read at all.
+
