@@ -703,3 +703,35 @@ The truck, street, lamps, vending machines and rail are still round 2's drawings
 
 **Order to confirm with the owner:** his note of 2026-11-14 says the trucks are next after the supplier
 dock; the order he set earlier puts the airport, the terminal and the plane there.
+
+
+## The batch of 2026-11-15, element 4: the truck of scenes 01, 02 and 03, redrawn
+
+Part `r4-truck` (one block, the whole truck) is in `round2/js`. Evidence: `evidence/2026-11-15-trucks/`
+(`truck-old-new-2x.jpg`, `truck-door-open-2x.png`, full, desktop and phone stills, the two departure strips).
+
+- **The vehicle.** A flat side-on cab-over dry van, drawn from a blank page: a white box with a rounded
+  front top corner, panel rails, corner posts and one vermilion stripe; a lower navy cab with a raked
+  windscreen, a visor, a mirror on its stays, a stacked lamp, a step and a chamfered bumper; a battery box,
+  tank and side guard on the chassis; a level contact shadow (the diagonal ground shadow is gone). No roof
+  deflector, so nothing stands in front of the box's front wall; no badge, no plate, no people.
+- **The lettering (the owner's decision of 2026-11-14).** 三豊運輸 is the big line: 19 local units, 38 stage
+  px at scale 2, about 27 px on a 390 px phone. SANPOU is the small line under it: 7 units, 14 stage px,
+  letter spacing 3.6. The words are the same; only their order of size changed.
+- **Kept.** `Truck(p)`'s interface, `truckMotion`, the rear plane at local x 0, the floor height, the length
+  (the bumper still ends at 177.6), the door leaf (24 units), the exhaust wisps, every timing.
+  `TRUCK_WHEELS` is `[50, 148]` (was `[50, 150]`), radius 11.
+- **Secondary motion.** The cab nods 0.45 x `pitch` about its front; the mud flaps trail `run` x 6 degrees.
+- **Colours.** Cab `#28395a` (lit `#46608f`, shade `#1c2a45`), bumper `#8a9bb5` / `#bcc8d9`; new
+  `truckBumperShade`, `truckBoxSeam`, `truckSeam`; `truckStripe2` removed (one stripe now).
+
+**Checks on `round2`.** `original/` intact; 0 console errors; draw (original / round2) 2.64 / 1.94 ms full,
+2.36 / 1.97 desktop, 2.38 / 2.10 phone; against the old truck in the same sitting 1.96 / 1.57 ms and
+2.04 / 1.71 with the sides swapped (no slower; 24 fewer nodes a truck); 0 frozen steps in scenes 01 to 03;
+one step at 14600 ms (the scene clock stepping back at the 02 to 03 seam, 1.16 against 1.04 before); scenes
+04 and 05 pixel-identical; copy contrast passes (the unfilled track fails as on the original).
+
+**Known.** On a 390 px phone scene 02's crop cuts the name on both trucks in view (豊運輸 on one, 三豊 on
+the next): that is where the trucks stand, which is closed. The three trucks at the docks are still three
+of the same truck (the mixed-fleet question is still open with the owner). The finale's small road trucks
+and the map's route trucks are separate drawings, done with their scenes.
