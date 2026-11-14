@@ -10,3 +10,5 @@ reference/warehouse-ops/
 
 # the scratch trial side (sh tools/build-side.sh trial <part>): rebuilt at will, never kept
 samples/trial/
+samples/trial2/
+samples/trial3/
