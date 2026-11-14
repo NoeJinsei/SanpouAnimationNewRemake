@@ -158,9 +158,17 @@ Round 3 (started 2026-11-14, brief in `PROMPT-FOR-FABLE.md`):
   Parts `r3-warehouse`, `r3-clouds-b2` and `r3-sign-jp` are in `round2/js`; evidence in
   `evidence/2026-11-14-r3-warehouse/` and `evidence/2026-11-14-lettering/`; details at the end of
   `CHANGES.md`. Its sign reads 三豊運輸　物流センター (Japanese, never roman only).
+- **The supplier building's dock of scene 01 is drawn, merged and shown (2026-11-15), waiting for the
+  owner's verdict.** Parts `r3-supplier-dock` and `r3-supplier-dock-fix` are in `round2/js`: an open door
+  with stock inside, a roller conveyor carrying six cartons into the truck in place of the hopping parcels,
+  the supplier's own blue-grey forklift seen through the door. Evidence in
+  `evidence/2026-11-14-r3-supplier-dock/`; details, constants and check results at the end of `CHANGES.md`.
+  Open for him: the shutter is up from the first frame (it could roll up), and which comes next, the trucks
+  or the airport and plane.
 - **The company name on things (owner, 2026-11-14).** The characters are 三豊運輸 (never 株式会社, never
-  三豊運送). Two jobs wait for the elements they sit on: **the trucks** (next after the supplier dock): on
-  the box side 三豊運輸 becomes the big line and the roman SANPOU the small one under it, the way the scene 04
+  三豊運送). Two jobs wait for the elements they sit on: **the trucks** (his note of 2026-11-14 says "the trucks are
+  next after the supplier dock", while the order above puts the airport and the plane there: ask him which
+  comes first when the supplier dock is shown): on the box side 三豊運輸 becomes the big line and the roman SANPOU the small one under it, the way the scene 04
   card does it, because on a 390 px phone the truck is the only place the name is read (this replaces "truck
   lettering exactly as it is"); **the Sanpou depot in the finale** (with the rest of scene 05): put 三豊運輸
   on it, legible on a phone. Leave all other copy alone: scene 03's caption says 関東一円, which the company

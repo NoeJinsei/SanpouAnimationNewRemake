@@ -653,3 +653,53 @@ is approved.
      no name; put 三豊運輸 on it, sized so it is legible on a phone.
 - **All other copy is left alone.** Scene 03's caption uses 関東一円, which contradicts the company facts, but
   copy is the owner's call and he has not decided yet.
+
+
+## The supplier building's dock of scene 01 (2026-11-15): drawn, merged, shown, waiting for the owner's verdict
+
+Change 4 of the pass 1 verdict, second half: "the same working feel at the supplier building's dock in
+scene 01". In `round2/js` (parts `r3-supplier-dock`, then `r3-supplier-dock-fix`). Evidence:
+`evidence/2026-11-14-r3-supplier-dock/` (`three-way-scene01-loading.jpg`, `three-way-scene01-hold.jpg`,
+`loading-strip.jpg`, `forklift-loop.jpg`, `crop-dock-2x.png`, `arrival-and-departure.png`, full and phone
+stills).
+
+- **Only the dock zone changed.** The building's outline, office part, windows, staff door and footprint are
+  as they were; scene 01 differs from before only inside stage x 652 to 959, y 701 to 881.
+- **An open dock.** The door is open to the ground (screen x 668 to 865, head y 701); the shutter is rolled
+  up from the first frame and does not move. Inside: cool shade, racking with stock at the back, a working
+  rack at the right of the door. The raised sill, the cartons that stood on it and the right-hand guide post
+  are gone.
+- **Loading.** A roller conveyor from the door to the truck (screen x 668 to 951, rollers at y 864, a plate
+  on to the truck's rear at 960). Six cartons: three wait in the door (drawn under the truck, which drives
+  in over them); the line starts at frame 68, runs at 4.8 px a frame, five cross the truck's rear plane at
+  frames 96 to 159 (inside `T_WORLD.parcels`, door open, before it closes) and the line is at rest by frame
+  171; the sixth stops in the door for the next load. No hops: `parcelPose` and `Parcel` are removed.
+- **The forklift** is the supplier's own: the warehouse's drawing in the supplier's blue-greys with a yellow
+  band and a dark-glass cab (no operator), at 0.86 of the building's units so it reads as inside, cut to the
+  door opening. A round of 24.2 s on the continuous sky clock: it comes in with a pallet as the scene opens,
+  lifts it while the truck is loaded, sets it on the rack and backs off while the scene holds, leaves; on
+  its next visit it takes the pallet down again, so the loop closes with nothing popping.
+- **Constants.** `T_WORLD` and `TRUCK_PARK_1` untouched. Removed: `SUPPLIER_DOCK`, `parcelPose`, `Parcel`.
+  New: `supplierArt`, `supForkPose`, `SupplierCartons(frame)`, `supplierJambX`, `SUP_FORK = 0.86`,
+  `SUP_ROUND = 24.2`, `DAY.supIn*` and `DAY.supFk*`, clip paths `wSupDoor` and `wSupLine`;
+  `SupplierBuilding()` takes `time: skyTime`; `clipT1` is now the window over the truck's open rear door.
+- **Found on review and fixed** (`r3-supplier-dock-fix`): that window followed the truck as it pulled away,
+  so the cartons already loaded showed in mid-air behind it during the pan to scene 02. It now ends where
+  the truck's rear stands while parked and closes as the truck leaves (`arrival-and-departure.png`).
+
+**Checks on `round2`.** `original/` intact; 0 console errors; draw (original / round2) 2.79 / 2.11 ms full,
+2.69 / 2.17 desktop, 2.47 / 2.19 phone, and against frozen round 2 2.27 / 2.15, 2.47 / 2.27, 2.35 / 2.24
+(the machine measured slower all round today; the ratio is as before); scene 01 (0 to 7000 ms) 0 frozen
+steps, 0 pops; the departure and pan (7000 to 9400 ms) 0 frozen steps, 0 pops; scene 02 pixel-identical at
+9200, 11000, 11800, 13500 and 14400 ms; copy contrast passes (the unfilled progress track fails as on the
+original); clouds: 0 below a roof.
+
+**Known, for the owner to decide or for a later pass:** the shutter is already up when the film opens (it
+could roll up as the truck pulls in); on a 390 px phone the crop drifts right during the scene, so by the
+hold the left part of the door is cut off (the forklift's set-down on the rack is timed to the part still in
+view); the cartons on the line hide the forklift's lower body while loading; the conveyor's end stands
+34 px past the building's corner to reach the truck; in the first 0.17 s nothing moves in the dock itself.
+The truck, street, lamps, vending machines and rail are still round 2's drawings.
+
+**Order to confirm with the owner:** his note of 2026-11-14 says the trucks are next after the supplier
+dock; the order he set earlier puts the airport, the terminal and the plane there.
