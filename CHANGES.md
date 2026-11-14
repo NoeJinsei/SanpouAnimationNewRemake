@@ -735,3 +735,40 @@ one step at 14600 ms (the scene clock stepping back at the 02 to 03 seam, 1.16 a
 the next): that is where the trucks stand, which is closed. The three trucks at the docks are still three
 of the same truck (the mixed-fleet question is still open with the owner). The finale's small road trucks
 and the map's route trucks are separate drawings, done with their scenes.
+
+
+## The batch of 2026-11-15, element 1: the clouds, redrawn in every scene
+
+The owner: "the model of the clouds on other scenes looks a bit odd, idk doesnt look that natural /
+professionally designed or fits the animation scenes overall." Part `r4-clouds` (two blocks: the species
+and the three composed skies) is in `round2/js`. Evidence: `evidence/2026-11-15-clouds/`
+(`species-old-new.jpg`, `scenes-old-new.jpg`, full, desktop and phone stills of scenes 01, 02, 03, 05).
+
+- **What a cloud is now.** One silhouette, two paths (the white and one shade area), 2.7 to 3.0 times
+  wider than tall, the mass low, the dome off-centre, the far side stepping down and trailing away; its own
+  slightly uneven base. The pile of discs, the crescent on every lobe and the pill under the lobes are gone.
+- **The seven species.** 0 large cumulus (a broad dome left of centre, a knuckle, a lower second dome
+  trailing right); 1 fair-weather (a long low lobe left, a dome right of centre); 2 small humped (a dome
+  left, three steps down right); 3 and 4 the high streaks, the same construction pressed flat into a long
+  pale bank (3 with a wisp above it); 5 and 6 scraps of three or four low lobes.
+- **Shade.** One area along the base with a softly swelling top edge, deep on the left (away from the sun)
+  and gone at the right end: `#d1e4f6` near, `#d4e6f6` far (far white `#f3f8fd`), cooler and much closer
+  to white than the old `#b9caef`.
+- **The skies, composed again.** 01: the large cumulus upper left, a fair-weather cloud lower right of it,
+  a scrap by Tokyo Tower, a streak across the sun. 02: the same fair-weather cloud at the left edge, a
+  scrap, the sun streak; the middle left empty. 03: the large cumulus low right of Mt Fuji, a fair-weather
+  cloud behind Fuji's left shoulder, a small one near the sun, a bank behind Fuji. 05: the large one upper
+  left, a fair-weather cloud between Fuji and the Tower, a bank behind Fuji, the sun streak, a scrap.
+- **Kept.** Seven species, two depth planes, the wind speeds, the wrap and the edge fades, the list format,
+  the `cloud3-` cache names and `data-sky` tags the cloud check reads.
+
+**Checks on `round2`.** `original/` intact; 0 clouds below a roof in scenes 01, 02, 03, 05; 0 console
+errors; draw (original / round2) 2.44 / 2.13 ms full, 2.96 / 2.10 desktop, 2.53 / 2.27 phone; scene 01
+0 frozen steps, 0 pops; scene 05's first six seconds 0 frozen steps and the one step at 28700 ms that was
+there before (0.889 against 0.891); every copy row passes contrast.
+
+**Known.** On desktop the mid-sky cumulus of scenes 03 and 05 sits behind the right end of the headline
+(under the pale wash). Scene 02's sky is sparse in the middle: a cumulus there would cover the sun in
+scene 01, which shares the list. The streaks now read as flat banks rather than wisps. The canvas engine
+was not run. Scene 05's roofs are being recomposed with the plane's corridor, so its cloud check is run
+again with that pass.
