@@ -231,10 +231,21 @@ loading strips; its new-versus-old lines are in the script. Details and check nu
   so think of that line before moving any roof in `cityFinale()`); the airport; the Sanpou depot with
   三豊運輸 written downward on a navy band; two-axle road trucks.
 - **Values** (`r4-values`): `CITY_LOOK` and `CITY_HAZE` widened from navy to air.
-- **What a viewer really sees** (measured in this batch; design to it): desktop shows the full width and
-  about stage y 60 to 1020, with a dark band over the lower third and the caption over the lower left; a
-  390 px phone shows a strip of the stage at about 0.62 to 0.8 of its size: about x 648 to 1137 in scene 01,
-  the middle of the map in scene 04, **only x 942 to 1579 in scene 05**.
+- **What a viewer really sees** (measured, every scene, 2026-11-15; design to it, never to the bare stage).
+  Desktop is the full width at stage y 60 to 1020, with a dark band over the lower third and the caption
+  over the lower left. A 390 px phone sees a strip about 550 to 615 stage px wide, full height:
+
+  | scene | phone sees (stage x) |
+  |---|---|
+  | 01 入荷 | 644 – 1191 |
+  | 02 積込 | 763 – 1309 |
+  | 03 輸送 | 631 – 1187 |
+  | 04 map | **708 – 1322** |
+  | 05 finale | 991 – 1598 |
+  | 05 climb | 955 – 1553 |
+
+  Re-measure with `node tools/crop-table.mjs <side>` (it reads the stage's
+  `getScreenCTM()` on `viewer/frame.html?framing=site` at each viewport) if the camera path ever changes.
 - Still the original or round 2 drawings: scene 03's expressway, lamps, gantry, signs and fence; the
   street, lamps, vending machines and foreground rail of scenes 01 and 02. The seams and the motion pass
   are not done. Scene 03's caption still says 関東一円 (the owner's call).
