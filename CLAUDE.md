@@ -187,6 +187,30 @@ Round 3 (started 2026-11-14, brief in `PROMPT-FOR-FABLE.md`):
   part whose anchors match the file as it is now; to try something, build a sample side from a fresh copy of
   `round2/js` and point its build script at the part in `round2/parts/` (never a second copy of the part).
 
+## What the owner changed on 2026-11-15
+
+- **The gate is relaxed for this batch.** The rule above is one element at a time, stopping for his yes at
+  each. He has now asked for the remaining queue to be worked through and shown together: "work on
+  everything else that we are pushing as well and give us its output once they are finished for us to review
+  them and give it feedback at the end". Keep committing one pass per element with its own evidence, but do
+  not stop for a verdict between them. The per-element gate comes back after this batch.
+- **The map's look is Fable's to decide.** He asked Fable to come up with its own style for a moving
+  background behind the map, and for the colouring of both that background and the map itself. The options
+  built on 2026-11-15 (navy / indigo / slate; lift / light / card) are a floor to beat, not a choice he has
+  made. Everything in the "Closed" list still binds.
+- **Closed on the map, from his earlier words:** the service area is no longer green; vermilion stays the
+  route's alone; scene 04 carries no sky, sun or clouds (`map-nosky.js`); the land is not a plate with
+  thickness (`map-flat-plate.js`); the prefecture names are no longer near-black. Grid lines behind the map
+  were ruled out long ago — if Fable's own direction needs something near one, it says so and shows it as an
+  option rather than slipping it in.
+- **Judge every map frame at the desktop and phone framings, never on the bare 1920 stage.** The site crops
+  the stage. The "card" background looked the strongest of three on the bare stage and died at the real
+  crop, its corners outside the frame.
+- **The clouds are being redrawn** in every scene: the owner called them "a bit odd … not that natural /
+  professionally designed". The old `STYLE.md` rule is what produced them and has been rewritten. That is
+  the third rejection traced to a rule written here (after the footprint rule and the skyline-layout rule) —
+  each time the rule described a construction method instead of a result. Write rules as results.
+
 Usage: this account has a 5-hour usage limit; a burst of parallel agents exhausted it in the first session and
 killed work in progress. Use one or two agents at a time (a cheaper model for engineering, the best one for
 art) and keep the main session short.
