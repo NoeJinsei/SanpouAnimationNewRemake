@@ -898,3 +898,24 @@ and 05 pixel-identical.
 Saitama's truck stops 24 units short of its dot, between 埼玉 and the 志木 name card (nearer, it would cover
 the name). Trucks pass behind the depots and the name cards. Tochigi's and Saitama's trucks leave about two
 seconds after their lines draw, so that nothing jumps when the scene's clock steps at 27800 ms.
+
+
+## The batch of 2026-11-15, the value range: the city widened from navy to air
+
+"Across the whole film the value range is narrow: everything sits in a pale blue-grey band and the road is
+the only dark thing anywhere. Widen it, carefully, without breaking the daylight or putting anything dark
+under the copy overlay." Part `r4-values` (one block: `CITY_LOOK` and `CITY_HAZE`) is in `round2/js`.
+Evidence: `evidence/2026-11-15-values/` (four scenes at the desktop crop, before above and after below;
+crops of scenes 01 and 05 at full size, before left and after right).
+
+- The middle of the film's range lives in the city, so that is where it is widened. The nearest row goes
+  decisively toward navy (`air` -0.08 to -0.3: it carries the weight of the picture, just above the road),
+  the row behind it is no longer washed toward the air (0.2 to 0.04), and the far rows go a little further
+  into the air (0.52 / 0.62 / 0.78 to 0.5 / 0.66 / 0.82): five clear steps from navy to sky instead of
+  three of the same grey-blue. The haze over the near rows is thinner (0.2 to 0.13).
+- Untouched: the sky, the clouds, the whites (trucks, warehouse, Fuji's cap), every shape. Nothing above
+  the roofs gets darker, so the copy's ground does not change.
+
+**Checks on `round2`.** `original/` intact; 0 console errors; draw (original / round2) 2.28 / 2.10 ms
+full, 2.37 / 2.12 desktop, 2.13 / 1.95 phone; all 13 copy rows pass contrast over the whole film at both
+framings (the two unfilled-track rows fail as on the original); 0 clouds below a roof.

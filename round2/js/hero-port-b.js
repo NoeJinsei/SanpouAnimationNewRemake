@@ -1002,14 +1002,14 @@
   // a tier's drawing: u = scale of every part, air = how far its tones go toward the air (below zero: toward navy,
   // the nearest row carries the most weight), lod = how much is drawn
   var CITY_LOOK = {
-    near: { u: 1, air: -0.08, lod: 2 },
-    nearBack: { u: 0.94, air: 0.2, lod: 2 },
-    far: { u: 0.78, air: 0.52, lod: 1 },
-    farBack: { u: 0.72, air: 0.62, lod: 1 },
-    deep: { u: 0.6, air: 0.78, lod: 0 }
+    near: { u: 1, air: -0.3, lod: 2 },
+    nearBack: { u: 0.94, air: 0.04, lod: 2 },
+    far: { u: 0.78, air: 0.5, lod: 1 },
+    farBack: { u: 0.72, air: 0.66, lod: 1 },
+    deep: { u: 0.6, air: 0.82, lod: 0 }
   };
   // the two haze bands, the same in every scene: [strength at the ground, height]
-  var CITY_HAZE = [[0.4, 430], [0.2, 270]];
+  var CITY_HAZE = [[0.4, 430], [0.13, 270]];
   function CityHaze(id, baseY, i) { return h("rect", { x: 0, y: baseY - CITY_HAZE[i][1], width: 1920, height: CITY_HAZE[i][1], fill: "url(#" + id + ")" }); }
 
   var _cpMemo = {};
