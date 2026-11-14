@@ -634,3 +634,22 @@ the rule at x 171. Built as side `trial`: 0 console errors, draw 1.49 ms against
 2. **The truck lettering.** The roman name is the big one and 三豊運輸 the small one under it. On a 390 px
    phone the warehouse sign is outside the crop, so the truck is the only place the name is read at all.
 
+
+## The owner's verdict on the warehouse (2026-11-14): right, go on; the sign in Japanese is in
+
+"The warehouse is right — go on to the supplier building's dock in scene 01." The Sanpou warehouse of scene 02
+is approved.
+
+- **The sign.** `round2/parts/r3-sign-jp.js` is spliced into `round2/js` (one block, the two `text.push`
+  lines of the fascia): it reads 「三豊運輸　物流センター」. Checked on `round2`: 0 console errors; draw
+  (original / round2) 1.97 / 1.46 ms full, 1.90 / 1.43 desktop, 1.73 / 1.55 phone. Picture:
+  `evidence/2026-11-14-lettering/sign-in-round2.png`.
+- **Two jobs for later, each when its element is redrawn** (the owner's words, in short):
+  1. **The trucks** (next after the supplier dock): 三豊運輸 becomes the big line on the box side and the
+     roman SANPOU the small one under it, the way the scene 04 card does it. On a 390 px phone the warehouse
+     sign is outside the crop, so the truck is the only place the name is read at all. This replaces the old
+     rule "truck lettering exactly as it is"; the words themselves do not change.
+  2. **The Sanpou depot in the finale** (with the rest of scene 05): it carries the vermilion fascia line but
+     no name; put 三豊運輸 on it, sized so it is legible on a phone.
+- **All other copy is left alone.** Scene 03's caption uses 関東一円, which contradicts the company facts, but
+  copy is the owner's call and he has not decided yet.

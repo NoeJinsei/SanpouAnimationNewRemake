@@ -40,7 +40,8 @@ what stays is the cast, the staging and the story. See `HANDOFF.md`.
 - Already decided by the owner, keep off: floating dust, rotating sun spokes, stars, night lamps and glows, data
   cards, in-art titles, grid lines behind the map, any faint ellipse or stripe that reads as noise.
 - No other company's branding, no readable number plates, no people or faces, vending machines unbranded, the
-  truck lettering exactly as it is, no new claims about the company (no refrigerated trucks, no badges).
+  truck lettering's words exactly as they are (from 2026-11-14 三豊運輸 is the big line on the box side and the
+  roman name the small one under it, once the trucks are redrawn), no new claims about the company (no refrigerated trucks, no badges).
 
 ## 1. Essence, and what it is not
 

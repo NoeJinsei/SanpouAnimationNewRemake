@@ -154,12 +154,17 @@ Round 3 (started 2026-11-14, brief in `PROMPT-FOR-FABLE.md`):
   `r3-size-pick`, `r3-clouds-b`. Details and check results are at the end of `CHANGES.md`; pictures in
   `evidence/2026-11-14-r3-flat/` (`picked-scene01/03/05.jpg` are the chosen sizes). The sizes are closed:
   do not reopen them.
-- **The Sanpou warehouse of scene 02 is drawn, merged and shown (2026-11-14), waiting for the owner's
-  verdict.** Parts `r3-warehouse` and `r3-clouds-b2` are in `round2/js`; evidence in
-  `evidence/2026-11-14-r3-warehouse/`; what it is, the constants it changed and the check results are at the
-  end of `CHANGES.md`. Open for him: the forklift stands in the right-hand wing, which the phone crop never
-  reaches. **Next, after his yes:** the same working feel at the supplier building's dock in scene 01 (reuse
-  the warehouse's conveyor, pallets, cartons and forklift), then the airport, the terminal and the plane.
+- **The Sanpou warehouse of scene 02: approved by the owner (2026-11-14)** ("The warehouse is right").
+  Parts `r3-warehouse`, `r3-clouds-b2` and `r3-sign-jp` are in `round2/js`; evidence in
+  `evidence/2026-11-14-r3-warehouse/` and `evidence/2026-11-14-lettering/`; details at the end of
+  `CHANGES.md`. Its sign reads 三豊運輸　物流センター (Japanese, never roman only).
+- **The company name on things (owner, 2026-11-14).** The characters are 三豊運輸 (never 株式会社, never
+  三豊運送). Two jobs wait for the elements they sit on: **the trucks** (next after the supplier dock): on
+  the box side 三豊運輸 becomes the big line and the roman SANPOU the small one under it, the way the scene 04
+  card does it, because on a 390 px phone the truck is the only place the name is read (this replaces "truck
+  lettering exactly as it is"); **the Sanpou depot in the finale** (with the rest of scene 05): put 三豊運輸
+  on it, legible on a phone. Leave all other copy alone: scene 03's caption says 関東一円, which the company
+  facts ban, but copy is the owner's call and he has not decided.
 - `trial` is a scratch viewer side (`sh tools/build-side.sh trial <part>`, `samples/trial/` is gitignored):
   use it to try a part before splicing it into `round2/js`, instead of adding a side each time.
 - **Three checks added with the flat pass:** `node tools/cloud-check.mjs <side> --skip=7417-9139` (no cloud

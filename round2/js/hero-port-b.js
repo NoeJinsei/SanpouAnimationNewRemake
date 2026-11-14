@@ -2279,9 +2279,8 @@
     fill(back, rd(B(10, 169, 320, 40)), D.whSign);
     fill(back, rd(B(10, 207.5, 320, 1.5)), D.whSignLit);
     fill(back, rd(B(171, 177, 1.5, 24)), D.whSignRule);
-    text.push(h("text", { x: 34, y: -179.6, fontFamily: FONTS.lat, fontSize: 27, fontWeight: 800, fill: COLORS.paper, letterSpacing: 0.6 }, CONTENT.brand.nameLat));
+    text.push(h("text", { x: 34, y: -179.6, fontFamily: FONTS.jp, fontSize: 26, fontWeight: 800, fill: COLORS.paper, letterSpacing: 1.5 }, CONTENT.brand.nameJp));
     text.push(h("text", { x: 191, y: -182.6, fontFamily: FONTS.jp, fontSize: 17, fontWeight: 700, fill: D.whSignSub, letterSpacing: 1.5 }, CONTENT.brand.signSub));
-
     /* ---- a strip of high windows on the hall, under a slim sun shade ---- */
     glaze(back, 420, 174, 192, 30, 6, [{ hi: [[19, 6]] }, { hi: [[22, 3], [28, 1.8]] }, { hi: [[18, 7]] }, {}, { hi: [[21, 5]] }, { hi: [[17.5, 3], [24, 5]] }]);
     tone(back, [B(418, 204, 196, 3), B(418, 171.4, 196, 2.6)], D.whAlu, D.whAluShade);
