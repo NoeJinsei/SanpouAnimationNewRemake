@@ -3027,7 +3027,9 @@
     TOKYO: { x: 463.8, y: 792.8, f: 15, at: [456.4, 791.3] }, SAITAMA: { x: 418.7, y: 745.2, f: 15, at: [425.0, 733.8] },
     KANAGAWA: { x: 451.5, y: 830.6, f: 14 }, CHIBA: { x: 565.7, y: 851.7, f: 15 },
     IBARAKI: { x: 581.4, y: 715.6, f: 15 }, TOCHIGI: { x: 523.7, y: 628.1, f: 15 },
-    GUNMA: { x: 411.4, y: 665.9, f: 15 }, NIIGATA: { x: 397.0, y: 552.7, f: 15 },
+    // 新潟 stands in the open land south west of its place, clear of the phone's buttons now that the map is
+    // higher; `at` keeps its wipe aimed from where the name used to stand
+    GUNMA: { x: 411.4, y: 665.9, f: 15 }, NIIGATA: { x: 376.0, y: 592.0, f: 15, at: [397.0, 552.7] },
   };
   var ROUTE_ORDER = ["CHIBA", "IBARAKI", "TOCHIGI", "GUNMA", "NIIGATA", "KANAGAWA", "SAITAMA"];
   var ROUTE_END = {
@@ -3189,12 +3191,14 @@
      exactly that when scene 05 begins, so the water does not jump there), rise = the part of its life in
      which a band comes up from nothing, fade = how its opacity falls as it travels, tol = how closely the water follows the coast, taperN / taperS = how far along the
      neighbours' coast, north and south, the apron narrows to nothing. */
-  // Round 7 (2026-11-15): the box stands 36 px higher than it did (its top was 12). On the desktop framing the
-  // site lays a dark band over the foot of the hero, from stage y 713 down, and the hub, the name cards and
-  // 東京 stood in it. 36 px is what a phone leaves: there the name 新潟 comes up under the two buttons and now
-  // clears them by 10 px. It takes the darkness over the hub from 25 % to 15 %; clearing the band altogether
-  // takes 89 px, which a phone does not have (measured by node tools/map-band.mjs <side>).
-  var MAP_BOX = [535, -24, 850, 1056];
+  // The box's top is -77 (it was 12 until round 7, then -24): the map stands 89 px higher than it first did,
+  // at full size. On the desktop framing the site lays a dark band over the foot of the hero, from stage y 713
+  // down, and the hub, the three name cards and 東京 stood in it; 89 px clears the hub and all three cards
+  // (東京 keeps 4 %). A phone has only 46 px above the name 新潟 before it meets the two buttons, so that name
+  // moved down into the open part of Niigata's own land (MAP_LABEL.NIIGATA) and clears them by 17 px.
+  // The reviewer's answer of 2026-11-16, measured by node tools/map-band.mjs <side>. Not the 13 % smaller map:
+  // that would take the map truck's gap, tyres and windscreen back under the 3 stage px floor.
+  var MAP_BOX = [535, -77, 850, 1056];
   var SWELL = { n: 3, reach: 24, far: 1.95, period: 34 / 9, rise: 0.04, fade: 1.25, tol: 2.4, taperN: 285, taperS: 100 };
   /* The same water off our other coast, Niigata's, on the Sea of Japan. It cannot grow about the head
      office: seen from there the sea lies beyond every line through that coast, so the straight side of
