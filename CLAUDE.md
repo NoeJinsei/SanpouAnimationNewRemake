@@ -261,11 +261,12 @@ loading strips; its new-versus-old lines are in the script. Details and check nu
 - Three scratch sides exist (`trial`, `trial2`, `trial3`) so helpers can build side by side. A helper
   stopped by the usage limit is resumed with a message to it; its part file on disk survives.
 
-## Round 6 (2026-11-15): drawn, merged, shown together, waiting for the owner's review
+## Round 6 (2026-11-15): accepted (round 7 below builds on it)
 
 Asked for after the four fixes were accepted; parts `r6-*`, one commit each with its own evidence folder,
 gathered on `evidence/2026-11-15-round6-review/index.html` (through the viewer's server). Details and
-numbers are at the end of `CHANGES.md`. **Check the owner's verdict before building on any of it.**
+numbers are at the end of `CHANGES.md`. Accepted on 2026-11-15: scene 03, the street, the steered map
+trucks, the arrival ring and the plane's speed stay as they are.
 
 - **Map trucks** (`r6-map-corridors`, `r6-map-truck`): the owner saw them slide ("sliding by the side
   rather than actually driving"). The truck is a plan view (4 nodes), steered along its corridor;
@@ -293,8 +294,65 @@ numbers are at the end of `CHANGES.md`. **Check the owner's verdict before build
   smoother:** on the slowed phone the frame median is 9.4 / 11.8 / 8.5 / 5.9 / 7.7 ms in scenes 01 to 05
   against the original's 6.2 / 6.8 / 6.3 / 5.9 / 5.6, about where it stood. Scene 02 is the heaviest. What
   costs is what is painted (the city rows, the trucks), so that is where the motion pass should look.
-- **Not started, as the owner asked:** the seams between scenes and the motion pass. They come after he
-  has looked at the drawing.
+  (Round 7 found what it was: redrawing still scenery every frame. See "The cost" below.)
+- The seams and the motion pass were not part of round 6; they are round 7, below.
+
+## Round 7 (2026-11-15 and 16): built, merged, shown together, waiting for review
+
+Round 6 was accepted. Round 7 was four corrections on it and then the half of the brief that had never
+been touched: the seams, the motion pass and the cost. Parts `r7-*`, one commit each; shown on
+`evidence/2026-11-16-round7-review/index.html` (through the viewer's server), with clips. Details and
+numbers are at the end of `CHANGES.md`. **Check the verdict before building on any of it.**
+
+- **The four corrections:** the map truck redrawn at 1.5 times (`r7-map-truck`: box, gap, narrower cab,
+  tyres, a shadow; rejected `-opt-sizeonly`, `-opt-125`); the map 36 px higher (`r7-map-lift`); 神奈川's ring
+  open on the name's side (`r7-map-ring`); no power lines across Tokyo Tower (`r7-tower-wires`).
+  **Open, the reviewer's / owner's to decide:** the map against the desktop band. 36 px is all a phone
+  leaves (新潟 comes up under the two buttons); it halves the band over the hub and does not clear it.
+  Clearing it takes 89 px: the map 13 % smaller (`r7-map-lift-opt-shrink`) or 新潟 behind the buttons
+  (`r7-map-lift-opt-high`). `node tools/map-band.mjs <side>` prints the numbers.
+- **Every scene change is a camera move** (`r7-seams`, `r7-seam-fix`, and the remake's own player
+  `round2/js/hero-glue.js`). 02 -> 03: the camera goes after the departing trucks along the road, the
+  street gives way to the expressway at its fastest moment (`SEAM23`, `seam23X`), and it lands riding with
+  the convoy. 03 -> 04: the expressway, still running, goes down out of the frame as the map comes down
+  into it (`SEAM34`, `seam34`): one stage, two slots, no dissolve. 01 -> 02 (the pan) and 04 -> 05 (the
+  map's retreat) keep their frames and land on `landEase`. The phone camera moves from scene to scene on a
+  1.8 s ease (`camEase`), not at a fixed chase rate. The dwells, `ENTER_RATE`, the five stops and the
+  camera paths are untouched: only how a move eases changed.
+- **The viewer's clock player follows the side:** `JourneyPort.SEAM23` / `seam34` in a side's scene file and
+  `schedule.camEase` in `sides.json` switch `viewer/timeline.js` and `viewer/player.js` to the new seams and
+  camera; a side without them (the original) plays as before. `samples/before-round7` (side "Before the
+  motion pass, frozen") is the working copy after the four corrections and before all of this, never edited.
+- **Nothing pops** (`r7-pops-landings`): scenes 01-02 have ONE ambient clock (the trucks' idle used to step
+  back a pixel at 14600 ms); the finale is no longer faded in as one group (every gradient used to shift a
+  level at 28700 ms): it stands finished under the map's opaque panel. `motion-check` on the whole film:
+  0 frozen steps, 0 pops, in every scene.
+- **The route line** (`r7-route-line`): the roads' centre dashes (street, expressway, finale road) are the
+  vermilion of the map's corridors, `DAY.routeLine`. Its own commit, so it can be dropped alone.
+- **The cost (`r7-cost-a`, `r7-cost-b`). Read this before adding anything that moves.**
+  What the remake cost was not its script and not its node count: it was REDRAWING. Everything shared one
+  layer, so any change anywhere made the browser draw the whole scene again (13.6 ms a frame of raster work
+  in scene 02 against the original's 0.4 ms; `node tools/trace-side.mjs <side> --from --to` shows it).
+  The engine's rules now:
+  - a group with `data-cache` is a finished drawing and **gets its own layer** (`will-change`), drawn once.
+    Give `data-cache` to anything big that only ever moves as a whole. Do not put something that changes
+    inside one (its layer is drawn again whenever it changes). `data-layer` on such a group opts out (the
+    buildings of a row that already has a layer).
+  - **a scene is a stack of pictures**, not one svg (scenes 01-02): live pictures (`h("svg", PIC, ...)`) and
+    still ones (`stillPic(x, ...)`, the rows of the city, moved by the camera as layers). Keep the order.
+  - a single filled shape's `opacity` is written as `fill-opacity` by `h()`: same picture, no effect node.
+    A GROUP with opacity is still expensive (the browser draws it through a buffer): avoid new ones.
+  - the patcher skips a node whose description is the very object it was last patched to, so drawings built
+    once and kept (memoised) cost nothing per frame. Never change such an object after it is built.
+  Measured back to back in one sitting (phone @2x, CPU 4x slower, whole film): original 70 to 74 fps,
+  median 13 ms, 12 % of frames over 16.7 ms; remake 78 to 80 fps, 12.3 ms, 5 %. Per scene the remake is at
+  or better than the original in all five. Always report both sides from the same run.
+- **Already there, checked, not added to:** ambient motion in every hold (clouds, birds, the Tower's beacon,
+  cranes, lit windows, exhaust, both forklifts, the airport's windsock, radar and baggage train, the map's
+  water and dashes) and weight wherever a truck moves (`truckMotion`, the forklifts' pitch, `mapRunEase`).
+- New tools: `check-seams.mjs` (the real player plays both moves, at both framings, and by click),
+  `trace-side.mjs` (where a frame's time goes), `what-moves.mjs` (where two moments differ),
+  `what-changes.mjs` (what the patcher writes per step), `map-band.mjs`; `record.mjs` takes `--dpr=2`.
 
 Usage: this account has a 5-hour usage limit; a burst of parallel agents exhausted it in the first session and
 killed work in progress. Use one or two agents at a time (a cheaper model for engineering, the best one for

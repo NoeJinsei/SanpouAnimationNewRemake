@@ -16,8 +16,8 @@
     },
     {
       "id": "round2",
-      "label": "Remake (round 3 working copy)",
-      "detail": "the working copy: every drawing is the remake's own (round 6, 2026-11-15); the seams and the motion pass are still to come",
+      "label": "Remake (working copy)",
+      "detail": "the working copy: every drawing is the remake's own, the scene changes are camera moves and it plays smoother than the original (round 7, 2026-11-16)",
       "kind": "dom",
       "base": "round2/js/",
       "scripts": [
@@ -29,6 +29,22 @@
       "schedule": {
         "holdAmbient02": true,
         "camEase": 1800
+      }
+    },
+    {
+      "id": "before-round7",
+      "label": "Before the motion pass, frozen",
+      "detail": "the working copy as it stood on 2026-11-15 after the four corrections of round 7 and before the seams, the motion pass and the cost work (commit 96b9f61), never edited: the 'before' of every clip",
+      "kind": "dom",
+      "base": "samples/before-round7/js/",
+      "scripts": [
+        "hero-flag.js",
+        "hero-port-a.js",
+        "hero-port-b.js"
+      ],
+      "glue": "hero-glue.js",
+      "schedule": {
+        "holdAmbient02": true
       }
     },
     {

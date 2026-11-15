@@ -1361,3 +1361,90 @@ These four were asked for with it. One commit each, parts `r7-*`, each with its 
 `original/` intact, site untouched; `check-viewer` 0 console errors; `motion-check` scene 04: only the
 two-step dissolve lead frozen, 0 pops; `contrast-check` scene 04: every copy row passes at both framings
 (the unfilled track fails as on the original).
+
+## Round 7, part 2: the seams, the motion pass and the cost (2026-11-15 and 16)
+
+The drawing was finished; this is the half of the brief that makes it a film. The owner's timings are
+untouched (`AUTO_DWELL` [7000, 7600, 7200, 6000, 18000], `ENTER_RATE` 1.2, the five stops, the camera paths):
+only HOW a move eases changed. Shown with clips on `evidence/2026-11-16-round7-review/index.html`.
+
+### Every scene change is one camera move (`r7-seams`, `r7-seam-fix`, `round2/js/hero-glue.js`)
+- **02 -> 03** was an 18-frame dissolve between two still cameras. Now the camera goes after the departing
+  trucks along the road, to the right: slowly, then fast (`SEAM23.v` 118 px a frame at the top, 4250 px/s).
+  At its fastest the street gives way to the expressway, going by at the same speed, over 6 frames (0.17 s);
+  then it lands over 1.25 s until it rides with the convoy. `seam23X(m)` is the camera's extra travel at
+  master frame m: in scene 02 it is added to the camera (every layer answers at its own depth), in scene 03
+  the road's scroll is short of its steady pace by what is still to come, and the convoy, at its own steady
+  speed, is simply ahead on the road until the camera has caught it up. No truck fades in any more. Once the
+  camera has landed scene 03 is the picture it always was (0.03 % of pixels differ from before).
+- **03 -> 04** was a 0.85 s dissolve onto a frozen frame, between two stages. Now the expressway, still
+  running, goes down out of the frame and the map comes down into it from above (`seam34(f)`, 34 frames,
+  0.94 s, 114 px a frame at the top). One stage, two slots, a transform on each. A click on 04 from 03's
+  hold plays the same move; every other jump still dissolves.
+- **01 -> 02** (the pan inside one scene) and **04 -> 05** (the map draws back, the land is there) keep their
+  frames and distances and ease on `landEase` (quick start, long landing) instead of in-out cubic.
+- **The phone camera** (the glue's art-directed framing) used to chase its target at a fixed rate, so it set
+  off at full speed when a scene changed. Each scene change is now one move of 1.8 s from where the camera is
+  to the new scene's own path, eased in over the first 0.3 and landing over the rest (`camEase`).
+- `tools/check-seams.mjs` runs the real player: both moves play, at both framings, and by click.
+
+### Nothing pops (`r7-pops-landings`)
+- 14600 ms: the three trucks at the docks moved a pixel in one step. Their idle ran on the frame clock while
+  the sky ran on its own. Scenes 01-02 have ONE ambient clock now.
+- 28700 ms: the finale was faded in as one group over the whole stage; on the step its opacity reached 1 the
+  browser stopped drawing it through a buffer and every gradient shifted by one level. The finale now stands
+  finished under the map's opaque panel and is seen as the panel goes. While the map is up it is not drawn.
+- `motion-check`, the finished film, scene by scene (0..7000, 7000..14600, 14600..21800, 21800..27800,
+  27800..49500 ms, 60 steps a second): **0 frozen steps and 0 pops in every scene.** (Scene 04 used to
+  begin with two frozen steps, the dissolve's lead; there is no dissolve there now.)
+
+### The world is never frozen; heavy things show weight (checked, nothing added)
+- What is alive in each hold (`node tools/what-moves.mjs <side> <ms> <ms + 500>`): scene 01 the clouds, the
+  birds, the shafts, the Tower's beacon, a crane, the supplier's forklift, the truck's idle and exhaust;
+  scene 02 the warehouse forklift, three trucks' idle and exhaust, clouds, birds; scene 03 everything;
+  scene 04 the water off both coasts, the corridors' dashes, the trucks; scene 05 the plane's 26 s cycle,
+  the road trucks, the depot's trucks, the airport's windsock, radar, tower lamp and baggage train, the
+  beacon, cranes, lit windows, clouds, birds.
+- Weight: every truck that starts or stops goes through `truckMotion` (scene 01's arrival, the move to the
+  dock, the three departures, the depot's trucks in the finale); both forklifts pitch on their own
+  acceleration; the map trucks run on `mapRunEase` (soft start, longer landing); the plane has its own.
+
+### The route line (`r7-route-line`)
+- The centre dashes of the street, the lane dashes of the expressway and the centre dashes of the finale's
+  road are the vermilion of the map's corridors (`DAY.routeLine`): same dashes, same places, nothing added.
+  With the corridors and the site's dashed track it is one line from the first scene to the last. It lies
+  under the site's dark band, so it is quiet. Its own commit: it can be dropped alone.
+
+### The cost (`r7-cost-a`, `r7-cost-b`)
+- **What it was.** `tools/trace-side.mjs` (new) adds up a frame's work from a Chrome trace. Scene 02, phone,
+  CPU slowed four times: the remake's script was faster than the original's (5.1 against 7.3 ms) and its
+  main thread about level (14.6 against 15.6 ms), but its raster work was 17 ms a frame against 0.4 ms.
+  Everything shared one layer, so anything that moved anywhere (a cloud, a lit window, a truck's idle) made
+  the browser draw the whole scene again, and merging rectangles into a few large paths to save nodes had
+  made that drawing dear. That is why fewer nodes had not made it smoother.
+- **What changed** (the picture is the same: 0.08 % of pixels differ on the stage, worst 0.27 %; 0.10 % on a
+  phone, worst 0.57 %; all at the edges of layers):
+  1. a group with `data-cache` gets a layer of its own: drawn once, then only moved (raster 13.6 to 1.3 ms);
+  2. the patcher skips a node whose description is the very object it was last patched to (script 5.6 to
+     4.2 ms);
+  3. a single filled shape's `opacity` is written as `fill-opacity` (scenes 01-02 had 150 such shapes; each
+     was a separate effect for the browser: paint and layer work 8.2 to 6.4 ms);
+  4. scenes 01-02 are a stack of pictures instead of one svg: the four rows of the city are still pictures
+     with one layer each (their 41 buildings no longer take one apiece), moved by the camera as layers;
+  5. 56 circles that were never seen and an empty opacity group are gone from scenes 04-05.
+- **Measured back to back, one sitting, phone @2x, CPU 4x slower.** Whole film, two runs each:
+  original 69.9 / 74.0 fps, frame median 13.7 / 12.9 ms, 13.0 / 11.5 % of frames over 16.7 ms;
+  remake 78.4 / 79.7 fps, 12.4 / 12.2 ms, 4.5 / 5.0 %. (Before the cost work the remake stood at 50 to 54
+  fps and 43 to 54 % in the same sitting.) Scene by scene, median of two runs, original / remake:
+  01 14.0 / 12.9 ms, 2.8 / 2.0 % over 16.7 ms; 02 13.1 / 13.8 ms, 22.4 / 3.6 %; 03 14.8 / 12.4 ms,
+  19.0 / 4.7 %; 04 14.3 / 11.5 ms, 15.2 / 9.2 %; 05 13.4 / 11.4 ms, 3.2 / 2.0 %.
+- **Nodes** (`node tools/node-count.mjs original round2`; original / before round 7 / now): 01 1337 / 1472 /
+  1484, 02 1372 / 1483 / 1495, 03 1254 / 944 / 940, 04 778 / 1017 / 946, 05 777 / 1016 / 945. Scenes 01 and
+  02 have 12 more than before the round (the wrappers of the picture stack); the others have fewer.
+
+### Checks on the finished film
+`original/` intact (7 of 7), the website folder untouched; `check-viewer` 0 console errors (determinism, the
+real player, rapid clicks, reduced motion); `check-seams` passes at both framings; `check-player-vs-glue`
+matches in every hold; `motion-check` 0 frozen steps and 0 pops in all five scenes; `contrast-check` all 13
+copy rows pass at both framings (the unfilled track fails as on the original); `cloud-check` 0 clouds below
+a roof.
