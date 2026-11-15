@@ -3494,10 +3494,15 @@
   }
   /* The map truck: THE FILM'S OWN TRUCK, SEEN FROM ABOVE, pointing right (+x), drawn about its own centre
      (round 8, 2026-11-16; the steering, the wheelbase model, the shadow and the size are round 7's and stay).
-     Every Sanpou truck in the film is a white box with a navy cab and one vermilion stripe along its side.
+     Every Sanpou truck in the film is a white box with a navy cab and one vermilion stripe.
      From above that is, from the tail to the nose:
-       the box      long and white: 13.55 of the truck's 18 units. Its two long edges are the vermilion stripe,
-                    seen from above along both sides (1.25 wide each); its tail end is navy
+       the box      long and white inside ONE NAVY OUTLINE, 13.55 of the truck's 18 units. The vermilion
+                    stripe is a band across its tail (1.75 long): the film's one small vermilion accent.
+                    (The reviewer's verdict of 2026-11-16, replacing the drawing whose two long edges were
+                    the stripe: with no dark edge along its sides that truck read as a pale capsule at true
+                    phone size, and on this map vermilion means ROUTE, so a truck with vermilion flanks on
+                    a vermilion dashed line blurred into the line. At 29 stage px the outline is worth more
+                    than where exactly the stripe sits.)
        the cab      one navy block joined to the box, as wide as the box: its roof, then the pale windscreen
                     across it (1.6 long, 4.7 wide), then the bumper with its two corners cut: the nose
        the wheels   four short navy marks (1.9 long) standing 1.25 out at the corners: the rear pair near
@@ -3527,8 +3532,8 @@
       + R(-7.4, -4.85, -5.5, -3.6) + R(-7.4, 3.6, -5.5, 4.85) + R(4.7, -4.85, 6.6, -3.6) + R(4.7, 3.6, 6.6, 4.85);
     return _mapTruck = { d: d, art: [
       h("path", { d: d, fill: C.ink }),
-      Q(-7.75, -3.6, 3.3, 3.6, C.route),            // the stripe along both sides: the box's two long edges
-      Q(-7.75, -2.35, 3.3, 2.35, C.depotLit),       // the roof
+      Q(-7.75, -2.35, 3.3, 2.35, C.depotLit),       // the roof, inside the navy outline
+      Q(-7.75, -2.35, -6, 2.35, C.route),           // the stripe: a band across the tail
       Q(6.15, -2.35, 7.75, 2.35, C.depotGlassLit)   // the windscreen
     ] };
   }
