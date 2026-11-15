@@ -1079,3 +1079,27 @@ on a phone). Part `r5-map-names` (two blocks) is in `round2/js`. Evidence:
 
 **Known.** With this fix alone, the arriving 入間 depot covers half of 埼玉 for a third of a second; fix 4
 (the hub) removes that.
+
+
+## Fixes on the batch, 4 of 4 (2026-11-15): the knot at the centre of the map is opened
+
+Inside about 140 x 60 map units stood three name cards, three depots, two place dots, a stub line, the
+meeting of all seven corridors and the names 埼玉 and 東京: nothing overlapped, but it read as a knot, in
+the centre of the phone's picture. Part `r5-map-hub` (six blocks) is in `round2/js`. Evidence:
+`evidence/2026-11-15-fix-map/hub-*`.
+
+- **入間 stands on its real point, beside 志木** (a 5 unit gap between the two depots). Both place dots and
+  the stub line are gone (their nodes are kept, empty, so the node list keeps its shape): the depots
+  themselves mark the places.
+- **The Saitama corridor passes behind 入間**, and its truck now runs all the way to its dot (it used to
+  stop 24 units short so as not to cover a name).
+- The three bases keep their real places and names; the head office is untouched.
+- **0 overlaps** among depots, cards and names over 195 measured moments. **Nodes: 1059 to 1059.**
+
+**Checks on `round2`, all four fixes in.** `original/` intact; 0 console errors; draw (original / round2)
+1.73 / 1.71 ms full, 1.66 / 1.70 desktop, 1.71 / 1.71 phone (against the film before the map fixes, same
+sitting: 2.04 to 1.64, 1.90 to 1.59, 1.81 to 1.56). The rest of the checks are in the section below.
+
+**Known, for the owner.** 入間's depot arrives at 1.8 times its size instead of 1.9 (the arrival is a closed
+item; this is the one number of it that changed, so that it does not touch 志木 as it lands). Two corridors
+still pass behind the 志木 name card.

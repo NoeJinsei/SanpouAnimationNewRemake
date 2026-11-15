@@ -3001,11 +3001,12 @@
      3.2 units or more from its own border and from everything else; at 16 it does not fit).
        東京  in the wide part of west Tokyo, 3.2 u inside the border above and below; the Kanagawa truck
              passes its lower right corner without touching it
-       埼玉  in the open west of Saitama, above the 入間 name card and left of where the Saitama truck stands
+       埼玉  in the open west of Saitama, 6 u above the 入間 name card and left of where the Saitama truck
+             stands (1.5 u lower than before the hub was opened up: the card under it stands lower now)
      at = the point a prefecture's wipe is aimed from the head office. It is where the name stood when the
      wipe was set, and it stays there when a name moves, so the wipe is exactly what it was. */
   var MAP_LABEL = {
-    TOKYO: { x: 463.8, y: 792.8, f: 15, at: [456.4, 791.3] }, SAITAMA: { x: 418.7, y: 743.7, f: 15, at: [425.0, 733.8] },
+    TOKYO: { x: 463.8, y: 792.8, f: 15, at: [456.4, 791.3] }, SAITAMA: { x: 418.7, y: 745.2, f: 15, at: [425.0, 733.8] },
     KANAGAWA: { x: 451.5, y: 830.6, f: 14 }, CHIBA: { x: 565.7, y: 851.7, f: 15 },
     IBARAKI: { x: 581.4, y: 715.6, f: 15 }, TOCHIGI: { x: 523.7, y: 628.1, f: 15 },
     GUNMA: { x: 411.4, y: 665.9, f: 15 }, NIIGATA: { x: 397.0, y: 552.7, f: 15 },
@@ -3018,31 +3019,40 @@
   // one corridor per direction: the bearing each route leaves the hub on. Swept for the widest possible
   // fan — the closest two corridors stay 14 map units (23 stage px) apart, so none crowds another.
   var ROUTE_DEP = { CHIBA: 48, IBARAKI: -36, TOCHIGI: -66, NIIGATA: -96, GUNMA: -132, SAITAMA: -170, KANAGAWA: 122 };
-  /* The three bases, each standing on its real place (map units; 1 u = 1.63 stage px).
+  /* The three bases, each standing ON its real place (map units; 1 u = 1.63 stage px). No base has a place
+     dot or a stub any more: the building is the mark.
        本社（板橋）   stands on its own point in the north of Tokyo: the point is under its roof, so the
-                     seven routes come out from behind the head office (no dot: the building is on it)
-       志木営業所    stands on its point in Saitama: the dot shows just under its base line
-       入間営業所    stands in Saitama beside its point, its near wall 9 u west of the dot and joined to
-                     it by a stub: the Saitama corridor runs over the point's own spot, and Tokyo
-                     begins 8 u south of it
-     Positions were set against the corridors and the prefecture borders (scratch solver, 2026-11-14):
-     every corner of both branch depots is inside Saitama, the head office's base is inside Tokyo.
+                     seven routes come out from behind the head office (unchanged)
+       志木営業所    stands on its point in Saitama: the point is at its door, 3 u under its base line
+                     (unchanged; only its dot is gone)
+       入間営業所    stands on its point in Saitama, the point 1 u right of its middle. It used to stand
+                     18 u west of the point, joined to it by a stub, because the Saitama corridor runs over
+                     the point; now the corridor simply passes behind the building, in at its lower right
+                     corner and out through its roof, as a road passes behind a depot. Its base line is
+                     4 u lower than 志木's: just low enough to hide the corridor where it goes in.
+     So the two branch depots stand side by side, 5 u apart, with the head office in front of them to the
+     right: one group of three buildings instead of three marks, two dots, a stub and a corridor threaded
+     between them, and the west of Saitama is left open for its name and for the corridor's last stretch.
+     Every corner of both branch depots is inside Saitama, the head office's base is inside Tokyo.
      The bases are only 16 u and 25 u apart, so a depot can be no wider than 18 u at rest. Each one
-     therefore arrives ENLARGED (big) about its own place (px = the pivot on its base line), lifted a
-     little (lift) so it clears what is already down, and is set down as it eases to resting size; only
-     one is ever enlarged at a time. t0 = the frame its arrival starts.
+     therefore arrives ENLARGED (big) about its own place (px = the pivot on its base line; for 入間 its
+     right wall, so that it grows away from 志木), lifted a little (lift) so it clears what is already
+     down, and is set down as it eases to resting size; only one is ever enlarged at a time. 入間 arrives
+     1.8 times its size, not 1.9: at 1.9, where it stands now, its roof would reach the 志木 name card.
+     Measured every 10 ms of the arrival: no depot, card or name ever overlaps another. t0 = the frame its
+     arrival starts.
      Cards: 本社 to the east (the open wedge between the Ibaraki and Chiba corridors), 入間 to the west,
      志木 on a short post above its roof, in the widest gap of the fan (two corridors pass behind it:
-     there is no spot in Saitama next to 志木 that clears them all). card = [x, y, width], side = the
-     edge it grows from: r = from its left edge rightwards, l = from its right edge leftwards, u = from
-     the post outwards. */
+     there is no spot in Saitama next to 志木 that clears them all). card = [x, y, width], side = the edge
+     it grows from: r = from its left edge rightwards, l = from its right edge leftwards, u = from the
+     post outwards. */
   var MAP_BASES = [
     { id: "itabashi", nm: "本社（板橋）", hq: true, w: 23, cx: 508.5, by: 791.5, px: 505.4, big: 2.2, lift: [0, -2], t0: 24,
       card: [522.8, 778.6, 62], side: "r" },
     { id: "shiki", nm: "志木営業所", hq: false, w: 17.6, cx: 489.2, by: 766.5, px: 491.9, big: 2.0, lift: [0, -4], t0: 40,
       card: [460, 731.5, 53], side: "u", post: 489.2 },
-    { id: "iruma", nm: "入間営業所", hq: false, w: 17.6, cx: 449.2, by: 768, px: 458, big: 1.9, lift: [-3.5, -0.5], t0: 56,
-      card: [384.6, 753.5, 53], side: "l" },
+    { id: "iruma", nm: "入間営業所", hq: false, w: 17.6, cx: 466.4, by: 770.6, px: 475.2, big: 1.8, lift: [-3.5, 0], t0: 56,
+      card: [404.6, 757.1, 53], side: "l" },
   ];
   var CARD_F = 9, CARD_H = 12.5;
   // one depot's arrival, in frames from its t0: pop 0-9, set down 9-19, card 17-24. The next one starts
@@ -3378,9 +3388,10 @@
                   fade  how long it takes to go
                   runs  how many runs it makes in one SWELL.period: the two short corridors (Chiba,
                         Kanagawa) are served twice as often as the others
-                  back  (Saitama only) how far short of the dot it stops: the name 埼玉 lies beside the
-                        last 21 u of that corridor, and a truck any nearer the dot would stand on it.
-                        The others stop where their box clears the dot (11 to 16 u short of it)
+                  back  how far short of the dot it stops, if given. No corridor gives it now: every truck
+                        stops where its box clears the dot (11 to 16 u short of it). Saitama's used to stop
+                        24 u short, between the name 埼玉 and the 志木 name card; the name has moved
+                        clear of the corridor's end, so the truck runs on to its place like the others.
                 First seen, in order: Chiba, Gunma, Kanagawa, Niigata, Ibaraki, then Tochigi and Saitama,
                 which leave late so that their runs fill the end of the hold; two that follow each other
                 closely leave in different directions.
@@ -3397,7 +3408,7 @@
     NIIGATA:  { dep: 2.30, run: 2.42, stay: 0.90, fade: 0.40, runs: 1 },
     IBARAKI:  { dep: 2.65, run: 1.87, stay: 0.90, fade: 0.40, runs: 1 },
     TOCHIGI:  { dep: 3.83, run: 1.77, stay: 0.42, fade: 0.40, runs: 1 },
-    SAITAMA:  { dep: 4.26, run: 1.60, stay: 0.20, fade: 0.36, runs: 1, back: 24 },
+    SAITAMA:  { dep: 4.26, run: 1.60, stay: 0.20, fade: 0.36, runs: 1 },
   };
   /* A run's distance, 0 -> 1 over 0 -> 1 of its time: the speed comes up smoothly over the first 30 %,
      holds, and comes down smoothly over the last 42 % (a longer landing than start). */
@@ -3593,14 +3604,12 @@
           return h("g", null,
             MAP_BASES.map(function (b, j) {
               var B = JRMAP.bases[b.id], s = st[j], hw = b.w / 2;
-              var dk = easeOutCubic(clamp01((s.a + 3) / 4));               // the place lights up first
-              var lk = clamp01((s.a - 13) / 6);                             // then the stub to the building
-              // the stub runs from the place to the nearest point of the resting building's wall
-              var wx = Math.max(b.cx - hw, Math.min(b.cx + hw, B.x)), wy = Math.min(b.by - 1.4, B.y);
+              // every base stands on its own place, so no place has a dot or a stub: the three nodes stay,
+              // empty, so that the node list of the map is the shape it was
               return h("g", null,
-                h("line", { x1: B.x, y1: B.y, x2: mr2(B.x + (wx - B.x) * lk), y2: mr2(B.y + (wy - B.y) * lk), stroke: C.ink, strokeWidth: 1.9, opacity: lk > 0 ? 1 : 0 }),
-                h("circle", { cx: B.x, cy: B.y, r: b.hq ? 0 : mr2(3.9 * dk), fill: C.dot }),
-                h("circle", { cx: B.x, cy: B.y, r: b.hq ? 0 : mr2(2 * dk), fill: C.ink }));
+                h("line", { x1: B.x, y1: B.y, x2: B.x, y2: B.y, stroke: C.ink, strokeWidth: 1.9, opacity: 0 }),
+                h("circle", { cx: B.x, cy: B.y, r: 0, fill: C.dot }),
+                h("circle", { cx: B.x, cy: B.y, r: 0, fill: C.ink }));
             }),
             MAP_BASES.map(function (b, j) {
               var s = st[j];
