@@ -1222,3 +1222,35 @@ fails as on the original; **nodes 1017 before, 1017 after**. Evidence: `evidence
 
 **Known, for the owner.** Kanagawa's place dot already sat on the last stroke of 川; the target now opens
 around that stroke. Clearing it means moving that dot or the name, and both are closed.
+
+
+### Scene 03: the expressway, drawn again from a blank page (`r6-expressway`)
+
+Everything the road is made of was still the original drawing. All of it is new; the sky, city, Fuji,
+trucks, timings and the scroll are as they were, and the caption and title lines are not touched.
+
+- **The gantry** is an open galvanised-steel truss with a soft navy outline (it was a navy slab), on a far
+  column with a plinth and knee braces; its near column still passes in front of the trucks. It sits about
+  70 px lower, so the boards clear the site's two buttons on a phone.
+- **The signs** carry the same words, green and white as Japanese expressway signs are: 関越自動車道 /
+  KAN-ETSU EXPWY / 新潟 Niigata / 前橋 Maebashi with two arrows, and 板橋 出口 / ITABASHI EXIT with its
+  vermilion bar. The direction board is 450 px wide (was 560), so a phone shows it whole; the place names
+  are 58 px (were 37) with the roman under each, and each board has a lamp at its foot.
+- **The road**: a concrete parapet with joints and a steel rail on posts, two lanes with long dashes, a
+  darker hard shoulder, expansion seams, a kerb, and a dark guard rail in front (it was a band with 46
+  posts a tile).
+- **The lamps**: tapered columns with a swept arm and a flat head, two between gantries, so none stands
+  behind a board.
+
+**Checks.** `original/` intact; `check-viewer` 0 console errors; `motion-check` 14600 to 21800 ms: 0 frozen
+steps, 0 pops; `contrast-check` scene 03: all 13 copy rows pass (the desktop caption's lead line is 9.18
+at its tightest, it was 6.52; the track's filled part on a phone 5.06, was 3.24), the unfilled track fails
+as on the original; `cloud-check` 0. **Nodes: scene 03 had 1290 elements on the stage, now 944** (the
+original has 1254). Evidence: `evidence/2026-11-15-expressway/`.
+
+**Known, for the owner.** There is no pale edge line on the near side of the road: the site's caption and
+progress track lie over stage y 918 to 995 and a pale line there cut through "03 輸送". The near column
+wears a dark jacket below the trucks' wheels for the same reason. The lamps are kept as pale as the old
+ones (nothing above the barrier may get darker, the copy sits there), so they are faint under a phone's
+wash. On a phone the big board is whole inside the strip for about 0.3 s as it passes; that comes from the
+scroll and the camera, which are closed.
