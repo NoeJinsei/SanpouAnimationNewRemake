@@ -163,13 +163,23 @@
   // the road truck: a small Sanpou truck rides the leading edge of the dashed line (decoration only)
   var idxEl=document.getElementById('sjxIndex'), truckEl=null, TRUCK_W=30, idxW=0, lastTruckTf='', lastTi=0, lastTfrac=0;
   if(idxEl){ truckEl=document.createElement('span'); truckEl.className='sjx-truck'; truckEl.setAttribute('aria-hidden','true');
+    // Round 8 (2026-11-16): the little truck is the film's truck, drawn again for 30 x 16 px (it was the site's
+    // original drawing until now, the one thing in the picture nobody had remade, because it lives here and not
+    // in the scene code). The film's proportions: a tall white box in a navy outline with the vermilion stripe in
+    // its lower third and white under it; a lower navy cab with its glass; a dark chassis; two wheels tucked under
+    // the body, dark tyres with steel hubs. It is always seen on the dark band, riding the track: the box and the
+    // glass hold it against the dark, the white row and the navy chassis keep its stripe apart from the vermilion
+    // dashes under it, and the cab is the film's cab in the light so it does not sink into the band.
+    // The box stays 30 x 16 (the site's CSS places it). Every edge is on a whole or half pixel, so it is crisp at 1x.
+    // The viewer's clock player reads this drawing out of this file: keep it one assignment of quoted pieces.
     truckEl.innerHTML='<svg width="30" height="16" viewBox="0 0 30 16" fill="none" aria-hidden="true" focusable="false">'
-      +'<rect x="0.5" y="0.5" width="18" height="10" rx="1.5" fill="#f7f9fb" stroke="rgba(8,15,22,0.65)"/>'
-      +'<rect x="1.5" y="8" width="16" height="2" fill="#e16347"/>'
-      +'<path d="M19 3.5h4.6l4.4 4.2v2.8H19Z" fill="#1d2d47"/>'
-      +'<path d="M20.4 4.8h2.8l2.4 2.4h-5.2Z" fill="#9fb4cc"/>'
-      +'<circle cx="6.5" cy="12.6" r="2.6" fill="#0c1626"/><circle cx="6.5" cy="12.6" r="1" fill="#55657e"/>'
-      +'<circle cx="23" cy="12.6" r="2.6" fill="#0c1626"/><circle cx="23" cy="12.6" r="1" fill="#55657e"/>'
+      +'<circle cx="7.5" cy="13.2" r="2.6" fill="#0c1626"/><circle cx="7.5" cy="13.2" r="1.15" fill="#b9c5d6"/>'
+      +'<circle cx="24.3" cy="13.2" r="2.6" fill="#0c1626"/><circle cx="24.3" cy="13.2" r="1.15" fill="#b9c5d6"/>'
+      +'<path d="M2 10.4h26.5v1.9H2z" fill="#13263f"/>'
+      +'<rect x="0.5" y="0.5" width="19.5" height="10" rx="1.2" fill="#fbfdff" stroke="#13263f"/>'
+      +'<rect x="1.5" y="7" width="17.5" height="2" fill="#e16347"/>'
+      +'<path d="M20.9 3.4h5.2l2.9 3.5v5.4h-8.1z" fill="#30466f"/>'
+      +'<path d="M22.2 4.6h3.5l2 2.6h-5.5z" fill="#b7d3ee"/>'
       +'</svg>';
     idxEl.appendChild(truckEl); }
   // truck x = the fill edge of scene i at fraction frac (track width cached in fitStage; no layout read per frame)

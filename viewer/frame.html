@@ -60,14 +60,23 @@
         if (!side.glue) throw new Error("this side has no site player (glue)");
         return load("../" + side.base + side.glue).then(function () { window.heroFrame = { side: side, live: true, heroHeight: function () { return host.getBoundingClientRect().height; } }; });
       }
-      var ready = Promise.resolve();
-      if (document.fonts && document.fonts.ready) ready = document.fonts.load('700 20px "Noto Sans JP"', "三豊運輸関東新潟").catch(function () {});
+      // the little truck on the progress bar is drawn by the side's own player (hero-glue.js: truckEl.innerHTML,
+      // a string of quoted pieces). The clock player shows that same drawing: it is read out of the glue's text,
+      // so there is one drawing per side and the viewer cannot drift from it.
+      var truckSvg = null, ready = Promise.resolve();
+      if (side.glue) ready = text("../" + side.base + side.glue).then(function (src) {
+        var m = /truckEl\.innerHTML\s*=\s*((?:\s*\+?\s*'[^']*')+)\s*;/.exec(src);
+        if (m) truckSvg = new Function("return " + m[1])();
+      }).catch(function () {});
+      var fontsReady = Promise.resolve();
+      if (document.fonts && document.fonts.ready) fontsReady = document.fonts.load('700 20px "Noto Sans JP"', "三豊運輸関東新潟").catch(function () {});
+      ready = Promise.all([ready, fontsReady]);
       if (side.kind === "canvas" && window.HeroCanvas && window.HeroCanvas.ready) ready = Promise.all([ready, window.HeroCanvas.ready]);
       return ready.then(function () {
         var adapter;
         if (side.kind === "canvas") { if (!window.HeroCanvas) throw new Error("the side's scripts did not define window.HeroCanvas"); adapter = HeroPlayer.CanvasAdapter(window.HeroCanvas, fit, stage); }
         else { if (!window.JourneyPort) throw new Error("the side's scripts did not define window.JourneyPort"); adapter = HeroPlayer.DomAdapter(window.JourneyPort, fit, stage); }
-        var p = HeroPlayer.create({ adapter: adapter, host: host, fit: fit, camEase: side.schedule && side.schedule.camEase });
+        var p = HeroPlayer.create({ adapter: adapter, host: host, fit: fit, camEase: side.schedule && side.schedule.camEase, truckSvg: truckSvg });
         window.heroFrame = { side: side, kind: p.kind, seek: p.seek, cost: p.cost, nodeCount: p.nodeCount, heroHeight: p.heroHeight, refit: p.refit };
       });
     });

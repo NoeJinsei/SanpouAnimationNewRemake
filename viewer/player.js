@@ -185,7 +185,7 @@
     var fills = items.map(function (b) { return b.querySelector(".hc-fill"); });
     var idxEl = host.querySelector("#sjxIndex"), truckEl = null, idxW = 0, shown = -1;
     var noEl = host.querySelector("#hcNo"), scEl = host.querySelector("#hcScene"), ldEl = host.querySelector("#hcLead");
-    if (idxEl) { truckEl = document.createElement("span"); truckEl.className = "sjx-truck"; truckEl.setAttribute("aria-hidden", "true"); truckEl.innerHTML = TRUCK_SVG; idxEl.appendChild(truckEl); }
+    if (idxEl) { truckEl = document.createElement("span"); truckEl.className = "sjx-truck"; truckEl.setAttribute("aria-hidden", "true"); truckEl.innerHTML = o.truckSvg || TRUCK_SVG; idxEl.appendChild(truckEl); }
     function controls(st) {
       var i = st.idx, frac = Math.min(1, st.tau / TL.STOPS[i].dwell);
       if (i !== shown) {
