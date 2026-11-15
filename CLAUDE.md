@@ -358,13 +358,17 @@ numbers are at the end of `CHANGES.md`. **Check the verdict before building on a
     `at` keeping its wipe's aim). Hub and all three cards 0 % under the desktop band, 東京 4 %, 新潟 17 px
     under the phone's buttons. Do not make the map smaller: at 1 u = 1.417 px the map truck's gap, tyres
     and windscreen fall under the 3 stage px floor.
-  - **The map truck** (`r8-map-truck`; rejected `-opt-tail`, `-opt-gap`): the film's own truck seen from
-    above: a long white roof whose two long edges are the vermilion stripe, a navy tail, one navy cab joined
-    to the box with the windscreen across it, four short wheel marks. Steering, wheelbase, shadow and the
-    1.5x size are round 7's. The reviewer asked for a navy outline round the box; the pick has vermilion
-    long edges instead (told on the review page; `-opt-tail` is the outlined one).
+  - **The map truck** (`r8-map-truck`, then `r9-map-truck-tail`): the film's own truck seen from above: a
+    long white box inside ONE NAVY OUTLINE with the vermilion stripe as a band across its tail, one navy cab
+    joined to the box with the windscreen across it, four short wheel marks. Steering, wheelbase, shadow and
+    the 1.5x size are round 7's. Rejected, kept as parts: the stripe along both sides
+    (`r9-map-truck-opt-sides`: Fable's first pick, taken out by the reviewer) and a gap behind the cab
+    (`r8-map-truck-opt-gap`). Why the outline won, as a result to hold to: **at about 29 stage px a thing
+    on the map needs a dark edge all round to read as an object, and on the map vermilion means ROUTE:**
+    **nothing that drives on a route may carry vermilion along its length.**
   - **The truck on the progress bar** (a direct edit of `round2/js/hero-glue.js`, `truckEl.innerHTML`): the
-    film's truck at the same 30 x 16 CSS px.
+    film's truck at the same 30 x 16 CSS px. Open, a picture only (`evidence/2026-11-16-r9-progress-truck-cab/`):
+    its cab is lighter than the box's outline; the alternative is the film's cab navy with a light edge.
 - **What is in the picture but not in the scene code. Look here too when asked to redraw "everything":**
   - the little truck on the progress bar: `round2/js/hero-glue.js`, `truckEl.innerHTML`, an inline SVG. Its
     box must stay 30 x 16 CSS px: the site's CSS places it (`.sjx-truck { top: 50%; margin-top: -15px }`)
@@ -374,9 +378,14 @@ numbers are at the end of `CHANGES.md`. **Check the verdict before building on a
   - the bar it rides (`.hc-fill`), the dark band, the pale wash, the copy, the two buttons, the caption:
     the site's HTML and CSS (`original/site/`, `original/css/40-hero.css`), READ ONLY. For the integration
     task: beside the redrawn truck the bar's flat vermilion dashes read a little crude at 2x.
+- **The film is finished to the brief** (the reviewer, 2026-11-16): every drawing remade, both seams as
+  camera moves, no pops, the route line through, and smoother than what it replaces. **Start nothing else.**
+  The owner watches it end to end next; putting it into the site is a separate task that does not start
+  until he has said yes to the film.
 - New tools: `check-seams.mjs` (the real player plays both moves, at both framings, and by click),
   `trace-side.mjs` (where a frame's time goes), `what-moves.mjs` (where two moments differ),
   `what-changes.mjs` (what the patcher writes per step), `map-band.mjs`; `record.mjs` takes `--dpr=2`.
+  `sheet.py` gives every tile of a row the same label bar (a second label line used to shift one picture).
 
 Usage: this account has a 5-hour usage limit; a burst of parallel agents exhausted it in the first session and
 killed work in progress. Use one or two agents at a time (a cheaper model for engineering, the best one for

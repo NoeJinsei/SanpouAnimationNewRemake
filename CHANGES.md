@@ -1502,3 +1502,38 @@ unfilled track fails as on the original); `cloud-check` passes; `map-band` as ab
 before these fixes. `perf-side`, phone @2x, CPU 4x slower, one sitting, one side after the other, two
 runs each: original 75.1 / 74.3 fps, median 12.9 / 13.0 ms, 5.5 / 6.6 % of frames over 16.7 ms; remake
 82.8 / 84.9 fps, 11.6 / 11.3 ms, 3.3 / 2.9 %.
+
+## The map truck's stripe moves to the tail; two smaller things (2026-11-16)
+
+### The map truck (`r9-map-truck-tail`)
+- The reviewer's verdict on the side-stripe drawing of the round before, which comes out: (1) with no dark
+  edge along its long sides it read as a pale capsule, not an object, at true phone size; (2) on this map
+  vermilion means ROUTE (the corridors, the arrival ring), so a truck with vermilion flanks on a vermilion
+  dashed line blurred into the line (`STYLE.md` section 3, vermilion creep); (3) the tail band is the film's
+  truck (white box, navy, one small vermilion accent) and sits with the navy cards and names. At 29 stage
+  px the outline is worth more than where exactly the stripe sits.
+- Now: a navy outline all round the white box, the stripe as a band across its tail (1.75 units). Nothing
+  else about the truck changed: the steering, the wheelbase, the shadow, the 1.5x size, the cab, the four
+  wheel marks.
+- The side-stripe drawing is kept the other way round as the rejected option (`r9-map-truck-opt-sides`,
+  which rebuilds it exactly) with its picture. Evidence in `evidence/2026-11-16-r9-map-truck-tail/`, with
+  the whole of scene 04 at the phone crop and the desktop crop.
+- No node added (scene 04: 945). `check-viewer` 0 console errors; `motion-check` on scene 04: 0 frozen
+  steps, 0 pops; `contrast-check`: all 13 copy rows pass.
+
+### The progress truck's cab: a picture, not a change
+- The cab (#30466f) is lighter than the box's outline, so it is not the darkest part of the truck as it is
+  on every other truck in the film. One alternative, shown at both framings in scene 04 and in scene 05:
+  the film's own cab navy (#28395a) with a light edge along its roof and front. It holds against the band
+  at both framings in both scenes; its edge is one pixel wide on a desktop and it costs one node.
+  `evidence/2026-11-16-r9-progress-truck-cab/` has the picture and the two pieces of markup. Not applied.
+
+### `tools/sheet.py`
+- Every tile in a row gets the same label bar, as tall as the row's longest label. A tile whose label had a
+  second line used to get a taller bar than its neighbour, so the two pictures of a before/after stood at
+  different heights and it could look as if something had moved.
+
+### Where the film stands
+Finished to the brief, in the reviewer's words: every drawing remade, both seams as camera moves, no pops,
+the route line through, and faster than what it replaces. Nothing else is started. The owner watches it
+end to end next; integrating it into the site is a separate task that waits for his yes.
