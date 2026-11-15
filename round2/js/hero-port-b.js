@@ -3492,44 +3492,44 @@
     x = (u - (1 - b)) / b;
     return v * (a / 2 + 1 - b - a + b * (x - x * x * x + x * x * x * x / 2));
   }
-  /* The map truck, SEEN FROM ABOVE, pointing right (+x), drawn about its own centre (round 7, 2026-11-15).
-     The steering of round 6 stays; the drawing is new, because at 18 x 9 u it read as a pill with a dark
-     end, not as a truck. It is the only thing that moves on the map, so it is drawn out of scale, as a map
-     icon is: MAP_TRUCK.k times the old length (1.5: 27 u long, 44 stage px, about 29 px on a phone).
-     What makes it a truck, each part big enough to be seen on a phone (nothing under 1.9 u = 3 stage px):
-       the box      a long white roof inside one navy outline, the vermilion stripe across its front end
-       the gap      1.95 u of open ground between the box and the cab, bridged by the narrow chassis
-       the cab      navy, 1.9 u narrower than the box on each side, its front corners cut; the pale
-                    windscreen sits at its nose, so the short dark end with the light in it is the front
-       the wheels   four navy tyres: the rear pair stands 1.9 u out beyond the box, the front pair 1.9 u
-                    out beside the narrower cab, behind the windscreen, in line with the box's sides
+  /* The map truck: THE FILM'S OWN TRUCK, SEEN FROM ABOVE, pointing right (+x), drawn about its own centre
+     (round 8, 2026-11-16; the steering, the wheelbase model, the shadow and the size are round 7's and stay).
+     Every Sanpou truck in the film is a white box with a navy cab and one vermilion stripe along its side.
+     From above that is, from the tail to the nose:
+       the box      long and white: 13.55 of the truck's 18 units. Its two long edges are the vermilion stripe,
+                    seen from above along both sides (1.25 wide each); its tail end is navy
+       the cab      one navy block joined to the box, as wide as the box: its roof, then the pale windscreen
+                    across it (1.6 long, 4.7 wide), then the bumper with its two corners cut: the nose
+       the wheels   four short navy marks (1.9 long) standing 1.25 out at the corners: the rear pair near
+                    the tail, the front pair beside the cab's roof
        the shadow   the same outline in flat navy, a little down and to the left of the truck whichever
-                    way the truck points (the sun is top right): it lifts the white box off the white land
-     Drawn in the units of the old truck (d: 18 long) and multiplied by k. Four nodes, built once and shared
-     by every truck, plus one node each for its shadow.
+                    way it points (the sun is top right)
+     Few parts, mostly white. Round 7's drawing was an armature of dark parts: tyre blocks that read as two
+     crossbeams, a dark nib of a cab, the stripe as a bar across the middle of the box.
+     Drawn in d (18 long) and multiplied by k; 1 d = 2.45 stage px, so nothing is under 1.23 d (3 stage px).
+     Four nodes, built once and shared by every truck, plus one node each for its shadow: as before.
      MAP_TRUCK: k = its size; hx / hy = half its length and width; axle = its front axle, ahead of its
      centre; base = from that axle back to the rear axle; stop = how far from the middle of the place dot
-     its nose stops (the open target's edge is 7.9 u out, so the two never touch); from / north / join =
-     where it starts, under the head office (right of and below the hub: `north` is the drop for a corridor
-     that leaves upwards), and how far it has run when it is on its corridor's line; show = between which
-     distances run it comes up from nothing (it is longer than the head office is wide, so it comes up as
-     it pulls out from under the building, not behind it); cast = where its shadow lies, in map units. */
+     its nose stops (the open target's edge is 7.9 u out); from / north / join = where it starts, under the
+     head office, and how far it has run when it is on its corridor's line; show = between which distances
+     run it comes up from nothing; cast / shade = where its shadow lies, in map units, and how dark it is. */
   var MAP_TRUCK = { k: 1.5, stop: 8.4, from: [2.5, 6.4], north: 3, join: 16, show: [0.5, 8], cast: [-1.3, 2.3], shade: 0.24 };
-  MAP_TRUCK.hx = 9 * MAP_TRUCK.k; MAP_TRUCK.hy = 4.94 * MAP_TRUCK.k; MAP_TRUCK.axle = 4.55 * MAP_TRUCK.k; MAP_TRUCK.base = 9.95 * MAP_TRUCK.k;
+  MAP_TRUCK.hx = 9 * MAP_TRUCK.k; MAP_TRUCK.hy = 4.85 * MAP_TRUCK.k; MAP_TRUCK.axle = 5.65 * MAP_TRUCK.k; MAP_TRUCK.base = 12.1 * MAP_TRUCK.k;
   var _mapTruck = null;
   function MiniTruck() {
     if (_mapTruck) return _mapTruck;
     var C = DAY.map, k = MAP_TRUCK.k, n = function (v) { return mr2(v * k); };
     var R = function (x0, y0, x1, y1) { return "M" + n(x0) + "," + n(y0) + "H" + n(x1) + "V" + n(y1) + "H" + n(x0) + "Z"; };
-    // everything navy as one outline: the box, the chassis in the gap, the cab, the two axles' tyres
-    var d = R(-9, -3.67, 1.8, 3.67) + R(1.8, -1.3, 3.1, 1.3)
-      + "M" + n(3.1) + "," + n(-2.4) + "H" + n(8.3) + "L" + n(9) + "," + n(-1.7) + "V" + n(1.7) + "L" + n(8.3) + "," + n(2.4) + "H" + n(3.1) + "Z"
-      + R(-6.85, -4.94, -3.95, 4.94) + R(3.3, -3.67, 5.8, 3.67);
+    var Q = function (x0, y0, x1, y1, fill) { return h("rect", { x: n(x0), y: n(y0), width: n(x1 - x0), height: n(y1 - y0), fill: fill }); };
+    // everything navy as one outline: the box, the cab with its cut corners, the four wheel marks
+    var d = R(-9, -3.6, 4.55, 3.6)
+      + "M" + n(4.55) + "," + n(-3.6) + "H" + n(7.8) + "L" + n(9) + "," + n(-2.4) + "V" + n(2.4) + "L" + n(7.8) + "," + n(3.6) + "H" + n(4.55) + "Z"
+      + R(-7.4, -4.85, -5.5, -3.6) + R(-7.4, 3.6, -5.5, 4.85) + R(4.7, -4.85, 6.6, -3.6) + R(4.7, 3.6, 6.6, 4.85);
     return _mapTruck = { d: d, art: [
       h("path", { d: d, fill: C.ink }),
-      h("rect", { x: n(-7.73), y: n(-2.4), width: n(6.53), height: n(4.8), fill: C.depotLit }),
-      h("rect", { x: n(-1.2), y: n(-2.4), width: n(1.73), height: n(4.8), fill: C.route }),
-      h("rect", { x: n(6.4), y: n(-1.13), width: n(1.33), height: n(2.26), fill: C.depotGlassLit }),
+      Q(-7.75, -3.6, 3.3, 3.6, C.route),            // the stripe along both sides: the box's two long edges
+      Q(-7.75, -2.35, 3.3, 2.35, C.depotLit),       // the roof
+      Q(6.15, -2.35, 7.75, 2.35, C.depotGlassLit)   // the windscreen
     ] };
   }
   /* Each corridor measured for its truck, once. From the numbers the line itself is drawn with (one cubic,
