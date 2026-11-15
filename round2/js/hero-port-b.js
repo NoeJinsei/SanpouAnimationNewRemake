@@ -3173,7 +3173,12 @@
      exactly that when scene 05 begins, so the water does not jump there), rise = the part of its life in
      which a band comes up from nothing, fade = how its opacity falls as it travels, tol = how closely the water follows the coast, taperN / taperS = how far along the
      neighbours' coast, north and south, the apron narrows to nothing. */
-  var MAP_BOX = [535, 12, 850, 1056];
+  // Round 7 (2026-11-15): the box stands 36 px higher than it did (its top was 12). On the desktop framing the
+  // site lays a dark band over the foot of the hero, from stage y 713 down, and the hub, the name cards and
+  // 東京 stood in it. 36 px is what a phone leaves: there the name 新潟 comes up under the two buttons and now
+  // clears them by 10 px. It takes the darkness over the hub from 25 % to 15 %; clearing the band altogether
+  // takes 89 px, which a phone does not have (measured by node tools/map-band.mjs <side>).
+  var MAP_BOX = [535, -24, 850, 1056];
   var SWELL = { n: 3, reach: 24, far: 1.95, period: 34 / 9, rise: 0.04, fade: 1.25, tol: 2.4, taperN: 285, taperS: 100 };
   /* The same water off our other coast, Niigata's, on the Sea of Japan. It cannot grow about the head
      office: seen from there the sea lies beyond every line through that coast, so the straight side of

@@ -1,0 +1,21 @@
+round2: map box [535,-24,850,1056], 1 u = 1.632 px, band from stage y 713
+  hub (HQ foot)  stage y 766            band 15 %
+  card itabashi  stage y 745..765       band 15 %
+  card shiki     stage y 668..688       band 0 %
+  card iruma     stage y 710..730       band 5 %
+  name 東京        stage y 756..780       band 19 %
+  name 新潟       top at stage y 364: 10 px under the buttons on a phone (16 stage px)
+trial2: map box [591,27,738,916.8], 1 u = 1.417 px, band from stage y 713
+  hub (HQ foot)  stage y 713            band 0 %
+  card itabashi  stage y 694..712       band 0 %
+  card shiki     stage y 628..645       band 0 %
+  card iruma     stage y 664..682       band 0 %
+  name 東京        stage y 704..725       band 3 %
+  name 新潟       top at stage y 364: 10 px under the buttons on a phone (16 stage px)
+trial3: map box [535,-77,850,1056], 1 u = 1.632 px, band from stage y 713
+  hub (HQ foot)  stage y 713            band 0 %
+  card itabashi  stage y 692..712       band 0 %
+  card shiki     stage y 615..635       band 0 %
+  card iruma     stage y 657..677       band 0 %
+  name 東京        stage y 703..727       band 4 %
+  name 新潟       top at stage y 311: -24 px under the buttons on a phone (-37 stage px)
