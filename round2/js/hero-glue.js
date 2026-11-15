@@ -171,10 +171,11 @@
     // glass hold it against the dark, the white row and the navy chassis keep its stripe apart from the vermilion
     // dashes under it, and the cab is the film's cab in the light so it does not sink into the band.
     // The box stays 30 x 16 (the site's CSS places it). Every edge is on a whole or half pixel, so it is crisp at 1x.
+    // Seven shapes (the original had eight): both tyres are one path and both hubs another.
     // The viewer's clock player reads this drawing out of this file: keep it one assignment of quoted pieces.
     truckEl.innerHTML='<svg width="30" height="16" viewBox="0 0 30 16" fill="none" aria-hidden="true" focusable="false">'
-      +'<circle cx="7.5" cy="13.2" r="2.6" fill="#0c1626"/><circle cx="7.5" cy="13.2" r="1.15" fill="#b9c5d6"/>'
-      +'<circle cx="24.3" cy="13.2" r="2.6" fill="#0c1626"/><circle cx="24.3" cy="13.2" r="1.15" fill="#b9c5d6"/>'
+      +'<path d="M4.9 13.2a2.6 2.6 0 1 0 5.2 0a2.6 2.6 0 1 0-5.2 0zM21.7 13.2a2.6 2.6 0 1 0 5.2 0a2.6 2.6 0 1 0-5.2 0z" fill="#0c1626"/>'
+      +'<path d="M6.35 13.2a1.15 1.15 0 1 0 2.3 0a1.15 1.15 0 1 0-2.3 0zM23.15 13.2a1.15 1.15 0 1 0 2.3 0a1.15 1.15 0 1 0-2.3 0z" fill="#b9c5d6"/>'
       +'<path d="M2 10.4h26.5v1.9H2z" fill="#13263f"/>'
       +'<rect x="0.5" y="0.5" width="19.5" height="10" rx="1.2" fill="#fbfdff" stroke="#13263f"/>'
       +'<rect x="1.5" y="7" width="17.5" height="2" fill="#e16347"/>'
