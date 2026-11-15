@@ -3821,7 +3821,11 @@
   var STREET = {
     LAMPS: [-176, 1150, 1770], LAMP_Y: 14,      // lamps stand at the kerb, 14 px in front of the building line
     VEND_X: 1178, VEND_Y: 2,                    // the vending corner: at the back of the pavement
-    POLE_X0: -226, POLE_N: 6, POLE_GAP: 640, POLE_H: 240,
+    // POLE_OPEN (round 7): no lines are strung from this pole to the next one. That span is the one Tokyo
+    // Tower stands behind while scene 01 holds (the pole behind the truck's box to the pole right of the
+    // Tower), so the lines end at one pole and start again at the next and the Tower's outline is clean.
+    // When the camera pans, the next span only comes in front of the Tower once the warehouse covers it.
+    POLE_X0: -226, POLE_N: 6, POLE_GAP: 640, POLE_H: 240, POLE_OPEN: 2,
     DASH_X: 100, DASH_W: 130, DASH_P: 300, DASH_Y: 54,
     GRATES: [-350, 130, 640, 1420, 1960, 2550, 3070, 3600, 4100]   // drain grates: clear of where the trucks stand in both scenes
   };
@@ -3947,7 +3951,7 @@
       }
       dBand += R(px - 6.2, G - 46, 12.4, 13) + R(px - 6.2, G - 27, 12.4, 13);                                       // the guard sleeve: yellow, a dark band, yellow
       dDark += R(px - 6.2, G - 33, 12.4, 6);
-      if (i < S.POLE_N - 1) {
+      if (i < S.POLE_N - 1 && i !== S.POLE_OPEN) {
         var nx = px + gp, mx = px + gp / 2;
         [[-19, 3, 40], [0, -8, 30], [19, 3, 40]].forEach(function (w) { dW += "M" + (px + w[0]) + "," + (G + T + w[1]) + "Q" + (mx + w[0]) + "," + (G + T + w[1] + w[2]) + " " + (nx + w[0]) + "," + (G + T + w[1]); });
         dC += "M" + px + "," + (G + T + 80) + "Q" + mx + "," + (G + T + 80 + 44) + " " + nx + "," + (G + T + 80);
