@@ -47,10 +47,14 @@
     return stateIn(i, ms - START[i]);
   }
 
+  // A side whose scene file has its own seams says so itself (JourneyPort.SEAM23, JourneyPort.seam34: round 7).
+  // SEAM23.cut = the master frames between which the expressway comes up over the street (the site: 420..438).
+  function seams() { return root.JourneyPort || {}; }
   function master(m) {
+    var S = seams().SEAM23, a = S ? S.cut[0] : TRANSIT_START, b = S ? S.cut[1] : TRANSIT_START + SLIDE;
     if (m < TRANSIT_START) return [{ scene: "world", frame: m }];
-    if (m < TRANSIT_START + SLIDE) {
-      var s = (m - TRANSIT_START) / SLIDE;
+    if (m < b) {
+      var s = Math.max(0, (m - a) / (b - a));
       return [{ scene: "world", frame: m }, { scene: "transit", frame: m - TRANSIT_START, opacity: s * s * (3 - 2 * s) }];
     }
     return [{ scene: "transit", frame: m - TRANSIT_START }];
@@ -69,7 +73,12 @@
       case 0: return e ? [{ scene: "world", frame: st.clk }] : [{ scene: "world", frame: 185, time: st.idle }];
       case 1: return e ? [{ scene: "world", frame: st.clk, time: st.clk / 30 + AMB_OFF * (391 - st.clk) / 206 }] : [{ scene: "world", frame: 391, time: SCHED.holdAmbient02 ? st.idle : undefined }];
       case 2: return e ? master(st.clk) : [{ scene: "transit", frame: st.idle }];
-      case 3: return e ? [{ scene: "network", frame: st.clk }] : [{ scene: "network", frame: 80, time: st.idle }];
+      case 3:
+        if (!e) return [{ scene: "network", frame: 80, time: st.idle }];
+        // a side with seam34: the expressway, still running, goes down out of the frame as the map comes down into it
+        var rise = seams().seam34 ? seams().seam34(st.clk) : null;
+        if (!rise) return [{ scene: "network", frame: st.clk }];
+        return [{ scene: "transit", frame: stateIn(2, STOPS[2].dwell).idle + st.clk / ENTER_RATE, style: rise.t }, { scene: "network", frame: st.clk, style: rise.n }];
       default: return e ? [{ scene: "network", frame: st.clk }] : [{ scene: "network", frame: st.idle }];
     }
   }
@@ -90,7 +99,7 @@
   var dissolveEase = bezier(0.2, 0.6, 0.2, 1);
   // the picture that fades out above 04 while it enters: 03's last frame, frozen
   function dissolveAt(ms) {
-    if (stopAt(ms) !== 3) return null;
+    if (stopAt(ms) !== 3 || seams().seam34) return null;      // a side with seam34 has a camera move there, not a dissolve
     var tau = ms - START[3];
     if (tau < 0 || tau >= DISSOLVE_LEAD + DISSOLVE_MS) return null;
     var k = tau <= DISSOLVE_LEAD ? 0 : dissolveEase((tau - DISSOLVE_LEAD) / DISSOLVE_MS);

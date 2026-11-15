@@ -33,7 +33,7 @@
         var sl = el.__slot[f], L = null;
         for (var i = 0; i < layers.length; i++) if (layers[i].scene === f) L = layers[i];
         if (!L) { clear(sl); return; }
-        setStyle(sl, BASE + (L.opacity != null ? "opacity:" + L.opacity + ";" : ""));
+        setStyle(sl, BASE + (L.opacity != null ? "opacity:" + L.opacity + ";" : "") + (L.style || ""));
         JP.mount(sl, S[f](L.frame, L.time));
       });
     }
@@ -130,6 +130,21 @@
       var mx = k.x0 + (k.x1 - k.x0) * p, my = k.y0 + (k.y1 - k.y0) * p, mz = k.z0 + (k.z1 - k.z0) * p;
       return { x: FOCUS_X[idx] + (mx - FOCUS_X[idx]) * mobT, y: 540 + (my - 540) * mobT, z: 1 + (mz - 1) * mobT };
     }
+    // A side whose player moves the camera from scene to scene on a designed ease (round 7: sides.json
+    // schedule.camEase = the move's length in ms) is a closed form: from the last framing of the scene before
+    // to this scene's own path, eased (the glue's camEase).
+    var CAM_MS = o.camEase || 0;
+    function camEase(u) {
+      var a = 0.3, k = 1 / (a * a * (0.75 + 0.25 * a)); if (u <= 0) return 0; if (u >= 1) return 1;
+      return u < a ? k * u * u * u : 1 - (3 * k * a * a / (4 * Math.pow(1 - a, 3))) * Math.pow(1 - u, 4);
+    }
+    function camEased(ms) {
+      ms = Math.max(0, ms);
+      var idx = TL.stopAt(ms), tau = ms - TL.START[idx], t = target(idx, tau);
+      if (!idx || tau >= CAM_MS) return t;
+      var p = target(idx - 1, TL.STOPS[idx - 1].dwell), k = camEase(tau / CAM_MS);
+      return { x: p.x + (t.x - p.x) * k, y: p.y + (t.y - p.y) * k, z: p.z + (t.z - p.z) * k };
+    }
     function buildPath() {
       var n = Math.ceil(TL.TOTAL / 1000 * CAM_HZ) + 2, dt = 1000 / CAM_HZ, k = Math.min(1, dt / 1000 * 2.6);
       path = new Float32Array(n * 3);
@@ -141,6 +156,7 @@
       }
     }
     function camAt(ms) {
+      if (CAM_MS) return camEased(ms);
       var f = Math.max(0, Math.min(TL.TOTAL, ms)) / 1000 * CAM_HZ, i = Math.floor(f), u = f - i, n = path.length / 3;
       var a = Math.min(i, n - 1) * 3, b = Math.min(i + 1, n - 1) * 3;
       return { x: path[a] + (path[b] - path[a]) * u, y: path[a + 1] + (path[b + 1] - path[a + 1]) * u, z: path[a + 2] + (path[b + 2] - path[a + 2]) * u };

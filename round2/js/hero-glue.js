@@ -45,11 +45,21 @@
   // entrance ends at ambient time 391/30, which is what 02's held idle and 03's renderMaster(391)
   // show, so 02->03 does not jump either.
   var ambOff=0;
+  // 03 -> 04 (round 7): the camera rises off the road to the map. The expressway, still running on its own clock
+  // (outT, the transit frame it was on when the move began), goes down out of the frame in the t slot while the
+  // map comes down into it in the n slot: JP.seam34(f) gives the two slots' places at frame f of 04's entrance.
+  // outT is null when 04 is entered any other way (a jump, a dissolve): then 04 simply enters.
+  var outT=null;
+  function enter04(f){ var r=(outT!=null&&JP.seam34)?JP.seam34(f):null;
+    if(!r) return one('n',S.network(f));
+    return { t:{s:BASE+r.t,c:S.transit(outT+f/ENTER_RATE)}, n:{s:BASE+r.n,c:S.network(f)} }; }
+  // the move can start from 03's hold, or from 03's entrance once the expressway is the only picture
+  function canRise(i){ return i===3 && idx===2 && !!JP.seam34 && (mode==='idle' || clk>=JP.SCENES[2]); }
   var STOPS=[
     { enter:function(f){return one('w',S.world(f));}, eFrom:0, eTo:185, idle:function(t){return one('w',S.world(185,t));}, iStart:185/30, sec:true },                 // 01 入荷
     { enter:function(f){return one('w',S.world(f, f/30 + ambOff*(391-f)/206));}, eFrom:185, eTo:391, idle:function(t){return one('w',S.world(391,t));}, iStart:391/30, sec:true }, // 02 積込 (camera pan + load; the choreography holds, ambient runs on)
     { enter:master, eFrom:391, eTo:475, idle:function(c){return one('t',S.transit(c));}, iStart:55, sec:false },                                                     // 03 輸送 (depart + slide + convoy)
-    { enter:function(f){return one('n',S.network(f));}, eFrom:0, eTo:80, idle:function(t){return one('n',S.network(80,t));}, iStart:80/30, sec:true, cross:true },     // 04 ネットワーク (map)
+    { enter:enter04, eFrom:0, eTo:80, idle:function(t){return one('n',S.network(80,t));}, iStart:80/30, sec:true, cross:true },     // 04 ネットワーク (map)
     { enter:function(f){return one('n',S.network(f));}, eFrom:80, eTo:174, idle:function(c){return one('n',S.network(c));}, iStart:174, sec:false }                  // 05 結び (commitment)
   ];
   var items=Array.prototype.slice.call(document.querySelectorAll('#sjxIndex button'));
@@ -111,6 +121,15 @@
     {x0:1300,y0:600,z0:1.02,x1:1240,y1:610,z1:1.04}];
   var RMOT=false; try{RMOT=matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}
   var boxW=0,boxH=0,sc0=1,mobT=0,cam={x:FOCUS_X[0],y:540,z:1},camSnap=true,lastTf='',lastSc='';
+  // Round 7: how the camera gets from one scene's framing to the next. It used to chase its target at a fixed
+  // rate (2.6 a second): it set off at full speed the moment the scene changed and crept in. Now every scene
+  // change is one move of CAM_MS, from where the camera is (camA) to the new scene's own path: it gathers
+  // speed over the first 0.3 of the move and lands over the rest (camEase: the cube of the time, then the
+  // fourth power of what is left). After the move it is exactly on the scene's path, which is unchanged.
+  var CAM_MS=1800, camA=null, camT=CAM_MS;
+  function camEase(u){ var a=0.3, k=1/(a*a*(0.75+0.25*a)); if(u<=0) return 0; if(u>=1) return 1;
+    return u<a ? k*u*u*u : 1-(3*k*a*a/(4*Math.pow(1-a,3)))*Math.pow(1-u,4); }
+  function camFrom(){ camA={x:cam.x,y:cam.y,z:cam.z}; camT=0; }
   function fitStage(){ var box=fit.parentElement; boxW=box.clientWidth||0; boxH=box.clientHeight||0; if(!boxW||!boxH) return;
     sc0=Math.max(boxW/1920, boxH/1080);
     mobT=Math.max(0,Math.min(1,(1500-boxW/sc0)/880));
@@ -123,8 +142,10 @@
     var mx=k.x0+(k.x1-k.x0)*p, my=k.y0+(k.y1-k.y0)*p, mz=k.z0+(k.z1-k.z0)*p;
     return { x:FOCUS_X[idx]+(mx-FOCUS_X[idx])*mobT, y:540+(my-540)*mobT, z:1+(mz-1)*mobT }; }
   function camTick(dt){ if(!boxW) return; var t=camTarget();
-    var k=(camSnap||RMOT)?1:Math.min(1,dt/1000*2.6); camSnap=false;
-    cam.x+=(t.x-cam.x)*k; cam.y+=(t.y-cam.y)*k; cam.z+=(t.z-cam.z)*k;
+    if(camSnap||RMOT||!camA) camT=CAM_MS; else camT=Math.min(CAM_MS,camT+Math.max(0,dt));
+    camSnap=false;
+    if(camT>=CAM_MS){ cam.x=t.x; cam.y=t.y; cam.z=t.z; }
+    else { var k=camEase(camT/CAM_MS); cam.x=camA.x+(t.x-camA.x)*k; cam.y=camA.y+(t.y-camA.y)*k; cam.z=camA.z+(t.z-camA.z)*k; }
     var sc=sc0*cam.z;
     var tx=-Math.min(Math.max(cam.x*sc-boxW/2,0),1920*sc-boxW);
     var ty=-Math.min(Math.max(cam.y*sc-boxH/2,0),1080*sc-boxH);
@@ -206,6 +227,7 @@
       // pre-building for the next seam (02: transit before 03's slide; 03: network before the dissolve into 04)
       if(AUTO_DWELL[idx]-dwellMs<PRE_LEAD && preDone!==idx){ preDone=idx;
         if(idx===1) startPre(stage.__slot.t, function(){ return S.transit(0); });
+        else if(idx===2 && JP.seam34) startPre(stage.__slot.n, function(){ return S.network(0); });   // the move shows it in this stage
         else if(idx===2 && !spare.__fading) startPre(spare.__slot.n, function(){ return S.network(0); }); }
       if(dwellMs>=AUTO_DWELL[idx]){
         if(idx<STOPS.length-1){ enterStop(idx+1, !!STOPS[idx+1].cross); }
@@ -240,12 +262,13 @@
   function enterStop(i, useCross){
     // 01's idle ambient time carries on into 02's entrance (sequential advance only)
     ambOff = (i===1 && idx===0 && mode==='idle') ? Math.max(0, idleClk-STOPS[0].iStart) : 0;
-    if(useCross && visible) crossfade(i); idx=i; mode='enter'; clk=STOPS[i].eFrom; scheduleAuto(); mark(); render(); kick(); }
-  function jumpStop(i){ ambOff=0; dropPre(); idx=i; mode='idle'; idleClk=STOPS[i].iStart; scheduleAuto(); mark(); render(); kick(); }
-  function showStatic(i){ ambOff=0; dropPre(); idx=i; mode='idle'; idleClk=STOPS[i].iStart; scheduleAuto(); mark(); render(); camSnap=true; camTick(0); }
+    var rise=canRise(i); outT = rise ? (mode==='idle' ? idleClk : clk-420) : null;
+    if(useCross && visible && !rise) crossfade(i); camFrom(); idx=i; mode='enter'; clk=STOPS[i].eFrom; scheduleAuto(); mark(); render(); kick(); }
+  function jumpStop(i){ ambOff=0; outT=null; dropPre(); camFrom(); idx=i; mode='idle'; idleClk=STOPS[i].iStart; scheduleAuto(); mark(); render(); kick(); }
+  function showStatic(i){ ambOff=0; outT=null; dropPre(); idx=i; mode='idle'; idleClk=STOPS[i].iStart; scheduleAuto(); mark(); render(); camSnap=true; camTick(0); }
   // which navigations dissolve: every one while paused, and while playing every one except a plain
   // step forward into a scene without its own cross (04 has one)
-  function dissolves(i){ if(RMOT||!visible) return false; if(!playing) return true; return i===idx+1 ? !!STOPS[i].cross : true; }
+  function dissolves(i){ if(RMOT||!visible) return false; if(!playing) return true; return i===idx+1 ? (!!STOPS[i].cross && !canRise(i)) : true; }
   function go(i){ if(i===idx){ mark(); return; }
     if(RMOT||!playing){ showStatic(i); return; }
     if(i===idx+1) enterStop(i, false);   // sequential forward = play the motion

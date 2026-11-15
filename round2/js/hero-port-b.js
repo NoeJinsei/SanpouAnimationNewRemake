@@ -3846,8 +3846,9 @@
     var FO = function (fill, d, w) { return h("path", { d: d, fill: fill, stroke: D.stInk, strokeWidth: w, strokeLinejoin: "round" }); };
 
     /* =================================== the ground =================================== */
-    var X0 = -400, XW = WORLD_W + 800, dash = "", grate = "", shade = "";
-    for (i = -1; i < 17; i++) dash += R(S.DASH_X + i * S.DASH_P, G + S.DASH_Y, S.DASH_W, 5);
+    // the street runs on 1000 px further than it did, and its centre dashes with it: the seam's camera goes that far
+    var X0 = -400, XW = WORLD_W + 1800, dash = "", grate = "", shade = "";
+    for (i = -1; i < 21; i++) dash += R(S.DASH_X + i * S.DASH_P, G + S.DASH_Y, S.DASH_W, 5);
     S.GRATES.forEach(function (gx) { grate += R(gx, G + 25.8, 46, 4.4); });
     // flat contact shadows on the paving, falling down and to the left: the lamps' feet, the vending corner
     S.LAMPS.forEach(function (lx) { shade += P([[-9, 0], [9, 0], [3, 3], [-17, 3]], lx, G + S.LAMP_Y); });
@@ -3987,6 +3988,47 @@
     ];
     return _stArt = A;
   }
+  /* ---- The seams (round 7, 2026-11-15): every scene change is one camera move ----
+     Until now 02 -> 03 was a half-second dissolve between two still cameras and 03 -> 04 a dissolve onto a
+     frozen frame. Both are camera moves now, with the change of picture at the move's fastest moment, where
+     the eye cannot follow what is in the frame (the reference film does the same).
+
+     02 -> 03   THE CAMERA GOES WITH THE TRUCKS. As the three trucks pull away from the docks the camera
+                starts after them along the road, to the right: slowly, then fast. It overtakes them. At its
+                fastest (master frame SEAM23.mc) the street gives way to the expressway, which is going by
+                at the same speed, over SEAM23.cut (6 frames, 0.17 s); then the camera slows over a long
+                landing until it rides with the convoy, as scene 03 always did.
+                seam23X(m) is how far the camera has gone beyond its own path at master frame m, in px.
+                Its speed rises as the square of the time from m0 to mc (v px a frame at the top) and
+                falls as the cube of what is left from mc to m1: a long soft landing, 1.25 s.
+                In scene 02 it is added to the camera, so every layer answers at its own depth; in scene 03
+                it is added to the road's scroll, and the convoy, which keeps its own steady speed, is
+                simply that much further ahead on the road until the camera has caught it up. No truck
+                fades in or slides in from nowhere any more.
+     03 -> 04   THE CAMERA RISES OFF THE ROAD TO THE MAP. The expressway, still running, goes down out of
+                the frame and the map comes down into it from above, edge to edge, as one picture 2160 px
+                tall passing a 1080 px window: seam34(f) gives the two layers' places at frame f of scene
+                04's entrance (SEAM34.f1 frames, 0.94 s). It gathers speed over the first 0.4 of the move
+                (as the cube of the time) and lands over the rest (as the fourth power of what is left);
+                the edge between the two pictures crosses the frame at the top speed, 114 px a frame.
+     04 -> 05   was already one move inside one scene (the map draws back and the land comes up). */
+  var SEAM23 = { m0: 400, mc: 429, m1: 474, v: 118, cut: [426, 432] };
+  function seam23X(m) {
+    var S = SEAM23, a = S.mc - S.m0, b = S.m1 - S.mc;
+    if (m <= S.m0) return 0;
+    if (m <= S.mc) { var u = (m - S.m0) / a; return S.v * a * u * u * u / 3; }
+    var q = 1 - Math.min(1, (m - S.mc) / b);
+    return S.v * a / 3 + S.v * b * (1 - q * q * q * q) / 4;
+  }
+  var SEAM34 = { f1: 34, rise: 1080, a: 0.4 };
+  function seam34(f) {
+    var S = SEAM34;
+    if (f >= S.f1) return null;
+    var u = Math.max(0, f) / S.f1, a = S.a, k = 1 / (a * a * (0.75 + 0.25 * a));
+    var e = u < a ? k * u * u * u : 1 - (3 * k * a * a / (4 * Math.pow(1 - a, 3))) * Math.pow(1 - u, 4);
+    var y = S.rise * e;
+    return { t: "transform:translate3d(0," + y.toFixed(2) + "px,0);will-change:transform;", n: "transform:translate3d(0," + (y - S.rise).toFixed(2) + "px,0);will-change:transform;" };
+  }
   /* ---- Scene12World.tsx ---- */
   function sceneWorld(frame, tOverride) {
     // tOverride decouples ambient time from the choreography frame: hold `frame`
@@ -3995,6 +4037,7 @@
     // the per-scene end-of-scene idle. Default (undefined) = identical to before.
     var fps = FPS, time = (tOverride != null ? tOverride : frame / fps);
     var cam = interpolate(frame, [T_WORLD.panStart, T_WORLD.panEnd], [T_WORLD.camRecvX, T_WORLD.camLoadX], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.inOut(Easing.cubic) });
+    cam += seam23X(frame);        // the seam into scene 03: the camera goes after the trucks
     var panK = clamp01((frame - T_WORLD.panStart) / (T_WORLD.panEnd - T_WORLD.panStart));
     // truck positions as functions of frame, so truckMotion can read their acceleration
     var arriveAt = function (f) { return interpolate(f, [T_WORLD.truckIn[0], T_WORLD.truckIn[1]], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.cubic) }); };
@@ -4256,7 +4299,10 @@
   }
   function sceneTransit(frame) {
     var fps = FPS, time = frame / fps;
-    var SPEED = 9, scroll = frame * SPEED;
+    // the seam from scene 02: `lead` is how far the camera has come beyond its steady 9 px a frame since
+    // this scene's frame 0, `ahead` how far it still has to come before it rides with the convoy
+    var SPEED = 9, lead = seam23X(TRANSIT_START + frame) - seam23X(TRANSIT_START);
+    var ahead = seam23X(SEAM23.m1) - seam23X(TRANSIT_START) - lead, scroll = frame * SPEED + lead;
     var titleEnter = clamp01((frame - 10) / 36);
     var convoyIn = interpolate(frame, [T_TRANSIT.convoyIn[0], T_TRANSIT.convoyIn[1]], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.cubic) });
     var cardEnter = spring({ frame: frame - T_TRANSIT.cardIn, fps: fps, config: { damping: 13, mass: 0.9 } });
@@ -4312,15 +4358,12 @@
         h("line", { x1: -180, y1: ROAD_Y + 51, x2: 2100, y2: ROAD_Y + 51, stroke: DAY.roadDash, strokeWidth: 6, strokeDasharray: "72 108", strokeDashoffset: (scroll % 180).toFixed(2) }),
         [0, 1].map(function (rep) { return h("g", { transform: "translate(" + (xg + rep * GTILE).toFixed(2) + ", 0)" }, XW.back); }),
         convoy.map(function (c, i) {
-          var ex = c.x - (1 - convoyIn) * 560;
+          var ex = c.x + ahead;
           var drift = Math.sin(time * 0.5 + i * 1.4) * 12;
-          // the camera rides with the convoy, so screen-x acceleration is road acceleration: the trucks
-          // brake gently (nose dip) as they ease into formation
-          var m = truckMotion(function (f) {
-            var a = T_TRANSIT.convoyIn, k = f < a[0] ? (f - a[0]) * 3 / (a[1] - a[0]) : interpolate(f, a, [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.cubic) });
-            return c.x - (1 - k) * 560 + Math.sin(f / fps * 0.5 + i * 1.4) * 12;
-          }, frame);
-          return Truck({ x: ex + drift, y: ROAD_Y + 18, scale: c.scale, distance: scroll, bob: Math.sin((frame - c.lag) * 0.9) * 1.5, opacity: Math.min(1, convoyIn * 1.5), moving: true, pitch: m.pitch, run: 1 });
+          // the trucks keep their own steady speed: while the camera is catching them up they are simply
+          // ahead of it on the road, and once it rides with them only their slow drift is left to pitch on
+          var m = truckMotion(function (f) { return c.x + Math.sin(f / fps * 0.5 + i * 1.4) * 12; }, frame);
+          return Truck({ x: ex + drift, y: ROAD_Y + 18, scale: c.scale, distance: scroll, bob: Math.sin((frame - c.lag) * 0.9) * 1.5, opacity: 1, moving: true, pitch: m.pitch, run: 1 });
         }),
         [0, 1].map(function (rep) { return h("g", { transform: "translate(" + (xg + rep * GTILE).toFixed(2) + ", 0)" }, XW.front); }),
         h("path", { d: XW.fgPosts, fill: DAY.fgRail, transform: xFg }),
@@ -5232,14 +5275,13 @@
     frame = ((frame % DURATION) + DURATION) % DURATION;
     var parts = [];
     // WORLD
-    if (frame < TIMELINE.worldDur + SLIDE) {
-      var s = frame >= TRANSIT_START ? clamp01((frame - TRANSIT_START) / SLIDE) : 0;
-      parts.push(layer({}, sceneWorld(frame)));
-    }
+    // the street until the change of picture is over (SEAM23.cut), the expressway from its own frame 0:
+    // it is there under the street, unseen, until the change begins
+    if (frame < SEAM23.cut[1]) parts.push(layer({}, sceneWorld(frame)));
     // TRANSIT
     if (frame >= TRANSIT_START && frame < NETWORK_START + FADE) {
       var st = {};
-      if (frame < TRANSIT_START + SLIDE) { var s2 = clamp01((frame - TRANSIT_START) / SLIDE); st.opacity = s2 * s2 * (3 - 2 * s2); }
+      if (frame < SEAM23.cut[1]) { var s2 = clamp01((frame - SEAM23.cut[0]) / (SEAM23.cut[1] - SEAM23.cut[0])); st.opacity = s2 * s2 * (3 - 2 * s2); }
       if (frame >= NETWORK_START) { var f = clamp01((frame - NETWORK_START) / FADE); st.opacity = 1 - f; }
       parts.push(layer(st, sceneTransit(frame - TRANSIT_START)));
     }
@@ -5253,8 +5295,8 @@
   }
 
   /* scene-index seek beats used by the page scaffold (master frames). */
-  var SCENES = [0, T_WORLD.panEnd, TRANSIT_START + SLIDE, NETWORK_START + 34];
-
+  var SCENES = [0, T_WORLD.panEnd, SEAM23.cut[1], NETWORK_START + 34];
+  root.JourneyPort.SEAM23 = SEAM23; root.JourneyPort.SEAM34 = SEAM34; root.JourneyPort.seam34 = seam34;
   root.JourneyPort._components.city = { row: cityRow, draw: CityRow, cranes: CityCranes, look: CITY_LOOK, size: SKYLINE_SIZE, world: cityWorld, transit: cityTransit, finale: cityFinale };
   root.JourneyPort.renderMaster = renderMaster;
   root.JourneyPort.mount = mount;

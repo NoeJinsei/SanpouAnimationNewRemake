@@ -27,7 +27,8 @@
       ],
       "glue": "hero-glue.js",
       "schedule": {
-        "holdAmbient02": true
+        "holdAmbient02": true,
+        "camEase": 1800
       }
     },
     {
@@ -193,7 +194,8 @@
       ],
       "glue": "hero-glue.js",
       "schedule": {
-        "holdAmbient02": true
+        "holdAmbient02": true,
+        "camEase": 1800
       }
     },
     {
@@ -209,7 +211,8 @@
       ],
       "glue": "hero-glue.js",
       "schedule": {
-        "holdAmbient02": true
+        "holdAmbient02": true,
+        "camEase": 1800
       }
     },
     {
@@ -225,7 +228,8 @@
       ],
       "glue": "hero-glue.js",
       "schedule": {
-        "holdAmbient02": true
+        "holdAmbient02": true,
+        "camEase": 1800
       }
     }
   ]

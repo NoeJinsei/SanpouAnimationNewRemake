@@ -67,7 +67,7 @@
         var adapter;
         if (side.kind === "canvas") { if (!window.HeroCanvas) throw new Error("the side's scripts did not define window.HeroCanvas"); adapter = HeroPlayer.CanvasAdapter(window.HeroCanvas, fit, stage); }
         else { if (!window.JourneyPort) throw new Error("the side's scripts did not define window.JourneyPort"); adapter = HeroPlayer.DomAdapter(window.JourneyPort, fit, stage); }
-        var p = HeroPlayer.create({ adapter: adapter, host: host, fit: fit });
+        var p = HeroPlayer.create({ adapter: adapter, host: host, fit: fit, camEase: side.schedule && side.schedule.camEase });
         window.heroFrame = { side: side, kind: p.kind, seek: p.seek, cost: p.cost, nodeCount: p.nodeCount, heroHeight: p.heroHeight, refit: p.refit };
       });
     });
