@@ -1060,3 +1060,22 @@ with all three map fixes in: see fix 4.)
 **Known.** The left third is alive only at its right edge. The answer of the land is soft: 41 colour levels
 for Niigata, 20 to 24 for Ibaraki, Tochigi and Gunma, 13 or fewer for the rest (the most-delivered
 prefectures are nearly white already).
+
+
+## Fixes on the batch, 3 of 4 (2026-11-15): 東京 and 埼玉 are no longer the smallest names
+
+`MAP_LABEL` set TOKYO and SAITAMA at 11.5 units while every other name was 14 or 15: the company's home
+prefectures, which carry the head office and both branches, had the faintest type on the map (about 12 px
+on a phone). Part `r5-map-names` (two blocks) is in `round2/js`. Evidence:
+`evidence/2026-11-15-fix-map/names-*`.
+
+- **東京 and 埼玉 go from 11.5 to 15**, the size of the rest, each inside its own shape (16 does not fit).
+  The colour stays `#2f4d78`. Each name keeps the angle at which the wipe reaches it, through a stored
+  `at` point, so the timing of its appearance does not move.
+- **Nodes: 1059 to 1059.**
+
+**Checks on `round2`.** `original/` intact; 0 console errors; draw (original / round2) 1.76 / 1.67 ms full,
+1.74 / 1.72 desktop, 1.69 / 1.72 phone.
+
+**Known.** With this fix alone, the arriving 入間 depot covers half of 埼玉 for a third of a second; fix 4
+(the hub) removes that.
