@@ -382,7 +382,8 @@ numbers are at the end of `CHANGES.md`. **Check the verdict before building on a
 - **The film is finished to the brief** (the reviewer, 2026-11-16): every drawing remade, both seams as
   camera moves, no pops, the route line through, and smoother than what it replaces. **Start nothing else.**
   The owner watches it end to end next; putting it into the site is a separate task that does not start
-  until he has said yes to the film.
+  until he has said yes to the film. (He watched it on 2026-11-16 and gave two notes, the birds and the
+  sky: see "Round 10" below. His yes to the film is still to come.)
 - **The finished film, recorded end to end for watching** (2026-11-16; the film itself unchanged):
   `evidence/2026-11-16-the-film/index.html` (through the viewer's server) plays four recordings with no
   cuts, 0 to 48000 ms at 60 fps: the remake and the original, on a desktop (1440 x 720, the hero section)
@@ -395,6 +396,35 @@ numbers are at the end of `CHANGES.md`. **Check the verdict before building on a
   `trace-side.mjs` (where a frame's time goes), `what-moves.mjs` (where two moments differ),
   `what-changes.mjs` (what the patcher writes per step), `map-band.mjs`; `record.mjs` takes `--dpr=2`.
   `sheet.py` gives every tile of a row the same label bar (a second label line used to shift one picture).
+
+## Round 10 (2026-11-16): the birds and the sky, waiting for the owner's verdict
+
+The owner watched the film end to end and said: "It is nearly perfect, but the way the birds are flying is a
+bit odd personally. Also, might need some polishing on the sky / clouds as well, make sure its all smooth
+and natural looking." Parts `r10-birds`, `r10-sky` (in that order); shown on
+`evidence/2026-11-16-r10-birds-sky/index.html` with before/after clips; the whole film recorded again on
+`evidence/2026-11-16-the-film/index.html`. Details and numbers at the end of `CHANGES.md`; the rules it
+leaves are in `STYLE.md` (Birds, Streaks, the sun, the sky's clock). **Check his verdict before building on
+it.** Nothing else in the film was touched.
+
+- **Birds: a bird goes where it points, at a pace its wings could give it.** The old ones were drawn
+  head-on and slid sideways (the fault he had already seen in the map trucks). Now one small solid model
+  (`BIRD_KIND`) is turned to its heading and seen from below (`birdD`); the flock flies right in side view,
+  a few beats then a glide (`birdBeat`), each bird on its own time; the kite really turns round its circle.
+  Still one path per scene. `BIRD_SETS` says where they fly. On a desktop the headline stands over stage
+  x 160 to 1075 from y 264 down, so a flock keeps above y 264 while it is left of 1075, and it passes under
+  the sun's ring. The finale's flocks come round every two plane cycles (`span: 52 * 52`): one crosses
+  Tokyo Tower every 26 s, nine seconds before the plane. Keep that if the plane's cycle or the birds' speed
+  changes.
+- **Sky:** the sun stands clear in every scene (the streak that lay across it is a high streak to its
+  left); streaks are lens-shaped paths written out whole (`CLOUDS[k].path`); the finale's sky has its own
+  clock (`skyT`) and starts from rest at its own pace when the map draws back (it used to dart 23 px in
+  0.4 s). The cumulus clouds were looked at and left as accepted.
+- **Tools:** `node tools/sky-motion.mjs <side>` follows every cloud through the film and lists any that
+  goes faster than its drift, jumps or pops. `sh tools/cut-pairs.sh <before dir> <after dir> <out dir>`
+  cuts before/after clips out of two sets of whole-film recordings.
+- **If the film changes again, record the four films again** (the commands are on the film page) and say
+  so on that page.
 
 Usage: this account has a 5-hour usage limit; a burst of parallel agents exhausted it in the first session and
 killed work in progress. Use one or two agents at a time (a cheaper model for engineering, the best one for

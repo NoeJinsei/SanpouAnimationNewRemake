@@ -23,6 +23,8 @@ and features. The current hero (`sanpou-site-v2/public_html/assets/js/hero-port-
   https://x.com/motion_so/status/2119956569597358414/video/1
 - Style benchmark: Kurzgesagt — https://www.youtube.com/channel/UCsXVk37bltHxD1rDPwtNM8Q
 - Original July daylight version: Logistics-Website-Animation `sanpou-site/index.html` @ d24a12c
+- The owner's GitHub repository for this project (given 2026-11-16, to upload this folder to and keep the
+  session connected to): https://github.com/NoeJinsei/SanpouAnimationNewRemake.git
 - Tools installed for this work (each scanned with skill-inspector first):
   - frontend-design (official) — https://github.com/anthropics/claude-plugins-official.git — APPROVE
   - oil-ui — https://github.com/oil-oil/oil-ui.git (commit 28948c3, update check off) — CAUTION

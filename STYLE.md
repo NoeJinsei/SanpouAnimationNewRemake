@@ -95,6 +95,22 @@ fantasy silhouettes.
   A few big, composed clouds, not many small ones. Two depth planes at most, one speed per plane.
   Clouds fade in and out only at the wrap edges, and no cloud base sits below the roofline of the tier it
   stands in front of.
+  **Streaks** (the thin far clouds, round 10): one long lens with a low uneven back, a nearly level
+  underside and both ends drawn out to a point, in one pale colour. Never a bar with round ends, never a
+  detached dash beside it.
+  **The sun stands clear**: while a scene rests, no cloud crosses the sun's disc or its ring.
+  **The sky's clock never runs fast.** A sky that was standing still starts at its own drift; it is never
+  given the scene's clock multiplied by something that is easing in (that made the finale's clouds dart
+  23 px in 0.4 s as the map drew back). `node tools/sky-motion.mjs <side>` follows every cloud and lists
+  any that goes faster than its drift outside a camera move.
+- **Birds** (round 10; the owner's verdict on the ones before: "the way the birds are flying is a bit odd"):
+  **a bird goes where it points, at a pace its wings could give it.** A flock crosses the sky in side view,
+  the way the trucks drive. Each bird beats a few times and then glides on set wings, on its own time; it
+  rises a little while it beats and sinks while it glides, and its nose follows that path. A soaring bird
+  really turns as it goes round its circle. Never a bird drawn facing the viewer that slides sideways, and
+  never a wingbeat up into a deep V. They are the only dark things in the sky: on a desktop they keep above
+  the headline (stage y 264) while they are left of its end (stage x 1075), and they pass under the sun's
+  ring, not across the sun.
 - **Light shafts**: three (at most four) wedges fanning from a point outside the frame on the sun's side, of
   clearly different widths and uneven spacing, each wider than 100 px where it crosses the middle of the sky,
   hard edges, plain white at 7 to 12 % strength, behind the clouds and behind every building. They must read

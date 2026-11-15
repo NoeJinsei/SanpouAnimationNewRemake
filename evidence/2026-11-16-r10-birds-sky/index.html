@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>三豊運輸 hero remake: the birds and the sky</title>
+<style>
+  :root { --ink: #13263f; --soft: #51627c; --line: #d5dde8; --bg: #f4f7fb; --card: #ffffff; --verm: #e16347; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.6 "Noto Sans JP", "Segoe UI", system-ui, sans-serif; }
+  main { max-width: 1280px; margin: 0 auto; padding: 32px 16px 80px; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 21px; margin: 56px 0 6px; padding-top: 18px; border-top: 3px solid var(--ink); }
+  h3 { font-size: 16px; margin: 28px 0 6px; }
+  p { margin: 6px 0 12px; max-width: 76ch; }
+  .lead { color: var(--soft); }
+  figure { margin: 14px 0 26px; background: var(--card); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+  figure img, figure video { display: block; width: 100%; height: auto; background: #0e1826; }
+  figcaption { padding: 10px 14px; font-size: 14px; color: var(--soft); border-top: 1px solid var(--line); }
+  figcaption b { color: var(--ink); }
+  nav { display: flex; flex-wrap: wrap; gap: 8px 14px; margin: 18px 0 0; font-size: 14px; }
+  a { color: var(--ink); }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+  .two figure { margin: 8px 0 18px; }
+  .two.phone { grid-template-columns: repeat(2, minmax(0, 300px)); }
+  @media (max-width: 760px) { .two { grid-template-columns: 1fr; } }
+  .bar { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 0; }
+  button { font: inherit; font-weight: 600; min-height: 44px; padding: 8px 18px; border-radius: 6px; border: 1px solid var(--ink); cursor: pointer; }
+  button.go { background: var(--ink); color: #fff; }
+  button.stop { background: var(--card); color: var(--ink); }
+  button:hover { filter: brightness(1.12); }
+  button:focus-visible, a:focus-visible { outline: 3px solid var(--verm); outline-offset: 2px; }
+  table { border-collapse: collapse; width: 100%; background: var(--card); font-size: 14px; }
+  .scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; margin: 10px 0 18px; max-width: 820px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  th { background: #e9eff6; }
+  td.n { white-space: nowrap; font-variant-numeric: tabular-nums; }
+  ul { margin: 6px 0 14px; padding-left: 22px; max-width: 76ch; }
+  li { margin: 3px 0; }
+  code { font-size: 13px; }
+  .note { background: #fff7e8; border: 1px solid #ecd9ae; border-radius: 6px; padding: 10px 14px; margin: 12px 0 18px; max-width: 76ch; }
+</style>
+</head>
+<body>
+<main>
+<h1>三豊運輸 hero remake: the birds and the sky</h1>
+<p>Two notes from watching the film end to end: the way the birds fly is a bit odd, and the sky and clouds need a polish so that everything is smooth and natural. This page shows what changed for each. Nothing else in the film was touched.</p>
+<p class="lead">The whole film, recorded again with these changes in it, is on <a href="../2026-11-16-the-film/index.html">the film page</a>. Every clip here can be dragged to any second.</p>
+<nav><a href="#birds">1 The birds</a><a href="#sky">2 The sky</a><a href="#checks">Checks</a><a href="#left">What I left alone</a></nav>
+
+<h2 id="birds">1. The birds</h2>
+<p><b>What was odd.</b> The birds were drawn facing the viewer, wings out to both sides, and they slid sideways across the sky at a walking pace, so they hung in the air. Their wings beat up into a deep V. And the kite went round its circle without ever turning: the same head-on view all the way.</p>
+<p><b>What they do now.</b> A bird goes where it points. The flock is seen from the side and flies forwards across the sky, the way the trucks drive. Each bird beats its wings a few times and then glides, on its own time; it rises a little while it beats and sinks while it glides. The kite really turns as it circles, so it shows its spread wings on the near side and goes edge-on on the far side.</p>
+<figure><img src="flock-before-after.jpg" alt="The flock before and after, six moments each"><figcaption><b>The flock, enlarged, six moments 0.12 s apart.</b> New: every bird. Old: the sky and the Tower's mast behind them.</figcaption></figure>
+<figure><img src="kite-before-after.jpg" alt="The kite round one circle, before and after"><figcaption><b>The kite round one circle, a frame every 1.2 s.</b> New: the kite. Old: the cloud, the Tower, and the plane that crosses this patch of sky in the last frames.</figcaption></figure>
+<h3>In motion</h3>
+<div data-pair>
+  <div class="bar"><button type="button" class="go" data-play>Play both together</button><button type="button" class="stop" data-pause>Pause both</button></div>
+  <div class="two">
+    <figure><video src="clips/scene-01-desktop-before.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Scene 01, desktop, before.</b></figcaption></figure>
+    <figure><video src="clips/scene-01-desktop-after.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Scene 01, desktop, after.</b> New: the flock along the top, the kite right of the Tower, the clear sun and the high streak.</figcaption></figure>
+  </div>
+</div>
+<div data-pair>
+  <div class="bar"><button type="button" class="go" data-play>Play both together</button><button type="button" class="stop" data-pause>Pause both</button></div>
+  <div class="two">
+    <figure><video src="clips/scene-03-desktop-before.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Scene 03, desktop, before.</b></figcaption></figure>
+    <figure><video src="clips/scene-03-desktop-after.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Scene 03, desktop, after.</b> New: the flock flying the same way as the trucks, the kite, the clear sun and the high streak.</figcaption></figure>
+  </div>
+</div>
+<div data-pair>
+  <div class="bar"><button type="button" class="go" data-play>Play both together</button><button type="button" class="stop" data-pause>Pause both</button></div>
+  <div class="two">
+    <figure><video src="clips/scene-05-desktop-before.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>The finale, desktop, before</b> (30 to 48 s).</figcaption></figure>
+    <figure><video src="clips/scene-05-desktop-after.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>The finale, desktop, after.</b> New: the flock crosses above the headline, passes the Tower and goes under the sun; the kite circles left of the Tower; the clear sun; the streaks.</figcaption></figure>
+  </div>
+</div>
+<div data-pair>
+  <div class="bar"><button type="button" class="go" data-play>Play both together</button><button type="button" class="stop" data-pause>Pause both</button></div>
+  <div class="two phone">
+    <figure><video src="clips/scene-05-phone-before.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>The finale, phone, before.</b></figcaption></figure>
+    <figure><video src="clips/scene-05-phone-after.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>The finale, phone, after.</b> New: the kite in the open sky left of the Tower. The flock passes behind the headline, as the old one did.</figcaption></figure>
+  </div>
+</div>
+<ul>
+  <li><b>Where they fly.</b> On a desktop the flock keeps above the headline while it is beside it, and it passes under the sun, not across it. In the finale a flock crosses about every 26 seconds, always nine seconds before the plane passes Tokyo Tower, so the two never meet.</li>
+  <li><b>Cost.</b> All the birds of a scene are still one shape on the stage, as before: no node was added.</li>
+</ul>
+
+<h2 id="sky">2. The sky</h2>
+<p>I looked for whatever in the sky was not smooth or not natural, by eye and by measurement, and found three things.</p>
+<h3>The sun had a bar of cloud across it</h3>
+<p>A thin far cloud was laid across the sun's disc in every scene. At full size it read as a pale bar over the sun. Now the sun stands clear in every scene, and that cloud is a high streak to the sun's left.</p>
+<h3>The thin clouds were bars</h3>
+<p>The streak clouds were a row of low bumps on a level base with round ends, and one of them carried a loose dash above it. Each is now one long lens with a low uneven back and both ends drawn out to a point.</p>
+<figure><img src="sun-and-streaks.jpg" alt="The sun and the streak clouds at full size, before and after"><figcaption><b>The sun and the cloud band behind Mt Fuji, at full size.</b> New: the clear sun and the streaks' shape. Old: the sun itself and its light, the small cloud, Mt Fuji, the cumulus.</figcaption></figure>
+<h3>The clouds darted as the map drew back</h3>
+<p>I followed every cloud through the whole film. They drift evenly everywhere except one place: as the map drew back to show the finale (28.1 s), the finale's clouds ran 23 px in 0.4 s, fifteen times their own pace, and the light shafts swung into place. Now the finale's sky starts from rest at its own even pace.</p>
+<div data-pair>
+  <div class="bar"><button type="button" class="go" data-play>Play both together</button><button type="button" class="stop" data-pause>Pause both</button></div>
+  <div class="two">
+    <figure><video src="clips/change-04-05-desktop-before.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>The map draws back, desktop, before</b> (27.4 to 30.4 s). Watch the clouds as the sky comes into view.</figcaption></figure>
+    <figure><video src="clips/change-04-05-desktop-after.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>After.</b> New: the clouds and the shafts move at their own pace from the first moment. Old: the move itself.</figcaption></figure>
+  </div>
+</div>
+<h3>The whole sky, before and after</h3>
+<figure><img src="sky-before-after-desktop.jpg" alt="Scenes 01, 03 and 05 on a desktop, before and after"><figcaption><b>Desktop.</b> What is new is written on each picture.</figcaption></figure>
+<figure style="max-width: 900px"><img src="sky-before-after-phone.jpg" alt="The finale on a phone, before and after"><figcaption><b>Phone.</b> A phone sees little of the sky: the headline covers the top of it. New: the kite, and the flock where it shows.</figcaption></figure>
+
+<h2 id="checks">Checks</h2>
+<ul>
+  <li><b>The sky's motion</b> (a new check, <code>node tools/sky-motion.mjs round2</code>, every cloud followed through 48 s): no jumps, and no cloud goes faster than its drift outside a camera move. Before: the dart at 28.1 s.</li>
+  <li><b>Do the clouds glide or hop?</b> Measured on one cloud's edge at every 1/60 s: it moves 0.11 to 0.19 px each frame, never a whole-pixel step.</li>
+  <li><b>No cloud below a roof</b> (<code>cloud-check</code>): passes in scenes 01, 02, 03 and 05.</li>
+  <li><b>Nothing frozen, nothing pops</b> (<code>motion-check</code>, all five scenes, to 49.5 s): 0 frozen steps, 0 pops.</li>
+  <li><b>Viewer</b>: 0 console errors. <b>Both scene changes</b> still play as camera moves in the real player, at both framings. <b>The clock player</b> matches the site's player at both framings.</li>
+  <li><b>Contrast</b>: all 13 copy rows pass (the unfilled track fails, as on the original).</li>
+  <li><b>Nodes per scene</b>: 1483, 1494, 943, 945, 944: unchanged.</li>
+  <li><b>The original and the website</b>: the original copies are intact (7 of 7), the website folder is untouched.</li>
+</ul>
+<h3>Cost, measured in one sitting</h3>
+<div class="scroll"><table>
+<tr><th>Whole film, phone at 2x, CPU 4 times slower</th><th>Original</th><th>Remake now</th></tr>
+<tr><td>Frames a second (two runs)</td><td class="n">188.5 / 189.7</td><td class="n">203.1 / 202.3</td></tr>
+<tr><td>Frame time, median</td><td class="n">5.1 / 5.0 ms</td><td class="n">4.4 / 4.4 ms</td></tr>
+<tr><td>Frames over 16.7 ms</td><td class="n">0.2 / 0.1 %</td><td class="n">0.1 / 0.1 %</td></tr>
+</table></div>
+<div class="scroll"><table>
+<tr><th>Frame time by scene, median of three runs</th><th>01</th><th>02</th><th>03</th><th>04</th><th>05</th></tr>
+<tr><td>Original</td><td class="n">5.4 ms</td><td class="n">6.3 ms</td><td class="n">5.6 ms</td><td class="n">5.3 ms</td><td class="n">4.6 ms</td></tr>
+<tr><td>Remake before this round</td><td class="n">5.3 ms</td><td class="n">5.1 ms</td><td class="n">5.3 ms</td><td class="n">4.1 ms</td><td class="n">3.7 ms</td></tr>
+<tr><td>Remake now</td><td class="n">5.5 ms</td><td class="n">5.2 ms</td><td class="n">5.3 ms</td><td class="n">4.0 ms</td><td class="n">4.0 ms</td></tr>
+</table></div>
+<ul>
+  <li><b>What this round cost:</b> the new birds are a longer shape to work out, about 0.1 to 0.2 ms a frame on the slowed phone in the scenes that have them. Scene 01 is level with the original (5.5 against 5.4 ms); the other four are ahead of it.</li>
+  <li><b>What it saved:</b> the finale's birds used to be worked out while the map hid them. They are not any more.</li>
+  <li>These numbers are from this sitting only. The machine was quicker today than in the earlier sittings, so compare the rows, not the sittings.</li>
+  <li><b>One thing I could not explain:</b> one run of the viewer check out of ten reported a problem, and I had not kept its message. The nine runs after it were clean.</li>
+</ul>
+
+<h2 id="left">What I left alone, for you to say</h2>
+<ul>
+  <li><b>The big white clouds</b> are as you accepted them. I looked for something wrong in their drawing and their drift and found nothing to fix. If the polish you meant was their shape, say so and I will show options.</li>
+  <li><b>The kite and the plane</b> cross the same patch of sky for about a second now and then, as they did before.</li>
+  <li><b>The corners of the picture</b> are darkened a little by a soft frame laid over the whole film, which also dulls a white cloud near the top corner. On a desktop that corner is under the pale wash behind the headline. Left as it is.</li>
+  <li><b>The small jet in scene 03's sky</b> never comes into view in the time the scene lasts. Left as it is.</li>
+</ul>
+</main>
+<script>
+  // The viewer's server cannot send part of a file, so a clip played straight from it cannot be dragged.
+  // Each clip is fetched whole and played from memory instead.
+  if (/^http/.test(location.protocol) && window.fetch && window.URL) {
+    document.querySelectorAll("video").forEach(function (v) {
+      fetch(v.getAttribute("src")).then(function (r) { if (!r.ok) throw new Error(r.status); return r.blob(); }).then(function (b) {
+        var at = v.currentTime, playing = !v.paused;
+        v.src = URL.createObjectURL(b);
+        v.load();
+        if (at) v.currentTime = at;
+        if (playing) v.play();
+      }).catch(function () {});
+    });
+  }
+  // "Play both together": both clips of a pair go back to the start and play once both are ready.
+  document.querySelectorAll("[data-pair]").forEach(function (box) {
+    var vids = Array.prototype.slice.call(box.querySelectorAll("video"));
+    box.querySelector("[data-play]").addEventListener("click", function () {
+      var left = vids.length, started = false;
+      function start() { if (started) return; started = true; vids.forEach(function (v) { v.play(); }); }
+      vids.forEach(function (v) {
+        v.pause();
+        function ready() { v.removeEventListener("seeked", ready); v.removeEventListener("canplay", ready); if (--left === 0) start(); }
+        if (v.currentTime === 0 && v.readyState >= 3) { ready(); return; }
+        v.addEventListener("seeked", ready); v.addEventListener("canplay", ready);
+        v.currentTime = 0;
+      });
+      setTimeout(start, 2500);
+    });
+    box.querySelector("[data-pause]").addEventListener("click", function () { vids.forEach(function (v) { v.pause(); }); });
+  });
+</script>
+</body>
+</html>

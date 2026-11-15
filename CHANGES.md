@@ -1571,3 +1571,81 @@ scenes and seams, and the plane's pass at Tokyo Tower was in none of them.
   all four. The clips on the round 7 review page have the same limit and were left as they are.
 - A recording shows the film as it is meant to play at 60 frames a second. It is not a measure of how
   smoothly a given machine plays it live; that is the cost table above.
+
+## Round 10: the birds and the sky (2026-11-16)
+
+The owner watched the film end to end: "It is nearly perfect, but the way the birds are flying is a bit odd
+personally. Also, might need some polishing on the sky / clouds as well, make sure its all smooth and natural
+looking." Parts `r10-birds` and `r10-sky` (spliced in that order: the sky part's last anchor is a line the
+birds part writes). Shown with before/after pictures and clips on
+`evidence/2026-11-16-r10-birds-sky/index.html`. Nothing else in the film was touched.
+
+### The birds (`r10-birds`)
+- What was odd: they were drawn facing the viewer, wings out to both sides, and slid sideways at 14 px a
+  second, so they hung in the air; their wings beat up into a deep V; the kite went round its circle without
+  turning. (The same fault he saw in the map trucks: sliding, not going where they point.)
+- Now each bird is one small solid model in its own axes (`BIRD_KIND`: a body from above and from the side,
+  a tail, two wings of two panels), turned to its heading, banked and pitched, and projected as seen from
+  the ground, a little from below (`birdD`). Every piece is written the same way round on the screen so
+  overlaps never cut a hole. Still ONE path per scene: no node added.
+- The flock flies across in side view, the way the trucks drive, at 40 px/s (scenes 01-02), 44 (03) and 52
+  (05). `birdBeat`: three beats and a glide, every 2.5 to 3.4 s, each bird on its own time; the downstroke
+  is the quicker, the hand trails the arm, the beats swell from the held wing and die back into it with no
+  step in the wing's speed; the bird climbs 6 to 9 px while it beats and sinks while it glides, and its nose
+  follows its path.
+- The kite soars round a level circle seen from below (the far side lies lower and smaller), banked 25
+  degrees into the turn, heading along its path, and beats twice in nine seconds.
+- Where they fly (`BIRD_SETS`): scenes 01-02 along the top of the sky (y 126), above the glass tower and
+  into the open sky of scene 02; scene 03 from x 1150, over the cumulus and on; the finale from the
+  headline's end past Tokyo Tower and under the sun, coming down 6 px in every 100. On a desktop the
+  headline stands over stage x 160 to 1075 from y 264 down (measured from the frame; an earlier note of
+  mine said it ended at 853), so a flock keeps above y 264 while it is left of 1075.
+- The finale has two flocks half a round apart, and a round is two of the plane's cycles
+  (`span: 52 * 52`): a flock crosses Tokyo Tower every 26 s, always nine seconds before the plane passes it.
+- While the map hides the finale its birds are not worked out (`DayBirdsNone`).
+
+### The sky (`r10-sky`)
+- **The sun stands clear.** A far streak lay across the sun's disc in all three skies; at full size it read
+  as a pale bar over the sun. It is now a high streak to the sun's left (`SKY_WORLD.far` 1180, 100, 500;
+  `SKY_TRANSIT.far` 820, 108, 500; `SKY_FINALE.far` 1040, 150, 480). It cannot go under the sun: in scene
+  02 the tower block's roof (y 121) stands there, and in the finale Tokyo Tower's tip (y 168).
+- **Streaks** (cloud species 3 and 4) were a row of low lobes on a level base with round ends, and 3 had a
+  detached dash above it. Each is now one long lens with a low uneven back and pointed ends, written out
+  whole (`CLOUDS[k].path`; 3 has a second, shorter lens on its back).
+- **The finale's sky no longer darts.** Its clock was the scene's clock times how far the map had drawn
+  back, so at 28.1 s the clouds ran 23 px in 0.4 s (up to 107 px/s against a drift of 7) and the shafts
+  swung into place. It now has its own clock (`skyT`): still under the map's panel, then the scene's clock
+  from the frame the map starts to go. After the map has gone every cloud is where it was composed.
+- Found by `tools/sky-motion.mjs` (new): it follows every cloud on the screen through the film and lists
+  any that goes faster than three times its own drift, jumps, or pops.
+
+### Looked at and left alone
+- The cumulus clouds: as accepted. They drift without stepping (one cloud's edge measured at every 1/60 s:
+  0.11 to 0.19 px a frame, never a whole pixel).
+- The recording: the sky in the first recordings was a little blockier than the live film (video
+  compression). All four were recorded again at `--crf=18`.
+- The vignette (a soft dark frame over the whole picture) dulls a white cloud near the top corners
+  (255 to 244 at the first cloud's top). On a desktop that corner is under the pale wash.
+- The small jet in scene 03's sky never comes into view while the scene lasts (it starts 360 px off the
+  left edge at 38 px/s).
+- The kite and the plane cross the same patch of sky for about a second now and then, as before.
+
+### Checks
+`original/` intact (7 of 7), the website folder untouched; `check-viewer` 0 console errors (one run of ten
+reported one problem whose message I had not kept; the nine after it were clean); `check-seams` passes at
+both framings; `check-player-vs-glue` passes at both framings; `motion-check` 0 frozen steps and 0 pops in
+all five scenes (to 49.5 s); `contrast-check` all 13 copy rows pass (the unfilled track fails as on the
+original); `cloud-check` passes; `sky-motion`: no jumps, nothing faster than its drift outside a camera
+move. Nodes per scene: 1483, 1494, 943, 945, 944, unchanged.
+
+Cost, one sitting (the machine was quicker than in earlier sittings: compare the rows). `perf-side`, phone
+@2x, CPU 4x slower, two runs each: original 188.5 / 189.7 fps, median 5.1 / 5.0 ms; remake 203.1 / 202.3
+fps, 4.4 / 4.4 ms. `perf-table`, phone, CPU 4x slower, frame median of three runs, scenes 01 to 05:
+original 5.4 / 6.3 / 5.6 / 5.3 / 4.6 ms; the remake before this round 5.3 / 5.1 / 5.3 / 4.1 / 3.7; now
+5.5 / 5.2 / 5.3 / 4.0 / 4.0. The new birds cost about 0.1 to 0.2 ms a frame of script on the slowed phone
+where there are birds; scene 01 is level with the original, the other four ahead.
+
+### The film, recorded again
+`evidence/2026-11-16-the-film/`: all four recordings made again (0 to 48000 ms, 60 fps, `--crf=18`), each
+48.0 s and 2880 frames with none dropped or repeated: `remake-desktop.mp4` 7.8 MB, `remake-phone.mp4`
+12.4 MB, `original-desktop.mp4` 5.3 MB, `original-phone.mp4` 9.8 MB.
