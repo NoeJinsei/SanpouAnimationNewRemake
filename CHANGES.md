@@ -1254,3 +1254,32 @@ wears a dark jacket below the trucks' wheels for the same reason. The lamps are 
 ones (nothing above the barrier may get darker, the copy sits there), so they are faint under a phone's
 wash. On a phone the big board is whole inside the strip for about 0.3 s as it passes; that comes from the
 scroll and the camera, which are closed.
+
+
+### Scenes 01 and 02: the street, drawn again from a blank page (`r6-street`)
+
+The street itself was still the round 2 drawing. All of it is new; the buildings, trucks, cartons, sky,
+city, Tokyo Tower, camera and timings are as they were.
+
+- **The ground**: paving with an unbroken tactile strip, a kerb stone, a concrete gutter with drain
+  grates, asphalt with one row of long centre dashes and the near lane one tone down. The dashes lie on
+  y 934 to 939, above both of the site's progress tracks, and repeat every 300 px (the pan is 2100 px), so
+  in both scenes the desktop caption's number and name stand over a gap.
+- **The lamps**: 277 px tall (were 192), pale galvanised steel with the soft outline scene 03 uses: a
+  tapered column on a bolted skirt, a switch box on straps, a raked arm, a flat head. **There are 3, not
+  11**: the other eight stood behind the two buildings and were never seen.
+- **The utility poles**: 240 px (were 176), 640 px apart, one braced crossarm, a transformer on every
+  other pole, the cable with its splice case.
+- **The vending corner**: a wide white machine, a lower blue one and a bin for empties, seen square on,
+  no lettering, no vermilion. It stands further left, so Tokyo Tower's foot is clear.
+- **The foreground**: a pedestrian guard fence of pipe hoops (it was two pipes on posts).
+
+**Checks.** `original/` intact; `check-viewer` 0 console errors; `motion-check` 0 to 14600 ms: 0 frozen
+steps, the one pop that was there (14600 ms, 1.18, the scene's end); `contrast-check` scenes 01 and 02: all
+13 copy rows pass (the desktop caption's number 15.85 at its tightest, it was 8.79), the unfilled track
+fails as on the original; `cloud-check` 0. **Nodes: scene 01 1588 before, 1472 after; scene 02 1599
+before, 1483 after.** Evidence: `evidence/2026-11-15-street/`.
+
+**Known, for the owner.** Three lamps: say if you want more of them in the open stretch between the two
+buildings. The power lines still cross Tokyo Tower in scene 01, as they did (now two lines and a cable).
+A phone sees little of the street: the ground, the fence, and one pole head in scene 01.
