@@ -3815,6 +3815,12 @@
   DAY.utilityLit = "#7f92b2"; DAY.utilityDark = "#3f5175"; DAY.wireFlat = "#6b7da0"; DAY.guardBand = "#cdb84f";
   DAY.walkLit = "#d6dae0"; DAY.walkShade = "#a3abb6"; DAY.curbShade = "#7f8994"; DAY.tactile = "#dcc152";
   DAY.roadLine = "#757b82"; DAY.roadDash = "#b9bdc1";
+  /* The route line (round 7): ONE dashed vermilion line runs through the film. It is the centre line of the
+     street in scenes 01 and 02, the lane line of the expressway in scene 03, the seven corridors of the map in
+     scene 04, the centre line of the road in the finale, and (on the site) the dashed track the little truck
+     rides under the picture. On the roads it is road paint, the colour of the corridors: same dashes, same
+     places as the pale line it replaces, nothing added. The edge lines of the roads stay pale. */
+  DAY.routeLine = COLORS.verm;
   DAY.fgBand = "#222a37"; DAY.fgEdge = "#3b4759"; DAY.fgRail = "#1b2638"; DAY.fgRailLit = "#4b5b76";
   // the street's own
   DAY.stSteel = "#b3c0d5";         // lamp columns: galvanised steel (the expressway's gantry is the same metal)
@@ -3878,7 +3884,7 @@
       h("rect", { x: X0, y: G + 25, width: XW, height: 6, fill: D.curb }),        // the concrete gutter
       h("rect", { x: X0, y: G + 31, width: XW, height: 73, fill: D.road }),       // the carriageway
       F(D.roadEdge, R(X0, G + 104, XW, 196) + grate),                             // the near lane, one tone down; the drain grates
-      F(D.roadDash, dash)                                                         // the centre line
+      F(D.routeLine, dash)                                                        // the centre line: the route line
     ];
 
     /* =================================== the road lamps ===================================
@@ -4424,7 +4430,8 @@
         XW.deck,
         h("path", { d: XW.parJoints, fill: DAY.walkShade, transform: xPar }),
         h("path", { d: XW.railPosts, fill: DAY.poleDark, transform: xPar }),
-        h("line", { x1: -180, y1: ROAD_Y + 51, x2: 2100, y2: ROAD_Y + 51, stroke: DAY.roadDash, strokeWidth: 6, strokeDasharray: "72 108", strokeDashoffset: (scroll % 180).toFixed(2) }),
+        // the lane line is the route line (see DAY.routeLine)
+        h("line", { x1: -180, y1: ROAD_Y + 51, x2: 2100, y2: ROAD_Y + 51, stroke: DAY.routeLine, strokeWidth: 6, strokeDasharray: "72 108", strokeDashoffset: (scroll % 180).toFixed(2) }),
         [0, 1].map(function (rep) { return h("g", { transform: "translate(" + (xg + rep * GTILE).toFixed(2) + ", 0)" }, XW.back); }),
         convoy.map(function (c, i) {
           var ex = c.x + ahead;
@@ -5077,7 +5084,7 @@
     F(rd, D.curb, R(0, 1011.4, 1920, 2.6));
     F(rd, D.road, R(0, 1014, 1920, 40));
     F(rd, D.roadLine, R(0, 1016.6, 1920, 3) + R(0, 1049.4, 1920, 3));
-    F(rd, D.roadDash, dash);
+    F(rd, D.routeLine, dash);                    // the centre line: the route line
     F(rd, D.roadEdge, R(0, 1054, 1920, 26));
     A.road = h("g", { "data-cache": "nRoad", "data-box": "0 1006 1920 74" }, rd);
 
