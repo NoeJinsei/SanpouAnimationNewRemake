@@ -1,0 +1,7 @@
+The alternative cab of the progress bar's truck (round2/js/hero-glue.js, truckEl.innerHTML), NOT applied.
+In the working copy the cab is one piece:
+  <path d="M20.9 3.4h5.2l2.9 3.5v5.4h-8.1z" fill="#30466f"/>
+The alternative replaces it with two (one node more, 8 shapes, as many as the original's drawing):
+  <path d="M20.9 3.4h5.2l2.9 3.5v5.4h-8.1z" fill="#28395a"/><path d="M20.9 3.9h5l2.6 3.15v4.6" stroke="#7f9bc8"/>
+#28395a is the film's cab (DAY.truckCab). The second piece is a 1 px light edge along the roof, down the
+windscreen's rake and down the front. The picture was made on a scratch side with only this changed.
