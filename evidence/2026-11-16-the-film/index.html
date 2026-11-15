@@ -45,6 +45,7 @@
 <main>
 <h1>三豊運輸 hero remake: the film, end to end</h1>
 <p>The whole film in one take, with no cuts: 48 seconds, from the first frame to after the plane has passed Tokyo Tower. The film itself is not changed by this page. It is only here so the film can be watched.</p>
+<p><b>Recorded again on 16 November</b> after the birds and the sky were redone (<a href="../2026-11-16-r10-birds-sky/index.html">what changed, with before and after</a>). All four were recorded again, at a higher picture quality than the first time, so the skies stay smooth in the recording.</p>
 <p class="lead">Press play on the first one and watch it through. The original is under it, and the same two on a phone are further down. "Play both together" starts a remake and its original from the beginning at the same moment.</p>
 
 <h2 id="desktop">On a desktop</h2>
@@ -81,20 +82,20 @@
 <h2 id="files">The four recordings</h2>
 <div class="scroll"><table>
 <tr><th>File</th><th>Picture</th><th>Length</th><th>Frames</th><th>Size</th><th>Frames dropped</th></tr>
-<tr><td><a href="remake-desktop.mp4">remake-desktop.mp4</a></td><td class="n">1440 x 720</td><td class="n">48.0 s</td><td class="n">2,880 at 60 a second</td><td class="n">6.2 MB</td><td class="n">none</td></tr>
-<tr><td><a href="remake-phone.mp4">remake-phone.mp4</a></td><td class="n">780 x 1360</td><td class="n">48.0 s</td><td class="n">2,880 at 60 a second</td><td class="n">9.8 MB</td><td class="n">none</td></tr>
-<tr><td><a href="original-desktop.mp4">original-desktop.mp4</a></td><td class="n">1440 x 720</td><td class="n">48.0 s</td><td class="n">2,880 at 60 a second</td><td class="n">4.3 MB</td><td class="n">none</td></tr>
-<tr><td><a href="original-phone.mp4">original-phone.mp4</a></td><td class="n">780 x 1360</td><td class="n">48.0 s</td><td class="n">2,880 at 60 a second</td><td class="n">7.5 MB</td><td class="n">none</td></tr>
+<tr><td><a href="remake-desktop.mp4">remake-desktop.mp4</a></td><td class="n">1440 x 720</td><td class="n">48.0 s</td><td class="n">2,880 at 60 a second</td><td class="n">7.8 MB</td><td class="n">none</td></tr>
+<tr><td><a href="remake-phone.mp4">remake-phone.mp4</a></td><td class="n">780 x 1360</td><td class="n">48.0 s</td><td class="n">2,880 at 60 a second</td><td class="n">12.4 MB</td><td class="n">none</td></tr>
+<tr><td><a href="original-desktop.mp4">original-desktop.mp4</a></td><td class="n">1440 x 720</td><td class="n">48.0 s</td><td class="n">2,880 at 60 a second</td><td class="n">5.3 MB</td><td class="n">none</td></tr>
+<tr><td><a href="original-phone.mp4">original-phone.mp4</a></td><td class="n">780 x 1360</td><td class="n">48.0 s</td><td class="n">2,880 at 60 a second</td><td class="n">9.8 MB</td><td class="n">none</td></tr>
 </table></div>
 <ul>
-  <li><b>How they were made:</b> <code>node tools/record.mjs &lt;side&gt; &lt;file&gt; --framing=desktop|phone --from=0 --to=48000 --fps=60</code>, the phone ones with <code>--dpr=2</code>. The sides are <code>round2</code> (the remake, at commit <code>ab454a4</code>) and <code>original</code>.</li>
+  <li><b>How they were made:</b> <code>node tools/record.mjs &lt;side&gt; &lt;file&gt; --framing=desktop|phone --from=0 --to=48000 --fps=60 --crf=18</code>, the phone ones with <code>--dpr=2</code>. The sides are <code>round2</code> (the remake as it stands, with the birds and the sky redone) and <code>original</code>.</li>
   <li><b>What a recording is:</b> every frame is drawn for its own moment of the site's clock and saved, one after the other, so the file shows the film exactly as it is meant to play at 60 frames a second. It includes the site's own copy, buttons, dark band and progress bar, as the site lays them over the film.</li>
   <li><b>What it is not:</b> a measure of how smoothly a given computer or phone plays the film live. That was measured separately (the cost section of the <a href="../2026-11-16-round7-review/index.html#cost">round 7 page</a>).</li>
   <li><b>Jumping about:</b> this page loads each film whole before it plays, so its bar can be dragged to any second. (The viewer's server cannot send part of a file, and a film played straight from it can only run from the start.)</li>
   <li><b>The picture</b> is the site's hero section itself: 1440 x 720 in a desktop window of 1440 x 900, and 390 x 680 on a phone of 390 x 844.</li>
   <li><b>How "none dropped" was checked</b> (<code>ffprobe</code>, <code>ffmpeg -f framemd5</code>): each file holds 2,880 frames, which is 48 seconds at 60 a second; every frame comes exactly 1/60 s after the one before; and no frame's picture is the same as the one before it.</li>
 </ul>
-<p class="lead">What changed and why is on the review pages: <a href="../2026-11-16-three-fixes-review/index.html">the three fixes</a>, <a href="../2026-11-16-round7-review/index.html">round 7</a>.</p>
+<p class="lead">What changed and why is on the review pages: <a href="../2026-11-16-r10-birds-sky/index.html">the birds and the sky</a>, <a href="../2026-11-16-three-fixes-review/index.html">the three fixes</a>, <a href="../2026-11-16-round7-review/index.html">round 7</a>.</p>
 </main>
 <script>
   // The viewer's server (python's http.server) cannot hand out part of a file, and a browser needs that to jump
