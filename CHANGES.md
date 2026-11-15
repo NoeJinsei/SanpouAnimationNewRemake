@@ -1103,3 +1103,29 @@ sitting: 2.04 to 1.64, 1.90 to 1.59, 1.81 to 1.56). The rest of the checks are i
 **Known, for the owner.** 入間's depot arrives at 1.8 times its size instead of 1.9 (the arrival is a closed
 item; this is the one number of it that changed, so that it does not touch 志木 as it lands). Two corridors
 still pass behind the 志木 name card.
+
+
+## The four fixes: the checks on the finished film, and how they are shown
+
+All four are in `round2/js` (`r5-plane-tower`, `r5-map-alive`, `r5-map-names`, `r5-map-hub`, in that
+order). They are shown together at the top of `evidence/2026-11-15-batch-review/index.html` ("The four
+fixes"): each before and after at the desktop framing and at the phone crop for its scene, one line per
+picture saying what is new, and the plane's three options. The batch's three-way pictures and the desktop
+and phone sheets were rebuilt with the fixes in; their label bars now write Japanese (`tools/sheet.py`).
+
+**The numbers, on the finished film.**
+- `original/` intact; the website folder untouched.
+- `check-viewer`: 0 console errors; determinism, the real player, rapid clicks and reduced motion pass.
+  Draw (original / round2): 1.73 / 1.71 ms full, 1.66 / 1.70 desktop, 1.71 / 1.71 phone.
+- `motion-check`: 0 frozen steps in scenes 01, 02, 03 and 05; scene 04 only the player's two-step dissolve
+  lead (21800 to 21833 ms); the only pops are the two that were there before (14600 ms, 1.16; 28700 ms, 0.96).
+- `contrast-check`, whole film, both framings: all 13 copy rows pass AA (tightest: the desktop caption's
+  lead line, 4.84 against 4.5, at 30000 ms); the unfilled track fails as on the original.
+- `cloud-check`: 0 clouds below a roof.
+- **Nodes:** 1133 elements on the stage before the fixes, 1059 after. No fix added a node.
+- **Frame pacing, phone framing, CPU slowed four times** (`perf-table`, median of two runs, one sitting;
+  original / frozen round 2 / the film now): scene 01 5.4 / 5.8 / 8.2 ms, 02 6.1 / 7.4 / 11.1,
+  03 5.6 / 5.9 / 8.2, 04 5.3 / 8.2 / 5.0, 05 4.6 / 4.5 / 7.6; frames over 16.7 ms 0.1 / 0.3 / 0.5 %,
+  0.1 / 0.2 / 1.4 %, 0.3 / 1.1 / 4.2 %, 0.3 / 0.6 / 0.4 %, 0.1 / 0.4 / 0.5 %. Script time is 1.7 to 2.3 ms
+  in every scene on all three sides, so the difference is node count. Scene 02 is the heaviest; all of it
+  is still well above 60 frames a second, but scene 03 and the motion pass are still to come.

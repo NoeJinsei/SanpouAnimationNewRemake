@@ -36,9 +36,36 @@
 <h1>三豊運輸 hero remake: the batch of 2026-11-15</h1>
 <p class="lead">Everything redrawn in this batch, shown together. Each element has its own commit and evidence folder; this page only gathers the pictures. In every three-way picture the top panel is the site today, the middle is round 2 as it stood, and the bottom is the remake now, with a line saying what is new and what is still old.</p>
 <nav>
-  <a href="#scenes">All five scenes</a><a href="#clouds">1 Clouds</a><a href="#map">2 Map</a><a href="#routes">3 Routes</a>
+  <a href="#fixes"><b>The four fixes</b></a><a href="#scenes">All five scenes</a><a href="#clouds">1 Clouds</a><a href="#map">2 Map</a><a href="#routes">3 Routes</a>
   <a href="#trucks">4 Trucks</a><a href="#finale">5 Finale</a><a href="#values">Values</a><a href="#seams">Scene changes</a><a href="#checks">Checks</a><a href="#open">For you to decide</a>
 </nav>
+
+<h2 id="fixes">The four fixes on the batch</h2>
+<p>The batch was accepted; these four things were fixed afterwards, one commit each. Every picture shows before and after, at the desktop framing and at what a phone sees of that scene.</p>
+
+<h3><span class="tag">Fix 1</span>The plane is no longer sliced by Tokyo Tower</h3>
+<p>It crossed behind the Tower's lattice, which cut through the fuselage and the windows. Three options were built and judged on a phone. <b>Picked: A, a steeper climb</b> (43 degrees) that passes in front of the Tower's thin mast, above the top deck, so nothing is drawn across the plane. It also removes 68 nodes.</p>
+<figure><img src="../2026-11-15-fix-plane/options-phone.jpg" alt="The plane options at the phone crop"><figcaption><b>The options on a phone.</b> Rejected: B, the old climb drawn in front (covers the Tower's waist); C, a cloud parked at the Tower (changes the accepted sky, adds nodes).</figcaption></figure>
+<figure><img src="../2026-11-15-fix-plane/before-after-phone.jpg" alt="The climb on a phone, before and after"><figcaption><b>Phone, before and after.</b> New: only the plane's climb from the rotation on.</figcaption></figure>
+<figure><img src="../2026-11-15-fix-plane/before-after-desktop.jpg" alt="The climb on desktop, before and after"><figcaption><b>Desktop, before and after.</b> New: only the plane's climb from the rotation on.</figcaption></figure>
+<figure class="narrow"><img src="../2026-11-15-fix-plane/crossing-zoom.jpg" alt="The plane at the Tower's tip"><figcaption>The closest moment on desktop (40.0 s): the plane in front of the mast, at the Tower's tip.</figcaption></figure>
+
+<h3><span class="tag">Fix 2</span>The map's background is alive where a phone looks</h3>
+<p>In a second and a half not one pixel changed in the left third, and the moving water lay outside what a phone sees. Now the Sea of Japan coast off Niigata has the same moving water, and a prefecture steps softly to white while its truck stands at its destination. Pixels that change in 1.5 s inside the phone's strip: 10.7 % before, 40.6 % after; in the left third: 0 % before, 2.1 % after.</p>
+<figure class="narrow"><img src="../2026-11-15-fix-map/alive-before-after-phone.jpg" alt="Fix 2 on a phone, before and after"><figcaption><b>Phone, before and after.</b> New: water off Niigata (top left) and prefectures answering their trucks.</figcaption></figure>
+<figure><img src="../2026-11-15-fix-map/alive-before-after-desktop.jpg" alt="Fix 2 on desktop, before and after"><figcaption><b>Desktop, before and after.</b> New: the water off Niigata; the prefectures going white.</figcaption></figure>
+<figure><img src="../2026-11-15-fix-map/alive-motion-strip-phone.jpg" alt="The map through the hold on a phone"><figcaption>Through the hold on a phone, a still every 0.4 s.</figcaption></figure>
+
+<h3><span class="tag">Fix 3</span>東京 and 埼玉 are no longer the smallest names</h3>
+<p>They were 11.5 units, about 12 px on a phone, while every other name was 14 or 15. They are 15 now, each inside its own shape, in the same colour.</p>
+<figure class="narrow"><img src="../2026-11-15-fix-map/names-before-after-phone.jpg" alt="Fix 3 on a phone, before and after"><figcaption><b>Phone, before and after.</b> New: the size of 東京 and 埼玉.</figcaption></figure>
+<figure><img src="../2026-11-15-fix-map/names-before-after-desktop.jpg" alt="Fix 3 on desktop, before and after"><figcaption><b>Desktop, before and after.</b> New: the size of 東京 and 埼玉.</figcaption></figure>
+
+<h3><span class="tag">Fix 4</span>The knot at the centre of the map is opened</h3>
+<p>入間 now stands on its real point beside 志木. The two place dots and the stub line are gone: the depots mark the places. The Saitama road passes behind 入間 and its truck runs all the way to its dot.</p>
+<figure class="narrow"><img src="../2026-11-15-fix-map/hub-before-after-phone.jpg" alt="Fix 4 on a phone, before and after"><figcaption><b>Phone, before and after.</b> New: the two branch depots side by side, no dots, no stub.</figcaption></figure>
+<figure><img src="../2026-11-15-fix-map/hub-before-after-desktop.jpg" alt="Fix 4 on desktop, before and after"><figcaption><b>Desktop, before and after.</b> New: the arrangement at the centre.</figcaption></figure>
+<figure class="narrow"><img src="../2026-11-15-fix-map/hub-close-phone.png" alt="The centre of the map on a phone, at twice its size"><figcaption>The centre of the map on a phone, at twice its size, with all three map fixes.</figcaption></figure>
 
 <h2 id="scenes">All five scenes, as the site really shows them</h2>
 <figure><img src="scenes-desktop.jpg" alt="All five scenes at the desktop crop, original above, remake below"><figcaption><b>Desktop.</b> The site today above, the remake below.</figcaption></figure>
@@ -73,7 +100,7 @@
 <figure><img src="loading-scene02.jpg" alt="Loading at the Sanpou warehouse, scene 02"><figcaption>Scene 02, the three docks of the Sanpou warehouse, a still every 0.2 s.</figcaption></figure>
 
 <h2 id="finale">5. The airport, the terminal, the plane and the rest of scene 05</h2>
-<p>The plane is a proper twin-jet with a neutral livery, and it now climbs through open sky: the finale's skyline is composed again under its climb line, and at every measured moment it is over no building. It passes behind Tokyo Tower's lattice. The Sanpou depot carries 三豊運輸 on a navy band, where a phone can read it. The airport has a real control tower, a terminal under one rising roof, an apron with ground vehicles and an edge-on runway.</p>
+<p>The plane is a proper twin-jet with a neutral livery, and it now climbs through open sky: the finale's skyline is composed again under its climb line, and at every measured moment it is over no building. Since fix 1 it passes in front of Tokyo Tower's thin mast instead of behind its lattice. The Sanpou depot carries 三豊運輸 on a navy band, where a phone can read it. The airport has a real control tower, a terminal under one rising roof, an apron with ground vehicles and an edge-on runway.</p>
 <figure><img src="three-way-scene05-climb.jpg" alt="Scene 05 during the climb: original, round 2, new"><figcaption>Scene 05 at 38 s, three ways. In the two older panels the plane is in front of a tower.</figcaption></figure>
 <figure><img src="three-way-scene05-at-the-stand.jpg" alt="Scene 05 with the plane on the ground: original, round 2, new"><figcaption>Scene 05 at 33.5 s, three ways.</figcaption></figure>
 <figure><img src="../2026-11-15-plane/plane-old-new-2x.jpg" alt="The plane, old beside new"><figcaption>The plane, old left, new right.</figcaption></figure>
@@ -81,7 +108,6 @@
 <figure><img src="../2026-11-15-finale-ground/depot-old-new-2x.jpg" alt="The Sanpou depot, old beside new"><figcaption>The Sanpou depot, old and new.</figcaption></figure>
 <figure><img src="../2026-11-15-finale-ground/airport-old-new-2x.jpg" alt="The airport, old beside new"><figcaption>The airport, old and new.</figcaption></figure>
 <figure class="narrow"><img src="../2026-11-15-finale-ground/phone-t42000.png" alt="Scene 05 on a phone"><figcaption>Scene 05 on a phone: the depot's name beside Tokyo Tower.</figcaption></figure>
-<figure class="narrow"><img src="../2026-11-15-plane/phone-t39950.png" alt="The plane behind Tokyo Tower on a phone"><figcaption>The plane passing behind the Tower, on a phone.</figcaption></figure>
 
 <h2 id="values">The value range</h2>
 <p>The nearest city row is now clearly navy, the row behind it is no longer washed out, and the far rows are paler: five steps from navy to sky. The sky, the clouds and the whites are untouched.</p>
@@ -96,19 +122,23 @@
 <tr><th>Check</th><th>Result</th></tr>
 <tr><td>The original files</td><td>Untouched (all checksums match). The website folder was not touched.</td></tr>
 <tr><td>Console errors, the site's real player, rapid scene clicks, reduced motion</td><td>0 errors over 22 moments at three framings; all pass.</td></tr>
-<tr><td>Script time per frame (original / remake)</td><td class="n">2.19 / 2.29 ms full, 2.22 / 1.96 desktop, 2.02 / 1.98 phone</td></tr>
-<tr><td>Frame time on a phone with the CPU slowed four times (original / remake, median)</td><td class="n">01: 9.8 / 10.8 ms, 02: 10.7 / 12.0, 03: 9.9 / 9.9, 04: 9.8 / 9.3, 05: 8.9 / 9.1</td></tr>
-<tr><td>Frames slower than 60 a second on that slowed phone (original / remake)</td><td class="n">01: 0.3 / 1.7 %, 02: 1 / 6.9 %, 03: 3.4 / 6.2 %, 04: 1.4 / 1 %, 05: 0.3 / 0.8 %</td></tr>
+<tr><td>Script time per frame (original / remake)</td><td class="n">1.73 / 1.71 ms full, 1.66 / 1.70 desktop, 1.71 / 1.71 phone</td></tr>
+<tr><td>Frame time on a phone with the CPU slowed four times (original / remake, median)</td><td class="n">01: 5.4 / 8.2 ms, 02: 6.1 / 11.1, 03: 5.6 / 8.2, 04: 5.3 / 5.0, 05: 4.6 / 7.6</td></tr>
+<tr><td>Frames slower than 60 a second on that slowed phone (original / remake)</td><td class="n">01: 0.1 / 0.5 %, 02: 0.1 / 1.4 %, 03: 0.3 / 4.2 %, 04: 0.3 / 0.4 %, 05: 0.1 / 0.5 %</td></tr>
+<tr><td>Elements on the stage, before and after the four fixes</td><td class="n">1133 to 1059: the fixes took nodes away, none added</td></tr>
 <tr><td>Frozen frames</td><td>None in scenes 01, 02, 03 and 05. Scene 04's hold used to freeze; now only the player's own two-step dissolve lead at its start.</td></tr>
 <tr><td>Pops (one frame jumping)</td><td>Two, both there before this batch: 14.6 s (the clock steps back at the 02 to 03 change) and 28.7 s (the same at 04 to 05).</td></tr>
 <tr><td>Copy contrast over the whole film, desktop and phone</td><td>All 13 copy rows pass AA. Tightest: the caption's lead line on desktop, 4.84 against 4.5, at 30 s. The unfilled progress track still fails (about 1:1), as it does on the site today.</td></tr>
 <tr><td>Clouds below a roof</td><td>0 in scenes 01, 02, 03 and 05 (the depot and airport now count as roofs).</td></tr>
-<tr><td>The plane over a building</td><td>None at every 0.1 s of the approach and the climb. Nearest: the depot, 30.5 px.</td></tr>
+<tr><td>The plane over a building</td><td>None at every 0.05 s of the approach and the climb. It passes in front of Tokyo Tower's thin mast; nothing is drawn across it.</td></tr>
 <tr><td>Viewer clock against the site's real player</td><td>Matches in every hold.</td></tr>
 </table></div>
 
 <h2 id="open">For you to decide</h2>
 <ul>
+  <li><b>The plane's climb is 43 degrees</b>, steep for an airliner, and on desktop it sits right at the Tower's tip for a moment at 40.0 s (a close pass in front of the mast). On a phone it goes up behind the buttons before reaching the Tower.</li>
+  <li><b>入間's depot arrives at 1.8 times its size instead of 1.9</b>, so that it does not touch 志木 as it lands. The arrival was a closed item; this is the one number of it that changed.</li>
+  <li><b>The left third of the map</b> is alive only at its right edge (the water off Niigata and Toyama Bay), and the prefectures' answer to their trucks is soft, because most of them are nearly white already.</li>
   <li><b>The depot's name is vertical</b> (三豊運輸 written downward on a navy band). That is what keeps it inside the strip a phone sees and under the plane's climb. A horizontal sign would be smaller or cut off on a phone.</li>
   <li><b>The map's prefecture names</b> are a mid navy and turn pale under the site's wash at the top of the frame (新潟, 栃木). They can go a step darker if you want.</li>
   <li><b>On a phone the map's moving water</b> shows only as a thin strip at the right edge, because the map fills the phone. The trucks carry the motion there.</li>

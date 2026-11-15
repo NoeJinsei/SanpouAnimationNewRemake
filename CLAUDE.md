@@ -227,10 +227,21 @@ loading strips; its new-versus-old lines are in the script. Details and check nu
   dashes moving outward and a small truck on each corridor.
 - **Trucks** (`r4-truck`): redrawn; 三豊運輸 is the big line on the box, SANPOU the small one.
 - **Scene 05** (`r4-plane`, `r4-finale-ground`): the airliner and its 19 s cycle; the finale's skyline
-  composed again under its climb line (`y = 968 - 0.56 (x - 614)`: nothing may rise to within 30 px of it,
-  so think of that line before moving any roof in `cityFinale()`); the airport; the Sanpou depot with
+  composed again under its climb line (it was `y = 968 - 0.56 (x - 614)`; since the fix below the climb is
+  steeper, `PLANE.SLOPE` 0.92, so every roof has more room, but still think of the plane before raising any
+  roof in `cityFinale()` or anything at the airport); the airport; the Sanpou depot with
   三豊運輸 written downward on a navy band; two-axle road trucks.
 - **Values** (`r4-values`): `CITY_LOOK` and `CITY_HAZE` widened from navy to air.
+- **The batch was accepted, and four fixes were made on it (2026-11-15, parts `r5-*`, one commit each,
+  shown together on the same review page under "The four fixes"; waiting for the owner's verdict):**
+  the plane no longer passes behind Tokyo Tower's lattice: it climbs at 42.6 degrees and passes in front of
+  the thin mast above the top deck, one slot again (`r5-plane-tower`; the rejected options are
+  `r5-plane-opt-front` and `r5-plane-opt-cloud`); the map has moving water off Niigata as well and its
+  prefectures step to white while their trucks stand there (`r5-map-alive`); 東京 and 埼玉 are 15 units like
+  the other names (`r5-map-names`); 入間 stands beside 志木 with no dots or stub (`r5-map-hub`).
+  **The fixes added no nodes (1133 to 1059 elements on the stage). Node count is the film's cost, not
+  script time: say the number whenever a pass adds nodes.** `tools/sheet.py` now writes Japanese in its
+  label bars.
 - **What a viewer really sees** (measured, every scene, 2026-11-15; design to it, never to the bare stage).
   Desktop is the full width at stage y 60 to 1020, with a dark band over the lower third and the caption
   over the lower left. A 390 px phone sees a strip about 550 to 615 stage px wide, full height:
