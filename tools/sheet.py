@@ -18,8 +18,12 @@ for a in args:
         label, path = a.rsplit('=', 1); items.append((label, path))
 cols, width, title = int(flags.get('cols', 1)), int(flags.get('width', 1280)), flags.get('title')
 
+# The label bars must be able to write 三豊運輸: a font with Japanese glyphs comes first (it has Latin too),
+# Arial only as the last resort.
+JP_BOLD = ['C:/Windows/Fonts/YuGothB.ttc', 'C:/Windows/Fonts/meiryob.ttc', 'C:/Windows/Fonts/BIZ-UDGothicB.ttc']
+JP_REG = ['C:/Windows/Fonts/YuGothM.ttc', 'C:/Windows/Fonts/meiryo.ttc', 'C:/Windows/Fonts/BIZ-UDGothicR.ttc', 'C:/Windows/Fonts/msgothic.ttc']
 def font(size, bold=True):
-    for f in (['C:/Windows/Fonts/arialbd.ttf'] if bold else []) + ['C:/Windows/Fonts/arial.ttf']:
+    for f in (JP_BOLD if bold else []) + JP_REG + (['C:/Windows/Fonts/arialbd.ttf'] if bold else []) + ['C:/Windows/Fonts/arial.ttf']:
         try: return ImageFont.truetype(f, size)
         except OSError: pass
     return ImageFont.load_default()
