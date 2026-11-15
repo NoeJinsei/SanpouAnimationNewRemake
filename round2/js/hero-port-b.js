@@ -3016,9 +3016,33 @@
     CHIBA: [551, 833], IBARAKI: [612, 672], TOCHIGI: [523, 657], GUNMA: [432, 684],
     NIIGATA: [403, 577], KANAGAWA: [470, 826], SAITAMA: [430, 718],
   };
-  // one corridor per direction: the bearing each route leaves the hub on. Swept for the widest possible
-  // fan — the closest two corridors stay 14 map units (23 stage px) apart, so none crowds another.
-  var ROUTE_DEP = { CHIBA: 48, IBARAKI: -36, TOCHIGI: -66, NIIGATA: -96, GUNMA: -132, SAITAMA: -170, KANAGAWA: 122 };
+  /* The corridors and the three name cards (2026-11-15). No corridor passes under a name card any more.
+     The 志木営業所 card stands 33 to 48 u above the hub and is 53 u wide, so it lies across every bearing
+     from -77 to -144 degrees: the two corridors that used to leave inside that arc, Niigata's and Gunma's,
+     ran under it. A corridor can get past the card on two sides only:
+       to the east   between the card's right edge and the Ibaraki corridor. Niigata's corridor goes there:
+                     it leaves the hub on the bearing Tochigi's used to have, rounds the card's upper right
+                     corner 4.4 u clear of it and sweeps on to the north west in one curve (no radius under
+                     90 u). Tochigi's corridor moves over to make room: it leaves 16 degrees further east
+                     and comes back to its place in one curve (no radius under 67 u).
+       to the west   through the one gap between the 志木 card and the 入間 card, 11.4 u wide: room for one
+                     corridor, and Saitama's is in it. So Gunma's corridor IS Saitama's as far as that gap
+                     (the same curve exactly, so the two rows of dashes lie on each other: their patterns
+                     are 0.3 u apart) and leaves it there as a road leaves a road, turning north along the
+                     card's left edge and then on to its own place (no radius under 23 u).
+     Chiba's, Ibaraki's, Kanagawa's and Saitama's corridors are what they were.
+     ROUTE_DEP: the bearing an unchanged corridor leaves the hub on.
+     ROUTE_BEND: dep / arr = the bearings a bent corridor leaves the hub and arrives at its place on,
+     out / into = how far its two handles reach (map units); along / upto = the corridor it shares and how
+     far along that corridor's own curve (0-1) it stays on it, after which out / arr / into shape its own
+     branch. Measured on the drawn paths every 0.25 u: every corridor's centre line stays 3.4 u or more
+     from every name card (its casing is 2.45 u to a side). */
+  var ROUTE_DEP = { CHIBA: 48, IBARAKI: -36, SAITAMA: -170, KANAGAWA: 122 };
+  var ROUTE_BEND = {
+    NIIGATA: { dep: -62, out: 96, arr: -142, into: 94 },
+    TOCHIGI: { dep: -50, out: 74, arr: -119, into: 39 },
+    GUNMA: { along: "SAITAMA", upto: 0.62, out: 18, arr: -128, into: 40 },
+  };
   /* The three bases, each standing ON its real place (map units; 1 u = 1.63 stage px). No base has a place
      dot or a stub any more: the building is the mark.
        本社（板橋）   stands on its own point in the north of Tokyo: the point is under its roof, so the
@@ -3042,10 +3066,9 @@
      Measured every 10 ms of the arrival: no depot, card or name ever overlaps another. t0 = the frame its
      arrival starts.
      Cards: 本社 to the east (the open wedge between the Ibaraki and Chiba corridors), 入間 to the west,
-     志木 on a short post above its roof, in the widest gap of the fan (two corridors pass behind it:
-     there is no spot in Saitama next to 志木 that clears them all). card = [x, y, width], side = the edge
-     it grows from: r = from its left edge rightwards, l = from its right edge leftwards, u = from the
-     post outwards. */
+     志木 on a short post above its roof. No corridor passes behind a card: the corridors go round the 志木
+     card on both sides (see ROUTE_BEND). card = [x, y, width], side = the edge it grows from: r = from
+     its left edge rightwards, l = from its right edge leftwards, u = from the post outwards. */
   var MAP_BASES = [
     { id: "itabashi", nm: "本社（板橋）", hq: true, w: 23, cx: 508.5, by: 791.5, px: 505.4, big: 2.2, lift: [0, -2], t0: 24,
       card: [522.8, 778.6, 62], side: "r" },
@@ -3095,29 +3118,50 @@
     return _mapInit;
   }
 
-  /* the seven corridors: a cubic that leaves the hub on its own bearing and arrives aimed at its target */
+  /* the seven corridors: one cubic each that leaves the hub on its own bearing and arrives at its place
+     (aimed at it, or on the bearing ROUTE_BEND gives), except Gunma's, which is two cubics: Saitama's own
+     curve as far as the gap between the two name cards, then its own branch, leaving on that curve's
+     tangent. `d` is the path, `len` its length. */
   var _mapRoutes = null;
   function mapRoutes() {
     if (_mapRoutes) return _mapRoutes;
-    var H = JRMAP.bases.itabashi;
-    _mapRoutes = ROUTE_ORDER.map(function (en) {
-      var E = ROUTE_END[en], d = Math.hypot(E[0] - H.x, E[1] - H.y), a = ROUTE_DEP[en] * Math.PI / 180;
-      var c1x = H.x + Math.cos(a) * d * 0.45, c1y = H.y + Math.sin(a) * d * 0.45;
-      var ux = (E[0] - H.x) / d, uy = (E[1] - H.y) / d;
-      var c2x = E[0] - ux * d * 0.4, c2y = E[1] - uy * d * 0.4;
-      var len = 0, px = H.x, py = H.y;
+    var H = JRMAP.bases.itabashi, rad = Math.PI / 180;
+    // the eight numbers of one cubic from the hub: as it always was, or bent
+    var cubic = function (en) {
+      var E = ROUTE_END[en], d = Math.hypot(E[0] - H.x, E[1] - H.y), b = ROUTE_BEND[en];
+      if (b) return [H.x, H.y, mr1(H.x + Math.cos(b.dep * rad) * b.out), mr1(H.y + Math.sin(b.dep * rad) * b.out),
+        mr1(E[0] - Math.cos(b.arr * rad) * b.into), mr1(E[1] - Math.sin(b.arr * rad) * b.into), E[0], E[1]];
+      var a = ROUTE_DEP[en] * rad, ux = (E[0] - H.x) / d, uy = (E[1] - H.y) / d;
+      return [H.x, H.y, mr1(H.x + Math.cos(a) * d * 0.45), mr1(H.y + Math.sin(a) * d * 0.45), mr1(E[0] - ux * d * 0.4), mr1(E[1] - uy * d * 0.4), E[0], E[1]];
+    };
+    var mr3 = function (v) { return Math.round(v * 1000) / 1000; };
+    var measure = function (q) {
+      var len = 0, px = q[0], py = q[1];
       for (var i = 1; i <= 48; i++) {
         var t = i / 48, m = 1 - t;
-        var x = m * m * m * H.x + 3 * m * m * t * c1x + 3 * m * t * t * c2x + t * t * t * E[0];
-        var y = m * m * m * H.y + 3 * m * m * t * c1y + 3 * m * t * t * c2y + t * t * t * E[1];
+        var x = m * m * m * q[0] + 3 * m * m * t * q[2] + 3 * m * t * t * q[4] + t * t * t * q[6];
+        var y = m * m * m * q[1] + 3 * m * m * t * q[3] + 3 * m * t * t * q[5] + t * t * t * q[7];
         len += Math.hypot(x - px, y - py); px = x; py = y;
       }
-      return { en: en, end: E, len: len,
-        d: "M" + H.x + "," + H.y + " C" + mr1(c1x) + "," + mr1(c1y) + " " + mr1(c2x) + "," + mr1(c2y) + " " + E[0] + "," + E[1] };
+      return len;
+    };
+    var C = function (q) { return " C" + q[2] + "," + q[3] + " " + q[4] + "," + q[5] + " " + q[6] + "," + q[7]; };
+    _mapRoutes = ROUTE_ORDER.map(function (en) {
+      var E = ROUTE_END[en], b = ROUTE_BEND[en], segs;
+      if (b && b.along) {
+        // the shared corridor's curve cut at `upto` (de Casteljau: the same curve, not a copy of it)
+        var q = cubic(b.along), t = b.upto, mix = function (u, v) { return u + (v - u) * t; };
+        var ax = mix(q[0], q[2]), ay = mix(q[1], q[3]), bx = mix(q[2], q[4]), by = mix(q[3], q[5]), cx = mix(q[4], q[6]), cy = mix(q[5], q[7]);
+        var dx = mix(ax, bx), dy = mix(ay, by), ex = mix(bx, cx), ey = mix(by, cy), fx = mr3(mix(dx, ex)), fy = mr3(mix(dy, ey));
+        var tn = Math.hypot(ex - dx, ey - dy) || 1, tx = (ex - dx) / tn, ty = (ey - dy) / tn;
+        segs = [[q[0], q[1], mr3(ax), mr3(ay), mr3(dx), mr3(dy), fx, fy],
+          [fx, fy, mr2(fx + tx * b.out), mr2(fy + ty * b.out), mr2(E[0] - Math.cos(b.arr * rad) * b.into), mr2(E[1] - Math.sin(b.arr * rad) * b.into), E[0], E[1]]];
+      } else segs = [cubic(en)];
+      return { en: en, end: E, len: segs.reduce(function (s, q) { return s + measure(q); }, 0),
+        d: "M" + H.x + "," + H.y + segs.map(C).join("") };
     });
     return _mapRoutes;
   }
-
   /* ---- the land of Japan round the service area, and the water that moves ----
      MAP_BOX is the map's own box on the stage. The land and the water are drawn in boxes laid out from that
      box at the map's own scale, so they are in register with the prefectures by construction.
@@ -3421,92 +3465,132 @@
     x = (u - (1 - b)) / b;
     return v * (a / 2 + 1 - b - a + b * (x - x * x * x + x * x * x * x / 2));
   }
-  /* The map truck, facing right, drawn about its own centre (17 u long and 11.6 u high, 17.7 u with the
-     bumper; 1 u = 1.63 stage px, about 1.1 px on a phone). Designed at this size, in the manner of the
-     mini depots: a white box in one navy outline (roof, two walls, the chassis under it), the vermilion
-     stripe along its foot, a navy cab one roof-thickness lower than the box with one pane of glass and
-     the corner of the windscreen cut, a pale bumper, two navy wheels with pale hubs. No lettering.
-     Every part is 1.9 u (3.1 stage px) or more across. Built once; every truck on the map shares it. */
-  var MAP_TRUCK = { hx: 8.5, hy: 5.8 };
+  /* The map truck, SEEN FROM ABOVE, pointing right (+x), drawn about its own centre: 18 u long, 9 u wide
+     (1 u = 1.63 stage px, about 1 px on a phone). The map is a plan, so a truck on it is a plan too, and it
+     is turned to its road: a side elevation can only slide along a road that runs up the map.
+     Designed at this size, in the manner of the mini depots: white, one navy outline, the vermilion line.
+     From the tail to the nose:
+       1.9  the navy outline of the box (it runs round three sides of it)
+       8.0  the roof of the box, white
+       2.1  the vermilion stripe, across the box, closing its front end
+       2.0  the roof of the cab, navy; the cab is 1.5 u narrower than the box, so the truck has shoulders
+       2.0  the windscreen, pale glass, one bar across the cab
+       2.0  the bumper, navy, its two corners cut: the nose
+     so the dark end is the front and the long white end the back: it reads which way it is going with no
+     wheels to see. Nothing is under 1.85 u (3 stage px) across. No lettering.
+     Four nodes, built once; every truck on the map shares them (the old side view was ten).
+     MAP_TRUCK: hx / hy = half its length and width; axle = its front axle, ahead of its centre; base = from
+     that axle back to the rear axle; stop = how far from the middle of the place dot its nose stops (the
+     dot's ring is 4.8 u: it stands 3.6 u short of it, room for the dot to answer); from / north / join =
+     where it starts, inside the head office's front (right of and below the hub: `north` is the drop for
+     a corridor that leaves upwards, so that the whole truck is behind the building), and how far it has
+     run when it is on its corridor's line; show = between which distances run it comes up from nothing
+     (at the first it is still behind the head office, by the second its nose is out). */
+  var MAP_TRUCK = { hx: 9, hy: 4.5, axle: 4.5, base: 9.5, stop: 8.4, from: [2.5, 6.4], north: 3, join: 16, show: [0.5, 3.5] };
   var _mapTruck = null;
   function MiniTruck() {
     if (_mapTruck) return _mapTruck;
     var C = DAY.map;
     return _mapTruck = [
-      h("rect", { x: -8.5, y: -5.8, width: 11, height: 9.2, fill: C.ink }),
-      h("rect", { x: -6.6, y: -3.9, width: 7.2, height: 3.4, fill: C.depotLit }),
-      h("rect", { x: -6.6, y: -0.5, width: 7.2, height: 2, fill: C.route }),
-      h("polygon", { points: "2.5,-3.9 7.1,-3.9 8.5,-2.5 8.5,3.4 2.5,3.4", fill: C.ink }),
-      h("polygon", { points: "3.4,-2 6,-2 6.6,-1.4 6.6,0.6 3.4,0.6", fill: C.depotGlassLit }),
-      h("rect", { x: 6.9, y: 1.5, width: 2.3, height: 1.9, fill: C.depotShutter }),
-      h("circle", { cx: -4.4, cy: 3.4, r: 2.4, fill: C.ink }),
-      h("circle", { cx: 5, cy: 3.4, r: 2.4, fill: C.ink }),
-      h("circle", { cx: -4.4, cy: 3.4, r: 0.95, fill: C.depotShutter }),
-      h("circle", { cx: 5, cy: 3.4, r: 0.95, fill: C.depotShutter }),
+      h("polygon", { points: "-9,-4.5 3,-4.5 3,-3.75 7.5,-3.75 9,-2.25 9,2.25 7.5,3.75 3,3.75 3,4.5 -9,4.5", fill: C.ink }),
+      h("rect", { x: -7.1, y: -2.6, width: 8, height: 5.2, fill: C.depotLit }),
+      h("rect", { x: 0.9, y: -2.6, width: 2.1, height: 5.2, fill: C.route }),
+      h("rect", { x: 5, y: -1.9, width: 2, height: 3.8, fill: C.depotGlassLit }),
     ];
   }
-  /* Each corridor measured for its truck, once. From the numbers the line itself is drawn with:
+  /* Each corridor measured for its truck, once. From the numbers the line itself is drawn with (one cubic,
+     or two for a corridor that shares another's road at first):
        at(s)     the point s map units along the corridor
        cut(k)    the corridor's own curve from the hub to k of its length (0-1), as a path: what is drawn
                  while the corridor is still growing, so its dashes keep their pattern from the hub
-       travel    how far the truck runs: it stops with its nose at the place dot, standing back along the
-                 line until its box is clear of the dot, so the dot stays in view (or `back`, if given)
-       face      1 = it runs to the right, -1 = to the left (the drawing is mirrored, never turned)
+       travel    how far the truck runs: it stops MAP_TRUCK.stop short of the middle of the place dot
+                 (or `back` short of the corridor's end, if MAP_RUN gives it)
+       pose(s)   the truck when it has run s: [x, y, heading in degrees], x and y its centre.
+                 It is steered, not turned to the tangent. Its front axle is on its track (the corridor,
+                 joined from the point inside the head office where it starts), and its rear axle is
+                 pulled along behind at the length of its wheelbase, as a real one's is: so it swings into
+                 a bend a little after its nose has entered it, cuts the inside of it with its tail, and
+                 straightens up a truck's length after the bend is over. Worked out once per corridor,
+                 every 0.5 u, and looked up: the heading is a function of the distance run alone, so it
+                 is continuous for as long as the truck is seen and it stands still when the truck does.
      and its timetable from MAP_RUN (every = the seconds between two of its departures). */
   var _mapRuns = null;
   function mapRuns() {
     if (_mapRuns) return _mapRuns;
-    var N = 64;
+    var N = 64, T = MAP_TRUCK, STEP = 0.5;
     return _mapRuns = mapRoutes().map(function (r) {
-      var q = r.d.match(/-?\d+(\.\d+)?/g).map(Number), X = [q[0], q[2], q[4], q[6]], Y = [q[1], q[3], q[5], q[7]];
+      var q = r.d.match(/-?\d+(\.\d+)?/g).map(Number), S = (q.length - 2) / 6, X = [], Y = [];
+      for (var k = 0; k < S; k++) { X.push([q[6 * k], q[6 * k + 2], q[6 * k + 4], q[6 * k + 6]]); Y.push([q[6 * k + 1], q[6 * k + 3], q[6 * k + 5], q[6 * k + 7]]); }
       var B = function (P, t) { var m = 1 - t; return m * m * m * P[0] + 3 * m * m * t * P[1] + 3 * m * t * t * P[2] + t * t * t * P[3]; };
-      var cum = [0], px = X[0], py = Y[0];
-      for (var i = 1; i <= N; i++) {
-        var x = B(X, i / N), y = B(Y, i / N);
-        cum.push(cum[i - 1] + Math.hypot(x - px, y - py)); px = x; py = y;
+      // g = the place on the corridor as one number: the cubic it is on plus that cubic's own parameter
+      var XY = function (g) { var k = Math.min(S - 1, Math.floor(g)); return [B(X[k], g - k), B(Y[k], g - k)]; };
+      var cum = [0], p0 = XY(0);
+      for (var i = 1; i <= N * S; i++) {
+        var p1 = XY(i / N);
+        cum.push(cum[i - 1] + Math.hypot(p1[0] - p0[0], p1[1] - p0[1])); p0 = p1;
       }
-      var len = cum[N];
-      // the curve's own parameter at s units along it
+      var len = cum[N * S];
       var seek = function (s) {
         if (s <= 0) return 0;
-        if (s >= len) return 1;
-        var lo = 0, hi = N;
+        if (s >= len) return S;
+        var lo = 0, hi = N * S;
         while (hi - lo > 1) { var mid = (lo + hi) >> 1; if (cum[mid] <= s) lo = mid; else hi = mid; }
         return (lo + (s - cum[lo]) / (cum[hi] - cum[lo] || 1)) / N;
       };
       var mix = function (a, b, t) { return a + (b - a) * t; };
-      var cut = function (k) {
-        var t = seek(len * k);
-        var ax = mix(X[0], X[1], t), ay = mix(Y[0], Y[1], t), bx = mix(X[1], X[2], t), by = mix(Y[1], Y[2], t), cx = mix(X[2], X[3], t), cy = mix(Y[2], Y[3], t);
+      var whole = function (k) { return " C" + X[k][1] + "," + Y[k][1] + " " + X[k][2] + "," + Y[k][2] + " " + X[k][3] + "," + Y[k][3]; };
+      var cut = function (c) {
+        var g = seek(len * c), k = Math.min(S - 1, Math.floor(g)), t = g - k, x = X[k], y = Y[k], d = "M" + X[0][0] + "," + Y[0][0];
+        for (var j = 0; j < k; j++) d += whole(j);
+        var ax = mix(x[0], x[1], t), ay = mix(y[0], y[1], t), bx = mix(x[1], x[2], t), by = mix(y[1], y[2], t), cx = mix(x[2], x[3], t), cy = mix(y[2], y[3], t);
         var dx = mix(ax, bx, t), dy = mix(ay, by, t), ex = mix(bx, cx, t), ey = mix(by, cy, t);
-        return "M" + X[0] + "," + Y[0] + " C" + mr2(ax) + "," + mr2(ay) + " " + mr2(dx) + "," + mr2(dy) + " " + mr2(mix(dx, ex, t)) + "," + mr2(mix(dy, ey, t));
+        return d + " C" + mr2(ax) + "," + mr2(ay) + " " + mr2(dx) + "," + mr2(dy) + " " + mr2(mix(dx, ex, t)) + "," + mr2(mix(dy, ey, t));
       };
-      var tt = MAP_RUN[r.en], back = tt.back || 0;
-      if (!back) {
-        var ux = X[3] - X[2], uy = Y[3] - Y[2], un = Math.hypot(ux, uy) || 1;
-        ux = Math.abs(ux / un); uy = Math.abs(uy / un);
-        while (Math.hypot(Math.max(0, back * ux - MAP_TRUCK.hx), Math.max(0, back * uy - MAP_TRUCK.hy)) < 4.8 + 0.6) back += 0.25;
+      // the truck's track: its corridor, joined over the first `join` units from where it starts
+      var up = (Y[0][1] - Y[0][0]) / (Math.hypot(X[0][1] - X[0][0], Y[0][1] - Y[0][0]) || 1) < -0.5;
+      var fx = T.from[0], fy = up ? T.north : T.from[1];
+      var track = function (s) {
+        var p = XY(seek(s)), j = clamp01(s / T.join), off = 1 - j * j * (3 - 2 * j);
+        return [p[0] + fx * off, p[1] + fy * off];
+      };
+      // its heading every STEP along the track: the rear axle dragged after the front one
+      var n = Math.ceil(len / STEP), f0 = track(0), f1 = track(STEP), th = [Math.atan2(f1[1] - f0[1], f1[0] - f0[0])];
+      var rx = f0[0] - Math.cos(th[0]) * T.base, ry = f0[1] - Math.sin(th[0]) * T.base;
+      for (var m = 1; m <= n; m++) {
+        var f = track(Math.min(len, m * STEP)), a = Math.atan2(f[1] - ry, f[0] - rx);
+        rx = f[0] - Math.cos(a) * T.base; ry = f[1] - Math.sin(a) * T.base;
+        while (a - th[m - 1] > Math.PI) a -= 2 * Math.PI;
+        while (a - th[m - 1] < -Math.PI) a += 2 * Math.PI;
+        th.push(a);
       }
-      return { en: r.en, len: len, travel: len - back, face: X[3] >= X[0] ? 1 : -1,
+      var pose = function (s) {
+        var sf = Math.min(len, Math.max(0, s) + T.axle), u = sf / STEP, i = Math.min(n - 1, Math.floor(u));
+        var a = th[i] + (th[i + 1] - th[i]) * Math.min(1, u - i), f = track(sf);
+        return [f[0] - Math.cos(a) * T.axle, f[1] - Math.sin(a) * T.axle, a * 180 / Math.PI];
+      };
+      var tt = MAP_RUN[r.en];
+      return { en: r.en, len: len, travel: len - (tt.back || T.hx + T.stop),
         dep: tt.dep, run: tt.run, stay: tt.stay, fade: tt.fade, every: SWELL.period / tt.runs,
-        at: function (s) { var t = seek(s); return [B(X, t), B(Y, t)]; }, cut: cut };
+        at: function (s) { return XY(seek(s)); }, cut: cut, pose: pose };
     });
   }
-  /* Where corridor R's truck is at ambient time `time`: [x, y, opacity], x and y the centre of the truck.
-     It starts inside the head office's front (2.5 u right of and 6.4 u below the hub, which lies under the
-     roof slab) and is on the line by the time it has run 16 u. Not on the road: at that start, opacity 0. */
+  /* Where corridor R's truck is at ambient time `time`: [x, y, opacity, heading in degrees], x and y the
+     centre of the truck. One lookup: the place and the heading both come from R.pose. It starts wholly
+     behind the head office, comes up from nothing as its nose comes out (MAP_TRUCK.show: by distance run,
+     not by the clock), runs, stands with its nose short of the place dot, and goes where it stands.
+     Not on the road: at its start, opacity 0. */
   function mapTruckAt(R, time) {
-    var ph = time - R.dep, s = 0, op = 0;
+    var ph = time - R.dep, s = 0, gone = 0, T = MAP_TRUCK;
     if (ph >= 0) {
       ph = ph % R.every;
-      if (ph < R.run) { s = R.travel * mapRunEase(ph / R.run); op = clamp01(ph / 0.1); }
+      if (ph < R.run) s = R.travel * mapRunEase(ph / R.run);
       else if (ph < R.run + R.stay + R.fade) {
         var fk = clamp01((ph - R.run - R.stay) / R.fade);
-        s = R.travel; op = 1 - fk * fk * (3 - 2 * fk);
+        s = R.travel; gone = fk * fk * (3 - 2 * fk);
       }
     }
-    var at = R.at(s), k0 = clamp01(s / 16), off = 1 - k0 * k0 * (3 - 2 * k0);
-    return [at[0] + 2.5 * off, at[1] + 6.4 * off, op];
+    var p = R.pose(s), k = clamp01((s - T.show[0]) / (T.show[1] - T.show[0]));
+    return [p[0], p[1], k * k * (3 - 2 * k) * (1 - gone), p[2]];
   }
   // for the close-up picture of the model and for checks
   root.JourneyPort._components.map = { truck: MiniTruck, depot: MiniDepot, runs: mapRuns, truckAt: mapTruckAt, timetable: MAP_RUN, dash: MAP_DASH, swell: SWELL };
@@ -3584,11 +3668,12 @@
           return h("text", { x: L.x, y: mr1(L.y + L.f * 0.36 + (1 - e) * 4), textAnchor: "middle",
             fontFamily: FONTS.jp, fontWeight: 700, fontSize: L.f, fill: C.label, opacity: e }, cp.jp);
         }),
-        // --- the trucks: over the names, under the depots (each comes out from behind the head office).
-        // Always seven, in the corridors' order; one that is not on the road waits at the hub with no opacity.
+        // --- the trucks: over the names, under the depots (each comes out from behind the head office),
+        // each turned to where it is going. Always seven, in the corridors' order; one that is not on the
+        // road waits behind the head office with no opacity.
         h("g", null, mapRuns().map(function (R) {
           var q = mapTruckAt(R, flowTime);
-          return h("g", { transform: "translate(" + mr2(q[0]) + "," + mr2(q[1]) + ") scale(" + R.face + ",1)", opacity: mr2(q[2]) }, MiniTruck());
+          return h("g", { transform: "translate(" + mr2(q[0]) + "," + mr2(q[1]) + ") rotate(" + mr1(q[3]) + ")", opacity: mr2(q[2]) }, MiniTruck());
         })),
         // --- the three bases: place dots and stubs first, then the buildings, then the name cards ---
         (function () {

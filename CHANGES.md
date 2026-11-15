@@ -1173,3 +1173,31 @@ Evidence: `evidence/2026-11-15-plane-slow/` (phone and desktop before / after, t
 **Known, for the owner.** The climb is slower than a real one would look (about half a plane-length a
 second, like its approach). If it reads as floating, `CLIMB_V` is the one number to raise: 84 gives 3.3 s on
 a phone, 95 about 3 s.
+
+
+### The map trucks, seen from above, and the corridors clear of the name cards (`r6-map-corridors`, `r6-map-truck`)
+
+**Why.** The owner: "it looks like the truck is sliding by the side rather than actually driving." The
+truck was a side elevation on a plan-view map, mirrored once per corridor and never turned, and five of the
+seven corridors run more north than east.
+
+**The corridors.** Two of them (Gunma's, Niigata's) ran behind the 志木営業所 name card. Now none passes
+under a card (every corridor sampled every 0.25 u against every card: 0 hits, the nearest centre line is
+3.4 u from one; `evidence/2026-11-15-map-trucks/corridor-check.txt`). Niigata's rounds the card on the east,
+Tochigi's moved over for it, and Gunma's shares Saitama's road as far as the gap between the two cards and
+branches north there (that gap is 11.4 u, room for one corridor), so Gunma is two curves; `mapRoutes` and
+`mapRuns` handle a corridor of one or two curves. The cards and depots did not move.
+
+**The truck.** Three directions were built at the phone crop (`options-phone.jpg`):
+- **picked, plan view with a navy outline** (18 x 9 u, 4 nodes): white box, vermilion stripe, navy cab with
+  its glass. The only one that reads as a truck pointing along its road on white land. It is steered: the
+  rear axle is dragged behind the front, so the tail swings through a bend. `mapTruckAt` returns the
+  heading with the position; `face` is gone. Largest turn 2.7 degrees in one frame, none while it stands
+  or fades (`heading-and-nodes.txt`);
+- rejected, `r6-map-truck-opt-side`: today's side view turned to the road. It has an up and a down, so on
+  a road that runs up the map it stands on its tail, and it has to flip where a road bends past vertical;
+- rejected, `r6-map-truck-opt-paper`: no outline, on a hard shadow. The white box vanishes on white land.
+
+**Checks.** `original/` intact; `check-viewer` 0 console errors; `motion-check` 21800 to 27800 ms: only
+the dissolve's two-step lead, 0 pops; **nodes 1059 before, 1017 after** (each truck is 4 nodes, was 10).
+Evidence: `evidence/2026-11-15-map-trucks/`.

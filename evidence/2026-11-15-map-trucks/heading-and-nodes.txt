@@ -1,0 +1,15 @@
+The map trucks' heading, from the page's own mapTruckAt, 240 samples a second over 9 s (two cycles). 2026-11-15.
+trial
+CHIBA     seen 1655 steps; largest turn in one 1/240 s step 0.25 deg (at 3.90 s); while standing or fading 0.000 deg; largest move 0.26 u; heading at first sight 44, at the stop 50
+IBARAKI   seen 1323 steps; largest turn in one 1/240 s step 0.33 deg (at 6.80 s); while standing or fading 0.000 deg; largest move 0.47 u; heading at first sight -41, at the stop -48
+TOCHIGI   seen 901 steps; largest turn in one 1/240 s step 0.35 deg (at 8.67 s); while standing or fading 0.000 deg; largest move 0.43 u; heading at first sight -55, at the stop -107
+GUNMA     seen 1372 steps; largest turn in one 1/240 s step 0.67 deg (at 6.53 s); while standing or fading 0.000 deg; largest move 0.44 u; heading at first sight -162, at the stop -114
+NIIGATA   seen 1535 steps; largest turn in one 1/240 s step 0.39 deg (at 6.87 s); while standing or fading 0.000 deg; largest move 0.63 u; heading at first sight -67, at the stop -141
+KANAGAWA  seen 1509 steps; largest turn in one 1/240 s step 0.35 deg (at 4.43 s); while standing or fading 0.000 deg; largest move 0.22 u; heading at first sight 130, at the stop 130
+SAITAMA   seen 693 steps; largest turn in one 1/240 s step 0.30 deg (at 4.52 s); while standing or fading 0.000 deg; largest move 0.34 u; heading at first sight -162, at the stop -131
+
+Elements on the stage (node tools/node-count.mjs round2 trial --times=24500,26500):
+moment                 round2          trial
+24500 ms                 1059           1017
+26500 ms                 1059           1017
+total                    2118           2034

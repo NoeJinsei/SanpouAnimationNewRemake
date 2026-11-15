@@ -1,0 +1,23 @@
+Every corridor, as drawn in the page, sampled every 0.25 u against every name card, as drawn in the page.
+A hit = the corridor's centre line less than 2.45 u (half its casing) from a card (plate and rim). 2026-11-15.
+round2 = the film as it stands; trial = round2 + r6-map-corridors.js + r6-map-truck.js + r6-map-arrival.js.
+
+round2: 7 corridors, 3 name cards (itabashi 522.8,778.6,584.8,793.0 | shiki 460.0,731.5,513.0,745.9 | iruma 404.6,757.1,457.6,771.5)
+  CHIBA       70.6 u  from 505.4,779.1 to 551.0,833.0  tightest radius  695 u   itabashi 3.86   shiki 33.20   iruma 48.40
+  IBARAKI    151.5 u  from 505.4,779.1 to 612.0,672.0  tightest radius  297 u   itabashi 10.05   shiki 21.57   iruma 48.40
+  TOCHIGI    124.4 u  from 505.4,779.1 to 523.0,657.0  tightest radius  141 u   itabashi 15.81   shiki 3.53   iruma 48.40
+  GUNMA      120.2 u  from 505.4,779.1 to 432.0,684.0  tightest radius  488 u   itabashi 17.40   shiki 0.00 HIT   iruma 22.60
+  NIIGATA    229.7 u  from 505.4,779.1 to 403.0,577.0  tightest radius  195 u   itabashi 17.40   shiki 0.00 HIT   iruma 43.75
+  KANAGAWA    58.8 u  from 505.4,779.1 to 470.0,826.0  tightest radius  212 u   itabashi 17.40   shiki 33.20   iruma 43.76
+  SAITAMA     99.6 u  from 505.4,779.1 to 430.0,718.0  tightest radius   60 u   itabashi 17.40   shiki 3.41   iruma 5.50
+  hits (centre line under 2.45 u from a card): 2
+
+trial: 7 corridors, 3 name cards (itabashi 522.8,778.6,584.8,793.0 | shiki 460.0,731.5,513.0,745.9 | iruma 404.6,757.1,457.6,771.5)
+  CHIBA       70.6 u  from 505.4,779.1 to 551.0,833.0  tightest radius  695 u   itabashi 3.86   shiki 33.20   iruma 48.40
+  IBARAKI    151.5 u  from 505.4,779.1 to 612.0,672.0  tightest radius  297 u   itabashi 10.05   shiki 21.57   iruma 48.40
+  TOCHIGI    134.4 u  from 505.4,779.1 to 523.0,657.0  tightest radius   67 u   itabashi 13.24   shiki 13.42   iruma 48.40
+  GUNMA      128.8 u  from 505.4,779.1 to 432.0,684.0  tightest radius   24 u   itabashi 17.40   shiki 3.41   iruma 5.50
+  NIIGATA    250.5 u  from 505.4,779.1 to 403.0,577.0  tightest radius   90 u   itabashi 15.36   shiki 4.43   iruma 48.40
+  KANAGAWA    58.8 u  from 505.4,779.1 to 470.0,826.0  tightest radius  212 u   itabashi 17.40   shiki 33.20   iruma 43.76
+  SAITAMA     99.6 u  from 505.4,779.1 to 430.0,718.0  tightest radius   60 u   itabashi 17.40   shiki 3.41   iruma 5.50
+  hits (centre line under 2.45 u from a card): 0
