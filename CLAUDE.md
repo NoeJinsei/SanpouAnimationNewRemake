@@ -344,8 +344,8 @@ numbers are at the end of `CHANGES.md`. **Check the verdict before building on a
     A GROUP with opacity is still expensive (the browser draws it through a buffer): avoid new ones.
   - the patcher skips a node whose description is the very object it was last patched to, so drawings built
     once and kept (memoised) cost nothing per frame. Never change such an object after it is built.
-  Measured back to back in one sitting (phone @2x, CPU 4x slower, whole film): original 70 to 74 fps,
-  median 13 ms, 12 % of frames over 16.7 ms; remake 78 to 80 fps, 12.3 ms, 5 %. Per scene the remake is at
+  Measured back to back in one sitting (phone @2x, CPU 4x slower, the finished film): original 73 fps,
+  median 13.1 ms, 8 % of frames over 16.7 ms; remake 79 to 82 fps, 11.7 to 12.1 ms, 3 to 4 %. Per scene the remake is at
   or better than the original in all five. Always report both sides from the same run.
 - **Already there, checked, not added to:** ambient motion in every hold (clouds, birds, the Tower's beacon,
   cranes, lit windows, exhaust, both forklifts, the airport's windsock, radar and baggage train, the map's

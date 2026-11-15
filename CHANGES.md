@@ -1432,15 +1432,18 @@ only HOW a move eases changed. Shown with clips on `evidence/2026-11-16-round7-r
   4. scenes 01-02 are a stack of pictures instead of one svg: the four rows of the city are still pictures
      with one layer each (their 41 buildings no longer take one apiece), moved by the camera as layers;
   5. 56 circles that were never seen and an empty opacity group are gone from scenes 04-05.
-- **Measured back to back, one sitting, phone @2x, CPU 4x slower.** Whole film, two runs each:
-  original 69.9 / 74.0 fps, frame median 13.7 / 12.9 ms, 13.0 / 11.5 % of frames over 16.7 ms;
-  remake 78.4 / 79.7 fps, 12.4 / 12.2 ms, 4.5 / 5.0 %. (Before the cost work the remake stood at 50 to 54
-  fps and 43 to 54 % in the same sitting.) Scene by scene, median of two runs, original / remake:
+- **Measured back to back, one sitting, phone @2x, CPU 4x slower.** The finished film, two runs each, one
+  side after the other: original 73.0 / 73.4 fps, frame median 13.1 / 13.2 ms, 8.5 / 7.6 % of frames over
+  16.7 ms, 1.1 / 1.0 % over 33 ms, worst frame 134 / 119 ms; remake 81.8 / 79.3 fps, 11.7 / 12.1 ms,
+  3.0 / 3.6 %, 0.3 / 0.3 %, worst 97 / 99 ms. Script per frame: 5.98 / 5.97 ms against 4.06 / 4.24 ms.
+  (Before the cost work the remake stood at 50 to 54 fps and 43 to 54 %, against an original at 72 to 73
+  fps and 8 to 9 %.) Scene by scene, median of two runs, original / remake:
   01 14.0 / 12.9 ms, 2.8 / 2.0 % over 16.7 ms; 02 13.1 / 13.8 ms, 22.4 / 3.6 %; 03 14.8 / 12.4 ms,
   19.0 / 4.7 %; 04 14.3 / 11.5 ms, 15.2 / 9.2 %; 05 13.4 / 11.4 ms, 3.2 / 2.0 %.
 - **Nodes** (`node tools/node-count.mjs original round2`; original / before round 7 / now): 01 1337 / 1472 /
-  1484, 02 1372 / 1483 / 1495, 03 1254 / 944 / 940, 04 778 / 1017 / 946, 05 777 / 1016 / 945. Scenes 01 and
-  02 have 12 more than before the round (the wrappers of the picture stack); the others have fewer.
+  1484, 02 1372 / 1483 / 1495, 03 1254 / 944 / 944, 04 778 / 1017 / 946, 05 777 / 1016 / 945. Scenes 01 and
+  02 have 12 more than before the round (the wrappers of the picture stack); scene 03 has as many, scenes
+  04 and 05 have 71 fewer.
 
 ### Checks on the finished film
 `original/` intact (7 of 7), the website folder untouched; `check-viewer` 0 console errors (determinism, the
