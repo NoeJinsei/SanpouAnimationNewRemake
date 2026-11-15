@@ -1527,6 +1527,9 @@ runs each: original 75.1 / 74.3 fps, median 12.9 / 13.0 ms, 5.5 / 6.6 % of frame
   the film's own cab navy (#28395a) with a light edge along its roof and front. It holds against the band
   at both framings in both scenes; its edge is one pixel wide on a desktop and it costs one node.
   `evidence/2026-11-16-r9-progress-truck-cab/` has the picture and the two pieces of markup. Not applied.
+- **Answered the same day: the cab stays as it is.** At its real size the two are all but the same picture;
+  magnified, the light edge reads as a stray line beside the cab; and it costs a node for nothing (the
+  reviewer's own frames: `evidence/2026-11-16-opus-tailband/`). Closed.
 
 ### `tools/sheet.py`
 - Every tile in a row gets the same label bar, as tall as the row's longest label. A tile whose label had a

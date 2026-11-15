@@ -367,8 +367,9 @@ numbers are at the end of `CHANGES.md`. **Check the verdict before building on a
     on the map needs a dark edge all round to read as an object, and on the map vermilion means ROUTE:**
     **nothing that drives on a route may carry vermilion along its length.**
   - **The truck on the progress bar** (a direct edit of `round2/js/hero-glue.js`, `truckEl.innerHTML`): the
-    film's truck at the same 30 x 16 CSS px. Open, a picture only (`evidence/2026-11-16-r9-progress-truck-cab/`):
-    its cab is lighter than the box's outline; the alternative is the film's cab navy with a light edge.
+    film's truck at the same 30 x 16 CSS px. **Its cab is closed (2026-11-16): it keeps the lighter navy,
+    #30466f. Do not reopen it.** Turned down, a picture only (`evidence/2026-11-16-r9-progress-truck-cab/`):
+    the film's own cab navy with a light edge. At real size the two look the same, and it costs a node.
 - **What is in the picture but not in the scene code. Look here too when asked to redraw "everything":**
   - the little truck on the progress bar: `round2/js/hero-glue.js`, `truckEl.innerHTML`, an inline SVG. Its
     box must stay 30 x 16 CSS px: the site's CSS places it (`.sjx-truck { top: 50%; margin-top: -15px }`)
