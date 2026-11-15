@@ -1201,3 +1201,24 @@ branches north there (that gap is 11.4 u, room for one corridor), so Gunma is tw
 **Checks.** `original/` intact; `check-viewer` 0 console errors; `motion-check` 21800 to 27800 ms: only
 the dissolve's two-step lead, 0 pops; **nodes 1059 before, 1017 after** (each truck is 4 nodes, was 10).
 Evidence: `evidence/2026-11-15-map-trucks/`.
+
+
+### The arrival is shown at the place, not by a whole prefecture (`r6-map-arrival`)
+
+**Why.** A prefecture stepped to white while its truck stood there (fix 2 of the four). It did not read:
+most of the area is nearly white already, so the service area only looked patchy at different moments.
+
+**What changed.** That step is removed: every prefecture keeps its own tint all the time
+(`mapAnswerFill` and `MAP_ANSWER` are gone). The answer is on the destination: as the truck comes to rest,
+its place dot opens into a target (the dot and a vermilion ring, 16 u across, 26 stage px, 17 px on a
+phone), stays open while the truck stands and closes over the truck's fade. It runs on the truck's own
+clock, so it repeats with it and never jumps. It uses the two circles each corridor's end already had.
+One more picture for the owner, not the pick: `option-onewhite-phone.jpg` (part
+`r6-map-arrival-opt-onewhite`), the whole service area one flat white.
+
+**Checks.** `original/` intact; `check-viewer` 0 console errors; `motion-check` 21800 to 27800 ms: the
+dissolve's two-step lead only, 0 pops; `contrast-check` scene 04: all 13 copy rows pass, the unfilled track
+fails as on the original; **nodes 1017 before, 1017 after**. Evidence: `evidence/2026-11-15-map-arrival/`.
+
+**Known, for the owner.** Kanagawa's place dot already sat on the last stroke of 川; the target now opens
+around that stroke. Clearing it means moving that dot or the name, and both are closed.

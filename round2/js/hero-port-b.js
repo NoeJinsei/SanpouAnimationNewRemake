@@ -2923,12 +2923,13 @@
                    carried out. It runs on the ambient clock, so it never stops while the scene holds.
                    The Pacific water is the bold one; the water off Niigata is slower and travels a
                    third as far, because the site's copy and its pale wash lie over that side.
-       the answer  what moves on the land. When a corridor's truck reaches its place the whole prefecture
-                   steps, softly, from its own tint to the full white of the home ground ("delivered"),
-                   holds it while the truck stands there, and goes back as the truck goes (MAP_ANSWER).
-                   One to four prefectures at a time, each a big flat area: this is what a phone sees
-                   move, since the map fills it. The further a prefecture is from Tokyo the paler its own
-                   tint, so the further the truck has come the more the land answers.
+       the answer  what tells you a truck has arrived. It is on the destination, not on the land: when a
+                   corridor's truck stops at its place, the place dot opens into a target (the dot grows
+                   and a vermilion ring stands round it), holds while the truck stands there, and closes
+                   as the truck goes (MAP_ARRIVE). A prefecture never changes colour: it keeps its own
+                   tint from the moment it is wiped in. (Until 2026-11-15 the whole prefecture stepped to
+                   white instead. Most of the area is nearly white already, so that step was not read as
+                   an arrival: the service area only looked patchy, differently at different moments.)
      Vermilion is the routes' alone: the dashes, the place dots, the stripe on the trucks that run them
      (and the depots' fascia line).
      Sequence (all inside the timings the player already drives):
@@ -2947,15 +2948,16 @@
                            settle), is set down onto its own place as it eases to its resting size, and
                            then its name card comes out of it. All three are down and named by frame 80:
                            the frame the player holds, and the frame scene 05 starts from.
-     Never frozen while it holds: the water travels off both coasts, the prefectures answer their trucks,
-     the dashes of all seven corridors travel outward, and two to five trucks are on the road. The depots
-     stand still once they are down, as buildings do.
+     Never frozen while it holds: the water travels off both coasts, the dashes of all seven corridors
+     travel outward, two to five trucks are on the road, and a place dot answers each truck that arrives.
+     The depots stand still once they are down, as buildings do.
      Engine: the node list is the same shape on every frame; every id is prefixed nm4; the only clips are
      clipPaths with one rect child; no masks, filters, blur or gradients. Each water is ONE path (its fan,
      its reach and its tails together), drawn once in the land layer as the apron and once in each of its
      band layers; a band layer is only ever scaled and faded, and the land is a layer of its own, so
-     nothing behind the map is drawn again while the water moves. A prefecture's answer is a change of
-     its fill, in the map layer that is drawn again every frame anyway for the dashes and the trucks. */
+     nothing behind the map is drawn again while the water moves. A place's answer is a change of the two
+     circles of its dot, in the map layer that is drawn again every frame anyway for the dashes and the
+     trucks: no node is added for it. */
   DAY.map = {
     sea: "#5fabe4",           // the panel: the sea, in the sky's own blue
     shelf: "#b7d9f3",         // shallow water: the apron off our coast, and the bands that leave it
@@ -3594,33 +3596,28 @@
   }
   // for the close-up picture of the model and for checks
   root.JourneyPort._components.map = { truck: MiniTruck, depot: MiniDepot, runs: mapRuns, truckAt: mapTruckAt, timetable: MAP_RUN, dash: MAP_DASH, swell: SWELL };
-  /* The land answers the trucks. MAP_ANSWER: to = the colour a prefecture steps to when its truck is at its
-     place (the white of the home ground: the top of the map's own scale, where white is where we deliver
-     most), lead = seconds before the truck stops in which the step comes up (the truck is slowing into
-     the place). It holds while the truck stands and goes back over the truck's own fade, so it is a
-     function of the same clock as the truck and repeats with it: nothing jumps when that clock steps back
-     at scene 05. The step is 41 levels for Niigata, 20 to 24 for Ibaraki, Tochigi and Gunma, 6 to 13 for
-     the three nearest. Tokyo has no corridor (the head office is there) and never changes. */
-  var MAP_ANSWER = { to: [255, 255, 255], lead: 0.5 };
-  var _mapAnswer = null;
-  function mapAnswerFill(cp, time) {
-    if (!_mapAnswer) {
-      _mapAnswer = {};
-      var runs = mapRuns(), lo = DAY.map.heatLo, hi = DAY.map.heatHi;
-      JRMAP.covered.forEach(function (c) {
-        var t = Math.pow(c.heat, 0.75), R = null;
-        runs.forEach(function (q) { if (q.en === c.en) R = q; });
-        _mapAnswer[c.en] = { rest: [0, 1, 2].map(function (i) { return Math.round(lo[i] + (hi[i] - lo[i]) * t); }), run: R, still: mapHeat(c.heat) };
-      });
-    }
-    var A = _mapAnswer[cp.en], R = A.run, ph = R ? time - R.dep : -1;
-    if (ph < 0) return A.still;
+  /* The place answers its truck. A place dot is two circles: a white disc (4.8 u) and the vermilion dot on
+     it (2.8 u). When the corridor's truck stops, the dot opens into a target:
+       the dot    grows to MAP_ARRIVE.dot
+       the disc   grows to MAP_ARRIVE.ring and takes a vermilion outline MAP_ARRIVE.line thick, so a ring
+                  stands round the dot with a band of white between them (2.6 u; ring 1.9 u: both over
+                  the 3 stage px floor). Its outer edge is 7.9 u from the middle: the truck's nose stops
+                  at 8.4 u (MAP_TRUCK.stop), so the target never touches the truck.
+     Twice the size of the dot at rest (16 u across, about 16 px on a phone), in the route's own colour,
+     flat: no glow, nothing that blinks.
+     mapArrive(R, time) is how far open the place of corridor R is, 0 to 1, at ambient time `time`. It
+     starts to open MAP_ARRIVE.lead seconds before the truck is at rest (the truck is at walking pace by
+     then), on the curve the depots arrive on (depotPop: there in 4 frames, one overshoot under 4 %, then
+     still), stays open while the truck stands, and closes over the truck's own fade. It is a function of
+     the truck's own clock and nothing else, so it repeats with the truck and nothing jumps when that
+     clock steps back at scene 05. Tokyo has no corridor and no place dot (the head office is there). */
+  var MAP_ARRIVE = { dot: 3.4, ring: 6.95, line: 1.9, lead: 0.1 };
+  function mapArrive(R, time) {
+    var ph = time - R.dep;
+    if (ph < 0) return 0;
     ph = ph % R.every;
-    var up = clamp01((ph - R.run + MAP_ANSWER.lead) / MAP_ANSWER.lead), dn = clamp01((ph - R.run - R.stay) / R.fade);
-    var k = up * up * (3 - 2 * up) * (1 - dn * dn * (3 - 2 * dn));
-    if (k <= 0) return A.still;
-    var to = MAP_ANSWER.to, mx = function (i) { return Math.round(A.rest[i] + (to[i] - A.rest[i]) * k); };
-    return "rgb(" + mx(0) + "," + mx(1) + "," + mx(2) + ")";
+    var dn = clamp01((ph - R.run - R.stay) / R.fade);
+    return depotPop((ph - R.run + MAP_ARRIVE.lead) * FPS) * (1 - dn * dn * (3 - 2 * dn));
   }
   function CoverageMap(p) {
     var prefProgress = p.prefProgress, routeProgress = p.routeProgress, pinProgress = p.pinProgress,
@@ -3642,7 +3639,7 @@
         JRMAP.covered.map(function (cp) {
           var nf = M.info[cp.en];
           return h("g", { clipPath: "url(#nm4w" + nf.rank + ")" },
-            h("path", { d: cp.d, fill: mapAnswerFill(cp, flowTime), stroke: C.seam, strokeWidth: 1.9, strokeLinejoin: "round" }));
+            h("path", { d: cp.d, fill: mapHeat(cp.heat), stroke: C.seam, strokeWidth: 1.9, strokeLinejoin: "round" }));
         }),
         routes.map(function (r, i) {
           var raw = (routeProgress - i * 0.07) * 2.6;
@@ -3652,13 +3649,15 @@
           var d = draw < 1 ? mapRuns()[i].cut(draw) : r.d;
           // casing 4.9 u = 8.0 stage px, dashes 3.2 u = 5.2 px thick, 7.8 u long, 3 u apart: over the 3 px
           // floor on a phone. They move outward at laps x pattern / period = 22.9 u a second.
+          // The place dot at the corridor's end opens into a target while its truck stands there (ak).
+          var ak = mapArrive(mapRuns()[i], flowTime), AR = MAP_ARRIVE;
           return h("g", null,
             h("path", { d: d, fill: "none", stroke: C.routeCase, strokeWidth: 4.9, strokeLinecap: "round", opacity: 0.88 * on }),
             h("path", { d: d, fill: "none", stroke: C.route, strokeWidth: 3.2, strokeLinecap: "round", opacity: on,
               strokeDasharray: MAP_DASH.on + " " + MAP_DASH.off,
               strokeDashoffset: mr2(-((flowTime * MAP_DASH.laps * DP / SWELL.period + i * 3.7) % DP)) }),
-            h("circle", { cx: r.end[0], cy: r.end[1], r: 4.8 * flow, fill: C.routeCase }),
-            h("circle", { cx: r.end[0], cy: r.end[1], r: 2.8 * flow, fill: C.route })
+            h("circle", { cx: r.end[0], cy: r.end[1], r: mr2((4.8 + (AR.ring - 4.8) * ak) * flow), fill: C.routeCase, stroke: C.route, strokeWidth: mr2(AR.line * ak * flow) }),
+            h("circle", { cx: r.end[0], cy: r.end[1], r: mr2((2.8 + (AR.dot - 2.8) * ak) * flow), fill: C.route })
           );
         }),
         JRMAP.covered.map(function (cp) {
