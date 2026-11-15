@@ -1451,3 +1451,54 @@ real player, rapid clicks, reduced motion); `check-seams` passes at both framing
 matches in every hold; `motion-check` 0 frozen steps and 0 pops in all five scenes; `contrast-check` all 13
 copy rows pass at both framings (the unfilled track fails as on the original); `cloud-check` 0 clouds below
 a roof.
+
+## Three fixes on round 7 (2026-11-16)
+
+Asked for after round 7 was looked at; nothing else in round 7 was reopened. Parts `r8-*`, one commit each
+with its own evidence folder, gathered on `evidence/2026-11-16-three-fixes-review/index.html`.
+
+### The map's place against the desktop band is closed (`r8-map-lift`)
+- The reviewer's answer: neither of the two options shown. The map stays at FULL SIZE, `MAP_BOX`'s top is
+  -77 (the full 89 px; it was -24), and the name 新潟 moved from above its place into the open land south
+  west of it (`MAP_LABEL.NIIGATA` at 376, 592, `at: [397.0, 552.7]` so its wipe is aimed as before).
+- `node tools/map-band.mjs round2`: the hub and all three name cards 0 % under the band (the hub was 15 %),
+  東京 4 % (19 %), 新潟 17 px under the phone's buttons (10 px).
+- Why not the 13 % smaller map: at 1 u = 1.417 px the map truck's gap, tyres and windscreen fall under
+  the 3 stage px floor and the depot cards' text shrinks on a phone.
+- Seen: on a phone Niigata's open arrival ring comes within about 3 px of the buttons while its truck
+  stands there; Niigata's northern end runs off the top of the frame. The truck and the corridor do not
+  come near the name.
+
+### The map truck (`r8-map-truck`)
+- Round 7's drawing read as an armature of dark parts: tyre blocks as two crossbeams, a dark nib of a cab,
+  the stripe as a bar across the box. The steering, the wheelbase model, the shadow and the 1.5x size stay.
+- Now it is the film's own truck seen from above: a long white box (13.55 of 18 units) whose two long edges
+  are the vermilion stripe, its tail navy; one navy cab joined to the box and as wide as it, the windscreen
+  across it (1.6 x 4.7 units), the bumper's corners cut; four short wheel marks at the corners. Nothing
+  under 1.23 base units. Four shared nodes and a shadow each, as before (scene 04: 946 nodes then, 945 now).
+- Three drawings judged on the real map at the phone crop and magnified 8 times: picked the side stripes
+  with the cab joined; rejected a navy outline all round with the stripe as a tail band
+  (`r8-map-truck-opt-tail`) and the picked drawing with a gap behind the cab (`r8-map-truck-opt-gap`).
+- Differs from the reviewer's words in one thing, told on the review page: he described a navy outline
+  round the box; a navy outline and a side stripe together leave a white strip 2.2 units wide.
+
+### The truck on the progress bar (`round2/js/hero-glue.js`)
+- It was the site's original drawing, never remade because it is not in the scene code. Now the film's
+  truck in the same 30 x 16 CSS px: a tall white box in a navy outline, the stripe in its lower third with
+  a white row under it, a lower navy cab (#30466f, the film's navy a step lighter so it holds on the dark
+  band) with its glass, a dark chassis, two wheels with steel hubs tucked under the body. Edges on whole
+  and half pixels. One node fewer than the original's.
+- `viewer/frame.html` reads the truck out of each side's own glue file, so the clock player shows the
+  side's truck (it had its own copy of the old one). Checked identical in both players, for both sides.
+- For the integration task, not changed: the bar (`.hc-fill`, the site's CSS) reads a little crude beside
+  the redrawn truck at 2x.
+
+### Checks on the finished film
+`original/` intact (7 of 7), the website folder untouched; `check-viewer` 0 console errors;
+`check-player-vs-glue` passes at both framings (remake and original); `check-seams` passes; `motion-check`
+0 frozen steps and 0 pops in all five scenes (to 49.5 s); `contrast-check` all 13 copy rows pass (the
+unfilled track fails as on the original); `cloud-check` passes; `map-band` as above. Nodes per scene
+(original / now): 1337 / 1483, 1372 / 1494, 1254 / 943, 778 / 945, 777 / 944: one fewer in each than
+before these fixes. `perf-side`, phone @2x, CPU 4x slower, one sitting, one side after the other, two
+runs each: original 75.1 / 74.3 fps, median 12.9 / 13.0 ms, 5.5 / 6.6 % of frames over 16.7 ms; remake
+82.8 / 84.9 fps, 11.6 / 11.3 ms, 3.3 / 2.9 %.

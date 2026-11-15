@@ -285,8 +285,10 @@ trucks, the arrival ring and the plane's speed stay as they are.
   `viewer/timeline.js` lets tools ask for moments past 45.8 s. Rejected speeds: `r6-plane-opt-fast`,
   `-opt-slow`.
 - **Scene 03's road** (`r6-expressway`) and **the street of scenes 01 and 02** (`r6-street`): the last
-  original and round 2 drawings, drawn again from a blank page. **Nothing in the film is an original or a
-  round 2 drawing any more.** The sign wording and scene 03's caption (関東一円, the owner's call) are
+  original and round 2 drawings IN THE SCENE CODE, drawn again from a blank page. (This line used to say
+  that nothing in the film was an original drawing any more. That was not true: the little truck on the
+  progress bar was still the site's original until 2026-11-16. See "What is in the picture but not in the
+  scene code" below.) The sign wording and scene 03's caption (関東一円, the owner's call) are
   untouched. The street has 3 lamps where there were 11 (eight were never seen).
 - **Nodes** (`node tools/node-count.mjs original round2`, elements on the stage per scene; original /
   before round 6 / now): 01 1337 / 1588 / 1472, 02 1372 / 1599 / 1483, 03 1254 / 1290 / 944,
@@ -307,10 +309,8 @@ numbers are at the end of `CHANGES.md`. **Check the verdict before building on a
 - **The four corrections:** the map truck redrawn at 1.5 times (`r7-map-truck`: box, gap, narrower cab,
   tyres, a shadow; rejected `-opt-sizeonly`, `-opt-125`); the map 36 px higher (`r7-map-lift`); 神奈川's ring
   open on the name's side (`r7-map-ring`); no power lines across Tokyo Tower (`r7-tower-wires`).
-  **Open, the reviewer's / owner's to decide:** the map against the desktop band. 36 px is all a phone
-  leaves (新潟 comes up under the two buttons); it halves the band over the hub and does not clear it.
-  Clearing it takes 89 px: the map 13 % smaller (`r7-map-lift-opt-shrink`) or 新潟 behind the buttons
-  (`r7-map-lift-opt-high`). `node tools/map-band.mjs <side>` prints the numbers.
+  The map against the desktop band was left open here (36 px was all a phone left) and was closed on
+  2026-11-16: see "Three fixes on round 7" below. `node tools/map-band.mjs <side>` prints the numbers.
 - **Every scene change is a camera move** (`r7-seams`, `r7-seam-fix`, and the remake's own player
   `round2/js/hero-glue.js`). 02 -> 03: the camera goes after the departing trucks along the road, the
   street gives way to the expressway at its fastest moment (`SEAM23`, `seam23X`), and it lands riding with
@@ -344,12 +344,36 @@ numbers are at the end of `CHANGES.md`. **Check the verdict before building on a
     A GROUP with opacity is still expensive (the browser draws it through a buffer): avoid new ones.
   - the patcher skips a node whose description is the very object it was last patched to, so drawings built
     once and kept (memoised) cost nothing per frame. Never change such an object after it is built.
-  Measured back to back in one sitting (phone @2x, CPU 4x slower, the finished film): original 73 fps,
-  median 13.1 ms, 8 % of frames over 16.7 ms; remake 79 to 82 fps, 11.7 to 12.1 ms, 3 to 4 %. Per scene the remake is at
+  Measured back to back in one sitting (phone @2x, CPU 4x slower, the finished film, after the three
+  fixes): original 74 to 75 fps, median 13 ms, 6 % of frames over 16.7 ms; remake 83 to 85 fps, 11.3 to
+  11.6 ms, 3 %. (The reviewer's own sitting: original 58.4 fps / 15.7 ms / 41.5 %, remake 77 / 12.6 / 12.6.) Per scene the remake is at
   or better than the original in all five. Always report both sides from the same run.
 - **Already there, checked, not added to:** ambient motion in every hold (clouds, birds, the Tower's beacon,
   cranes, lit windows, exhaust, both forklifts, the airport's windsock, radar and baggage train, the map's
   water and dashes) and weight wherever a truck moves (`truckMotion`, the forklifts' pitch, `mapRunEase`).
+- **Three fixes on round 7 (2026-11-16, parts `r8-*`, shown on
+  `evidence/2026-11-16-three-fixes-review/index.html`, waiting for review):**
+  - **The map's place is closed** (`r8-map-lift`, the reviewer's own answer): `MAP_BOX` top -77 (the full
+    89 px, full size) and the name 新潟 moved into Niigata's own land (`MAP_LABEL.NIIGATA` at 376, 592, with
+    `at` keeping its wipe's aim). Hub and all three cards 0 % under the desktop band, 東京 4 %, 新潟 17 px
+    under the phone's buttons. Do not make the map smaller: at 1 u = 1.417 px the map truck's gap, tyres
+    and windscreen fall under the 3 stage px floor.
+  - **The map truck** (`r8-map-truck`; rejected `-opt-tail`, `-opt-gap`): the film's own truck seen from
+    above: a long white roof whose two long edges are the vermilion stripe, a navy tail, one navy cab joined
+    to the box with the windscreen across it, four short wheel marks. Steering, wheelbase, shadow and the
+    1.5x size are round 7's. The reviewer asked for a navy outline round the box; the pick has vermilion
+    long edges instead (told on the review page; `-opt-tail` is the outlined one).
+  - **The truck on the progress bar** (a direct edit of `round2/js/hero-glue.js`, `truckEl.innerHTML`): the
+    film's truck at the same 30 x 16 CSS px.
+- **What is in the picture but not in the scene code. Look here too when asked to redraw "everything":**
+  - the little truck on the progress bar: `round2/js/hero-glue.js`, `truckEl.innerHTML`, an inline SVG. Its
+    box must stay 30 x 16 CSS px: the site's CSS places it (`.sjx-truck { top: 50%; margin-top: -15px }`)
+    and this project does not touch the site. Keep it ONE assignment of quoted pieces: the viewer's clock
+    player reads the drawing out of each side's own glue file (`viewer/frame.html`), so a side shows its
+    own truck and there is no second copy to forget.
+  - the bar it rides (`.hc-fill`), the dark band, the pale wash, the copy, the two buttons, the caption:
+    the site's HTML and CSS (`original/site/`, `original/css/40-hero.css`), READ ONLY. For the integration
+    task: beside the redrawn truck the bar's flat vermilion dashes read a little crude at 2x.
 - New tools: `check-seams.mjs` (the real player plays both moves, at both framings, and by click),
   `trace-side.mjs` (where a frame's time goes), `what-moves.mjs` (where two moments differ),
   `what-changes.mjs` (what the patcher writes per step), `map-band.mjs`; `record.mjs` takes `--dpr=2`.

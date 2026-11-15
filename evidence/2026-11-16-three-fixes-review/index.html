@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>三豊運輸 hero remake: three fixes on round 7</title>
+<style>
+  :root { --ink: #13263f; --soft: #51627c; --line: #d5dde8; --bg: #f4f7fb; --card: #ffffff; --verm: #e16347; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.6 "Noto Sans JP", "Segoe UI", system-ui, sans-serif; }
+  main { max-width: 1180px; margin: 0 auto; padding: 32px 16px 80px; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 21px; margin: 56px 0 6px; padding-top: 18px; border-top: 3px solid var(--ink); }
+  h3 { font-size: 16px; margin: 28px 0 6px; }
+  p { margin: 6px 0 12px; max-width: 76ch; }
+  .lead { color: var(--soft); }
+  figure { margin: 14px 0 26px; background: var(--card); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+  figure img { display: block; width: 100%; height: auto; }
+  figcaption { padding: 10px 14px; font-size: 14px; color: var(--soft); border-top: 1px solid var(--line); }
+  figcaption b { color: var(--ink); }
+  nav { display: flex; flex-wrap: wrap; gap: 8px 14px; margin: 18px 0 0; font-size: 14px; }
+  nav a { color: var(--ink); }
+  table { border-collapse: collapse; width: 100%; background: var(--card); font-size: 14px; }
+  .scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; margin: 10px 0 18px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: #e9eff6; }
+  td.n { white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .narrow { max-width: 760px; }
+  ul { margin: 6px 0 14px; padding-left: 22px; max-width: 76ch; }
+  li { margin: 3px 0; }
+  .note { background: #fff7e8; border: 1px solid #ecd9ae; border-radius: 6px; padding: 10px 14px; margin: 12px 0 18px; max-width: 76ch; }
+</style>
+</head>
+<body>
+<main>
+<h1>三豊運輸 hero remake: three fixes on round 7</h1>
+<p class="lead">The map's place against the desktop band, the truck on the map, and the little truck on the progress bar. One commit each with its own evidence folder; this page gathers the pictures, each before and after at the desktop framing and on a 390 px phone, with both trucks magnified and the rejected drawings. Nothing else in round 7 was touched.</p>
+<p class="lead">Earlier: <a href="../2026-11-16-round7-review/index.html">round 7</a>.</p>
+<nav><a href="#map">1 The map's place</a><a href="#truck">2 The map truck</a><a href="#bar">3 The truck on the progress bar</a><a href="#checks">Checks</a><a href="#open">Seen and reported</a></nav>
+
+<h2 id="map">1. The map stands the full 89 px higher, at full size</h2>
+<p>As you specified: the map is not made smaller, its top moves to -77, and the name 新潟 moves down into the open part of Niigata's own land so that it still clears the phone's buttons. The numbers are the ones you measured.</p>
+<div class="scroll narrow"><table>
+<tr><th>node tools/map-band.mjs round2</th><th>Before (36 px)</th><th>Now (89 px)</th></tr>
+<tr><td>The band's darkness over the hub</td><td class="n">15 %</td><td class="n">0 %</td></tr>
+<tr><td>over the three name cards</td><td class="n">15 %, 5 %, 0 %</td><td class="n">0 %, 0 %, 0 %</td></tr>
+<tr><td>over the name 東京</td><td class="n">19 %</td><td class="n">4 %</td></tr>
+<tr><td>新潟 below the phone's buttons</td><td class="n">10 px</td><td class="n">17 px</td></tr>
+</table></div>
+<figure><img src="../2026-11-16-r8-map-lift/before-after-desktop.jpg" alt="The map on a desktop, before and after"><figcaption><b>Desktop, before and after.</b> New: the map's height and where 新潟 stands. Everything on the map is the size it was.</figcaption></figure>
+<figure class="narrow"><img src="../2026-11-16-r8-map-lift/before-after-phone.jpg" alt="The map on a phone, before and after"><figcaption><b>Phone, before and after.</b> New: the same two things.</figcaption></figure>
+<figure><img src="../2026-11-16-r8-map-lift/niigata-arrival-phone.jpg" alt="Niigata's truck arriving beside the moved name"><figcaption><b>Niigata's truck arriving, on a phone, every 0.4 s.</b> The name stands south west of its place; the truck comes in from the south east and stops short of the dot. They do not meet, and no corridor passes the name.</figcaption></figure>
+
+<h2 id="truck">2. The map truck is the film's own truck, seen from above</h2>
+<p>The steering, the wheelbase model, the shadow and the 1.5x size stay. The drawing is new. Every Sanpou truck in the film is a white box with a navy cab and one vermilion stripe along its side; from above that is a long white roof whose two long edges are the stripe, a navy tail end, one navy cab joined to the box with the windscreen across it, and four short wheel marks at the corners. Few parts, mostly white, nothing under 3 stage px.</p>
+<figure><img src="../2026-11-16-r8-map-truck/options-phone.jpg" alt="Three drawings of the map truck at the phone crop"><figcaption><b>Three drawings on the real map, at the phone crop.</b> Picked: 2, because it is the film's truck (white, the side stripe, a navy cab) and stays mostly white. Rejected: 3, a navy outline all round with the stripe as a band across the tail (the crispest outline of the three, but the stripe is a mark on the roof again), and 4, the picked drawing with a gap behind the cab (one part more, and the corridor shows through it).</figcaption></figure>
+<figure><img src="../2026-11-16-r8-map-truck/options-magnified.jpg" alt="The same four magnified"><figcaption><b>The same four, magnified 8 times from the phone frame.</b> 1 is round 7's drawing: the two dark crossbeams, the dark nib, the bar across the box.</figcaption></figure>
+<figure class="narrow"><img src="../2026-11-16-r8-map-truck/before-after-phone.jpg" alt="Scene 04 on a phone, before and after"><figcaption><b>Phone, before and after.</b> New: the seven trucks. The map, corridors, names, depots and rings are as they were.</figcaption></figure>
+<figure><img src="../2026-11-16-r8-map-truck/before-after-desktop.jpg" alt="Scene 04 on a desktop, before and after"><figcaption><b>Desktop, before and after.</b> New: the seven trucks.</figcaption></figure>
+<p class="note">One thing that differs from your words: you described a white box with a navy outline. In the picked drawing the box's two long edges are the vermilion stripe instead of navy; its tail and the cab are navy. A navy outline and a side stripe together leave a white strip only 2.2 units wide at this size. If you want the outline all round, drawing 3 is that, kept as <code>r8-map-truck-opt-tail.js</code>.</p>
+
+<h2 id="bar">3. The little truck on the progress bar</h2>
+<p>It was the site's original drawing, never remade because it lives in the player (<code>round2/js/hero-glue.js</code>), not in the scene code. It is now the film's truck at the same 30 x 16 px: a tall white box in a navy outline with the stripe in its lower third and a white row under it, a lower navy cab with its glass, a dark chassis, and two wheels with steel hubs tucked under the body. The element's box is unchanged, so the site's CSS still places it.</p>
+<figure><img src="../2026-11-16-r8-progress-truck/magnified.jpg" alt="The progress bar's truck magnified, before and after"><figcaption><b>Magnified, before and after</b> (in each picture, top row desktop at 8 times, bottom row phone at 4 times of its 2x pixels; left to right, three moments of the film). New: only the truck. The bar is the site's.</figcaption></figure>
+<figure><img src="../2026-11-16-r8-progress-truck/before-after-desktop.jpg" alt="Scene 01 on a desktop, before and after"><figcaption><b>Desktop, before and after.</b> New: only the little truck on the bar, at the lower right.</figcaption></figure>
+<figure class="narrow"><img src="../2026-11-16-r8-progress-truck/before-after-phone.jpg" alt="Scene 01 on a phone, before and after"><figcaption><b>Phone, before and after.</b> New: only the little truck, on the bar above the caption.</figcaption></figure>
+<ul>
+  <li>The white row and the navy chassis keep the truck's stripe apart from the vermilion dashes under it.</li>
+  <li>The cab is the film's navy one step lighter (#30466f for #28395a): at the film's own value it sank into the dark band it is always seen against.</li>
+  <li>It has one node fewer than the original's drawing (both tyres are one shape, both hubs another).</li>
+  <li>The viewer had its own copy of the old truck. It now reads the drawing out of each side's own player file, so the remake shows the new truck and the original its own.</li>
+</ul>
+<p class="note"><b>For the integration task, not changed here:</b> the bar the truck rides (<code>.hc-fill</code> in the site's CSS) is a flat vermilion block with hard dash edges. Beside the redrawn truck it reads a little crude at 2x.</p>
+
+<h2 id="checks">Checks on the finished film</h2>
+<ul>
+  <li>The original files are intact (7 of 7 checksums) and the website folder is untouched.</li>
+  <li><b>check-viewer:</b> 0 console errors. <b>check-player-vs-glue:</b> passes at both framings, for the remake and for the original. <b>check-seams:</b> passes.</li>
+  <li><b>motion-check, all five scenes</b> (to 49.5 s): 0 frozen steps and 0 pops in every scene. The move into the map is the same move; it lands 53 px higher.</li>
+  <li><b>contrast-check:</b> all 13 copy rows pass at both framings; the unfilled track fails as on the original.</li>
+  <li><b>cloud-check:</b> no cloud below a roof.</li>
+  <li><b>Nodes per scene:</b> 1483, 1494, 943, 945, 944: one fewer in each than before these fixes (the original has 1337, 1372, 1254, 778, 777).</li>
+</ul>
+<div class="scroll narrow"><table>
+<tr><th>The finished film, phone @2x, CPU 4x slower, one sitting, one side after the other, two runs each</th><th>Original</th><th>Remake</th></tr>
+<tr><td>Frames a second</td><td class="n">75.1 / 74.3</td><td class="n">82.8 / 84.9</td></tr>
+<tr><td>Frame time, median</td><td class="n">12.9 / 13.0 ms</td><td class="n">11.6 / 11.3 ms</td></tr>
+<tr><td>Frames over 16.7 ms</td><td class="n">5.5 / 6.6 %</td><td class="n">3.3 / 2.9 %</td></tr>
+<tr><td>Frames over 33 ms</td><td class="n">0.9 / 0.9 %</td><td class="n">0.4 / 0.4 %</td></tr>
+</table></div>
+
+<h2 id="open">Seen and reported</h2>
+<ul>
+  <li><b>Niigata's ring on a phone:</b> while its truck stands there the open ring comes within about 3 px of the buttons' lower edge. The dot at rest clears them.</li>
+  <li><b>Niigata's northern end</b> now runs off the top of the frame at both framings, as its grey neighbours do. Nothing that is drawn on the land is lost.</li>
+  <li><b>The map truck's outline:</b> the note under section 2.</li>
+  <li><b>The progress bar itself:</b> the note under section 3, for the integration task.</li>
+</ul>
+</main>
+</body>
+</html>
