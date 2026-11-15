@@ -4,6 +4,8 @@
 #   python tools/sheet.py evidence/x/three-way-scene01.jpg "1  Original - the site today=a.png" "2  Round 2 as it stood=b.png" "3  New=c.png"
 # --cols=N lays the pictures out N to a row (size options). --width is the width of one picture.
 # A label may carry more lines, each after a "|" (drawn smaller, e.g. what is new and what is still old).
+# Every picture is scaled to the same width, and the pictures of one row start at the same height whatever
+# their labels: compare two tiles of a row and nothing but the pictures differs.
 import sys
 from PIL import Image, ImageDraw, ImageFont
 
@@ -31,11 +33,16 @@ def font(size, bold=True):
 BAR, SUB, NAVY, PAPER = 40, 24, (38, 58, 88), (255, 255, 255)
 f1, f2, f0 = font(20), font(17, False), font(24)
 tiles = []
-for label, path in items:
+# Every tile in a row gets the same label bar, as tall as the row's longest label: a tile whose label has a
+# second line used to get a taller bar than its neighbour, so in a before/after the two pictures stood at
+# different heights and it could look as if something had moved or been zoomed when nothing had.
+lines = [len(label.split('|')) - 1 for label, _ in items]
+for i, (label, path) in enumerate(items):
     im = Image.open(path).convert('RGB')
     im = im.resize((width, round(im.height * width / im.width)), Image.LANCZOS)
     head, *subs = label.split('|')
-    bar = BAR + SUB * len(subs) + (4 if subs else 0)
+    most = max(lines[i - i % cols:i - i % cols + cols])
+    bar = BAR + SUB * most + (4 if most else 0)
     t = Image.new('RGB', (width, im.height + bar), NAVY)
     d = ImageDraw.Draw(t)
     d.text((14, 9), head.strip(), font=f1, fill=PAPER)
