@@ -35,12 +35,14 @@
   // where the player is inside stop i, tau ms after the stop began
   function stateIn(i, tau) {
     var s = STOPS[i], em = enterMs(i);
-    tau = Math.max(0, Math.min(s.dwell, tau));
+    // the last stop holds after its dwell and its ambient clock runs on (the glue does the same), so a
+    // moment past the end of the schedule can be asked for: what a visitor who stays on the finale sees
+    tau = Math.max(0, i === STOPS.length - 1 ? tau : Math.min(s.dwell, tau));
     if (tau < em) return { idx: i, tau: tau, mode: "enter", clk: s.eFrom + tau / 1000 * FPS * ENTER_RATE, idle: null };
     return { idx: i, tau: tau, mode: "idle", clk: s.eTo, idle: s.iStart + (tau - em) / 1000 * (s.sec ? 1 : FPS) };
   }
   function stateAt(ms) {
-    ms = Math.max(0, Math.min(TOTAL, ms));
+    ms = Math.max(0, ms);
     var i = stopAt(ms);
     return stateIn(i, ms - START[i]);
   }

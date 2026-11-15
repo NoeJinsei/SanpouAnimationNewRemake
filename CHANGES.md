@@ -1129,3 +1129,47 @@ and phone sheets were rebuilt with the fixes in; their label bars now write Japa
   0.1 / 0.2 / 1.4 %, 0.3 / 1.1 / 4.2 %, 0.3 / 0.6 / 0.4 %, 0.1 / 0.4 / 0.5 %. Script time is 1.7 to 2.3 ms
   in every scene on all three sides, so the difference is node count. Scene 02 is the heaviest; all of it
   is still well above 60 frames a second, but scene 03 and the motion pass are still to come.
+
+
+## Round 6 (2026-11-15): what the owner and the reviewer asked for after the four fixes
+
+The four fixes were accepted. This round: the map trucks (they slid), the plane on a phone, the prefecture
+that turned white, and the last old drawings (scene 03's road, the street of scenes 01 and 02). One commit
+per element, shown together at the end. Nothing in it may add nodes.
+
+### The plane's climb, slowed (`r6-plane-slow`)
+
+**Why.** On a phone the plane was clearly in open sky for about a second. A phone's only open sky in the
+finale is the band between the two buttons (stage y 356) and the roofs, left of Tokyo Tower (the phone sees
+x 955 to 1553), and the plane crossed it at 250 to 300 px a second, still gaining speed.
+
+**What changed.** The path is the one that was accepted (the 42.6 degree climb that passes in front of the
+Tower's thin mast); only the speed along it changed. The plane used to keep the thrust of its roll all the
+way up. Now, from lift-off, the speed over the ground settles to `PLANE.CLIMB_V` = 74 px/s (101 px/s along
+the path: a little more than it had on the runway, less than its approach), and 8.8 s after lift-off, when
+its nose has gone up behind the buttons on a phone, it gathers speed again (62 px/s2) and climbs away. The
+pitch is read by the place and not by the clock (`planeOldS`), so the nose rises over the same stretch as
+before and the tail is as clear of the runway as it was. The cycle is 26 s (was 19): lift-off at 36.1 s on
+the site clock as before, on a phone from 40.1 s, past the Tower's mast at 45.4 to 46.9 s (1.5 s, was
+0.6 s), out by the top at 48.6 s. The site holds on the finale after 45.8 s and its clock runs on, so this
+is seen; `viewer/timeline.js` now lets a moment past the end of the schedule be asked for, as the site's
+player does.
+
+**Measured** (`node tools/plane-visible.mjs <side>`: the frame with the plane against the frame without it,
+counting only the pixels below the buttons on a phone):
+
+| the plane in open phone sky | before | after |
+|---|---|---|
+| half of it or more | 1.1 s | 4.1 s |
+| a quarter of it or more | 1.3 s | 4.9 s |
+| four fifths of it or more | 0.4 s | 1.5 s |
+
+**Checks.** `original/` intact, site untouched; `check-viewer` 0 console errors; `motion-check` 27800 to
+49500 ms: 0 frozen steps, the one pop that was there (28700 ms, 0.96); `contrast-check` scene 05: every copy
+row passes, the unfilled track fails as on the original; `cloud-check` 0; **nodes 1058 before, 1058 after**
+(`node tools/node-count.mjs round2 trial3`, a new tool: elements on the stage per scene).
+Evidence: `evidence/2026-11-15-plane-slow/` (phone and desktop before / after, the Tower pass).
+
+**Known, for the owner.** The climb is slower than a real one would look (about half a plane-length a
+second, like its approach). If it reads as floating, `CLIMB_V` is the one number to raise: 84 gives 3.3 s on
+a phone, 95 about 3 s.
