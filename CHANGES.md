@@ -1317,3 +1317,47 @@ to decide.
   it is not lighter although scenes 01 to 03 lost 116, 116 and 346 nodes. Scene 03 now has fewer nodes
   than the original and is still 2.2 ms a frame slower, so the cost is in what is painted, not in the
   count alone.
+
+## Round 7 (2026-11-15), part 1: four corrections on round 6
+
+Round 6 was accepted (scene 03, the street, the steered map trucks, the arrival ring, the plane's speed).
+These four were asked for with it. One commit each, parts `r7-*`, each with its own evidence folder.
+
+### The map truck reads as a truck (`r7-map-truck`)
+- The steering stays. The drawing was 18 x 9 u (about 18 x 9 px on a phone) and read as a pill with a dark
+  end. It is 27 u long now (`MAP_TRUCK.k` 1.5): a white box in one navy outline with the vermilion stripe, a
+  gap with the chassis in it, a navy cab 1.9 u narrower than the box on each side with the windscreen at its
+  nose, four tyres standing 1.9 u out, and a flat shadow that keeps its place on the map while the truck
+  turns over it. Nothing under 1.9 u (3 stage px).
+- Three treatments at the phone crop (`evidence/2026-11-15-r7-map-truck/options-phone.jpg`): the old drawing
+  at 1.5 times (still a pill: `r7-map-truck-opt-sizeonly`), the new drawing at 1.25 times (wheels and gap
+  under the floor: `r7-map-truck-opt-125`), the new drawing at 1.5 times (picked).
+- Nodes in scene 04: 1017 to 1003. A truck has one more node (its shadow); 21 nodes that drew nothing are
+  gone (the empty place marks and shadow groups under the three depots).
+- Known: the gap between the 志木 and 入間 name cards is 11.4 u and the truck is 11 u wide without its tyres,
+  so Gunma's truck passes with its tyres under the two cards' edges for a moment.
+
+### The map against the desktop band (`r7-map-lift`)
+- `MAP_BOX`'s top is -24 (was 12): the map stands 36 px higher. `node tools/map-band.mjs <side>` (new)
+  prints the band's darkness over the hub, the cards and 東京 on a desktop, and how far 新潟 clears the two
+  buttons on a phone. Before to now: hub 25 to 15 %, 東京 29 to 19 %, the 入間 card 15 to 5 %, the 本社 card
+  25 to 15 %, the 志木 card 3 to 0 %; 新潟 clears the buttons by 10 px (was 34).
+- **It is not cleared, and the trade is the reviewer's / the owner's to decide.** Clearing the band takes
+  89 px; a phone has 46. The two ways to clear it are parts and pictures at both crops
+  (`evidence/2026-11-15-r7-map-lift/`): the map 13 % smaller (`r7-map-lift-opt-shrink`), or the same size
+  89 px higher with 新潟 behind the buttons (`r7-map-lift-opt-high`).
+- Not ours: on a desktop the site's pale wash under the copy column reaches the hub at about half strength.
+
+### 神奈川's ring (`r7-map-ring`)
+- A place listed in `MAP_ARRIVE.open` gets an open ring. Kanagawa's runs from ten o'clock round by the top
+  and the right to five o'clock and is left out where the name is: no line of it crosses a stroke of 川.
+  One circle with a dash pattern; no node added.
+
+### The wires at Tokyo Tower (`r7-tower-wires`)
+- `STREET.POLE_OPEN`: the span of poles the Tower stands behind in scene 01 carries no lines. During the pan
+  the next span reaches the Tower only after the warehouse covers it.
+
+### Checks after the four
+`original/` intact, site untouched; `check-viewer` 0 console errors; `motion-check` scene 04: only the
+two-step dissolve lead frozen, 0 pops; `contrast-check` scene 04: every copy row passes at both framings
+(the unfilled track fails as on the original).
