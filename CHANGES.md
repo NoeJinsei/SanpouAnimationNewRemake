@@ -992,3 +992,39 @@ scenes at the desktop and phone crops, both scene changes round the map frame by
 names turn pale under the site's wash at the top of the frame and could go a step darker; a phone sees the
 map's moving water only as a thin strip; scene 02's phone crop cuts the name on both trucks; the truck has
 no roof deflector; scene 02's sky is sparse in the middle; scene 03's caption still says 関東一円.
+
+
+## Fixes on the batch, 1 of 4 (2026-11-15): the plane is no longer sliced by Tokyo Tower
+
+The reviewer: at 40.0 s the airliner crossed Tokyo Tower behind its lattice, which cut straight through the
+fuselage and the window line, dead centre of the phone's picture: it read as a crash. Part `r5-plane-tower`
+(four blocks) is in `round2/js`. Evidence: `evidence/2026-11-15-fix-plane/` (`options-phone.jpg`,
+`options-desktop.jpg`, `before-after-phone.jpg`, `before-after-desktop.jpg`, `crossing-zoom.jpg`, stills).
+
+**Three options were built and judged at the phone crop** (stage x 955 to 1553):
+- **A, steep: picked.** The only one where the plane overlaps nothing but the thin mast, and nothing is
+  ever drawn across it.
+- B, front (`r5-plane-opt-front`): the old climb drawn in front of the Tower. Nothing cut, but the plane
+  covers the Tower's waist in the centre of the phone's picture.
+- C, cloud (`r5-plane-opt-cloud`): a 440 px cloud parked at the Tower to hide the crossing. It washes out
+  the Tower's white bands, changes the accepted sky and adds four nodes.
+
+**The new path.** Lift-off is unchanged (x 554, 36.1 s) and so is everything before it. The plane now bends
+over 185 px into a straight 42.6 degree climb (slope 0.92; it was 0.56, 29.2 degrees). It passes the
+Tower's x 1360 at 39.7 to 40.3 s **in front of the thin mast**, above the top deck: fuselage at y 237 to
+274, its lowest point 310 over the antenna drum (collar at 333) and 322 over the top deck (roof at 362). It
+leaves by the top edge at x 1630 to 1740 at about 41.0 s, passing up-left of the sun, 20 px outside its
+halo. On a phone it climbs up behind the buttons before it reaches the Tower, so the Tower's body is never
+touched. The back slot behind the Tower (`AirportPlaneBack`) is removed: the plane is one slot again.
+
+**Nodes: 1132 to 1064** at the same moment (68 fewer).
+
+**Checks on `round2`.** `original/` intact; 0 console errors; draw (original / round2) 1.80 / 1.73 ms full,
+1.74 / 1.72 desktop, 1.73 / 1.74 phone (1.95 to 1.63 against the film before the fix, same sitting);
+scene 05 0 frozen steps and only the step at 28700 ms that was there before; every copy row passes
+contrast; everything before the rotation pixel-identical; nothing new under the plane (the windsock is
+22 px clear, it was 18); 0 clouds below a roof.
+
+**Known, for the owner.** 43 degrees is steep for an airliner. On desktop at 40.0 s the plane sits right at
+the Tower's tip for a moment (`crossing-zoom.jpg`): a close pass in front of the mast, not through it. It
+covers some of the birds that circle the Tower's top.
