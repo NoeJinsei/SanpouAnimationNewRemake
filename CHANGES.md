@@ -1028,3 +1028,35 @@ contrast; everything before the rotation pixel-identical; nothing new under the 
 **Known, for the owner.** 43 degrees is steep for an airliner. On desktop at 40.0 s the plane sits right at
 the Tower's tip for a moment (`crossing-zoom.jpg`): a close pass in front of the mast, not through it. It
 covers some of the birds that circle the Tower's top.
+
+
+## Fixes on the batch, 2 of 4 (2026-11-15): the map's background is alive where a phone looks
+
+The reviewer measured two frames 1.5 s apart (25500 to 27000 ms): not one pixel changed in stage x 0 to 708,
+and the moving water lay outside x 708 to 1322, which is all a phone sees of scene 04. Part `r5-map-alive`
+(six blocks) is in `round2/js`. Evidence: `evidence/2026-11-15-fix-map/alive-*`.
+
+- **Water off Niigata too.** The Sea of Japan coast gets the same shallow water as the Pacific coast: a
+  24 unit apron in two bands, growing 1.18 times about an inland point (630, 570), reaching 28 to 45 units
+  seaward, on the same 3.78 s period. It is at the top left of the phone's picture and the right edge of
+  the desktop's left third (Toyama Bay).
+- **The land answers the trucks.** A prefecture steps softly to full white while its truck stands at its
+  destination (0.5 s rise; it falls back with the truck's fade): big flat areas, in the middle of the
+  phone's picture, and it means something (a delivery made).
+- Each water is now one path instead of several.
+
+| Changed pixels, 25500 to 27000 ms | Before | After |
+|---|---|---|
+| stage x 0 to 708 | 0.0 % | 2.1 % |
+| stage x 708 to 1322 (the phone) | 10.7 % | 40.6 % |
+| stage x 1322 to 1920 | 27.7 % | 27.7 % |
+
+**Nodes: 1065 to 1059** at 26500 ms (six fewer).
+
+**Checks on `round2`.** `original/` intact; 0 console errors; draw (original / round2) 1.84 / 1.68 ms full,
+1.73 / 1.68 desktop, 1.68 / 1.72 phone. (The hold's smoothness, contrast and the other scenes were measured
+with all three map fixes in: see fix 4.)
+
+**Known.** The left third is alive only at its right edge. The answer of the land is soft: 41 colour levels
+for Niigata, 20 to 24 for Ibaraki, Tochigi and Gunma, 13 or fewer for the rest (the most-delivered
+prefectures are nearly white already).
