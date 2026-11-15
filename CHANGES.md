@@ -1540,3 +1540,34 @@ runs each: original 75.1 / 74.3 fps, median 12.9 / 13.0 ms, 5.5 / 6.6 % of frame
 Finished to the brief, in the reviewer's words: every drawing remade, both seams as camera moves, no pops,
 the route line through, and faster than what it replaces. Nothing else is started. The owner watches it
 end to end next; integrating it into the site is a separate task that waits for his yes.
+
+## The finished film recorded end to end (2026-11-16)
+
+The film does not change; this only makes it watchable. Until now the only whole-film recordings in the
+project were round 1's (13 November, the rejected version); the finished remake existed as clips of single
+scenes and seams, and the plane's pass at Tokyo Tower was in none of them.
+
+- Four recordings in `evidence/2026-11-16-the-film/`, each the whole film in one take with no cuts, 0 to
+  48000 ms on the site clock at 60 frames a second (`tools/record.mjs`, the phone ones with `--dpr=2`):
+
+  | file | picture | length | frames | size |
+  |---|---|---|---|---|
+  | `remake-desktop.mp4` | 1440 x 720 | 48.0 s | 2880 | 6.2 MB |
+  | `remake-phone.mp4` | 780 x 1360 | 48.0 s | 2880 | 9.8 MB |
+  | `original-desktop.mp4` | 1440 x 720 | 48.0 s | 2880 | 4.3 MB |
+  | `original-phone.mp4` | 780 x 1360 | 48.0 s | 2880 | 7.5 MB |
+
+  The picture is the site's hero section itself (1440 x 720 in a 1440 x 900 window, 390 x 680 on a
+  390 x 844 phone), with the site's copy, buttons, band and progress bar over the film. No labels in it.
+- No frame dropped in any of them: 2880 frames each, every one exactly 1/60 s after the one before, and no
+  frame's picture the same as the one before it (`ffprobe`, `ffmpeg -f framemd5`).
+- `index.html` in that folder plays them: the remake large and the original under it on a desktop, the two
+  beside each other on a phone, a line under each, and "Play both together" for each pair. Checked through
+  the viewer's server at 1440, 1280 and 390 px wide: all four load at 48 s, nothing overflows sideways, 0
+  console errors, both of a pair play in step.
+- Found on the way: the viewer's server (python's `http.server`) cannot send part of a file, so a film
+  played straight from it runs from the start but cannot be scrubbed (every jump lands back on 0). The page
+  fetches each film whole and plays it from memory; jumps to 15, 46.2 and 47.9 s then land where asked in
+  all four. The clips on the round 7 review page have the same limit and were left as they are.
+- A recording shows the film as it is meant to play at 60 frames a second. It is not a measure of how
+  smoothly a given machine plays it live; that is the cost table above.

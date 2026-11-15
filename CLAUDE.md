@@ -383,6 +383,14 @@ numbers are at the end of `CHANGES.md`. **Check the verdict before building on a
   camera moves, no pops, the route line through, and smoother than what it replaces. **Start nothing else.**
   The owner watches it end to end next; putting it into the site is a separate task that does not start
   until he has said yes to the film.
+- **The finished film, recorded end to end for watching** (2026-11-16; the film itself unchanged):
+  `evidence/2026-11-16-the-film/index.html` (through the viewer's server) plays four recordings with no
+  cuts, 0 to 48000 ms at 60 fps: the remake and the original, on a desktop (1440 x 720, the hero section)
+  and on a phone (780 x 1360, `--dpr=2`). The plane's pass at the Tower (45.4 to 46.9 s) is in them. If the
+  film changes, record them again; the `tools/record.mjs` commands are on the page. **The viewer's server
+  (python's `http.server`) cannot send part of a file, so a `<video>` played straight from it cannot be
+  scrubbed:** that page fetches each film whole and plays it from memory. The clips on the round 7 page
+  play but cannot be dragged, for the same reason.
 - New tools: `check-seams.mjs` (the real player plays both moves, at both framings, and by click),
   `trace-side.mjs` (where a frame's time goes), `what-moves.mjs` (where two moments differ),
   `what-changes.mjs` (what the patcher writes per step), `map-band.mjs`; `record.mjs` takes `--dpr=2`.

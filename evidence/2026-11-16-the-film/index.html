@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>三豊運輸 hero remake: the film, end to end</title>
+<style>
+  :root { --ink: #13263f; --soft: #51627c; --line: #d5dde8; --bg: #f4f7fb; --card: #ffffff; --verm: #e16347; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.6 "Noto Sans JP", "Segoe UI", system-ui, sans-serif; }
+  main { max-width: 1472px; margin: 0 auto; padding: 32px 16px 80px; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 21px; margin: 56px 0 6px; padding-top: 18px; border-top: 3px solid var(--ink); }
+  p { margin: 6px 0 12px; max-width: 76ch; }
+  .lead { color: var(--soft); }
+  figure { margin: 14px 0 26px; background: var(--card); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+  figure video { display: block; width: 100%; height: auto; background: #0e1826; }
+  figcaption { padding: 10px 14px; font-size: 14px; color: var(--soft); border-top: 1px solid var(--line); }
+  figcaption b { color: var(--ink); }
+  /* each film fits the window it is watched in, so nothing has to be scrolled while it plays */
+  .desk-main { width: min(100%, 172vh); }
+  .desk-second { width: min(100%, 720px); }
+  .phones { display: flex; flex-wrap: wrap; gap: 0 24px; align-items: flex-start; }
+  .phone-main { width: min(390px, 100%, 48vh); }
+  .phone-second { width: min(300px, 100%, 37vh); }
+  .bar { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 4px; }
+  button { font: inherit; font-weight: 600; min-height: 44px; padding: 8px 18px; border-radius: 6px; border: 1px solid var(--ink); cursor: pointer; }
+  button.go { background: var(--ink); color: #fff; }
+  button.stop { background: var(--card); color: var(--ink); }
+  button:hover { filter: brightness(1.12); }
+  button:focus-visible, a:focus-visible { outline: 3px solid var(--verm); outline-offset: 2px; }
+  a { color: var(--ink); }
+  table { border-collapse: collapse; width: 100%; background: var(--card); font-size: 14px; }
+  .scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; margin: 10px 0 18px; max-width: 900px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  th { background: #e9eff6; }
+  td.n { white-space: nowrap; font-variant-numeric: tabular-nums; }
+  code { font-size: 13px; }
+  ul { margin: 6px 0 14px; padding-left: 22px; max-width: 76ch; }
+  li { margin: 3px 0; }
+</style>
+</head>
+<body>
+<main>
+<h1>三豊運輸 hero remake: the film, end to end</h1>
+<p>The whole film in one take, with no cuts: 48 seconds, from the first frame to after the plane has passed Tokyo Tower. The film itself is not changed by this page. It is only here so the film can be watched.</p>
+<p class="lead">Press play on the first one and watch it through. The original is under it, and the same two on a phone are further down. "Play both together" starts a remake and its original from the beginning at the same moment.</p>
+
+<h2 id="desktop">On a desktop</h2>
+<div data-pair>
+  <div class="bar"><button type="button" class="go" data-play>Play both together</button><button type="button" class="stop" data-pause>Pause both</button></div>
+  <figure class="desk-main"><video src="remake-desktop.mp4" controls muted playsinline preload="auto" width="1440" height="720"></video><figcaption><b>The remake, on a desktop.</b> The finished film as it stands in the working copy.</figcaption></figure>
+  <figure class="desk-second"><video src="original-desktop.mp4" controls muted playsinline preload="auto" width="1440" height="720"></video><figcaption><b>The original, on a desktop.</b> The hero that is on the site today, the same 48 seconds.</figcaption></figure>
+</div>
+
+<h2 id="phone">On a phone</h2>
+<div data-pair>
+  <div class="bar"><button type="button" class="go" data-play>Play both together</button><button type="button" class="stop" data-pause>Pause both</button></div>
+  <div class="phones">
+    <figure class="phone-main"><video src="remake-phone.mp4" controls muted playsinline preload="auto" width="780" height="1360"></video><figcaption><b>The remake, on a phone.</b> A phone 390 px wide, recorded at twice that so it stays sharp.</figcaption></figure>
+    <figure class="phone-second"><video src="original-phone.mp4" controls muted playsinline preload="auto" width="780" height="1360"></video><figcaption><b>The original, on a phone.</b> The same phone, the same 48 seconds.</figcaption></figure>
+  </div>
+</div>
+
+<h2 id="where">Where things are in the 48 seconds</h2>
+<div class="scroll"><table>
+<tr><th>Seconds</th><th>What is on</th></tr>
+<tr><td class="n">0 to 7.0</td><td>01 入荷, the supplier's dock</td></tr>
+<tr><td class="n">about 7 to 10</td><td>the move from 01 to 02 (the pan along the street)</td></tr>
+<tr><td class="n">7.0 to 14.6</td><td>02 積込, the Sanpou warehouse</td></tr>
+<tr><td class="n">about 14 to 17</td><td>the move from 02 to 03 (the camera goes after the trucks)</td></tr>
+<tr><td class="n">14.6 to 21.8</td><td>03 輸送, the expressway</td></tr>
+<tr><td class="n">about 21 to 24</td><td>the move from 03 to 04 (the road goes down, the map comes down)</td></tr>
+<tr><td class="n">21.8 to 27.8</td><td>04 配送ネットワーク, the map</td></tr>
+<tr><td class="n">about 27 to 30</td><td>the move from 04 to 05 (the map draws back)</td></tr>
+<tr><td class="n">27.8 to 45.8</td><td>05 地域とともに, the finale</td></tr>
+<tr><td class="n">45.8 to 48.0</td><td>the finale holds and its clock runs on; the plane passes Tokyo Tower's mast at 45.4 to 46.9</td></tr>
+</table></div>
+
+<h2 id="files">The four recordings</h2>
+<div class="scroll"><table>
+<tr><th>File</th><th>Picture</th><th>Length</th><th>Frames</th><th>Size</th><th>Frames dropped</th></tr>
+<tr><td><a href="remake-desktop.mp4">remake-desktop.mp4</a></td><td class="n">1440 x 720</td><td class="n">48.0 s</td><td class="n">2,880 at 60 a second</td><td class="n">6.2 MB</td><td class="n">none</td></tr>
+<tr><td><a href="remake-phone.mp4">remake-phone.mp4</a></td><td class="n">780 x 1360</td><td class="n">48.0 s</td><td class="n">2,880 at 60 a second</td><td class="n">9.8 MB</td><td class="n">none</td></tr>
+<tr><td><a href="original-desktop.mp4">original-desktop.mp4</a></td><td class="n">1440 x 720</td><td class="n">48.0 s</td><td class="n">2,880 at 60 a second</td><td class="n">4.3 MB</td><td class="n">none</td></tr>
+<tr><td><a href="original-phone.mp4">original-phone.mp4</a></td><td class="n">780 x 1360</td><td class="n">48.0 s</td><td class="n">2,880 at 60 a second</td><td class="n">7.5 MB</td><td class="n">none</td></tr>
+</table></div>
+<ul>
+  <li><b>How they were made:</b> <code>node tools/record.mjs &lt;side&gt; &lt;file&gt; --framing=desktop|phone --from=0 --to=48000 --fps=60</code>, the phone ones with <code>--dpr=2</code>. The sides are <code>round2</code> (the remake, at commit <code>ab454a4</code>) and <code>original</code>.</li>
+  <li><b>What a recording is:</b> every frame is drawn for its own moment of the site's clock and saved, one after the other, so the file shows the film exactly as it is meant to play at 60 frames a second. It includes the site's own copy, buttons, dark band and progress bar, as the site lays them over the film.</li>
+  <li><b>What it is not:</b> a measure of how smoothly a given computer or phone plays the film live. That was measured separately (the cost section of the <a href="../2026-11-16-round7-review/index.html#cost">round 7 page</a>).</li>
+  <li><b>Jumping about:</b> this page loads each film whole before it plays, so its bar can be dragged to any second. (The viewer's server cannot send part of a file, and a film played straight from it can only run from the start.)</li>
+  <li><b>The picture</b> is the site's hero section itself: 1440 x 720 in a desktop window of 1440 x 900, and 390 x 680 on a phone of 390 x 844.</li>
+  <li><b>How "none dropped" was checked</b> (<code>ffprobe</code>, <code>ffmpeg -f framemd5</code>): each file holds 2,880 frames, which is 48 seconds at 60 a second; every frame comes exactly 1/60 s after the one before; and no frame's picture is the same as the one before it.</li>
+</ul>
+<p class="lead">What changed and why is on the review pages: <a href="../2026-11-16-three-fixes-review/index.html">the three fixes</a>, <a href="../2026-11-16-round7-review/index.html">round 7</a>.</p>
+</main>
+<script>
+  // The viewer's server (python's http.server) cannot hand out part of a file, and a browser needs that to jump
+  // about in a film: served straight from it, a film plays from the start but its bar cannot be dragged.
+  // So each film is fetched whole (they are 4 to 10 MB) and played from memory, where it can be scrubbed.
+  if (/^http/.test(location.protocol) && window.fetch && window.URL) {
+    document.querySelectorAll("video").forEach(function (v) {
+      fetch(v.getAttribute("src")).then(function (r) { if (!r.ok) throw new Error(r.status); return r.blob(); }).then(function (b) {
+        var at = v.currentTime, playing = !v.paused;
+        v.src = URL.createObjectURL(b);
+        v.load();
+        if (at) v.currentTime = at;
+        if (playing) v.play();
+      }).catch(function () { /* the film still plays from the server, without scrubbing */ });
+    });
+  }
+  // "Play both together": both films of a pair go back to the start, and play once both are ready.
+  document.querySelectorAll("[data-pair]").forEach(function (box) {
+    var vids = Array.prototype.slice.call(box.querySelectorAll("video"));
+    box.querySelector("[data-play]").addEventListener("click", function () {
+      var left = vids.length, started = false;
+      function start() { if (started) return; started = true; vids.forEach(function (v) { v.play(); }); }
+      vids.forEach(function (v) {
+        v.pause();
+        function ready() { v.removeEventListener("seeked", ready); v.removeEventListener("canplay", ready); if (--left === 0) start(); }
+        if (v.currentTime === 0 && v.readyState >= 3) { ready(); return; }
+        v.addEventListener("seeked", ready); v.addEventListener("canplay", ready);
+        v.currentTime = 0;
+      });
+      setTimeout(start, 2500);
+    });
+    box.querySelector("[data-pause]").addEventListener("click", function () { vids.forEach(function (v) { v.pause(); }); });
+  });
+</script>
+</body>
+</html>
