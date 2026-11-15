@@ -1,0 +1,127 @@
+{
+ "framing": "phone",
+ "throttle": 4,
+ "runs": 2,
+ "rows": [
+  {
+   "scene": "01",
+   "side": "original",
+   "median": 6.2,
+   "p95": 8.4,
+   "worst": 17.9,
+   "over16": 0.1,
+   "over33": 0,
+   "draw": 2.85,
+   "drawP95": 3.8,
+   "errors": false
+  },
+  {
+   "scene": "01",
+   "side": "round2",
+   "median": 9.4,
+   "p95": 13,
+   "worst": 28,
+   "over16": 0.8,
+   "over33": 0,
+   "draw": 2.13,
+   "drawP95": 2.7,
+   "errors": false
+  },
+  {
+   "scene": "02",
+   "side": "original",
+   "median": 6.8,
+   "p95": 9.1,
+   "worst": 31.6,
+   "over16": 0.2,
+   "over33": 0,
+   "draw": 2.9,
+   "drawP95": 4.1,
+   "errors": false
+  },
+  {
+   "scene": "02",
+   "side": "round2",
+   "median": 11.8,
+   "p95": 15.1,
+   "worst": 31.6,
+   "over16": 1.8,
+   "over33": 0,
+   "draw": 2.49,
+   "drawP95": 3,
+   "errors": false
+  },
+  {
+   "scene": "03",
+   "side": "original",
+   "median": 6.3,
+   "p95": 10.8,
+   "worst": 59.2,
+   "over16": 0.5,
+   "over33": 0.1,
+   "draw": 2.84,
+   "drawP95": 4,
+   "errors": false
+  },
+  {
+   "scene": "03",
+   "side": "round2",
+   "median": 8.5,
+   "p95": 15.5,
+   "worst": 63.3,
+   "over16": 3.4,
+   "over33": 0.6,
+   "draw": 2.08,
+   "drawP95": 3.5,
+   "errors": false
+  },
+  {
+   "scene": "04",
+   "side": "original",
+   "median": 5.9,
+   "p95": 10.3,
+   "worst": 35,
+   "over16": 0.4,
+   "over33": 0.1,
+   "draw": 3.09,
+   "drawP95": 5.4,
+   "errors": false
+  },
+  {
+   "scene": "04",
+   "side": "round2",
+   "median": 5.9,
+   "p95": 10.2,
+   "worst": 33.9,
+   "over16": 0.4,
+   "over33": 0.1,
+   "draw": 2.67,
+   "drawP95": 4.4,
+   "errors": false
+  },
+  {
+   "scene": "05",
+   "side": "original",
+   "median": 5.6,
+   "p95": 8.2,
+   "worst": 24.6,
+   "over16": 0.2,
+   "over33": 0,
+   "draw": 2.48,
+   "drawP95": 3.4,
+   "errors": false
+  },
+  {
+   "scene": "05",
+   "side": "round2",
+   "median": 7.7,
+   "p95": 9.6,
+   "worst": 31.5,
+   "over16": 0.5,
+   "over33": 0,
+   "draw": 2.02,
+   "drawP95": 2.8,
+   "errors": false
+  }
+ ]
+}

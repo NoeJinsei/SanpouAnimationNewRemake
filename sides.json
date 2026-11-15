@@ -17,7 +17,7 @@
     {
       "id": "round2",
       "label": "Remake (round 3 working copy)",
-      "detail": "the working copy: flat pass 1 at the picked sizes (sky, clouds, city, Tokyo Tower, supplier building, map depots) the Sanpou warehouse of scene 02 and the supplier dock of scene 01; the rest is still round 2 or the original",
+      "detail": "the working copy: every drawing is the remake's own (round 6, 2026-11-15); the seams and the motion pass are still to come",
       "kind": "dom",
       "base": "round2/js/",
       "scripts": [

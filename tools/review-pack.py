@@ -56,7 +56,8 @@ if 'threeway' in only:
                         '3  New|' + new + '|' + old + '=' + still(dirs['round2'], 'round2', t)], check=True)
 
 if 'framings' in only:
-    scenes = [('01', 3300), ('02', 11800), ('03', 17000), ('04', 26500), ('05', 38000)]
+    # 03 at a moment with the gantry's board inside the phone's strip, 05 with the plane in the phone's open sky
+    scenes = [('01', 3300), ('02', 11800), ('03', 19800), ('04', 26500), ('05', 42500)]
     times = ','.join(str(t) for _, t in scenes)
     for framing, width in (('desktop', 720), ('phone', 300)):
         items = []

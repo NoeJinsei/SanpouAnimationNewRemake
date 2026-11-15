@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>三豊運輸 hero remake: round 6 review</title>
+<style>
+  :root { --ink: #13263f; --soft: #51627c; --line: #d5dde8; --bg: #f4f7fb; --card: #ffffff; --verm: #e16347; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.6 "Noto Sans JP", "Segoe UI", system-ui, sans-serif; }
+  main { max-width: 1180px; margin: 0 auto; padding: 32px 16px 80px; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 21px; margin: 56px 0 6px; padding-top: 18px; border-top: 3px solid var(--ink); }
+  h3 { font-size: 16px; margin: 28px 0 6px; }
+  p { margin: 6px 0 12px; max-width: 76ch; }
+  .lead { color: var(--soft); }
+  figure { margin: 14px 0 26px; background: var(--card); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+  figure img { display: block; width: 100%; height: auto; }
+  figcaption { padding: 10px 14px; font-size: 14px; color: var(--soft); border-top: 1px solid var(--line); }
+  figcaption b { color: var(--ink); }
+  nav { display: flex; flex-wrap: wrap; gap: 8px 14px; margin: 18px 0 0; font-size: 14px; }
+  nav a { color: var(--ink); }
+  table { border-collapse: collapse; width: 100%; background: var(--card); font-size: 14px; }
+  .scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; margin: 10px 0 18px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: #e9eff6; }
+  td.n { white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .narrow { max-width: 760px; }
+  ul { margin: 6px 0 14px; padding-left: 22px; max-width: 76ch; }
+  li { margin: 3px 0; }
+  .tag { display: inline-block; font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; background: var(--ink); color: #fff; margin-right: 6px; }
+</style>
+</head>
+<body>
+<main>
+<h1>三豊運輸 hero remake: round 6</h1>
+<p class="lead">The four things asked for after the four fixes, shown together: the trucks on the map, the plane on a phone, the prefecture that turned white, and the last old drawings. Each has its own commit and evidence folder; this page gathers the pictures. Every picture is before and after, at the desktop framing and at what a 390 px phone sees of that scene, and its label says what is new and what is still old. The earlier batch and the four fixes are on <a href="../2026-11-15-batch-review/index.html">the batch page</a>.</p>
+<nav>
+  <a href="#trucks">1 Map trucks</a><a href="#plane">2 The plane on a phone</a><a href="#arrival">3 The arrival</a><a href="#road">4 Scene 03's road</a><a href="#street">4 The street of scenes 01 and 02</a>
+  <a href="#scenes">All five scenes</a><a href="#checks">Checks</a><a href="#open">For you to decide</a>
+</nav>
+
+<h2 id="trucks">1. The trucks on the map drive; they no longer slide</h2>
+<p>The truck was drawn from the side on a map drawn from above, mirrored once per corridor and never turned, and five of the seven corridors run more north than east. It is now seen from above and steered along its road: the cab leads, and the tail swings through a bend. Three directions were built and judged on a phone.</p>
+<figure><img src="../2026-11-15-map-trucks/options-phone.jpg" alt="Three truck directions at the phone crop"><figcaption><b>The three directions on a phone, with each truck enlarged.</b> Picked: 1, seen from above with a navy outline (white box, vermilion stripe, navy cab and its glass). Rejected: 2, today's side view turned to the road (on a road that runs up the map it stands on its tail, and it has to flip); 3, no outline on a hard shadow (the white box vanishes on white land).</figcaption></figure>
+<figure class="narrow"><img src="../2026-11-15-map-trucks/before-after-phone.jpg" alt="The map trucks on a phone, before and after"><figcaption><b>Phone, before and after.</b> New: all seven trucks and the three corridors that were re-bent. Still as it was: the map's colours, names, depots, cards, water.</figcaption></figure>
+<figure><img src="../2026-11-15-map-trucks/before-after-desktop.jpg" alt="The map trucks on desktop, before and after"><figcaption><b>Desktop, before and after.</b> New: the trucks and the corridors.</figcaption></figure>
+<figure><img src="../2026-11-15-map-trucks/turning-strip.jpg" alt="One truck turning along a bending corridor"><figcaption><b>One truck on a bending corridor, a still every 0.2 s.</b> It turns 48 degrees on the way, never more than 2.7 degrees in one frame, and not at all once it stands.</figcaption></figure>
+<h3>No corridor passes under a name card</h3>
+<p>Two did (Gunma's and Niigata's, behind 志木営業所). Niigata's now rounds the card on the east and Tochigi's moved over for it. Gunma's shares Saitama's road as far as the gap between the two cards and branches north there: that gap has room for one corridor only. Every corridor was sampled against every card: none is under one.</p>
+<figure><img src="../2026-11-15-map-trucks/corridors-before-after.jpg" alt="The corridors and the name cards, before and after"><figcaption><b>The centre of the map on a phone, enlarged, before and after.</b> New: three corridors re-bent. The cards and depots did not move.</figcaption></figure>
+
+<h2 id="plane">2. The plane is on a phone for four seconds</h2>
+<p>A phone's only open sky in the finale is the band between the two buttons and the roofs, left of Tokyo Tower. The plane crossed it in about a second, because it kept gathering speed all the way up. The path past the Tower's mast is the one you accepted; only the speed along it changed. It now climbs at a steady speed, close to its approach speed, and gathers speed again once its nose has gone up behind the buttons on a phone.</p>
+<div class="scroll narrow"><table>
+<tr><th>The plane in open sky on a phone</th><th>Before</th><th>After</th></tr>
+<tr><td>Half of it or more</td><td class="n">1.1 s</td><td class="n">4.1 s</td></tr>
+<tr><td>A quarter of it or more</td><td class="n">1.3 s</td><td class="n">4.9 s</td></tr>
+</table></div>
+<figure><img src="../2026-11-15-plane-slow/phone-before-after.jpg" alt="The plane on a phone, before and after, a still every half second"><figcaption><b>Phone, before and after, a still every half second.</b> New: only how fast the plane travels its path. Still as it was: the plane's drawing, its path, everything else.</figcaption></figure>
+<figure><img src="../2026-11-15-plane-slow/desktop-before-after.jpg" alt="The plane on desktop, before and after, a still every second"><figcaption><b>Desktop, before and after, a still every second.</b> Lift-off is at 36 s as before; it now passes the Tower at 45.4 to 46.9 s and is gone at 48.6 s (the finale holds after 45.8 s and its clock runs on).</figcaption></figure>
+<figure><img src="../2026-11-15-plane-slow/options-phone.jpg" alt="The plane's three speeds on a phone"><figcaption><b>The options on a phone.</b> Picked: 74 px a second, 4.1 s in open sky. Rejected: keeping the lift-off speed (3.1 s, short of the four seconds); slower still (4.9 s, but it hangs). A shallower climb is not an option: any path lower than this one crosses the Tower's lattice.</figcaption></figure>
+<figure><img src="../2026-11-15-plane-slow/tower-pass.jpg" alt="The plane passing Tokyo Tower"><figcaption><b>The pass at Tokyo Tower, unchanged:</b> in front of the thin mast, above the top deck, nothing drawn across the plane. It takes 1.5 s where it took 0.6 s.</figcaption></figure>
+
+<h2 id="arrival">3. The arrival is shown at the place</h2>
+<p>A whole prefecture stepped to white while its truck stood there. Most of the area is nearly white already, so it only made the service area look patchy at different moments. That step is gone: every prefecture keeps its own tint all the time. Instead the place dot at the corridor's end opens into a ring as the truck comes to rest, stays while it stands and closes as the truck goes.</p>
+<figure class="narrow"><img src="../2026-11-15-map-arrival/before-after-phone.jpg" alt="The arrival on a phone, before and after"><figcaption><b>Phone, before and after</b> (three trucks are standing at their places). New: the ring at each place; the land no longer changes colour.</figcaption></figure>
+<figure><img src="../2026-11-15-map-arrival/before-after-desktop.jpg" alt="The arrival on desktop, before and after"><figcaption><b>Desktop, before and after.</b> New: the ring at each place; the land no longer changes colour.</figcaption></figure>
+<figure><img src="../2026-11-15-map-arrival/arrival-strip.jpg" alt="A truck arriving, a still every 0.2 s"><figcaption><b>One arrival, a still every 0.2 s.</b> The ring is 17 px across on a phone.</figcaption></figure>
+<figure class="narrow"><img src="../2026-11-15-map-arrival/option-onewhite-phone.jpg" alt="Option: the whole service area in one white"><figcaption><b>One more picture, not the pick:</b> the whole service area in one flat white, if you would rather it held a single value than the pale steps it has now.</figcaption></figure>
+
+<h2 id="road">4. The last old drawings: scene 03's road</h2>
+<p>Everything the expressway is made of was still the original drawing. All of it is new: the gantry is an open steel truss, the two green signs keep their words and are larger and narrower so a phone shows them whole, the road has a concrete parapet with a rail, two lanes, a hard shoulder and a guard rail in front, and the lamps are tapered columns with a swept arm. The caption was not touched.</p>
+<figure><img src="../2026-11-15-expressway/before-after-desktop.jpg" alt="Scene 03 on desktop, before and after"><figcaption><b>Desktop, before and after, at two moments.</b> New: the deck, parapet, lamps, gantry, both signs, the near column, the guard rail. Still as it was: sky, city, Fuji, trucks.</figcaption></figure>
+<figure><img src="../2026-11-15-expressway/before-after-phone.jpg" alt="Scene 03 on a phone, before and after"><figcaption><b>Phone, before and after,</b> with the gantry in the phone's strip and without it.</figcaption></figure>
+<figure><img src="../2026-11-15-expressway/gantry-pass-phone.jpg" alt="The gantry crossing the phone, a still every 0.3 s"><figcaption><b>The gantry crossing a phone, a still every 0.3 s.</b> Both boards are read below the buttons.</figcaption></figure>
+<figure class="narrow"><img src="../2026-11-15-expressway/close-up.jpg" alt="Scene 03 close up, before and after"><figcaption><b>Close up, before on the left, after on the right:</b> the gantry and its signs, a lamp and the parapet, the road and the guard rail.</figcaption></figure>
+
+<h2 id="street">4. The last old drawings: the street of scenes 01 and 02</h2>
+<p>The street was still the round 2 drawing. All of it is new: the paving, kerb and gutter, the road and its dashes (placed so the site's caption stands over a gap), the lamps, the utility poles and their lines, the vending corner, and a pedestrian fence of pipe hoops in the foreground. There are three lamps where there were eleven: the other eight stood behind the two buildings and were never seen.</p>
+<figure><img src="../2026-11-15-street/scene01-before-after-desktop.jpg" alt="Scene 01 on desktop, before and after"><figcaption><b>Scene 01, desktop, before and after.</b> New: the street and everything standing on it. Still as it was: sky, city, Tower, the supplier building and its dock, the truck.</figcaption></figure>
+<figure class="narrow"><img src="../2026-11-15-street/scene01-before-after-phone.jpg" alt="Scene 01 on a phone, before and after"><figcaption><b>Scene 01, phone, before and after.</b> A phone sees the ground, the fence and one pole head.</figcaption></figure>
+<figure><img src="../2026-11-15-street/scene02-before-after-desktop.jpg" alt="Scene 02 on desktop, before and after"><figcaption><b>Scene 02, desktop, before and after.</b> New: the ground and the fence (the lamps, poles and machines are behind the warehouse here). Still as it was: the warehouse, the trucks, the cartons.</figcaption></figure>
+<figure class="narrow"><img src="../2026-11-15-street/scene02-before-after-phone.jpg" alt="Scene 02 on a phone, before and after"><figcaption><b>Scene 02, phone, before and after.</b></figcaption></figure>
+<figure class="narrow"><img src="../2026-11-15-street/close-up.jpg" alt="The street close up, before and after"><figcaption><b>Close up, before on the left, after on the right:</b> a lamp, the vending corner, a pole, the kerb and road, the foreground fence.</figcaption></figure>
+
+<h2 id="scenes">All five scenes, as the site really shows them now</h2>
+<figure><img src="scenes-desktop.jpg" alt="All five scenes at the desktop framing, original above, remake below"><figcaption><b>Desktop.</b> The site today above, the remake below. Nothing in the remake's row is an original or a round 2 drawing any more.</figcaption></figure>
+<figure class="narrow"><img src="scenes-phone.jpg" alt="All five scenes at the phone framing, original above, remake below"><figcaption><b>Phone (390 px).</b> Scene 03 is taken with the gantry's board in the strip, scene 05 with the plane in the open sky.</figcaption></figure>
+
+<h2 id="checks">The check numbers (the finished working copy)</h2>
+<div class="scroll"><table>
+<tr><th>Check</th><th>Result</th></tr>
+<tr><td>The original files and the website folder</td><td>Untouched (all seven checksums match; the site is at its commit with no changes).</td></tr>
+<tr><td>Console errors, the real player, rapid clicks, reduced motion</td><td>0 errors; all pass. Script time per frame (original / remake): 1.71 / 1.70 ms on the full stage, 1.77 / 1.81 desktop, 1.75 / 1.76 phone.</td></tr>
+<tr><td>Frozen frames and pops</td><td>No frozen frames in scenes 01, 02, 03 and 05; in scene 04 only the player's own two-step lead into the map. The only pops are the two that were there before (14.6 s and 28.7 s).</td></tr>
+<tr><td>Copy contrast, whole film, both framings</td><td>All 13 copy rows pass. The tightest is still the desktop caption's lead line in the finale, 4.84 against 4.5. The unfilled part of the progress track fails, as it does on the original.</td></tr>
+<tr><td>Clouds</td><td>None sits below a roof.</td></tr>
+</table></div>
+<h3>Nodes on the stage</h3>
+<p>No pass added a node; four of the five removed some.</p>
+<div class="scroll narrow"><table>
+<tr><th>Scene</th><th>Original</th><th>Before this round</th><th>Now</th></tr>
+<tr><td>01</td><td class="n">1337</td><td class="n">1588</td><td class="n">1472</td></tr>
+<tr><td>02</td><td class="n">1372</td><td class="n">1599</td><td class="n">1483</td></tr>
+<tr><td>03</td><td class="n">1254</td><td class="n">1290</td><td class="n">944</td></tr>
+<tr><td>04</td><td class="n">778</td><td class="n">1059</td><td class="n">1017</td></tr>
+<tr><td>05</td><td class="n">777</td><td class="n">1058</td><td class="n">1016</td></tr>
+</table></div>
+<h3>Smoothness on a slowed phone (processor four times slower)</h3>
+<p>Measured in one sitting with nothing else running, one run after another. The whole film: the original plays at 167 frames a second with a 5.7 ms median frame and 0.2 % of frames over 16.7 ms; the remake at 114 frames a second, 8.3 ms, 1.5 %. That is where the remake stood before this round (118, 8.0 ms, 1.8 % in the reviewer's sitting): this round did not make it heavier, and it did not make it lighter either, although the node count fell. Scene 02 is still the heaviest.</p>
+<div class="scroll"><table>
+<tr><th>Scene</th><th>Frame median, original</th><th>Frame median, remake</th><th>Frames over 16.7 ms, original</th><th>Frames over 16.7 ms, remake</th></tr>
+<tr><td>01</td><td class="n">6.2 ms</td><td class="n">9.4 ms</td><td class="n">0.1 %</td><td class="n">0.8 %</td></tr>
+<tr><td>02</td><td class="n">6.8 ms</td><td class="n">11.8 ms</td><td class="n">0.2 %</td><td class="n">1.8 %</td></tr>
+<tr><td>03</td><td class="n">6.3 ms</td><td class="n">8.5 ms</td><td class="n">0.5 %</td><td class="n">3.4 %</td></tr>
+<tr><td>04</td><td class="n">5.9 ms</td><td class="n">5.9 ms</td><td class="n">0.4 %</td><td class="n">0.4 %</td></tr>
+<tr><td>05</td><td class="n">5.6 ms</td><td class="n">7.7 ms</td><td class="n">0.2 %</td><td class="n">0.5 %</td></tr>
+</table></div>
+
+<h2 id="open">For you to decide</h2>
+<ul>
+  <li><b>Gunma's corridor</b> shares Saitama's road as far as the gap between the 志木 and 入間 cards and branches north there. It was the only way through without moving a card.</li>
+  <li><b>The plane's climb is slow</b>, about half a plane-length a second, like its approach. If it reads as floating, one number makes it faster and costs time on a phone (the options picture shows 3.1 s and 4.9 s beside the picked 4.1 s).</li>
+  <li><b>The plane passes the Tower after 45.8 s</b>, while the finale holds. A visitor who stays sees it; the cycle is 26 s now (was 19).</li>
+  <li><b>Kanagawa's place dot</b> already sat on the last stroke of 川; the ring now opens around that stroke. Clearing it means moving the dot or the name, and both are closed.</li>
+  <li><b>The service area:</b> the pale steps it has now, or one flat white (the extra picture in section 3).</li>
+  <li><b>Three lamps in scenes 01 and 02</b> where there were eleven. Say if you want more in the open stretch between the two buildings.</li>
+  <li><b>The power lines still cross Tokyo Tower in scene 01</b>, as they did before.</li>
+  <li><b>Scene 03 on a phone:</b> the big board is whole inside the strip for about 0.3 s as it passes. That comes from the scroll and the camera, which are closed. The lamps are faint there, because nothing above the barrier may get darker.</li>
+  <li><b>Scene 03's caption</b> still says 関東一円. It was not touched; it is your call.</li>
+</ul>
+<p class="lead">Not in this round, as asked: the seams between scenes and the motion pass.</p>
+</main>
+</body>
+</html>

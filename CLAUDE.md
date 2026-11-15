@@ -233,7 +233,8 @@ loading strips; its new-versus-old lines are in the script. Details and check nu
   三豊運輸 written downward on a navy band; two-axle road trucks.
 - **Values** (`r4-values`): `CITY_LOOK` and `CITY_HAZE` widened from navy to air.
 - **The batch was accepted, and four fixes were made on it (2026-11-15, parts `r5-*`, one commit each,
-  shown together on the same review page under "The four fixes"; waiting for the owner's verdict):**
+  shown together on the same review page under "The four fixes"; accepted, and round 6 below builds on
+  them: the prefecture step and the plane's speed were changed again there):**
   the plane no longer passes behind Tokyo Tower's lattice: it climbs at 42.6 degrees and passes in front of
   the thin mast above the top deck, one slot again (`r5-plane-tower`; the rejected options are
   `r5-plane-opt-front` and `r5-plane-opt-cloud`); the map has moving water off Niigata as well and its
@@ -257,11 +258,43 @@ loading strips; its new-versus-old lines are in the script. Details and check nu
 
   Re-measure with `node tools/crop-table.mjs <side>` (it reads the stage's
   `getScreenCTM()` on `viewer/frame.html?framing=site` at each viewport) if the camera path ever changes.
-- Still the original or round 2 drawings: scene 03's expressway, lamps, gantry, signs and fence; the
-  street, lamps, vending machines and foreground rail of scenes 01 and 02. The seams and the motion pass
-  are not done. Scene 03's caption still says 関東一円 (the owner's call).
 - Three scratch sides exist (`trial`, `trial2`, `trial3`) so helpers can build side by side. A helper
   stopped by the usage limit is resumed with a message to it; its part file on disk survives.
+
+## Round 6 (2026-11-15): drawn, merged, shown together, waiting for the owner's review
+
+Asked for after the four fixes were accepted; parts `r6-*`, one commit each with its own evidence folder,
+gathered on `evidence/2026-11-15-round6-review/index.html` (through the viewer's server). Details and
+numbers are at the end of `CHANGES.md`. **Check the owner's verdict before building on any of it.**
+
+- **Map trucks** (`r6-map-corridors`, `r6-map-truck`): the owner saw them slide ("sliding by the side
+  rather than actually driving"). The truck is a plan view (4 nodes), steered along its corridor;
+  `mapTruckAt` returns the heading. No corridor passes under a name card: Niigata's rounds the 志木 card on
+  the east, Tochigi's moved over, Gunma's shares Saitama's road to the gap between the two cards and
+  branches north, so a corridor is one or two curves. Rejected: `r6-map-truck-opt-side`, `-opt-paper`.
+- **The arrival** (`r6-map-arrival`): the prefecture no longer steps to white (`MAP_ANSWER` is gone); the
+  place dot opens into a ring while its truck stands there. `r6-map-arrival-opt-onewhite` is an extra
+  picture for the owner (the service area one flat white), not the pick.
+- **The plane on a phone** (`r6-plane-slow`): the accepted path past the Tower's mast is kept; the speed
+  along it changed (`PLANE.CLIMB_V` 74 px/s over the ground, then it gathers speed `PLANE.ACC_AT` s after
+  lift-off). Cycle 26 s. A phone's only open sky in the finale is the band between the two buttons (stage
+  y 356) and the roofs, left of the Tower: half or more of the plane is in it for 4.1 s (was 1.1 s),
+  measured by `node tools/plane-visible.mjs <side>`. The pass at the Tower now comes at 45.4 to 46.9 s on
+  the site clock, after the last scene's dwell: the finale holds and its clock runs on, and
+  `viewer/timeline.js` lets tools ask for moments past 45.8 s. Rejected speeds: `r6-plane-opt-fast`,
+  `-opt-slow`.
+- **Scene 03's road** (`r6-expressway`) and **the street of scenes 01 and 02** (`r6-street`): the last
+  original and round 2 drawings, drawn again from a blank page. **Nothing in the film is an original or a
+  round 2 drawing any more.** The sign wording and scene 03's caption (関東一円, the owner's call) are
+  untouched. The street has 3 lamps where there were 11 (eight were never seen).
+- **Nodes** (`node tools/node-count.mjs original round2`, elements on the stage per scene; original /
+  before round 6 / now): 01 1337 / 1588 / 1472, 02 1372 / 1599 / 1483, 03 1254 / 1290 / 944,
+  04 778 / 1059 / 1017, 05 777 / 1058 / 1016. No pass added a node. **Fewer nodes did not make it
+  smoother:** on the slowed phone the frame median is 9.4 / 11.8 / 8.5 / 5.9 / 7.7 ms in scenes 01 to 05
+  against the original's 6.2 / 6.8 / 6.3 / 5.9 / 5.6, about where it stood. Scene 02 is the heaviest. What
+  costs is what is painted (the city rows, the trucks), so that is where the motion pass should look.
+- **Not started, as the owner asked:** the seams between scenes and the motion pass. They come after he
+  has looked at the drawing.
 
 Usage: this account has a 5-hour usage limit; a burst of parallel agents exhausted it in the first session and
 killed work in progress. Use one or two agents at a time (a cheaper model for engineering, the best one for

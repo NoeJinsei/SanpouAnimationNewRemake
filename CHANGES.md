@@ -1283,3 +1283,37 @@ before, 1483 after.** Evidence: `evidence/2026-11-15-street/`.
 **Known, for the owner.** Three lamps: say if you want more of them in the open stretch between the two
 buildings. The power lines still cross Tokyo Tower in scene 01, as they did (now two lines and a cable).
 A phone sees little of the street: the ground, the fence, and one pole head in scene 01.
+
+### Round 6: the checks on the finished film, and how it is shown
+
+All of it is in `round2/js` (`r6-plane-slow`, `r6-map-corridors`, `r6-map-truck`, `r6-map-arrival`,
+`r6-expressway`, `r6-street`, in that order). It is shown together on
+`evidence/2026-11-15-round6-review/index.html`: each item before and after at the desktop framing and at
+the phone crop for its scene, a line per picture saying what is new and what is still old, the truck's and
+the plane's rejected options, all five scenes as the site shows them, the numbers, and what is the owner's
+to decide.
+
+**The numbers, on the finished film.**
+- `original/` intact (7 of 7 checksums); the website folder untouched (commit `72862b6`, no changes).
+- `check-viewer`: 0 console errors; determinism, the real player, rapid clicks and reduced motion pass;
+  `check-player-vs-glue` matches in every hold. Draw (original / round2): 1.71 / 1.70 ms full,
+  1.77 / 1.81 desktop, 1.75 / 1.76 phone.
+- `motion-check`, scene by scene (the finale to 49500 ms): 0 frozen steps in scenes 01, 02, 03 and 05;
+  scene 04 only the player's two-step dissolve lead (21800 to 21833 ms); the only pops are the two that
+  were there before (14600 ms, 1.18; 28700 ms, 0.96).
+- `contrast-check`, whole film, both framings: all 13 copy rows pass AA (tightest: the desktop caption's
+  lead line, 4.84 against 4.5, at 30000 ms); the unfilled track fails as on the original.
+- `cloud-check`: 0 clouds below a roof in scenes 01, 02, 03 and 05.
+- **Nodes** (`node tools/node-count.mjs original round2`; original / before round 6 / now):
+  scene 01 1337 / 1588 / 1472, 02 1372 / 1599 / 1483, 03 1254 / 1290 / 944, 04 778 / 1059 / 1017,
+  05 777 / 1058 / 1016. No pass added a node.
+- **Smoothness, phone framing, CPU slowed four times, one sitting, nothing else running.**
+  `perf-side`, the whole film: original 167.3 fps, frame median 5.7 ms, 0.2 % of frames over 16.7 ms;
+  round2 113.9 fps, 8.3 ms, 1.5 %. `perf-table`, median of two runs (original / round2): scene 01
+  6.2 / 9.4 ms, 02 6.8 / 11.8, 03 6.3 / 8.5, 04 5.9 / 5.9, 05 5.6 / 7.7; frames over 16.7 ms
+  0.1 / 0.8 %, 0.2 / 1.8 %, 0.5 / 3.4 %, 0.4 / 0.4 %, 0.2 / 0.5 %
+  (`evidence/2026-11-15-round6-review/perf.json`). That is where the film stood before this round (the
+  original itself measured 0.6 to 0.8 ms slower in this sitting than in the last): it is not heavier, and
+  it is not lighter although scenes 01 to 03 lost 116, 116 and 346 nodes. Scene 03 now has fewer nodes
+  than the original and is still 2.2 ms a frame slower, so the cost is in what is painted, not in the
+  count alone.
