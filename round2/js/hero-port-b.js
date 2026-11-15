@@ -4012,6 +4012,28 @@
                 (as the cube of the time) and lands over the rest (as the fourth power of what is left);
                 the edge between the two pictures crosses the frame at the top speed, 114 px a frame.
      04 -> 05   was already one move inside one scene (the map draws back and the land comes up). */
+  /* ---- Nothing pops, and moves land softly (round 7) ----
+     landEase(u, a): 0 -> 1 over 0 -> 1 as a camera moves: it gathers speed over the first `a` of the move
+     (as the cube of the time) and lands over the rest (as the fourth power of what is left), so the
+     landing is longer and softer than the start. It is the curve of the rise to the map (seam34) and of
+     the player's camera between scenes; here it also carries the pan from scene 01 to scene 02 and the
+     map's retreat before the finale, which were symmetric (in-out cubic): same frames, same distance.
+     The two pops the motion check kept reporting:
+       14600 ms  the three trucks at the docks moved a pixel in one step. Their idle bob and exhaust ran on
+                 the frame clock while the sky ran on its own (which carries the 1.878 s the hold lets
+                 pass): the scene has ONE ambient clock now, the sky's, so nothing steps when the hold ends.
+       28700 ms  the finale was faded in as one group over the whole stage, and on the step its opacity
+                 reached 1 the browser stopped drawing it through a buffer: every gradient shifted by one
+                 level at once. The finale is not faded any more. It stands finished under the map's
+                 panel, which is opaque, and is seen as the panel goes: one dissolve, not two, and nothing
+                 for the browser to switch. While the map is up the finale is not drawn at all. */
+  function landEase(u, a) {
+    a = a || 0.35;
+    if (u <= 0) return 0;
+    if (u >= 1) return 1;
+    var k = 1 / (a * a * (0.75 + 0.25 * a));
+    return u < a ? k * u * u * u : 1 - (3 * k * a * a / (4 * Math.pow(1 - a, 3))) * Math.pow(1 - u, 4);
+  }
   var SEAM23 = { m0: 400, mc: 429, m1: 474, v: 118, cut: [426, 432] };
   function seam23X(m) {
     var S = SEAM23, a = S.mc - S.m0, b = S.m1 - S.mc;
@@ -4035,8 +4057,11 @@
     // at a settled value (parcels delivered, KPI at final, truck parked) while
     // ambient (idle bob, particles, god-rays, clouds) keeps breathing — used for
     // the per-scene end-of-scene idle. Default (undefined) = identical to before.
-    var fps = FPS, time = (tOverride != null ? tOverride : frame / fps);
-    var cam = interpolate(frame, [T_WORLD.panStart, T_WORLD.panEnd], [T_WORLD.camRecvX, T_WORLD.camLoadX], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.inOut(Easing.cubic) });
+    // one ambient clock for the whole scene: the player's when it gives one, else the frame clock plus the
+    // time scene 02's hold let pass (1.878 s, eased in over frames the site only plays with its own clock)
+    var fps = FPS, skyK = clamp01((frame - 300) / 91);
+    var time = tOverride != null ? tOverride : frame / fps + 1.878 * skyK * skyK * (3 - 2 * skyK), skyTime = time;
+    var cam = interpolate(frame, [T_WORLD.panStart, T_WORLD.panEnd], [T_WORLD.camRecvX, T_WORLD.camLoadX], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: function (u) { return landEase(u, 0.4); } });
     cam += seam23X(frame);        // the seam into scene 03: the camera goes after the trucks
     var panK = clamp01((frame - T_WORLD.panStart) / (T_WORLD.panEnd - T_WORLD.panStart));
     // truck positions as functions of frame, so truckMotion can read their acceleration
@@ -4081,7 +4106,7 @@
     // the trucks then leave, it hands this scene frame / 30 again, which is that much earlier, and the whole
     // sky would jump back. So from the departure on the sky adds that time back (eased in over frames the
     // site only ever plays with its own clock): clouds, birds and shafts carry straight through the seam.
-    var skyK = clamp01((frame - 300) / 91), skyTime = tOverride != null ? tOverride : frame / fps + 1.878 * skyK * skyK * (3 - 2 * skyK);
+    // (skyTime is the scene's one clock: see the top of this function)
     return h("div", { style: { position: "absolute", inset: 0, background: "#eaf5fc", overflow: "hidden" } },
       h("div", { style: { position: "absolute", inset: 0, background: DAY.sky } }),
       h("svg", { width: 1920, height: 1080, viewBox: "0 0 1920 1080", xmlns: "http://www.w3.org/2000/svg", style: { position: "absolute", inset: 0 } },
@@ -5145,7 +5170,7 @@
     var prefK = clamp01((frame - T_NETWORK.prefs[0]) / (T_NETWORK.prefs[1] - T_NETWORK.prefs[0]));
     var routeK = clamp01((frame - T_NETWORK.routesDraw[0]) / (T_NETWORK.routesDraw[1] - T_NETWORK.routesDraw[0]));
     var pinK = clamp01((frame - T_NETWORK.pinPop) / 18);
-    var recede = interpolate(frame, [T_NETWORK.mapRecede[0], T_NETWORK.mapRecede[1]], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.inOut(Easing.cubic) });
+    var recede = interpolate(frame, [T_NETWORK.mapRecede[0], T_NETWORK.mapRecede[1]], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: function (u) { return landEase(u, 0.35); } });
     var basesEnter = spring({ frame: frame - 14, fps: fps, config: { damping: 13, mass: 0.9 } });
     var overviewEnter = spring({ frame: frame - 26, fps: fps, config: { damping: 13, mass: 0.9 } });
     var logoEnter = spring({ frame: frame - T_NETWORK.logo[0], fps: fps, config: { damping: 12, mass: 0.9 } });
@@ -5181,7 +5206,9 @@
           return h("circle", { cx: x, cy: y, r: 1.4, fill: "rgba(245, 236, 234,0.7)", opacity: 0 });
         }),
         FloatingParticles({ seed: "network", x: 80, y: 120, width: 1760, height: 840, time: time, count: 28, baseOpacity: 0.4 }),
-        h("g", { opacity: recede },
+        // the finale stands finished under the map's opaque panel and is seen as the panel goes; while the
+        // map is up it is not drawn
+        h("g", { display: recede > 0 ? "inline" : "none" },
           range(26, function (i) {
             var x = random("n2-star-x" + i) * 1920, y = 24 + random("n2-star-y" + i) * 420;
             var tw = 0.3 + 0.7 * (0.5 + 0.5 * Math.sin(time * (0.6 + random("n2-star-t" + i) * 1.2) + i * 2));
