@@ -16,7 +16,7 @@ const VIEW = { phone: { w: 390, h: 844, dpr: 2, f: "site" }, desktop: { w: 1440,
 const browser = await launch({ channel: "chrome", headless: true, args: ["--headless=new", "--enable-gpu", "--ignore-gpu-blocklist", "--enable-gpu-rasterization", "--use-angle=d3d11", "--disable-frame-rate-limit=false"] });
 const ctx = await browser.newContext({ viewport: { width: VIEW.w, height: VIEW.h }, deviceScaleFactor: VIEW.dpr });
 const page = await ctx.newPage();
-await page.goto(`${BASE}/viewer/frame.html?side=${encodeURIComponent(side)}&framing=${VIEW.f}`);
+await page.goto(`${BASE}/viewer/frame.html?side=${encodeURIComponent(side)}&framing=${VIEW.f}${flags.q ? "&" + flags.q : ""}`);
 await page.waitForFunction(() => window.heroFrame && (window.heroFrame.seek || window.heroFrame.error), null, { timeout: 30000 });
 await page.evaluate(() => document.fonts.ready);
 await page.evaluate(([a, b]) => { for (let t = a; t < b; t += 400) window.heroFrame.seek(t); window.heroFrame.seek(a); }, [from, to]);

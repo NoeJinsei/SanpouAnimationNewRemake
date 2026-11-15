@@ -54,6 +54,17 @@
         attrs[ATTR[k] || k] = String(props[k]);
       }
     }
+    // Round 7: a group marked data-cache is a finished drawing that only ever moves as a whole (a building, a
+    // cloud, Mt Fuji, a depot). It is given its own layer, so the browser draws it once and afterwards only
+    // moves it or leaves it alone. Before, every frame in which anything moved was drawn again in full, still
+    // scenery included, and that redrawing, not the script, was what the remake cost over the original
+    // (measured with tools/trace-side.mjs: 13.6 ms a frame of raster work in scene 02 against 0.4 ms).
+    // (a drawing that stands in a picture which already has its own layer says so with data-layer, and gets none)
+    if (attrs["data-cache"] != null && attrs.style == null && attrs["data-layer"] == null) attrs.style = "will-change:transform";
+    // A single filled shape's own opacity is written as fill-opacity: the picture is the same, and the browser
+    // then needs no effect of its own for the shape (each one was a separate step in its paint and layer work:
+    // scenes 01 and 02 had 150 of them, lit windows mostly). Shapes with a stroke, groups and text keep opacity.
+    if (attrs.opacity != null && attrs.stroke == null && attrs["fill-opacity"] == null && (tag === "rect" || tag === "circle" || tag === "polygon" || tag === "path" || tag === "ellipse")) { attrs["fill-opacity"] = attrs.opacity; delete attrs.opacity; }
     return { t: tag, a: attrs, c: children };
   }
   /* --------------------------------------------- in-place stage patching */
@@ -66,7 +77,7 @@
     var inSvg = svg || v.t === "svg";
     var el = inSvg ? document.createElementNS(SVGNS, v.t) : document.createElement(v.t);
     for (var k in v.a) el.setAttribute(k, v.a[k]);
-    el.__t = v.t; el.__a = v.a;
+    el.__t = v.t; el.__a = v.a; el.__v = v;
     for (var i = 0; i < v.c.length; i++) el.appendChild(createNode(v.c[i], inSvg));
     return el;
   }
@@ -81,6 +92,10 @@
         continue;
       }
       if (d.nodeType !== 1 || d.__t !== v.t) { parent.replaceChild(createNode(v, svg), d); continue; }
+      // the very same description as the one this node was last patched to (a drawing built once and kept):
+      // nothing in it or under it can differ, so it is not walked again (round 7)
+      if (d.__v === v) continue;
+      d.__v = v;
       var oa = d.__a, na = v.a, k;
       for (k in na) if (oa[k] !== na[k]) d.setAttribute(k, na[k]);
       for (k in oa) if (!(k in na)) d.removeAttribute(k);
@@ -1409,7 +1424,7 @@
     CITY_TYPES[it.t](c, it.w, it.h, it.v);
     it.info = c.info; it.top = c.top();
     return it.node = h("g", {
-      "data-city": it.t, "data-roof": row.baseY - it.h,
+      "data-city": it.t, "data-roof": row.baseY - it.h, "data-layer": row.still ? "row" : null,
       "data-cache": "city-" + [it.t, it.x, it.w, it.h, it.v, it.m, row.baseY, look.u, look.air].join("_"), "data-box": c.box()
     }, c.done(cityPal(it.m, look.air)));
   }
@@ -1591,6 +1606,7 @@
         ["D", 1732, 308, 400, 1, "d"], ["L", 2046, 234, 150, 0, "t"], ["C", 2285, 205, 260, 0, "c"],
         ["M", 2546, 246, 300, 1, "t"], ["L", 2794, 244, 140, 1, "c"], ["B", 3040, 170, 250, 1, "d"]])
     };
+    stillRows([c.farBack, c.far, c.nearBack, c.near]);       // scenes 01 and 02 draw these four rows as still pictures
     c.farLights = cityLights([c.farBack, c.far], -64, { sheen: [[1285, 0]] });
     c.nearLights = cityLights([c.nearBack, c.near], -104, {
       sheen: [[2633, 10]],
@@ -3961,7 +3977,7 @@
         dDark += RR(px + 33, n1(G + T + 80 + 2 * tt * (1 - tt) * 44 - 1), 26, 8, 3);
       }
     }
-    A.poles = h("g", null,
+    A.poles = h("g", { "data-cache": "street-poles", "data-box": (S.POLE_X0 - 30) + " " + (G - S.POLE_H - 12) + " " + ((S.POLE_N - 1) * S.POLE_GAP + 60) + " " + (S.POLE_H + 14) },
       h("path", { d: dW, fill: "none", stroke: D.wireFlat, strokeWidth: 2 }),
       h("path", { d: dC, fill: "none", stroke: D.wireFlat, strokeWidth: 3.4 }),
       F(D.utility, dShaft), F(D.utilityDark, dDark), F(D.utilityLit, dLit), F(D.guardBand, dBand));
@@ -4051,6 +4067,27 @@
     var y = S.rise * e;
     return { t: "transform:translate3d(0," + y.toFixed(2) + "px,0);will-change:transform;", n: "transform:translate3d(0," + (y - S.rise).toFixed(2) + "px,0);will-change:transform;" };
   }
+  /* ---- A scene is a stack of pictures (round 7) ----
+     A scene used to be ONE svg. The browser walks the whole of an svg to paint it whenever anything in it has
+     changed, and something always has (a cloud, a truck's idle, a lit window): so every frame it walked the
+     rows of buildings too, which never change. Now a scene is a short stack of pictures, back to front in the
+     same order as before, so the picture is the same:
+       a LIVE picture   an svg of its own with what moves or changes in it (PIC);
+       a STILL picture  stillPic(x, ...): finished drawings (the rows of the city) in an svg of their own, in a
+                        layer of its own. It is drawn once. The camera moves it by moving the layer (x px), which
+                        costs nothing; a frame in which only other pictures change does not touch it at all.
+     Rows in a still picture are marked with stillRows() where they are made, before any building of theirs is
+     drawn: their buildings then get no layer each (the picture has one). ids are the document's, so a clip or a gradient defined in the first
+     picture's defs serves the others too. */
+  var PIC = { width: 1920, height: 1080, viewBox: "0 0 1920 1080", xmlns: "http://www.w3.org/2000/svg", style: { position: "absolute", left: 0, top: 0 } };
+  var PIC_STILL = { width: 1920, height: 1080, viewBox: "0 0 1920 1080", xmlns: "http://www.w3.org/2000/svg", style: { position: "absolute", left: 0, top: 0, overflow: "visible" } };
+  function stillPic(x, a, b) {
+    return h("div", { style: { position: "absolute", left: 0, top: 0, width: 1920, height: 1080, willChange: "transform", transform: "translate3d(" + x.toFixed(2) + "px,0,0)" } },
+      h("svg", PIC_STILL, a, b));
+  }
+  function stillRows(rows) { for (var i = 0; i < rows.length; i++) rows[i].still = true; }
+  // the street's paving, kerb, road and lamps: one finished drawing with a layer of its own
+  function streetBase() { var A = streetArt(); return A.base || (A.base = h("g", { "data-cache": "street-base", "data-box": "-400 600 6600 400" }, A.ground, A.lamps)); }
   /* ---- Scene12World.tsx ---- */
   function sceneWorld(frame, tOverride) {
     // tOverride decouples ambient time from the choreography frame: hold `frame`
@@ -4129,19 +4166,26 @@
         h("g", { transform: "translate(" + (-cam * 0.18) + ", 0)" }, CityRow(city.deep, -cam * 0.18)),
         h("g", { transform: "translate(" + (-cam * 0.32) + ", 0)" },
           CloudField(SKY_WORLD.near, 1, skyTime, 0),
-          DayBirds({ set: "w", time: skyTime, shift: cam * 0.1, back: cam * 0.32 }),
-          CityRow(city.farBack, -cam * 0.32), CityRow(city.far, -cam * 0.32), CityCranes(city.far, skyTime), CityLights(city.farLights, skyTime),
-          TokyoTower({ cx: 1560, baseY: GROUND, h: 770, time: time, opacity: 0.95 })
-        ),
-        CityHaze("wHazeFar", GROUND, 0),
-        h("g", { transform: "translate(" + (-cam * 0.52) + ", 0)" },
-          CityRow(city.nearBack, -cam * 0.52), CityCranes(city.nearBack, skyTime), CityRow(city.near, -cam * 0.52), CityLights(city.nearLights, skyTime),
-          streetArt().poles
-        ),
+          DayBirds({ set: "w", time: skyTime, shift: cam * 0.1, back: cam * 0.32 }))
+      ),
+      // the stack goes on (see "A scene is a stack of pictures"): the two far rows, still; what moves in front
+      // of them and the far haze, live; the two near rows, still, with the cranes that stand between them
+      stillPic(-cam * 0.32, CityRow(city.farBack, -cam * 0.32), CityRow(city.far, -cam * 0.32)),
+      h("svg", PIC,
+        h("g", { transform: "translate(" + (-cam * 0.32) + ", 0)" },
+          CityCranes(city.far, skyTime), CityLights(city.farLights, skyTime),
+          TokyoTower({ cx: 1560, baseY: GROUND, h: 770, time: time, opacity: 0.95 })),
+        CityHaze("wHazeFar", GROUND, 0)),
+      stillPic(-cam * 0.52, CityRow(city.nearBack, -cam * 0.52)),
+      h("svg", PIC, h("g", { transform: "translate(" + (-cam * 0.52) + ", 0)" }, CityCranes(city.nearBack, skyTime))),
+      stillPic(-cam * 0.52, CityRow(city.near, -cam * 0.52)),
+      // the last live picture: the near row's lit windows, the poles, the near haze, the street and all that works on it
+      h("svg", PIC,
+        h("g", { transform: "translate(" + (-cam * 0.52) + ", 0)" }, CityLights(city.nearLights, skyTime), streetArt().poles),
         CityHaze("wHazeNear", GROUND, 1),
         h("g", { transform: "translate(" + (-cam) + ", 0)" },
           // the street, round 6: the paving, the kerb and its gutter, the carriageway; the lamps at the kerb; the vending corner
-          streetArt().ground, streetArt().lamps, streetArt().vending,
+          streetBase(), streetArt().vending,
           FloatingParticles({ seed: "world-a", x: 60, y: 240, width: 1700, height: 560, time: time, count: 24, baseOpacity: 0.4 }),
           FloatingParticles({ seed: "world-b", x: 2050, y: 240, width: 1700, height: 560, time: time, count: 24, baseOpacity: 0.4 }),
           SupplierBuilding({ x: SUPPLIER_X, y: GROUND, scale: B_SCALE, time: skyTime }),
@@ -4157,7 +4201,7 @@
           DockCartons(frame)
         ),
         // the foreground: the pedestrian guard fence on the near pavement, the darkest thing in the picture, framing its foot
-        h("g", { transform: "translate(" + (-cam * 1.07) + ", 0)" }, streetArt().fence)
+        h("g", { "data-cache": "street-fence", transform: "translate(" + (-cam * 1.07) + ", 0)" }, streetArt().fence)
       ),
       h("div", { style: { opacity: 1 - panK } }, SceneTitle({ no: CONTENT.scenes.receiving.no, heading: CONTENT.scenes.receiving.heading, enter: title1 })),
       title2 > 0 ? SceneTitle({ no: CONTENT.scenes.loading.no, heading: CONTENT.scenes.loading.heading, enter: title2 }) : null,
@@ -4324,10 +4368,10 @@
   }
   function sceneTransit(frame) {
     var fps = FPS, time = frame / fps;
-    // the seam from scene 02: `lead` is how far the camera has come beyond its steady 9 px a frame since
-    // this scene's frame 0, `ahead` how far it still has to come before it rides with the convoy
-    var SPEED = 9, lead = seam23X(TRANSIT_START + frame) - seam23X(TRANSIT_START);
-    var ahead = seam23X(SEAM23.m1) - seam23X(TRANSIT_START) - lead, scroll = frame * SPEED + lead;
+    // the seam from scene 02: `ahead` is how far the camera still has to come before it rides with the convoy.
+    // The road's scroll is that much short of its steady 9 px a frame, so once the camera has landed the
+    // scene is exactly the picture it always was at that moment (the clouds were composed against it).
+    var SPEED = 9, ahead = seam23X(SEAM23.m1) - seam23X(TRANSIT_START + frame), scroll = frame * SPEED - ahead;
     var titleEnter = clamp01((frame - 10) / 36);
     var convoyIn = interpolate(frame, [T_TRANSIT.convoyIn[0], T_TRANSIT.convoyIn[1]], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.cubic) });
     var cardEnter = spring({ frame: frame - T_TRANSIT.cardIn, fps: fps, config: { damping: 13, mass: 0.9 } });
@@ -4340,7 +4384,7 @@
     // phases of what repeats on a short period
     var XW = expresswayArt(), xg = wrap(scroll + 2030, GTILE) + GTILE - 1300;
     var xPar = "translate(" + ((((xg % 150) + 150) % 150) - 150).toFixed(2) + ", 0)";
-    var xFg = "translate(" + (-((scroll * 1.25) % 175)).toFixed(2) + ", 0)";
+    var xFg = "translate(" + (-((((scroll * 1.25) % 175) + 175) % 175)).toFixed(2) + ", 0)";
     var convoy = [{ x: 120, scale: 1.8, lag: 0 }, { x: 620, scale: 1.88, lag: 8 }, { x: 1120, scale: 1.8, lag: 16 }, { x: 1600, scale: 1.72, lag: 24 }];
     return h("div", { style: { position: "absolute", inset: 0, background: "#eaf5fc", overflow: "hidden" } },
       h("div", { style: { position: "absolute", inset: 0, background: DAY.sky } }),
@@ -5186,10 +5230,7 @@
           GlowDef("nSun", DAY.sunGlow, 0.5),
           HazeDef("nHazeFar", CITY_HAZE[0][0]), HazeDef("nHazeNear", CITY_HAZE[1][0])
         ),
-        h("g", { opacity: 0.5 - recede * 0.3 },
-          
-          
-        ),
+
         SkyAir(),
         h("ellipse", { cx: 960, cy: 520, rx: 940, ry: 500, fill: "url(#nHalo)" }),
         // the sky the map floats in is the finale's sky. It holds still while the map is up (the player's
@@ -5200,28 +5241,12 @@
           SkySun({ cx: 1652, cy: 136, time: time * recede, gid: "nSun" })),
         CloudField(SKY_FINALE.far, 0, time * recede, 0),
         CloudField(SKY_FINALE.near, 1, time * recede, 0),
-        range(30, function (i) {
-          var x = random("n-star-x" + i) * 1920, y = 30 + random("n-star-y" + i) * 900;
-          var tw = 0.25 + 0.6 * (0.5 + 0.5 * Math.sin(time * (0.5 + random("n-star-t" + i)) + i));
-          return h("circle", { cx: x, cy: y, r: 1.4, fill: "rgba(245, 236, 234,0.7)", opacity: 0 });
-        }),
+        // (30 circles that were never seen stood here: gone, round 7)
         FloatingParticles({ seed: "network", x: 80, y: 120, width: 1760, height: 840, time: time, count: 28, baseOpacity: 0.4 }),
         // the finale stands finished under the map's opaque panel and is seen as the panel goes; while the
         // map is up it is not drawn
         h("g", { display: recede > 0 ? "inline" : "none" },
-          range(26, function (i) {
-            var x = random("n2-star-x" + i) * 1920, y = 24 + random("n2-star-y" + i) * 420;
-            var tw = 0.3 + 0.7 * (0.5 + 0.5 * Math.sin(time * (0.6 + random("n2-star-t" + i) * 1.2) + i * 2));
-            return h("circle", { cx: x, cy: y, r: 0.9 + random("n2-star-r" + i) * 1.6, fill: "rgba(245, 236, 234,0.8)", opacity: 0 });
-          }),
-          (function () {
-            var k = (time % 9) / 9;
-            if (true) return null;
-            var p = k / 0.1, sx = 1480 - p * 300, sy = 70 + p * 130;
-            return h("g", { opacity: Math.sin(p * Math.PI) * 0.8 },
-              h("line", { x1: sx, y1: sy, x2: sx + 64, y2: sy - 28, stroke: "rgba(245, 236, 234,0.5)", strokeWidth: 1.8, strokeLinecap: "round" }),
-              h("circle", { cx: sx, cy: sy, r: 2, fill: "#fff" }));
-          })(),
+          // (26 more unseen circles and a block that drew nothing stood here: gone, round 7)
           h("ellipse", { cx: 960, cy: 1000, rx: 1150, ry: 150, fill: "url(#nHalo)" }),
           CloudField(SKY_FINALE.landFar, 0, time * recede, 0),
           CloudField(SKY_FINALE.landNear, 1, time * recede, 0),
