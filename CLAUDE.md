@@ -426,6 +426,20 @@ it.** Nothing else in the film was touched.
 - **If the film changes again, record the four films again** (the commands are on the film page) and say
   so on that page.
 
+## GitHub (2026-11-16)
+
+`origin` is the owner's repository, https://github.com/NoeJinsei/SanpouAnimationNewRemake.git, and `main`
+tracks `origin/main`. He asked for this folder to be uploaded there and for the session to stay connected to
+it; the whole history was pushed on 2026-11-16. **The repository is public: anything pushed can be seen by
+anyone.** So:
+
+- Push with a plain `git push` (this machine is already signed in; never type a password or a token).
+- He has not said whether to push after every pass without asking. Ask once, then follow his answer.
+- Never add the ignored folders to git: `reference/motion-film/` and `reference/warehouse-ops/` hold other
+  people's material, and the scratch sides and `shots/` are throwaway.
+- Before a push, look at what is new for anything private (an address, a key, a personal detail). The
+  history pushed so far has none: no e-mail address in any file, and every commit is signed "Claude".
+
 Usage: this account has a 5-hour usage limit; a burst of parallel agents exhausted it in the first session and
 killed work in progress. Use one or two agents at a time (a cheaper model for engineering, the best one for
 art) and keep the main session short.
