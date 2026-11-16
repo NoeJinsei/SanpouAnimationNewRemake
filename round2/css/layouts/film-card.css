@@ -1,18 +1,162 @@
-/* The film becomes a framed card on the right; the copy stands beside it on the page's own ground.
-   Nothing is laid over the picture, so both washes are deleted outright rather than tuned.
-   The stage refits itself: fitStage() reads .hc-stagebox and a ResizeObserver watches it. */
-#sanpou-journey { background: #eef4f8; }
-#sanpou-journey .hc-stagebox { inset: 28px 28px 28px auto; width: min(62%, 1040px); border-radius: 14px; }
-#sanpou-journey .hc-scrim, #sanpou-journey .hc-scrim-sign { display: none; }
-#sanpou-journey .hc-content { top: 40%; width: min(34%, 430px); right: auto; max-width: none; }
-#sanpou-journey .hc-title { font-size: clamp(30px, 3.0vw, 44px); }
-#sanpou-journey .hc-sub { max-width: none; margin-top: 20px; font-size: 15px; line-height: 1.85; }
-#sanpou-journey .hc-cta { margin-top: 26px; }
-#sanpou-journey .hc-cta .btn { min-width: 0; }
-/* the furniture leaves the picture too: caption and scene buttons go under the copy */
-#sanpou-journey .hc-bottom { right: auto; bottom: 36px; width: min(34%, 430px); flex-wrap: wrap; gap: 12px 18px; }
+/* film-card — the film is a framed card with real margin around it, and the copy stands beside it on
+   the page's own pale ground. NOTHING is laid over the picture, so both washes are deleted outright
+   rather than tuned, and the type is as legible as type on a page is.
+
+   Loaded ON TOP OF the site's own stylesheet, round2/css/hero-copy.css and
+   round2/css/light/patch-faint.css (the treatment the owner chose on 2026-11-17). It keeps
+   patch-faint's phone rebuild — the smaller headline and tag, the two content-width 44px buttons,
+   the tighter caption bar — and needs none of its veil, because in this layout no word ever sits on
+   the picture. It must load AFTER those two files: several rules below undo theirs.
+
+   HOW THE CROP WORKS. The stage refits itself: fitStage() reads .hc-stagebox and a ResizeObserver
+   watches it, so the film follows whatever shape this file gives that box. The fit COVERS, so the
+   box's SHAPE decides the crop. A box narrower than 16:9 shows the FULL HEIGHT and a window of the
+   width (window = 1080 × boxW / boxH); a box wider than 16:9 shows the full width and crops top and
+   bottom. The player's camera then centres that window on each scene's subject, so the window is
+   context, not composition.
+
+   WHAT CHANGED on 2026-11-17, and why:
+
+   1. A PHONE RULE, which the first cut had none of. Under 768px the site already makes the section a
+      flex column; .hc-stagebox joins it as a normal-flow block at the top (it is the first child)
+      with an aspect ratio, and the copy stands beneath it on solid ground — the shape Daiwa Butsuryu
+      uses on phones. Before this the card kept its desktop share of a 390px screen, squeezed the film
+      into a 242px strip, and the copy fell on top of it with the two buttons in slivers.
+   2. THE COLUMNS NO LONGER OVERLAP. The card was 62% of the width while the copy was min(34%, 430px)
+      from the container edge: at 1440 the copy block ran to x 550 and the card began at x 519, so the
+      progress bar ran 31px in under the film (plainly visible on scenes 04 and 05). Both columns are
+      now cut from the same three custom properties, so the gap between them cannot go negative at any
+      width.
+   3. THE COPY STAYS UP. hero-copy.css clears the copy after the opening scene, and the site fades it
+      on the map — both because it normally sits ON the film. Here it never does, so clearing it only
+      left an empty column for forty seconds. Those rules are undone.
+   4. THE FURNITURE READS ON PALE GROUND. The caption, the scene-index track, the pause disc and the
+      keyboard focus ring were all drawn white for the dark band this layout deletes. The track is a
+      slate road bed measuring 3.65:1 against the pale ground, where it needs 3. (The `track unfilled`
+      row still FAILS the check at 1.00 — but at the one spot where the little truck stands on the
+      bar, which is the site's own drawing and fails on the `original` side too.)
+   5. A SHORT-LANDSCAPE RULE, for a phone turned on its side (see that block).
+
+   WHAT IT SHOWS OF THE FILM, measured with tools/layout-shot.mjs on the round2 side:
+      desktop 1440x900 — stage box 833x664, scene 01 shows stage x 143–1467, y 24–1080; full height
+      in every scene, about 1325 of the 1920 stage px wide, the camera centring that window.
+      phone 390x844  — stage box 358x424, scene 01 shows stage x 467–1301, y 92–1080: 834 stage px,
+      against the 543 a phone sees today, and the map scene shows all of x 545–1448.
+   WHAT IT COSTS. The copy column takes a third of the desktop frame, so the film's window is about
+   70% of the width. The camera keeps each scene's subject centred, so what goes is the outer context:
+   in the finale the airport's control tower and the left half of the terminal, and Mt Fuji's peak,
+   which a desktop visitor sees today and would not see here.
+*/
+
+/* ---------- shared: the page's own ground, and nothing over the picture ---------- */
+#sanpou-journey {
+  background: var(--band);           /* the site's own pale band colour, not an invented one */
+  /* the three numbers both columns are cut from: the page gutter, the copy column, the gap between */
+  --fc-edge: max(var(--gutter), calc((100% - var(--container)) / 2));
+  --fc-col: clamp(240px, 29%, 416px);
+  --fc-gap: clamp(24px, 3vw, 44px);
+  --fc-pad: clamp(16px, 2vw, 28px);  /* the margin around the card */
+}
+#sanpou-journey .hc-scrim,
+#sanpou-journey .hc-scrim-sign { display: none; }
+#sanpou-journey .hc-stagebox { border-radius: 14px; box-shadow: 0 16px 36px -26px rgba(16, 31, 54, .55); }
+
+/* the copy never leaves: it is not on the film, so there is nothing to clear out of the way.
+   This undoes hero-copy.css (.copy-out), patch-faint's drift, and the site's own .on-map fade. */
+#sanpou-journey.copy-out :is(.hc-title, .hc-sub, .hc-tag, .hc-cta),
+#sanpou-journey.on-map :is(.hc-title, .hc-sub, .hc-tag) { opacity: 1; transform: none; }
+
+/* ---------- the furniture, now on pale ground ---------- */
 #sanpou-journey .hc-no, #sanpou-journey .hc-scene { color: var(--navy-800); }
-#sanpou-journey .hc-lead { color: #46566e; }
-#sanpou-journey .sjx-index { width: 100%; }
-#sanpou-journey .sjx-index .tr { background: rgba(16, 31, 54, .14); outline: 0; }
-#sanpou-journey .hc-pause { border-color: rgba(16, 31, 54, .28); background: transparent; color: var(--navy-800); }
+#sanpou-journey .hc-lead { color: #46566e; }                     /* 6.6:1 on the band */
+#sanpou-journey .sjx-index .tr { background: rgba(16, 31, 54, .55); outline: 0; }  /* 3.6:1 on the band */
+@media (hover: hover) { #sanpou-journey .sjx-index button:hover .tr { background: rgba(16, 31, 54, .72); } }
+#sanpou-journey .hc-pause { border-color: rgba(16, 31, 54, .38); background: transparent; color: var(--navy-800); }
+@media (hover: hover) {
+  #sanpou-journey .hc-pause:hover { border-color: var(--navy-800); background: rgba(16, 31, 54, .08); color: var(--navy-800); }
+}
+#sanpou-journey .hc-bottom :focus-visible { outline-color: var(--navy-800); }
+
+/* ---------- 768px and up: the card on the right, the copy beside it ---------- */
+@media (min-width: 768px) {
+  #sanpou-journey .hc-stagebox {
+    inset: var(--fc-pad) var(--fc-pad) var(--fc-pad) calc(var(--fc-edge) + var(--fc-col) + var(--fc-gap));
+    width: auto;
+  }
+  /* the copy is centred in the ground ABOVE the furniture, not in the whole hero: the furniture is
+     about 140px tall here, so the centre of the free space sits 70px above the middle. That is what
+     keeps the copy off the caption bar when the headline wraps to four lines on a short window. */
+  #sanpou-journey .hc-content {
+    top: calc(50% - 70px); transform: translateY(-50%);
+    right: auto; width: var(--fc-col); max-width: none;
+  }
+  /* the column is narrower than the full-width overlay this layout replaces, so a headline line that
+     is too long must WRAP, not run over the card. The site sets .hc-line to nowrap and .hc-title to
+     word-break: keep-all, and keep-all does not break a run of Japanese either — together they let a
+     long line spill. Measured with the words on the site today: 関東1都6県と新潟市方面へ、 wants 590px
+     in a 416px column, so 174px of headline lay across the film. auto-phrase wraps it at a phrase
+     boundary instead; normal is the fallback where auto-phrase is not supported.
+     THE COLUMN'S LIMIT, so a copy decision can be made with it in hand: about 9 Japanese characters
+     per line at the full 43px, about 11 at 37px, about 13 at 30px. */
+  #sanpou-journey .hc-title { font-size: clamp(30px, 3.0vw, 44px); line-height: 1.34; word-break: normal; word-break: auto-phrase; }
+  #sanpou-journey .hc-line { white-space: normal; }
+  #sanpou-journey .hc-sub { max-width: none; margin-top: 20px; font-size: 15px; line-height: 1.85; }
+  #sanpou-journey .hc-cta { margin-top: 26px; }
+  #sanpou-journey .hc-cta .btn { min-width: 0; }
+  #sanpou-journey .hc-link { min-width: 0; }
+  /* the furniture leaves the picture too: caption and scene buttons go under the copy. Two rows,
+     not three — the caption on its own line, then the scene bar and the pause disc side by side.
+     (Three rows cost 163px and ran the copy onto the caption at a 700px-tall window.) */
+  #sanpou-journey .hc-bottom {
+    right: auto; bottom: 36px; width: var(--fc-col);
+    flex-wrap: wrap; gap: 10px 14px;
+  }
+  #sanpou-journey .hc-meta { flex: 1 0 100%; }
+  #sanpou-journey .sjx-index { flex: 1 1 auto; width: auto; min-width: 0; }
+}
+
+/* ---------- a phone turned on its side: wide, and only ~330px tall ---------- */
+/* The site has its own rule for this shape (copy at the top, smaller headline, no sub) and the
+   two-column block above was overriding it: the headline was clipped 54px off the top of the frame
+   and the copy ran onto the caption. The column also squeezed the five scene targets to 31px.
+   Here the copy is anchored to the top at the site's size, and the scene bar takes its own row. */
+@media (min-width: 768px) and (max-height: 520px) and (orientation: landscape) {
+  #sanpou-journey { --fc-col: clamp(240px, 36%, 320px); --fc-gap: 24px; }
+  #sanpou-journey .hc-content { top: 14px; transform: none; }
+  #sanpou-journey .hc-title { font-size: min(26px, 3.3vw); }
+  #sanpou-journey .hc-sub { display: none; }
+  #sanpou-journey .hc-cta { margin-top: 14px; }
+  /* slimmer actions, so the two keep ONE row in this column: stacked they were 108px tall and the
+     copy landed 22px on top of the caption */
+  #sanpou-journey .hc-cta .btn,
+  #sanpou-journey .hc-link { min-height: 44px; padding: 0 16px; font-size: 15px; }
+  #sanpou-journey .hc-bottom { bottom: 12px; gap: 8px 12px; }
+  #sanpou-journey .hc-meta { flex: 1 1 auto; }
+  #sanpou-journey .sjx-index { order: -1; flex: 1 0 100%; width: 100%; }
+}
+
+/* ---------- phones: the stack turns over — film on top, copy beneath it on solid ground ---------- */
+@media (max-width: 767.98px) {
+  /* the site already makes the section a flex column (justify-content: space-between) and puts
+     .hc-content and .hc-bottom in normal flow. The stage box joins them as the first block.
+     position: relative is NOT optional — .sjx-fit inside is absolutely positioned, and a static box
+     would let it escape to the section and draw outside the frame. */
+  #sanpou-journey .hc-stagebox {
+    position: relative; inset: auto; flex: 0 0 auto;
+    margin: 14px var(--gutter) 0;   /* the card's edges line up with the copy below it */
+    aspect-ratio: 4 / 5;
+    /* the card takes whatever height is left once the copy and the caption bar have theirs (about
+       420px together), so the whole hero still lands inside one phone screen: 424px tall on a
+       390x844 phone, 240 on a 360x640 one. min-height beats max-height in CSS, so the 240 is a real
+       floor. A box capped this way simply grows wider than its ratio, which trims top and bottom
+       sky instead of the sides. */
+    min-height: 240px;
+    max-height: calc(100svh - 420px);
+    border-radius: 12px;
+  }
+  /* undo the desktop column: the copy and the furniture are full-width blocks under the film */
+  #sanpou-journey .hc-content,
+  #sanpou-journey .hc-bottom { width: auto; max-width: none; }
+  #sanpou-journey .hc-content { top: auto; transform: none; }
+  #sanpou-journey .hc-bottom { bottom: auto; }
+}

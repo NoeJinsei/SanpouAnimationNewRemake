@@ -1,13 +1,180 @@
-/* The copy drops out of the middle and becomes a plate along the foot, sharing a baseline with the
-   caption and the scene buttons. The half-screen wash goes; the bottom gradient is no deeper than
-   the plate, so sky, sun, clouds, the Tower and the plane are never veiled. */
-#sanpou-journey .hc-scrim::before { content: none; }
-#sanpou-journey .hc-scrim-sign { display: none; }
-#sanpou-journey .hc-scrim { background: linear-gradient(to top, rgba(8, 15, 22, .88) 0, rgba(8, 15, 22, .62) 200px, rgba(8, 15, 22, 0) 48%); -webkit-mask-image: none; mask-image: none; }
-#sanpou-journey .hc-content { top: auto; bottom: 96px; transform: none; max-width: none;
-  display: grid; grid-template-columns: minmax(0, 520px) minmax(0, 440px); column-gap: 56px; align-items: end; }
-#sanpou-journey .hc-title { grid-column: 1; grid-row: 1; margin: 0; color: var(--on-dark); font-size: clamp(28px, 3.4vw, 44px); }
-#sanpou-journey .hc-sub { grid-column: 2; grid-row: 1; margin: 0; max-width: none; color: var(--on-dark-2); font-size: 15px; line-height: 1.8; }
-#sanpou-journey .hc-tag { display: none; }
-#sanpou-journey .hc-cta { grid-column: 2; grid-row: 2; margin-top: 18px; }
-#sanpou-journey .hc-link { color: var(--on-dark); border-color: rgba(255, 255, 255, .75); }
+/* plate-low - the copy drops out of the middle of the frame and becomes a plate along the foot,
+   sharing a baseline with the scene caption and the five buttons. The half-screen wash is deleted
+   outright; the only ink left is a bottom-up gradient no deeper than the plate itself, so the sky,
+   the sun, the clouds, Tokyo Tower and the plane are never veiled.
+   Additive: loaded on top of the site's own stylesheet, round2/css/hero-copy.css and
+   round2/css/light/patch-faint.css. The site is not touched.
+
+   ===============================================================================================
+   WHAT CHANGED ON 2026-11-17, and why. The first cut was shot and measured and it was wrong twice.
+
+   1 THE SUB-COPY WAS WHITE OVER THE PALE WAREHOUSE WALL. The first cut deleted the wash and then
+     leant on the site's own bottom band, which is .5 opaque at 96px and gone by 32% - but the copy
+     sat 96 to 212px up, where that band has almost nothing left. There was no plate at all; the
+     words were simply white on daylight. And .hc-link kept the site's rgba(255,255,255,.6) fill,
+     which is drawn for a PALE wash, so the outline button was white type on a white pill.
+     THE FIX IS THE WHOLE IDEA: there is now a real plate - one band dense enough to carry the
+     headline, the sub, both buttons, the caption and the controls together - and the copy is
+     compacted into ONE ROW (headline | sub | the two actions stacked) so the plate can be as
+     shallow as a plate can be. At 1440x900 the copy occupies 96-202px above the foot and the plate
+     is >= .70 effective through all of it.
+
+   2 ON A PHONE THE HEADLINE CLIPPED OFF THE TOP. Every rule was unscoped, so `bottom: 96px` reached
+     the phone - where the site puts .hc-content in normal flow inside a flex column - and shoved the
+     copy 96px up and out through `overflow: hidden`. Only the two buttons survived, over open sky,
+     the outline one invisible.
+     THE FIX: every rule here is scoped to `min-width: 768px`. A PHONE DOES NOT GET A FOOT PLATE,
+     and that is a finding rather than a dodge. The phone crop is a tall narrow slice (stage
+     x 663-1206, y 133-1080) in which the entire named cast sits LOW: the dock, the conveyor, the
+     parcels, the truck and the road all live below stage y 700. A foot plate big enough for the
+     copy starts at about css y 460 = stage y 773 and buries every one of them, while the head of
+     the frame is empty sky. So on a phone the copy stays at the head on patch-faint's own veil,
+     exactly as the owner chose it. plate-low's principle - the veil is never deeper than the copy -
+     is already what that patch does up there; there is nothing to improve on and nothing to invent.
+
+   3 THE PLATE CLEARS WITH THE COPY, which the first cut did not do. The plate is painted on
+     .hc-scrim::before - the very element that used to paint the half-screen wash - so it inherits
+     the behaviour the owner already approved in hero-copy.css and patch-faint.css: up on the
+     opening scene, gone while the film runs, back when the film is paused, when the copy is
+     focused, and under reduced motion. It sinks out of the bottom as it goes instead of drifting
+     up and left, because a foot plate leaves downwards. From scene 02 on, only the two buttons and
+     the caption are left, so the deep part of the plate is gone and the warehouse docks, the three
+     trucks and the loading are back in plain daylight. .hc-scrim keeps a shallow permanent band for
+     the caption and the controls, as the site always had.
+     The site's mask on ::before (opaque to 70% of the height, gone by 88%) IS cleared here, which
+     patch-faint deliberately does not do. That mask exists to stop a PALE wash reaching the dark
+     band under the captions; this plate is the same dark as that band, so there is nothing to keep
+     apart, and the mask would have deleted the bottom third of the plate - the part the words
+     stand on.
+
+   THE RULE THIS BENDS, stated plainly: "navy copy on a pale wash, never a dark scrim over daylight."
+   This layout puts WHITE copy on a DARK plate. It was chosen over the other way round - navy copy
+   on a pale foot plate - for one concrete reason: the band at the foot is ALREADY dark and ALREADY
+   carries white type (the caption, the scene name, the five tracks, the pause disc). Going dark
+   deepens a band that exists. Going pale would have meant milk over the road, where the film is
+   busiest, plus redrawing the caption, the track, the little truck and the pause disc in navy -
+   four more things to get wrong - to keep one shared baseline readable. In exchange NOTHING above
+   the plate is veiled: no half-screen wash, no second wash, not even patch-faint's soft patch. The
+   whole upper two thirds of the frame is plain daylight.
+
+   MEASURED (node tools/contrast-check.mjs round2 --css=round2/css/layouts/plate-low.css).
+   Every text row passes at BOTH framings, on the opening scene and across the whole film, playing
+   and paused. Worst rows, opening scene paused: headline 5.99 (needs 3), sub-copy 6.67 (needs 4.5),
+   filled button 6.65, outline button 15.47, caption 11.98-18.49; on a phone headline 12.48,
+   tagline 6.43. Whole film paused, worst of all: headline 5.37 at t=16000, sub-copy 6.45. The only
+   failures anywhere are the two `track unfilled` rows, the site's own progress bar over a pale sky,
+   which fail on the `original` side too.
+   Boxes checked for clipping and overlap at 1440x900, 1280x900, 1100x900, 1024x768 and 768x1024
+   with the site's real (longer) headline: no overflow, no overlap, every tap target >= 44px.
+
+   WHAT IT COSTS, plainly. On the opening scene the plate darkens the lowest 286px of the frame -
+   at the desktop crop that is stage y ~640 down - which is where the supplier building's dock, the
+   conveyor, the parcels and the truck sit. They read, but as evening rather than daylight. That is
+   the whole price of the idea, it is paid only while the copy is up, and the frame above it is
+   cleaner than any other option on the list.
+   =============================================================================================== */
+
+@media (min-width: 768px) {
+
+  /* ---------- nothing is veiled above the plate ---------- */
+  #sanpou-journey .hc-scrim-sign { display: none; }
+
+  /* ---------- the permanent band: the caption and the controls, as the site always had ---------- */
+  #sanpou-journey .hc-scrim {
+    background: linear-gradient(to top,
+      rgba(8, 15, 22, .84) 0,
+      rgba(8, 15, 22, .58) 70px,
+      rgba(8, 15, 22, .24) 130px,
+      rgba(8, 15, 22, .05) 180px,
+      rgba(8, 15, 22, 0) 215px);
+  }
+
+  /* ---------- the plate: dark, dense where the words are, feathered away by 286px ---------- */
+  /* painted on the element that used to paint the half-screen wash, so it clears with the copy */
+  #sanpou-journey .hc-scrim::before,
+  #sanpou-journey.is-static .hc-scrim::before,
+  #sanpou-journey:has(.hc-content:focus-within) .hc-scrim::before {
+    background: linear-gradient(to top,
+      rgba(8, 15, 22, .62) 0,
+      rgba(8, 15, 22, .66) 96px,
+      rgba(8, 15, 22, .64) 180px,
+      rgba(8, 15, 22, .58) 215px,
+      rgba(8, 15, 22, .32) 245px,
+      rgba(8, 15, 22, .11) 266px,
+      rgba(8, 15, 22, 0) 286px);
+    /* the site's mask would delete the foot of the plate: see note 3 in the header */
+    -webkit-mask-image: none; mask-image: none;
+  }
+  /* a foot plate leaves downwards */
+  #sanpou-journey.copy-out .hc-scrim::before { transform: translate3d(0, 5%, 0); }
+
+  /* ---------- the copy, one row, on the plate ---------- */
+  #sanpou-journey .hc-content {
+    top: auto; bottom: 96px; transform: none; max-width: none;
+    display: grid; grid-template-columns: max-content minmax(0, 1fr) max-content;
+    column-gap: 48px; align-items: end;
+  }
+  #sanpou-journey .hc-title {
+    grid-column: 1; grid-row: 1; margin: 0;
+    color: var(--on-dark); font-size: clamp(26px, 2.5vw, 36px); line-height: 1.45;
+  }
+  /* white, not the --on-dark-2 of the caption lead. Measured on the plate, #c6d0dd 15px came to
+     4.28 against the 4.5 it needs where the headline crosses the truck's white box at t=1750.
+     Taking the sub to white buys 2 points of margin and costs the picture NOTHING - the alternative
+     was another .05 of plate over the dock and the truck. The hierarchy is carried by size and
+     weight instead of tint: 36px bold against 15px regular. */
+  #sanpou-journey .hc-sub {
+    grid-column: 2; grid-row: 1; margin: 0; max-width: none;
+    color: var(--on-dark); font-size: 15px; line-height: 1.8;
+  }
+  #sanpou-journey .hc-tag { display: none; }
+
+  /* the two actions stack into a block the height of the headline, so the row - and with it the
+     plate - is only ever as deep as two lines of type */
+  #sanpou-journey .hc-cta {
+    grid-column: 3; grid-row: 1; margin: 0;
+    display: flex; flex-direction: column; gap: 10px; width: 220px;
+  }
+  #sanpou-journey .hc-cta .btn, #sanpou-journey .hc-link { width: 100%; min-width: 0; }
+  /* the site's outline button is drawn for a pale wash - a near-white fill with navy type - which on
+     the plate went white on white. It becomes a true outline over the dark. From scene 02 the plate
+     is gone from under it, so it carries its own dark then. */
+  #sanpou-journey .hc-link {
+    border-color: rgba(255, 255, 255, .85);
+    background: rgba(8, 15, 22, .62);
+    color: var(--on-dark);
+  }
+  #sanpou-journey.copy-out .hc-link { background: rgba(8, 15, 22, .82); }
+  #sanpou-journey.copy-out.is-static .hc-link,
+  #sanpou-journey.copy-out .hc-content:focus-within .hc-link { background: rgba(8, 15, 22, .62); }
+
+  /* ---------- tablets: the same plate, two columns ---------- */
+  /* Under 1100px three columns would squeeze the sub to about 140px. The headline runs as one line
+     and the two actions sit beside the sub, which keeps the plate near its desktop depth. */
+  @media (max-width: 1099.98px) {
+    #sanpou-journey .hc-content {
+      bottom: 104px; grid-template-columns: minmax(0, 1fr) max-content;
+      column-gap: 32px; row-gap: 14px;
+    }
+    #sanpou-journey .hc-line { display: inline; }
+    /* column 1 only, not 1 / -1: spanning under the actions made the headline's BOX touch theirs */
+    #sanpou-journey .hc-title { grid-column: 1; grid-row: 1; font-size: clamp(24px, 3.1vw, 30px); }
+    #sanpou-journey .hc-sub { grid-column: 1; grid-row: 2; margin-top: 0; font-size: 14px; line-height: 1.75; }
+    #sanpou-journey .hc-cta { grid-column: 2; grid-row: 2; align-self: end; width: 200px; }
+    #sanpou-journey .hc-scrim::before,
+    #sanpou-journey.is-static .hc-scrim::before,
+    #sanpou-journey:has(.hc-content:focus-within) .hc-scrim::before {
+      /* a tablet hero is shorter (614px at 1024x768) and the copy stacks, so the dense part has to
+         reach higher up the plate than it does on a desktop */
+      background: linear-gradient(to top,
+        rgba(8, 15, 22, .62) 0,
+        rgba(8, 15, 22, .66) 104px,
+        rgba(8, 15, 22, .64) 265px,
+        rgba(8, 15, 22, .58) 315px,
+        rgba(8, 15, 22, .32) 345px,
+        rgba(8, 15, 22, .11) 366px,
+        rgba(8, 15, 22, 0) 386px);
+      -webkit-mask-image: none; mask-image: none;
+    }
+  }
+}

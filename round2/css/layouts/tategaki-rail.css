@@ -1,17 +1,183 @@
-/* The headline stands on its side in a rail down one edge. A column of Japanese type is one
-   character wide, so the copy costs a ribbon of the frame instead of a band across it, and it buys
-   height - the one thing a 390px phone has to spare. The film keeps the whole middle. */
-#sanpou-journey .hc-scrim::before { content: none; }
+/* tategaki-rail - the headline stands on its side in a rail down ONE EDGE of the frame.
+
+   THE IDEA. A column of Japanese type is one character wide, so the copy costs a RIBBON of the
+   picture instead of a band across it, and it buys height, which is the one thing a 390px phone has
+   to spare. The film keeps the whole middle at every scene.
+
+   WHAT CHANGED (2026-11-17), and why. It was built on the right, where it did not work; all five of
+   these came out of shooting it at BOTH framings and reading the pictures.
+   1 THE RAIL MOVED FROM THE RIGHT EDGE TO THE LEFT. On the right it landed straight on Tokyo Tower,
+     and above that on the sun. The film was measured at both crops before choosing: the left column
+     of the picture is pale background blocks under open sky on the desktop, and sky over the
+     supplier building's pale upper storey on the phone. It is the quietest column in the frame, and
+     it is where the site's own copy has always lived.
+   2 THE TAG NO LONGER COLLIDES WITH THE HEADLINE. It is its own column of 13px type pinned to the
+     container edge, with the headline in the next column in. Right-to-left is Japanese reading
+     order, so the headline is read first and the small print trails off toward the margin. Cut to
+     two short columns it ends in open sky instead of running down onto the building.
+   3 THE BUTTONS LEFT THE TOP LEFT. They are a horizontal row under the rail - on the desktop at the
+     foot of the copy block (y 438-486), on the phone just below the type (y 332-380). Both are
+     clear of the dark caption band, and both were placed by shooting all five scenes: at the foot
+     of the phone rail they sat on the truck's 三豊運輸 and on the parcels.
+   4 THE VEIL IS CARRIED BY THE TYPE, not by the scrim, and the scrim's wash is deleted outright.
+     This is patch-faint's own device - the same rgb(238 246 251), the same two strengths, the same
+     soft edge, fading and rising with the words - attached to .hc-title and .hc-tag so that it is
+     always exactly as big as the type is. See the long note at the veil itself for why a patch
+     fixed to the scrim cannot work for a rail. The pale now dies by x 379 of 1440 on the desktop,
+     26% of the width, where patch-faint's dies at 71%. The buttons are opaque and are deliberately
+     left OUTSIDE it: nothing is veiled for their sake.
+   5 THE SUB-COPY IS DROPPED on the desktop (the site already hides it on phones). This is a real
+     cost, not a dodge: 100 characters set vertically is five more columns of small type, which
+     turns a rail into a wall. The tag, which the site hides on the desktop, is shown instead, so
+     the hero still carries the facts as a line rather than a paragraph.
+
+   WHAT THIS LAYOUT NEEDS FROM THE WORDS, since a copy decision is still open. A rail is only a rail
+   while a headline line fits in ONE column. Measured: about SEVEN Japanese characters a line at
+   both framings (desktop rail 345px at 42px type, phone rail 262px at 33px), and about sixteen on a
+   tablet. The specimen 「荷を預かり、／確実に運ぶ。」 (6 and 6) fits with room to spare. The line on
+   the site today (13 and 11) wraps to four columns on the desktop and five on a phone: it does not
+   clip, it does not overflow, it does not collide with anything and it still passes contrast - but
+   it is a slab, not a rail, and it stops being this layout. Round H's headline has to be short.
+
+   ADDITIVE. Loaded after the site's own stylesheet, round2/css/hero-copy.css and
+   round2/css/light/patch-faint.css; it edits none of them, and the site is not touched. */
+
+/* ---------- the rail ---------- */
 #sanpou-journey .hc-scrim-sign { display: none; }
-#sanpou-journey .hc-content { inset: 0; left: 0; right: 0; top: 0; transform: none; max-width: none; pointer-events: none; }
-#sanpou-journey .hc-content > * { pointer-events: auto; }
-#sanpou-journey .hc-title { position: absolute; top: 56px; margin: 0;
-  right: max(var(--gutter), calc((100% - var(--container)) / 2));
-  writing-mode: vertical-rl; max-height: calc(100% - 210px);
-  font-size: clamp(26px, 3.2vw, 44px); letter-spacing: .14em; }
-#sanpou-journey .hc-tag { display: block; position: absolute; top: 56px; margin: 0;
-  right: calc(max(var(--gutter), (100% - var(--container)) / 2) + 92px);
-  writing-mode: vertical-rl; letter-spacing: .12em; color: #46566e; }
+
+#sanpou-journey .hc-content {
+  top: clamp(24px, 5svh, 52px);
+  bottom: clamp(120px, 26svh, 236px);
+  right: auto;
+  width: min(600px, 52%);
+  max-width: none;
+  transform: none;
+}
+
+/* left: 72px clears a tag of up to THREE columns (3 x 13px x 1.7 = 66px), so a longer tagline can
+   never push a column into the headline - it only spends more of the margin. */
+#sanpou-journey .hc-title {
+  position: absolute; top: 0; left: 72px; margin: 0;
+  height: calc(100% - 96px);
+  writing-mode: vertical-rl;
+  font-size: clamp(24px, min(3vw, 6.3svh), 42px);
+  line-height: 1.68; letter-spacing: .08em;
+  word-break: normal; text-wrap: wrap;
+}
+/* the site sets each line nowrap, which in a column means "overflow rather than wrap". A long line
+   has to be allowed to take a second column instead of running down into the caption band. */
+#sanpou-journey .hc-line { display: block; white-space: normal; }
+
+/* two short columns, not one long whisker. At the full height the tagline ran down to y 342, onto
+   the supplier building's wall, and measured 4.59 against the 4.5 it needs; cut to two columns it
+   ends at y 234, in open sky. */
+#sanpou-journey .hc-tag {
+  display: block; position: absolute; top: 0; left: 0; margin: 0;
+  height: 200px;
+  writing-mode: vertical-rl; text-orientation: upright;
+  font-size: 13px; line-height: 1.7; letter-spacing: .04em;
+  /* the site's own tag ink, not patch-faint's softer #44566f. In a rail the tagline is already
+     set apart by size and by standing in the margin, and the softer grey measured 3.32 against the
+     4.5 it needs where the column's last characters cross the roofline on a phone. */
+  color: var(--navy-800);
+}
 #sanpou-journey .hc-sub { display: none; }
-#sanpou-journey .hc-cta { position: absolute; top: 56px; margin: 0;
-  left: max(var(--gutter), calc((100% - var(--container)) / 2)); }
+
+#sanpou-journey .hc-cta {
+  position: absolute; left: 0; bottom: 0; margin: 0;
+  display: flex; flex-wrap: nowrap; gap: 12px;
+}
+#sanpou-journey .hc-cta .btn, #sanpou-journey .hc-link { min-width: 0; padding: 0 22px; }
+/* the outline button stands on its own outside the ribbon, so it carries its own ground */
+#sanpou-journey .hc-link { background: rgba(255, 255, 255, .9); }
+
+/* ---------- the veil: patch-faint's patch, CARRIED BY THE RAIL ----------
+   patch-faint paints one soft patch on .hc-scrim::before, placed where the copy block is. A patch
+   fixed to the scrim cannot work for a rail, because a rail's width is not fixed: set the site's
+   own 13-character headline in a column and it wraps to five columns, and the outer two stand
+   outside any patch narrow enough to be worth having. Measured that way: 2.60 on the desktop and
+   2.78 on the phone, against the 3 the headline needs.
+   So the patch is attached to the WORDS instead. Same colour, same two strengths (.64 while the
+   film plays - the floor the owner chose - and .95 when it is paused or the copy is focused), same
+   soft edge, and it fades and rises with the words because hero-copy.css and patch-faint already
+   move them. It is now exactly as big as the type is, whatever the copy turns out to be, and the
+   wash over the film is DELETED outright rather than reshaped. */
+#sanpou-journey .hc-scrim::before { content: none; }
+
+#sanpou-journey .hc-title::before,
+#sanpou-journey .hc-tag::before {
+  content: ""; position: absolute; z-index: -1; inset: -34px -46px;
+  /* feathered left and right by the gradient, top and bottom by the mask: one soft ribbon, no hard
+     edge anywhere, and no mask on the element itself (that would fade the glyphs with it).
+     The feather is wide on purpose - a third of the box each side. At a narrow feather this read as
+     a translucent CARD with visible corners, which is the lozenge layout's idea, not this one. */
+  background: linear-gradient(to right,
+    rgba(238, 246, 251, 0) 0%,
+    rgba(238, 246, 251, .64) 24%,
+    rgba(238, 246, 251, .64) 76%,
+    rgba(238, 246, 251, 0) 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 15%, #000 85%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 15%, #000 85%, transparent 100%);
+}
+#sanpou-journey.is-static .hc-title::before,
+#sanpou-journey.is-static .hc-tag::before,
+#sanpou-journey:has(.hc-content:focus-within) .hc-title::before,
+#sanpou-journey:has(.hc-content:focus-within) .hc-tag::before {
+  background: linear-gradient(to right,
+    rgba(238, 246, 251, 0) 0%,
+    rgba(238, 246, 251, .95) 22%,
+    rgba(238, 246, 251, .95) 78%,
+    rgba(238, 246, 251, 0) 100%);
+}
+
+/* ---------- phones ---------- */
+@media (max-width: 767.98px) {
+  /* the copy leaves the flex column, so it costs the film no height at all: the caption bar is the
+     only thing left in the flow and it stays at the foot. */
+  #sanpou-journey { justify-content: flex-end; }
+  #sanpou-journey .hc-content {
+    position: absolute; z-index: 4;
+    top: clamp(28px, 5.4svh, 46px);
+    bottom: clamp(140px, 26svh, 190px);
+    left: var(--gutter); right: auto;
+    width: min(300px, 78%);
+    margin: 0;
+  }
+  /* THE RAIL IS A FIXED LENGTH on a phone, not "whatever is left above the buttons". A column that
+     could grow to the foot of the block let the site's own 13-character line fill it and run under
+     the buttons (shot and seen). With the length fixed, a long line takes another COLUMN instead of
+     more depth, so it can never reach them: it spreads sideways, which is ugly but not broken.
+     WHERE THE RAIL STARTS, measured on the phone slice of the opening scene, not guessed:
+     BIRD_SETS.w flies the scene 01-02 gulls along stage y 126, which lands at about y 19 on the
+     phone at t=0 and climbs out of frame by t=3.5s. Navy type on a gull measured 1.82 against the
+     3 it needs, so the rail starts below them, at y 46.
+     It used to stop at y 234 as well, above the supplier building's dark roof parapet. It does not
+     have to any more: the patch below is carried by the type, so it goes over the parapet with it.
+     That bought the phone a longer rail and four more points of type. */
+  #sanpou-journey .hc-content { --rail: min(262px, 40svh); }
+  #sanpou-journey .hc-title {
+    left: 66px; height: var(--rail);
+    font-size: clamp(18px, min(8.6vw, 5.2svh), 33px);
+    line-height: 1.68; letter-spacing: .06em;
+  }
+  /* two balanced columns of 14, not one long whisker: on a phone the rail has to end high, because
+     everything below it is the dock, the conveyor and the truck with the company name on it. */
+  #sanpou-journey .hc-tag { height: min(180px, calc(var(--rail) - 8px)); font-size: 12px; line-height: 1.7; }
+  /* the buttons come up under the rail instead of hanging at its foot. Measured on the phone crop:
+     at the foot they landed on the truck's 三豊運輸 and on the parcels; here they sit on the
+     supplier building's blank upper wall, which is the emptiest band on the phone's slice - clear
+     of the parapet above it and of the dock below. */
+  #sanpou-journey .hc-cta { top: calc(var(--rail) + 24px); bottom: auto; gap: 10px; }
+  #sanpou-journey .hc-cta .btn, #sanpou-journey .hc-link {
+    height: 44px; padding: 0 16px; font-size: 14px;
+  }
+  /* the ribbon comes in a little on a phone, where every pixel of width is the film's */
+  #sanpou-journey .hc-title::before,
+  #sanpou-journey .hc-tag::before { inset: -26px -34px; }
+}
+
+/* short landscape phones: the rail has almost no height, so the type comes down with it */
+@media (max-width: 1099.98px) and (max-height: 500px) and (orientation: landscape) {
+  #sanpou-journey .hc-content { top: 14px; bottom: 76px; }
+  #sanpou-journey .hc-title { font-size: clamp(18px, 5.4svh, 28px); }
+}

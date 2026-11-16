@@ -219,3 +219,54 @@ are unchanged.
 `track unfilled` rows are the site's own progress bar over a pale sky and fail on the `original` side too.
 
 The whole-film recordings were made again, because the overlay changed: `evidence/2026-11-16-the-film/`.
+
+---
+
+## The three broken layouts repaired, and all six re-shot (2026-11-17)
+
+One agent per stylesheet, each iterating against real shots, each told to make its layout work at BOTH
+framings or to say plainly that it cannot. All three came back "works with a cost", and the costs are
+real. `final-desktop.jpg` and `final-phone.jpg` show all seven — the chosen faint-patch baseline first,
+then the six — with the round H pick 「荷を運ぶ、荷を預かる。」 in them, so the layout and the words are
+judged together.
+
+- **film-card** had no phone rule at all. It has one now: under 768 px the stack turns over, the film
+  becoming a normal-flow block at the top with `aspect-ratio: 4/5` and a max-height that lands the whole
+  hero inside one phone screen (726 px on a 390x844). Three other faults were found and fixed on the way:
+  the two desktop columns overlapped by 31 px so the progress bar ran under the film; the copy was still
+  being cleared after the opening scene although it no longer sits on the film, leaving an empty column for
+  forty seconds; and a long headline spilled 174 px across the card because `.hc-line` is nowrap.
+  **The cost is the one that matters:** the card shows about 1325 of the 1920 stage px, so roughly 595 px
+  of width goes — in the finale a desktop visitor loses the airport's control tower, the left half of the
+  terminal arch and Fuji's peak. It gains the full 1080 height. **On a phone it is a clear gain**: 835
+  stage px against today's 543, and the whole map with every prefecture name reads where today it is cut.
+  The film is drawn smaller: scale 0.615 against 0.75 on a desktop, 0.39 against 0.63 on a phone.
+- **plate-low** clipped its headline off the top of a phone. Fixed. **I doubted its contrast from the
+  picture and checked it myself rather than passing the agent's number on: sub-copy 6.67 against the 4.5
+  it needs, headline 5.99 against 3. The measurement holds and my eye was wrong.** The real question it
+  raises is a design one: it puts WHITE copy on a DARK plate, which bends the hero's standing rule of navy
+  copy on a pale wash, never a dark scrim over daylight. The agent chose that deliberately, because the
+  foot band is already dark and already carries white type.
+- **tategaki-rail** had the vertical headline landing on Tokyo Tower. The rail has moved to open sky and
+  now reads. **It needs a short headline:** one column holds about seven Japanese characters at both
+  framings, so the round H pick runs to two columns and the line on the site today would run to four or
+  five. Honest warning carried over from the survey: no Japanese hero in the sample uses a vertical
+  headline — 縦書き appears only as a thin marginal rail — so this is a departure from practice, not an
+  example of it.
+
+**One fault I had called wrong before.** I said lozenge "works at both framings with no further work".
+It does not: on a phone its `display: table` on `.hc-sub` overrides the site's rule that hides the sub
+there, so a large white block of body copy covers the building. It is still the cheapest change on the
+list and it changes no crop, but it needs that one line fixed.
+
+Every layout's crop, measured at 1440x900 with `tools/layout-shot.mjs`:
+
+| | stage box | the slice of the film it shows |
+|---|---|---|
+| as it is (faint patch) | 1440 x 720 | x 0–1920, y 60–1020 |
+| film-card | 833 x 664 | **x 143–1467, y 24–1080** |
+| plate-low | 1440 x 720 | unchanged |
+| tategaki-rail | 1440 x 720 | unchanged |
+| lozenge | 1440 x 720 | unchanged |
+| band-stack | 1440 x 472 | **x 0–1920, y 225–854** |
+| title-beat | 1440 x 720 | unchanged |

@@ -1,10 +1,10 @@
 [
   {
     "id": "asis",
-    "label": "the hero as it is",
+    "label": "as it is, with the faint patch",
+    "cssFile": "round2/css/light/patch-faint.css",
     "title": [
-      "荷を預かり、",
-      "確実に運ぶ。"
+      "荷を運ぶ、荷を預かる。"
     ],
     "tag": "関東<span class=\"nw\">1都6県</span>・<span class=\"nw\">新潟市方面</span>　輸送・保管・流通加工・<span class=\"nw\">3PL</span>",
     "sub": "輸送・配送から倉庫保管、流通加工、<span class=\"nw\">3PLまで</span><span class=\"nw\">一貫して。</span><span class=\"nw\">板橋・志木・入間の</span><span class=\"nw\">3拠点</span>と<span class=\"nw\">32台の</span>自社車両で、関東<span class=\"nw\">1都6県</span>と<span class=\"nw\">新潟市方面</span>を<span class=\"nw\">カバーしています。</span>"
@@ -14,8 +14,7 @@
     "label": "film-card",
     "cssFile": "round2/css/layouts/film-card.css",
     "title": [
-      "荷を預かり、",
-      "確実に運ぶ。"
+      "荷を運ぶ、荷を預かる。"
     ],
     "tag": "関東<span class=\"nw\">1都6県</span>・<span class=\"nw\">新潟市方面</span>　輸送・保管・流通加工・<span class=\"nw\">3PL</span>",
     "sub": "輸送・配送から倉庫保管、流通加工、<span class=\"nw\">3PLまで</span><span class=\"nw\">一貫して。</span><span class=\"nw\">板橋・志木・入間の</span><span class=\"nw\">3拠点</span>と<span class=\"nw\">32台の</span>自社車両で、関東<span class=\"nw\">1都6県</span>と<span class=\"nw\">新潟市方面</span>を<span class=\"nw\">カバーしています。</span>"
@@ -25,8 +24,7 @@
     "label": "plate-low",
     "cssFile": "round2/css/layouts/plate-low.css",
     "title": [
-      "荷を預かり、",
-      "確実に運ぶ。"
+      "荷を運ぶ、荷を預かる。"
     ],
     "tag": "関東<span class=\"nw\">1都6県</span>・<span class=\"nw\">新潟市方面</span>　輸送・保管・流通加工・<span class=\"nw\">3PL</span>",
     "sub": "輸送・配送から倉庫保管、流通加工、<span class=\"nw\">3PLまで</span><span class=\"nw\">一貫して。</span><span class=\"nw\">板橋・志木・入間の</span><span class=\"nw\">3拠点</span>と<span class=\"nw\">32台の</span>自社車両で、関東<span class=\"nw\">1都6県</span>と<span class=\"nw\">新潟市方面</span>を<span class=\"nw\">カバーしています。</span>"
@@ -36,8 +34,7 @@
     "label": "tategaki-rail",
     "cssFile": "round2/css/layouts/tategaki-rail.css",
     "title": [
-      "荷を預かり、",
-      "確実に運ぶ。"
+      "荷を運ぶ、荷を預かる。"
     ],
     "tag": "関東<span class=\"nw\">1都6県</span>・<span class=\"nw\">新潟市方面</span>　輸送・保管・流通加工・<span class=\"nw\">3PL</span>",
     "sub": "輸送・配送から倉庫保管、流通加工、<span class=\"nw\">3PLまで</span><span class=\"nw\">一貫して。</span><span class=\"nw\">板橋・志木・入間の</span><span class=\"nw\">3拠点</span>と<span class=\"nw\">32台の</span>自社車両で、関東<span class=\"nw\">1都6県</span>と<span class=\"nw\">新潟市方面</span>を<span class=\"nw\">カバーしています。</span>"
@@ -47,8 +44,7 @@
     "label": "lozenge",
     "cssFile": "round2/css/layouts/lozenge.css",
     "title": [
-      "荷を預かり、",
-      "確実に運ぶ。"
+      "荷を運ぶ、荷を預かる。"
     ],
     "tag": "関東<span class=\"nw\">1都6県</span>・<span class=\"nw\">新潟市方面</span>　輸送・保管・流通加工・<span class=\"nw\">3PL</span>",
     "sub": "輸送・配送から倉庫保管、流通加工、<span class=\"nw\">3PLまで</span><span class=\"nw\">一貫して。</span><span class=\"nw\">板橋・志木・入間の</span><span class=\"nw\">3拠点</span>と<span class=\"nw\">32台の</span>自社車両で、関東<span class=\"nw\">1都6県</span>と<span class=\"nw\">新潟市方面</span>を<span class=\"nw\">カバーしています。</span>"
@@ -58,8 +54,7 @@
     "label": "band-stack",
     "cssFile": "round2/css/layouts/band-stack.css",
     "title": [
-      "荷を預かり、",
-      "確実に運ぶ。"
+      "荷を運ぶ、荷を預かる。"
     ],
     "tag": "関東<span class=\"nw\">1都6県</span>・<span class=\"nw\">新潟市方面</span>　輸送・保管・流通加工・<span class=\"nw\">3PL</span>",
     "sub": "輸送・配送から倉庫保管、流通加工、<span class=\"nw\">3PLまで</span><span class=\"nw\">一貫して。</span><span class=\"nw\">板橋・志木・入間の</span><span class=\"nw\">3拠点</span>と<span class=\"nw\">32台の</span>自社車両で、関東<span class=\"nw\">1都6県</span>と<span class=\"nw\">新潟市方面</span>を<span class=\"nw\">カバーしています。</span>"
@@ -69,8 +64,7 @@
     "label": "title-beat",
     "cssFile": "round2/css/layouts/title-beat.css",
     "title": [
-      "荷を預かり、",
-      "確実に運ぶ。"
+      "荷を運ぶ、荷を預かる。"
     ],
     "tag": "関東<span class=\"nw\">1都6県</span>・<span class=\"nw\">新潟市方面</span>　輸送・保管・流通加工・<span class=\"nw\">3PL</span>",
     "sub": "輸送・配送から倉庫保管、流通加工、<span class=\"nw\">3PLまで</span><span class=\"nw\">一貫して。</span><span class=\"nw\">板橋・志木・入間の</span><span class=\"nw\">3拠点</span>と<span class=\"nw\">32台の</span>自社車両で、関東<span class=\"nw\">1都6県</span>と<span class=\"nw\">新潟市方面</span>を<span class=\"nw\">カバーしています。</span>"
