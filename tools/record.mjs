@@ -1,5 +1,5 @@
 // Records a side as a video file, frame by frame on the site clock (so it is exact, not a screen capture).
-//   node tools/record.mjs <side> <out.mp4> [--framing=full|desktop|phone] [--from=0 --to=45800] [--fps=30] [--width=1920] [--crf=20] [--dpr=1]
+//   node tools/record.mjs <side> <out.mp4> [--css=<file>] [--framing=full|desktop|phone] [--from=0 --to=45800] [--fps=30] [--width=1920] [--crf=20] [--dpr=1]
 // Screenshots are piped straight into ffmpeg, so nothing large is written to disk.
 import { spawn } from "node:child_process";
 import path from "node:path";
@@ -22,6 +22,9 @@ page.on("pageerror", (e) => errors.push("pageerror: " + e.message));
 await page.goto(`${BASE}/viewer/frame.html?side=${encodeURIComponent(side)}&framing=${VIEW.f}`);
 await page.waitForFunction(() => window.heroFrame && (window.heroFrame.seek || window.heroFrame.error), null, { timeout: 30000 });
 if (await page.evaluate(() => !!window.heroFrame.error)) { console.log("side did not start:", await page.evaluate(() => window.heroFrame.error)); await browser.close(); process.exit(1); }
+// --css=<file>: an extra stylesheet on top of the side's own, for recording a proposed overlay
+// treatment without changing any file on disk (the same flag contrast-check.mjs takes)
+if (flags.css) await page.addStyleTag({ content: fs.readFileSync(String(flags.css), "utf8") });
 await page.evaluate(() => document.fonts.ready);
 const shot = await page.$(framing === "full" ? "#sanpou-journey" : "#sanpou-journey");
 

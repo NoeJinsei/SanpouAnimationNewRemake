@@ -1,0 +1,57 @@
+/* patch-soft - the copy keeps only as much of the picture as it needs.
+   Replaces the half-screen wash with a soft local patch behind the copy block, deletes the second
+   wash entirely, and rebuilds the phone layout so the film gets the screen back.
+   Additive: loaded on top of the site's own stylesheet and round2/css/hero-copy.css. The site is
+   not touched. Peak veil here is soft.  */
+
+/* ---------- the veil: a patch, not a wash ---------- */
+#sanpou-journey .hc-scrim-sign { display: none; }
+#sanpou-journey .hc-scrim::before {
+  background: radial-gradient(44% 50% at 27% 46%,
+    rgba(238, 246, 251, .82) 0%,
+    rgba(238, 246, 251, .70) 40%,
+    rgba(238, 246, 251, .38) 68%,
+    rgba(238, 246, 251, 0) 100%);
+  -webkit-mask-image: none; mask-image: none;
+  will-change: opacity, transform;
+  transition: opacity .75s var(--ease), transform 1.1s var(--ease);
+}
+/* it leaves the way the film moves: a slow drift with the fade, not a flat dissolve.
+   .copy-out is set by hero-glue.js on every scene after the opening. */
+#sanpou-journey.copy-out .hc-scrim::before {
+  transform: translate3d(-2.5%, -3%, 0) scale(1.07);
+  transition-duration: .85s, 1.5s;
+}
+#sanpou-journey.copy-out.is-static .hc-scrim::before,
+#sanpou-journey.copy-out:has(.hc-content:focus-within) .hc-scrim::before { transform: none; }
+/* the words arrive with the same unhurried rise */
+#sanpou-journey :is(.hc-title, .hc-tag, .hc-sub, .hc-cta) { transition: opacity .75s var(--ease), transform 1.1s var(--ease); }
+#sanpou-journey.copy-out :is(.hc-title, .hc-tag, .hc-sub, .hc-cta) { transform: translate3d(0, -10px, 0); }
+#sanpou-journey.copy-out.is-static :is(.hc-title, .hc-tag, .hc-sub, .hc-cta),
+#sanpou-journey.copy-out .hc-content:focus-within :is(.hc-title, .hc-tag, .hc-sub, .hc-cta) { transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  #sanpou-journey .hc-scrim::before,
+  #sanpou-journey :is(.hc-title, .hc-tag, .hc-sub, .hc-cta) { transition-duration: .01ms; transform: none !important; }
+}
+
+/* ---------- phones: give the film the screen back ---------- */
+@media (max-width: 767.98px) {
+  /* the patch follows the copy to the top, and stops well short of the road */
+  #sanpou-journey .hc-scrim::before {
+    background: radial-gradient(88% 30% at 46% 12%,
+      rgba(238, 246, 251, .82) 0%,
+      rgba(238, 246, 251, .70) 44%,
+      rgba(238, 246, 251, .38) 70%,
+      rgba(238, 246, 251, 0) 100%);
+  }
+  #sanpou-journey .hc-content { margin-top: 18px; }
+  #sanpou-journey .hc-title { font-size: clamp(20px, 5.9vw, 27px); line-height: 1.4; letter-spacing: .01em; }
+  #sanpou-journey .hc-tag { margin-top: 9px; font-size: 13px; color: #44566f; }
+  /* two content-width buttons instead of two half-screen slabs */
+  #sanpou-journey .hc-cta { display: flex; flex-wrap: wrap; margin-top: 16px; gap: 10px; }
+  #sanpou-journey .hc-cta .btn, #sanpou-journey .hc-link {
+    min-width: 0; height: 44px; padding: 0 18px; font-size: 14px; }
+  /* the furniture sits closer to the edge, so less of the picture is spent on it */
+  #sanpou-journey .hc-bottom { margin-top: 16px; margin-bottom: 6px; row-gap: 2px; }
+  #sanpou-journey .hc-scrim { background: linear-gradient(to top, rgba(8, 15, 22, .80) 0%, rgba(8, 15, 22, .46) 11%, rgba(8, 15, 22, 0) 23%); }
+}

@@ -106,3 +106,85 @@ renders them in the real hero and prints the stage box and which slice of the 19
   — but the rail belongs on the left, over open sky, and it is not there yet.
 
 Nothing here is a recommendation to change the site. The site is untouched and this is a project folder.
+
+---
+
+# Part three: the phone rebuilt, and the lightest veil that still reads (2026-11-17)
+
+His next note: *"Not only the wordings, but the smartphone view of the page and its elements / formatting
+looks atrocious. For the desktop site view (and the app as well) if possible I would like the animation
+section to be able to be visible as much as possible with a hint of somekind of appropriate element for the
+text to be visible if appropriate (like the slight fade effect, or a fade effect with a smooth animation that
+is appropriate to the animation section)."*
+
+So: maximum film, minimum ink, and fix the phone. All of it is in `round2/css/light/`, additive, four
+strengths of one idea. **The site is not touched.**
+
+## What was actually wrong with the phone
+
+Shot and measured rather than guessed (`shots/diag-p1/`). On a 390 px phone the copy furniture took the top
+**third** of the screen and the caption bar another sixth, leaving about half for the film:
+
+- the pale wash was a full-width band with a visible edge across the frame at about y 430;
+- the headline ran gutter to gutter at 30 px with no margin for the eye;
+- the two buttons were **half-screen slabs, 48 px tall** — the heaviest objects on the screen, heavier than
+  the headline;
+- the tag line ran at 14 px and wrapped awkwardly under it.
+
+The rebuild: the copy block starts at 18 px instead of 32, the headline drops to `clamp(20px, 5.9vw, 27px)`
+with a little line-height, the tag to 13 px, and **the two slabs become two content-width buttons** 44 px
+tall in a flex row. The caption bar tightens to the edge. Nothing is removed — it is the same copy, the same
+two actions, the same controls. The copy block is about 110 px shorter, and the film starts that much higher:
+`veil-phone.jpg` shows the whole supplier building, the conveyor, every parcel and the truck, where today the
+building is cut.
+
+## The veil: a patch, not a wash
+
+Today's wash pales **half the desktop screen** full height (.86 opaque at x 0, .72 at x 720) to protect copy
+that occupies about a seventh of it. The replacement is a soft elliptical patch behind the copy block only,
+feathered to nothing by its edge, and the second wash (`.hc-scrim-sign`, which used to stack on scenes 02 and
+03 up to 95 %) is deleted outright.
+
+**And it leaves the way the film moves.** When the copy clears after the opening scene the patch does not
+just dissolve: it drifts up and left and swells slightly over 1.5 s on the site's own easing, while the words
+rise 10 px over 1.1 s — the pace of the film's own clouds rather than a flat fade. It comes back the same way
+when the film is paused, when the copy is focused, and under reduced motion it does not move at all.
+`clear-desktop.mp4` and `clear-phone.mp4` are the five seconds across that moment; `clear-phone-today.mp4` is
+the same five seconds as it is now.
+
+## How faint it can go, measured
+
+`node tools/contrast-check.mjs round2 --css=round2/css/light/patch-<v>.css --from=0 --to=7000 --static`.
+Worst case over the opening scene, against what WCAG AA needs:
+
+| | peak | headline, desktop (needs 3) | sub-copy, desktop (needs 4.5) | headline, phone (needs 3) |
+|---|---|---|---|---|
+| today's wash | .86 across half the screen | 9.74 | 9.86 | 12.21 |
+| **strong** | .95 | 9.85 | 9.94 | 10.45 |
+| **soft** | .82 | 7.19 | 7.17 | 7.84 |
+| **faint** | **.64** | **4.91** | **4.84** | **5.58** |
+| whisper | .46 | 3.30 | **3.29 FAIL** | 4.04 |
+| nothing at all | — | **1.33 FAIL** | **1.34 FAIL** | **2.05 FAIL** |
+
+**Faint is the floor.** One notch below it the desktop sub-copy drops under what it needs, and that is a real
+limit rather than a matter of taste: the worst spot is where the headline crosses the supplier building's
+dark storey at t=0, which no amount of narrowing avoids because it is the copy's own position.
+
+The recommendation is **faint**, with soft as the cautious choice. At faint the left half of the desktop
+frame is plainly daylight — the sky keeps its blue, the sun its rays, the clouds and the building read
+through it — where today that half is flat pale.
+
+## Checks
+
+- `node tools/check-viewer.mjs round2` → **viewer OK: 0 console errors**, all three framings. (One earlier run
+  reported `ERR_NO_BUFFER_SPACE` against the round-1 side; it did not repeat and is the machine running out of
+  sockets under many parallel browsers, not the page.)
+- `contrast-check` at faint: every text row passes at both framings. The only failures left are the two
+  `track unfilled` rows, which are the site's own progress bar over a pale sky and **fail on the `original`
+  side too** — pre-existing, not ours.
+- `cd original && sha256sum -c SHA256SUMS` → 7 OK.
+- `tools/record.mjs` now takes `--css=<file>`, the same flag `contrast-check.mjs` has, so a proposed overlay
+  can be recorded without changing a file on disk.
+
+Nothing here is wired into a side yet: these are proposals measured in the real hero, and the working copy is
+exactly as it was.

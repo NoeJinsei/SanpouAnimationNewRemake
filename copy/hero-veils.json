@@ -1,0 +1,31 @@
+[
+  {
+    "id": "today",
+    "label": "the wash as it is today"
+  },
+  {
+    "id": "strong",
+    "label": "strong",
+    "cssFile": "round2/css/light/patch-strong.css"
+  },
+  {
+    "id": "soft",
+    "label": "soft",
+    "cssFile": "round2/css/light/patch-soft.css"
+  },
+  {
+    "id": "faint",
+    "label": "faint",
+    "cssFile": "round2/css/light/patch-faint.css"
+  },
+  {
+    "id": "whisper",
+    "label": "whisper",
+    "cssFile": "round2/css/light/patch-whisper.css"
+  },
+  {
+    "id": "none",
+    "label": "no protection at all",
+    "cssFile": "C:/Users/RTX407~1/AppData/Local/Temp/claude/9fdb7479dd8c9206/ebc51bcd-98dd-479d-bbf9-f61a2010e7ba/scratchpad/nowash.css"
+  }
+]
