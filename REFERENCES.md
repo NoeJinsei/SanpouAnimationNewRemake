@@ -114,3 +114,33 @@ The owner gave the live site again when he asked for the wording, with one remin
    sub-copy. (The company's own live site is the exception, and that is the older SME convention.)
 6. **None of them names the customer** in the headline — no 荷主, no 荷主企業. That belongs in the sub.
    An SME may say 企業の to make the B2B footing clear without the trade jargon.
+
+### Six more, read 2026-11-16 after the owner asked for more sources
+
+He asked for more reference homepages, with two new rules of his own: **do not emphasise the years of
+operation**, and **do not lean on 企業** (he wants to stay open about who he carries for). So this round
+looked at bigger carriers and at two of his own neighbours in 板橋.
+
+| Link | The hero, as it stood |
+|---|---|
+| https://www.seino.co.jp/ | 西濃運輸 — ONE line, 12 chars, one 、 inside it, 。 at the end, plain form |
+| https://www.sagawa-exp.co.jp/ | 佐川急便 — ONE line, 、 after the opening adverb, **polite ます**, the company itself as the subject |
+| https://www.sbs-group.co.jp/ | SBSホールディングス — ONE line, 13 chars, one 、, plain form |
+| https://www.hamakyorex.co.jp/ | ハマキョウレックス — ONE line, 8 chars, 体言止め, **no punctuation at all** |
+| https://hattori-group.com/ | 服部運輸倉庫 (板橋区高島平, a neighbour) — 3 lines, 9 / 5 / 7, 体言止め, no punctuation; **it opens with 創業から半世紀** |
+| https://shutoken.net/ | 首都圏物流 (板橋区板橋, a neighbour) — one long 体言止め line, recruiting-flavoured |
+
+Also tried and unreadable: 福山通運 (mis-encoded Shift_JIS), 第一貨物, 名鉄運輸, ニッコンHD (the hero is a
+picture with no text), センコー (403), 新潟運輸 and 久留米運送 (no such host).
+
+**What the second round changes:**
+
+7. **A single 、 inside ONE line is completely normal** — 西濃, 佐川 and SBS all do it. What none of the
+   twelve does is put a 、 in BOTH lines, which is what the new site does and what the owner noticed.
+   So: at most one 、 in the whole headline; if the headline breaks, it goes at the break.
+8. **A ONE-LINE headline is the commonest shape of all** — 5 of the 12 (西濃, 佐川, SBS, ハマキョウ,
+   トランコム). On this site a one-line headline also lifts the tag and the buttons and leaves much more
+   of the film visible, on a phone especially.
+9. **Years of operation are rare, and the nearest company already uses them.** Only 服部運輸倉庫 leads with
+   半世紀 — and they are in 板橋 too. A second 板橋 carrier opening the same way is a reason not to.
+10. **企業 appears in none of the twelve heroes.** Point 6's "an SME may say 企業の" is withdrawn.

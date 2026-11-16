@@ -194,3 +194,68 @@ they are what leaves the picture visible on a phone.
 
 **Still true:** nothing is changed, copy is the owner's call, and a native writer should read whichever he
 picks.
+
+---
+
+# Round 3 of the wording: no years, no 企業 (2026-11-16)
+
+The owner's answer to D1–D4: *"I dont want to emphasize on the years of operation, just a bit more basic
+but still relatively impactful, also not focusing on 企業 as well, since we do want to be flexible in
+operation partners."* And: check more Japanese logistics homepages.
+
+## Six more homepages read
+
+Recorded in `REFERENCES.md` with their links. Two of them are his own neighbours in 板橋.
+
+| | the hero, as it stood |
+|---|---|
+| 西濃運輸 | ONE line, 12 chars, one 、 inside it, 。 at the end, plain form |
+| 佐川急便 | ONE line, 、 after the opening adverb, **polite ます** |
+| SBSホールディングス | ONE line, 13 chars, one 、, plain form |
+| ハマキョウレックス | ONE line, 8 chars, 体言止め, **no punctuation at all** |
+| 服部運輸倉庫 (板橋区高島平) | 3 lines, 9/5/7, 体言止め; **opens with 創業から半世紀** |
+| 首都圏物流 (板橋区板橋) | one long 体言止め line, recruiting-flavoured |
+
+Unreadable: 福山通運 (mis-encoded), 第一貨物 / 名鉄運輸 / ニッコンHD (picture heroes), センコー (403),
+新潟運輸 and 久留米運送 (no such host).
+
+**Three things the second round changed.**
+
+1. **A single 、 inside ONE line is normal** — 西濃, 佐川 and SBS all do it. What none of the twelve does
+   is put a 、 in BOTH lines, which is exactly what the new site does and what the owner noticed. At most
+   one 、 in the whole headline; if it breaks, the 、 goes at the break.
+2. **A one-line headline is the commonest shape of all** — 5 of the 12. On this site it also lifts the tag
+   and the buttons and leaves much more of the film visible, a phone especially.
+3. **The nearest company already opens with 半世紀.** 服部運輸倉庫 is in 板橋 too. A second 板橋 carrier
+   opening the same way is its own reason not to — on top of the owner's.
+
+And 企業 appears in none of the twelve heroes, so the earlier note that "an SME may say 企業の" is withdrawn.
+
+## The four, in `copy/hero-copy-basic.json`
+
+`basic-desktop.jpg` and `basic-phone.jpg`. Each is a different shape as well as different words.
+
+- **E1 「板橋から、／関東と新潟市へ。」** (5 + 8) — where from, where to, and nothing else. The most basic
+  of the four and the most concrete: it is the only one that says a real place.
+- **E2 「毎日の荷物を、／確かに運ぶ。」** (7 + 6) — the job itself. 毎日 does the work 半世紀 used to do:
+  it says dependable without counting years.
+- **E3 「関東と新潟市をつなぐ／毎日の物流」** (10 + 5) — 体言止め, no punctuation at all, so the comma
+  question does not arise. The calmest.
+- **E4 「荷物を、まっすぐ運ぶ。」** (11, ONE line) — the commonest industry shape. On a phone the single
+  line lifts the buttons and opens the sky above the truck.
+
+**新潟市, not 新潟.** The company covers 新潟市方面, not the prefecture. Dropping the 市 in a headline would
+be an over-claim, so all four keep it.
+
+The tag and the sub are the B2B set unchanged, and neither carries 企業 or a founding year:
+「関東1都6県・新潟市方面　輸送・保管・流通加工・3PL」 and 「輸送・配送から倉庫保管、流通加工、3PLまで一貫
+して。板橋・志木・入間の3拠点と32台の自社車両で、関東1都6県と新潟市方面をカバーしています。」
+昭和50年創業 is now in none of it; it can go back into the sub's tail on one word from him.
+
+## Widths, measured as always
+
+A headline line has 358 px on a 390 px phone. E1 131/210, E2 184/158, E3 263/131, E4 289 — against the
+345 of 358 the line as it stands uses. All four have room to spare at both framings.
+
+**Still true:** nothing is changed, copy is the owner's call, and a native writer should read whichever
+he picks.

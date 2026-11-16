@@ -420,10 +420,19 @@ not this project; nothing has been changed. **Do not touch the site; ask him bef
   which is backwards in Japanese; 「方面」 is timetable language; the sub is one 70-character sentence
   carrying six facts. 「昭和50年」 is NOT a fault (it carries the age better than 1975 would) - it is only
   said twice. The five scene captions were read and are fine.
-  The options and the words are in `copy/hero-copy-options.json`, the pictures and the reasoning in
-  `evidence/2026-11-16-opus-wording/`: **A** one word out and one sentence split; **B** (the reviewer's
-  pick) 「板橋から、関東と新潟市へ。／毎日の荷物を、確かに運ぶ。」; **C** half a century first, which
-  collides with scene 05's caption.
+  Three rounds of options have been drawn, all in `evidence/2026-11-16-opus-wording/` with their reasoning:
+  A/B/C (`copy/hero-copy-options.json`), then the B2B set D1-D4 (`copy/hero-copy-b2b.json`), then
+  **E1-E4 (`copy/hero-copy-basic.json`), which is the live set** - `basic-desktop.jpg`, `basic-phone.jpg`.
+  **His two rules, given on 2026-11-16 after D: do not emphasise the years of operation, and do not lean
+  on 企業** (he wants to stay open about who he carries for), "just a bit more basic but still relatively
+  impactful". So D1-D4 are dead and so is anything built on 創業 / 半世紀 / 昭和50年 or 企業.
+  E1 「板橋から、／関東と新潟市へ。」, E2 「毎日の荷物を、／確かに運ぶ。」,
+  E3 「関東と新潟市をつなぐ／毎日の物流」 (体言止め, no punctuation), E4 「荷物を、まっすぐ運ぶ。」 (one line).
+  **Twelve Japanese logistics heroes have now been read** (`REFERENCES.md`): at most ONE 、 in a headline
+  and never one in both lines (his own note); a ONE-LINE headline is the commonest shape of all, 5 of the
+  12, and on this site it lifts the buttons and opens the picture; 企業 is in none of the twelve; and the
+  only one that opens with 半世紀 is 服部運輸倉庫, a carrier in 板橋 like him. Keep 新潟市, never bare
+  新潟: the company covers 新潟市方面, not the prefecture.
   **The phone sets the shape:** `.hc-line` is `white-space: nowrap` at `clamp(21px, 6.6vw, 30px)`, so a
   headline line has 358 px on a 390 px phone. The line as it stands uses 345. The polite ending
   「確かに運びます。」 needs 394 and the spelled-out 「関東1都6県」 needs 423: both overflow.
