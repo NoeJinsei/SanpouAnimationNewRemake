@@ -402,8 +402,10 @@ not this project; nothing has been changed. **Do not touch the site; ask him bef
   A side may now carry its own stylesheet (`sides.json` `"css"`, loaded by `viewer/frame.html` before the
   side is ready); the `original` side has none, so it still shows the old behaviour for comparison.
   Pictures, clips and the check results: `evidence/2026-11-16-opus-copy-clears/index.html`.
-  **The four whole-film recordings on `evidence/2026-11-16-the-film/` were made before this and still
-  show the old overlay; record them again if this is kept.**
+  **The remake's two whole-film recordings were made again with it** (`evidence/2026-11-16-the-film/`,
+  16 November 20:05): the remake now plays with the copy clearing, the original keeps the overlay the
+  site has today, so each pair shows both changes at once. All four checked whole with the new
+  `sh tools/check-recording.sh <file.mp4>` - 2880 frames, none repeated, none off the beat.
   New tools: `check-copy.mjs` (the real player: up on the opening, gone while it runs, back on pause,
   on keyboard focus and under reduced motion - it FAILS on the `original` side by design, since that side
   has no stylesheet); `contrast-check.mjs` takes `--css=<file>` and `--static` (measure with the hero
@@ -425,8 +427,10 @@ not this project; nothing has been changed. **Do not touch the site; ask him bef
 - **The finished film, recorded end to end for watching** (2026-11-16; the film itself unchanged):
   `evidence/2026-11-16-the-film/index.html` (through the viewer's server) plays four recordings with no
   cuts, 0 to 48000 ms at 60 fps: the remake and the original, on a desktop (1440 x 720, the hero section)
-  and on a phone (780 x 1360, `--dpr=2`). The plane's pass at the Tower (45.4 to 46.9 s) is in them. If the
-  film changes, record them again; the `tools/record.mjs` commands are on the page. **The viewer's server
+  and on a phone (780 x 1360, `--dpr=2`). The plane's pass at the Tower (45.4 to 46.9 s) is in them.
+  **If the film OR the overlay changes, record them again** (`tools/record.mjs`, the commands are on the
+  page) and check each one with `sh tools/check-recording.sh <file.mp4>` (frames, repeats, the beat).
+  The remake's two were last made on 16 November at 20:05, with the copy clearing after the opening. **The viewer's server
   (python's `http.server`) cannot send part of a file, so a `<video>` played straight from it cannot be
   scrubbed:** that page fetches each film whole and plays it from memory. The clips on the round 7 page
   play but cannot be dragged, for the same reason.
