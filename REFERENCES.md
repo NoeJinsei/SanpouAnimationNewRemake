@@ -144,3 +144,32 @@ picture with no text), センコー (403), 新潟運輸 and 久留米運送 (no 
 9. **Years of operation are rare, and the nearest company already uses them.** Only 服部運輸倉庫 leads with
    半世紀 — and they are in 板橋 too. A second 板橋 carrier opening the same way is a reason not to.
 10. **企業 appears in none of the twelve heroes.** Point 6's "an SME may say 企業の" is withdrawn.
+
+### The big survey, 2026-11-17: `research/jp-hero-survey-2026-11-17.md`
+
+The owner rejected the place-name drafts — "that is not the main message we want to write on the hero section
+of our website" — and asked for more examples. Six readers took a slice each (national carriers, 3PL and
+warehouse groups, Kanto regionals, small carriers of 20–80 trucks, last-mile, and companies selling his exact
+four services): **123 companies, 90 heroes readable**, every one classified by WHAT IT SAYS. Every link, every
+company and the full reasoning are in that file. The headline results:
+
+11. **He was right about the places, and the number is brutal.** 13 of the 90 heroes contain a place name,
+    but seven of those are search-engine sentences pasted in as a headline on template-built small-firm sites.
+    **Exactly ONE is a deliberately written place slogan** (a 612-staff carrier whose claim IS its twelve
+    prefectures), and **not one hero in 90 is built as "from X to Y"** — the shape of every draft of mine that
+    he rejected. The place belongs in the page title, the small line under the headline, or the footer.
+12. **The commonest messages are IDENTITY (19), PROMISE (15) and ROLE (13)** — what kind of carrier we are,
+    what we undertake, and where we fit in an ordinary day. Those three are what suit this company. The traps
+    are SCOPE (listing the services is what makes a hero long and inhuman), CHANGE and CHALLENGE (national-group
+    register; CHALLENGE reads as a recruitment poster), BENEFIT (it needs a named customer, which he has banned)
+    and INVITATION (it asks before the film has told).
+13. **PROMISE is the biggest group among small carriers and the nationals barely touch it** — "we are reliable"
+    is defensive from a brand everyone knows and necessary from one nobody has heard of. ROLE runs the other
+    way, so a ROLE line from a 32-truck firm must stay the size of a street or a morning, never a nation.
+14. **Length: 7 to 16 characters for the WHOLE headline**, median 12–13. Above ~22 almost nothing still sounds
+    human; 25 to 69 characters is search copy without exception. Shortness and quality tracked together across
+    the whole pool.
+15. **The verb goes LAST and what it acts on FIRST.** Not one hero in 90 is built as "to X, from Y, we carry".
+    That is the structural reason the rejected drafts read as wrong, quite apart from the place names.
+16. **No hero carries facts** — no fleet count, no founding year, no depot count, no service list — except the
+    search-written ones, which carry all of them and read worst.
