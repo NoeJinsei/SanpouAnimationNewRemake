@@ -259,3 +259,68 @@ A headline line has 358 px on a 390 px phone. E1 131/210, E2 184/158, E3 263/131
 
 **Still true:** nothing is changed, copy is the owner's call, and a native writer should read whichever
 he picks.
+
+---
+
+# Round 4: better words inside the two shapes he picked (2026-11-16)
+
+His answer to E1-E4: *"Either E1 or 3, but I think it could worded better."* So the shape is settled twice over
+and only the words were open. Both branches were rewritten by a workflow of eight agents - two writers per
+shape from different angles, a ranking pass per shape against the twelve-site conventions, and an adversarial
+pass told to assume every finalist was bad. 40 candidates written, 5 ranked per shape, 10 stress-tested.
+
+## What the adversarial pass killed, and why it matters
+
+Nine of the ten finalists were dropped, every one on a ground that can be checked rather than argued:
+
+- **Anything with 32台 in it.** Four of shape B's five finalists put the fleet in the headline. The number is
+  already in the sub directly beneath it, and 「板橋の32台」 hands the whole fleet to Itabashi when it is spread
+  over 板橋・志木・入間. No hero among the twelve reference sites carries a fleet count.
+- **「倉庫も車も自社で持つ」** - `CONTEXT.md` says 倉庫保管 is a service of theirs; it does not say they own the
+  warehouses. An unverifiable claim cannot ship.
+- **「板橋から…まで」** - 板橋 is IN 関東, so から…まで reads as a span that ends where it started. へ tolerates
+  this (it reads as dispatching outward); まで sharpens it into a route and exposes the geography.
+- **「…届ける。」** - this is his current 「お届けします。」 with the politeness clipped off. 届ける is the single
+  most worn verb on every delivery site in Japan and carries the parcel-to-a-householder flavour the B2B round
+  already threw out.
+- **「今日も…」 and 「…走る。」** - both are the cadence of driver-recruitment and CSR pages in this trade. 走る
+  also says the trucks move without saying anything arrives, and leans on dash and hustle beside a company that
+  does not take same-day or emergency spot work.
+- **Anything opening 「荷物を、」** - scene 01's caption 「お預かりした荷物を、丁寧に検品します。」 is the one
+  caption on screen at the same time as the headline, and it breaks at the same place.
+
+## The four that survived, in `copy/hero-copy-final.json`
+
+`final-desktop.jpg` and `final-phone.jpg`, each beside the E1 or E3 it answers.
+
+- **F1 「板橋から、／関東と新潟市へ運ぶ。」** (5 + 10) - **the pick.** E1 with the one word it was short of.
+  E1 is two place names and a particle, so it reads like a label on a map; 運ぶ finishes it into a sentence
+  without touching a word he already approved. It is the only verb with no problem attached: plain trade
+  language, the only verb that appears nowhere else on the screen (the tag says 輸送, the sub says カバー, the
+  captions say 積み込みます and 向かいます), and the 運 of 運輸 in the company's own name, so headline and
+  truck chime. Claims nothing they cannot do.
+- **F2 「板橋から／関東と新潟市へ」** (4 + 7) - his own words with the punctuation taken out, which answers his
+  comma note directly: no 、 anywhere, so the question cannot arise. The quietest of the four.
+- **F3 「板橋から関東と新潟市へ」** (11, ONE line) - the same words again, on one line. A one-line hero is the
+  commonest shape among the twelve, and on this page it lifts the tag and both buttons and opens the most
+  picture of any option. 「〜へ」 as an ending is ordinary Japanese headline form.
+- **F4 「関東と新潟市へ運ぶ／板橋の三豊運輸」** (9 + 7) - **the answer to E3.** 体言止め, no punctuation, and it
+  replaces both weak halves of E3: 「つなぐ」 (the most worn verb in this industry's copy) and 「毎日の物流」
+  (a noun phrase that could belong to anyone) with what the company is and where it is. 佐川's own hero names
+  itself the same way.
+
+**The one argument against F1,** found by the adversarial pass and worth saying out loud: 運ぶ is transitive and
+the line never gives it an object, so on paper it reads a step clipped. On this page the object is on screen -
+cartons going into the truck behind the words, and the tag beneath names the cargo work.
+
+**One structural thing for later, not changed:** 関東と新潟市 now appears four times on one screen - headline,
+tag, sub, and scene 04's caption 「配送エリアは、関東1都6県と新潟市方面です。」. Every finalist that reached for
+a fact collided with the copy below it, because the tag and sub already carry every fact the company has. If he
+wants the headline to say something new, the room has to come from shortening the tag, not lengthening the H1.
+
+## Widths, measured as always
+
+A headline line has 358 px on a 390 px phone. F1 131/263, F2 105/184, F3 289, F4 236/184 - against the 345 of
+358 the line as it stands uses. All four have room at both framings.
+
+**Still true:** nothing is changed, copy is the owner's call, and a native writer should read whichever he picks.

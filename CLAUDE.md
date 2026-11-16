@@ -428,6 +428,18 @@ not this project; nothing has been changed. **Do not touch the site; ask him bef
   impactful". So D1-D4 are dead and so is anything built on 創業 / 半世紀 / 昭和50年 or 企業.
   E1 「板橋から、／関東と新潟市へ。」, E2 「毎日の荷物を、／確かに運ぶ。」,
   E3 「関東と新潟市をつなぐ／毎日の物流」 (体言止め, no punctuation), E4 「荷物を、まっすぐ運ぶ。」 (one line).
+  **He then picked the SHAPES of E1 and E3 and asked for better words inside them** ("Either E1 or 3, but I
+  think it could worded better"). Round 4 (`copy/hero-copy-final.json`, `final-desktop.jpg`, `final-phone.jpg`,
+  a workflow of 8 agents) is the live set: **F1 「板橋から、／関東と新潟市へ運ぶ。」** (the reviewer's pick:
+  E1 plus the one verb it lacked), F2 「板橋から／関東と新潟市へ」 (no punctuation), F3 「板橋から関東と新潟市へ」
+  (one line), F4 「関東と新潟市へ運ぶ／板橋の三豊運輸」 (the answer to E3). Nine of ten other finalists were
+  killed on checkable grounds, recorded in the evidence note: **no 32台 in a headline** (it is in the sub and
+  the fleet is spread over three bases), no 「倉庫も車も自社で持つ」 (ownership is not in CONTEXT.md),
+  no 「板橋から…まで」 (板橋 is in 関東, so から…まで ends where it starts), no 届ける (his current
+  「お届けします」 with the politeness clipped, and the parcel register the B2B round threw out), no 今日も and
+  no 走る (driver-recruitment cadence), and nothing opening 「荷物を、」 (scene 01's caption breaks there and is
+  on screen with the headline). Structural, for later: 関東と新潟市 is now on screen four times at once
+  (headline, tag, sub, scene 04's caption) - room for the H1 has to come from shortening the TAG.
   **Twelve Japanese logistics heroes have now been read** (`REFERENCES.md`): at most ONE 、 in a headline
   and never one in both lines (his own note); a ONE-LINE headline is the commonest shape of all, 5 of the
   12, and on this site it lifts the buttons and opens the picture; 企業 is in none of the twelve; and the
