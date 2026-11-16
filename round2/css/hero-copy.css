@@ -1,0 +1,43 @@
+/* The hero's copy and its washes — the owner's note of 2026-11-16: the fading background behind the
+   title "blocks half the animation section".
+
+   What this does: the copy and BOTH washes are up during the opening scene, then clear, so the film
+   plays in the whole frame. They come back whenever the film is paused (the pause button, and reduced
+   motion, which pauses on the last scene) or someone tabs into the copy.
+
+   This is not a new idea: the site already does exactly this on scene 04 (the map), where the title,
+   tagline and sub fade out and return on .is-static and on :focus-within. These rules apply that
+   behaviour to every scene after the first, and take the washes with it.
+
+   ADDITIVE. This file is loaded after the site's own stylesheet and edits nothing in it, so the site
+   stays untouched while this is judged. For the integration task these rules replace the .on-map block
+   in css-src/40-hero.css.
+
+   .copy-out is set by the player on every scene after the first: round2/js/hero-glue.js mark() and
+   viewer/player.js controls(). With no JavaScript, and before the first frame, no class is set and the
+   copy stands as it always did. */
+
+#sanpou-journey .hc-scrim::before,
+#sanpou-journey .hc-scrim-sign,
+#sanpou-journey .hc-title,
+#sanpou-journey .hc-sub,
+#sanpou-journey .hc-tag { transition: opacity .55s var(--ease); }
+
+/* past the opening: out, faster than they came, so nothing half-faded sits over a scene change */
+#sanpou-journey.copy-out .hc-scrim::before { opacity: 0; transition-duration: .3s; }
+#sanpou-journey.copy-out .hc-title,
+#sanpou-journey.copy-out .hc-sub,
+#sanpou-journey.copy-out .hc-tag { opacity: 0; transition-duration: .3s; }
+/* and the second wash, the one scenes 02 and 03 raise over their signs, never rises while the copy is away */
+#sanpou-journey.copy-out.on-sign .hc-scrim-sign { opacity: 0; }
+
+/* paused: everything back, at the slower pace */
+#sanpou-journey.copy-out.is-static .hc-scrim::before { opacity: 1; transition-duration: .55s; }
+#sanpou-journey.copy-out.is-static :is(.hc-title, .hc-sub, .hc-tag) { opacity: 1; transition-duration: .55s; }
+#sanpou-journey.copy-out.on-sign.is-static .hc-scrim-sign { opacity: 1; }
+
+/* a keyboard visitor reads it the instant they reach it, with no fade to sit through - and the washes
+   arrive with the words, not half a second behind them, or the copy stands unbacked while they land */
+#sanpou-journey.copy-out .hc-content:focus-within :is(.hc-title, .hc-sub, .hc-tag) { opacity: 1; transition: none; }
+#sanpou-journey.copy-out:has(.hc-content:focus-within) .hc-scrim::before { opacity: 1; transition: none; }
+#sanpou-journey.copy-out.on-sign:has(.hc-content:focus-within) .hc-scrim-sign { opacity: 1; transition: none; }

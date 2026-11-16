@@ -385,16 +385,30 @@ numbers are at the end of `CHANGES.md`. **Check the verdict before building on a
 He watched the film and said it "looks pretty good overall, for now". These are for the integration task,
 not this project; nothing has been changed. **Do not touch the site; ask him before acting on either.**
 
-- **The copy wash on the left** (`.hc-scrim::before`). He asked whether it should be there at all, "since
-  it blocks half the animation section". Measured, on a 1440 desktop: .86 opaque at x 0, .72 at x 720
-  (half the screen), .50 at 818, clear at 1040 - at least half-opaque over 57 % of the width and 70 % of
-  the height. On a phone it is a different rule, a wash across the TOP. He is right about the cost: most
-  of the warehouse pass sits behind it. But it cannot simply go: with it off the headline crosses the
-  supplier building's dark storey at t=0 and measures 1.33:1 against the 3 it needs. Four options, with
-  pictures and numbers, in `evidence/2026-11-16-opus-copy-wash/`; the reviewer's pick is to let the copy
-  and the wash clear after the opening and come back on pause or focus, which is what the site ALREADY
-  does on scene 04. `node tools/scrim-shot.mjs <side> <outDir>` shoots the hero at several wash strengths;
-  `contrast-check.mjs` now takes `--css=<file>` to measure one without changing anything on disk.
+- **The copy wash on the left: BUILT on his "yes, start it" (2026-11-16), waiting for his verdict.**
+  He asked whether the fade should be there at all, "since it blocks half the animation section". It was
+  worse than half: on a 1440 desktop `.hc-scrim::before` was .86 opaque at x 0, .72 at x 720 (half the
+  screen) and only clear at 1040, full height, and on scenes 02 and 03 `.hc-scrim-sign` sat on top of it
+  - up to 95 % opaque together. On a phone it is a different rule, a band across the TOP. It could not
+  simply go: with it off the headline crosses the supplier building's dark storey at t=0 and measures
+  1.33:1 against the 3 it needs, and narrowing it does not help because the worst spot is outside any
+  narrower wash. The four options are in `evidence/2026-11-16-opus-copy-wash/`.
+  **What was built:** the copy and BOTH washes are up on the opening scene, then clear so the film plays
+  in the whole frame, and come back when the film is paused, when the copy is focused, and under reduced
+  motion. That is what the site ALREADY did on scene 04; these rules apply it to every scene after the
+  first. `round2/css/hero-copy.css` (40 lines, ADDITIVE - the site itself is untouched); the class
+  `copy-out` is set by `round2/js/hero-glue.js` `mark()` and `viewer/player.js` `controls()` on every
+  scene after `COPY_UNTIL` (0 = the opening only; change that one constant to keep the copy up longer).
+  A side may now carry its own stylesheet (`sides.json` `"css"`, loaded by `viewer/frame.html` before the
+  side is ready); the `original` side has none, so it still shows the old behaviour for comparison.
+  Pictures, clips and the check results: `evidence/2026-11-16-opus-copy-clears/index.html`.
+  **The four whole-film recordings on `evidence/2026-11-16-the-film/` were made before this and still
+  show the old overlay; record them again if this is kept.**
+  New tools: `check-copy.mjs` (the real player: up on the opening, gone while it runs, back on pause,
+  on keyboard focus and under reduced motion - it FAILS on the `original` side by design, since that side
+  has no stylesheet); `contrast-check.mjs` takes `--css=<file>` and `--static` (measure with the hero
+  paused, so copy that is normally faded out is measured too); `scrim-shot.mjs` shoots the hero at any
+  wash strength (`--states=before,after`).
 - **The wording.** He has never liked it: "doesnt sound like a text or phrase a person wrote it, doesnt
   sound natural like what other websites for a logistics company uses it." The copy is
   `original/site/hero-section.html` (H1 関東1都6県と新潟市方面へ、板橋からお届けします。, the tag and the

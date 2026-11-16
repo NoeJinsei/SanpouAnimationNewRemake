@@ -204,10 +204,12 @@
   function paintFills(i){ fills.forEach(function(f,k){ if(!f) return;
     f.style.width = (k<i || (k===i && !playing)) ? '100%' : (k===i && i===idx && autoOn ? Math.min(100, dwellMs/AUTO_DWELL[i]*100)+'%' : '0%'); });
     placeTruck(i, !playing ? 1 : (i===idx && autoOn ? Math.min(1, dwellMs/AUTO_DWELL[i]) : 0)); }
+  var COPY_UNTIL=0;   // the last scene that still shows the hero copy (0 = the opening scene only)
   function mark(i){ if(i==null) i=idx;
     items.forEach(function(b,k){ b.setAttribute('aria-current',k===i?'true':'false'); });
     host.classList.toggle('on-map', i===3);
     host.classList.toggle('on-sign', i===1||i===2);
+    host.classList.toggle('copy-out', i>COPY_UNTIL);   // the copy and its washes clear past the opening (css/hero-copy.css)
     if(!playing && i===idx){ camSnap=true; camTick(16); }
     paintFills(i);
     if(metaBox && i!==metaWant){ metaWant=i;

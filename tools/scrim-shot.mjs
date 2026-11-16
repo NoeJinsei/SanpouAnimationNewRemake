@@ -10,9 +10,15 @@ const pos = args.filter((x) => { const m = /^--(\w+)(?:=(.*))?$/.exec(x); if (m)
 const side = pos[0] || "round2", out = pos[1] || "shots/scrim", framing = flags.framing || "desktop";
 const VIEW = { phone: { w: 390, h: 844, dpr: 2 }, desktop: { w: 1440, h: 900, dpr: 1 } }[framing];
 const times = String(flags.times || "3500,10500,18000,32000").split(",").map(Number);
+const only = flags.states ? String(flags.states).split(",") : null;
 
 const W = "238, 246, 251";
 const STATES = {
+  // the two that matter now: the site's behaviour as it was, and the side as it stands
+  "before": `#sanpou-journey.copy-out .hc-scrim::before { opacity: 1 !important; }
+    #sanpou-journey.copy-out.on-sign .hc-scrim-sign { opacity: 1 !important; }
+    #sanpou-journey.copy-out:not(.on-map) :is(.hc-title, .hc-sub, .hc-tag) { opacity: 1 !important; }`,
+  "after": "",
   "as-is": "",
   "off": `#sanpou-journey .hc-scrim::before { background: none !important; }`,
   "half-reach": `#sanpou-journey .hc-scrim::before { background: linear-gradient(90deg, rgba(${W},.86) 0%, rgba(${W},.70) 19%, rgba(${W},0) 36%) !important; }`,
@@ -37,6 +43,7 @@ await page.evaluate(() => document.fonts.ready);
 const hero = await page.$("#sanpou-journey");
 let n = 0;
 for (const [state, css] of Object.entries(STATES)) {
+  if (only && !only.includes(state)) continue;
   await page.evaluate((c) => {
     let el = document.getElementById("scrimState");
     if (!el) { el = document.createElement("style"); el.id = "scrimState"; document.head.appendChild(el); }

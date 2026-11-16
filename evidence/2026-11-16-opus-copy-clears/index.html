@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The hero copy clears after the opening</title>
+<style>
+  :root { --ink: #16233a; --mute: #5b6b84; --line: #d7e0ea; --wash: #f4f8fb; }
+  body { margin: 0; padding: 32px 24px 72px; background: #fff; color: var(--ink);
+    font: 16px/1.7 "Noto Sans JP", -apple-system, Segoe UI, sans-serif; }
+  .w { max-width: 1180px; margin: 0 auto; }
+  h1 { font-size: 30px; line-height: 1.35; margin: 0 0 6px; }
+  h2 { font-size: 21px; margin: 44px 0 10px; padding-top: 16px; border-top: 1px solid var(--line); }
+  p.lead { color: var(--mute); margin: 0 0 22px; max-width: 72ch; }
+  img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 8px; }
+  video { display: block; width: 100%; border: 1px solid var(--line); border-radius: 8px; background: #000; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+  .cap { color: var(--mute); font-size: 14px; margin: 8px 0 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; }
+  th, td { text-align: left; padding: 7px 12px; border-bottom: 1px solid var(--line); }
+  th { color: var(--mute); font-weight: 600; }
+  code { background: var(--wash); padding: 1px 6px; border-radius: 4px; font-size: 14px; }
+  .ok { color: #1d6b3f; font-weight: 700; }
+  .no { color: #a3301d; font-weight: 700; }
+  @media (max-width: 820px) { .two { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="w">
+<h1>The hero copy clears after the opening</h1>
+<p class="lead">The owner, 2026-11-16: the fading background behind the title "blocks half the animation
+section". It did. On a 1440 desktop the pale wash was .86 opaque at the left edge, still .72 exactly
+half-way across, and did not clear until 72&nbsp;% of the width — and on scenes 02 and 03 a second wash sat
+on top of it, up to 95&nbsp;% opaque together. <b>The film is not changed.</b> This is the site's overlay,
+built here as an additive stylesheet so the site itself stays untouched while it is judged.</p>
+
+<h2>What it does</h2>
+<p class="lead">The copy and both washes are up during the opening scene, then clear. They come back
+whenever the film is paused, when someone tabs into the copy, and under reduced motion. The site already
+did exactly this on scene 04; these rules apply it to every scene after the first and take the washes with
+it. The two buttons never leave.</p>
+
+<h2>The moment it hands over, 5.2&nbsp;s to 10.2&nbsp;s</h2>
+<div class="two">
+  <div><video src="hand-off-desktop.mp4" controls muted playsinline preload="metadata"></video><p class="cap">desktop</p></div>
+  <div><video src="hand-off-phone.mp4" controls muted playsinline preload="metadata"></video><p class="cap">phone, 2x</p></div>
+</div>
+
+<h2>Every scene, before and after — desktop</h2>
+<img src="desktop.jpg" alt="every scene before and after on a desktop">
+
+<h2>Every scene, before and after — phone</h2>
+<p class="lead">On a phone the wash is a different rule: a band across the TOP, not the left.</p>
+<img src="phone.jpg" alt="four scenes before and after on a phone">
+
+<h2>Checked</h2>
+<table>
+<tr><th>check</th><th>result</th></tr>
+<tr><td><code>node tools/check-copy.mjs round2 --framing=desktop</code> (and <code>--framing=phone</code>), through the site's real player</td><td class="ok">OK — up on the opening, gone while it runs, back when paused, back on keyboard focus, back under reduced motion, and the dark band under the controls never moves</td></tr>
+<tr><td><code>node tools/contrast-check.mjs round2 --every=1000</code>, playing</td><td class="ok">headline 9.74, sub-copy 9.86, both buttons, every caption — all pass AA</td></tr>
+<tr><td><code>node tools/contrast-check.mjs round2 --every=1000 --static</code>, i.e. paused on every scene</td><td class="ok">headline worst 7.43, sub-copy 9.86 — the copy is legible on all five scenes when it comes back</td></tr>
+<tr><td><code>node tools/check-viewer.mjs round2</code></td><td class="ok">0 console errors, all three framings</td></tr>
+<tr><td><code>node tools/check-player-vs-glue.mjs round2</code></td><td class="ok">the clock player matches the site's real player in every hold</td></tr>
+<tr><td><code>cd original &amp;&amp; sha256sum -c SHA256SUMS</code>; the website folder</td><td class="ok">7 OK; clean at 72862b6 — nothing on the site touched</td></tr>
+<tr><td><code>contrast-check</code>: <code>track unfilled</code></td><td class="no">FAIL 1.00 — pre-existing. The same row fails on the <code>original</code> side too (1.05 on a phone). The site's own progress bar over a pale sky, not the film and not this change.</td></tr>
+</table>
+
+<h2>Where it lives</h2>
+<table>
+<tr><th>file</th><th>what</th></tr>
+<tr><td><code>round2/css/hero-copy.css</code></td><td>the rules, 40 lines, additive. For the integration task they replace the <code>.on-map</code> block in <code>css-src/40-hero.css</code>.</td></tr>
+<tr><td><code>round2/js/hero-glue.js</code>, <code>viewer/player.js</code></td><td>one line each: the class <code>copy-out</code> on every scene after <code>COPY_UNTIL</code> (0 = the opening only). Change that one constant to keep the copy up for longer.</td></tr>
+<tr><td><code>sides.json</code>, <code>viewer/frame.html</code></td><td>a side may now carry its own stylesheet on top of the site's. The <code>original</code> side has none, so it still shows the old behaviour for comparison.</td></tr>
+<tr><td><code>tools/check-copy.mjs</code></td><td>new. <code>contrast-check.mjs</code> gained <code>--css=&lt;file&gt;</code> and <code>--static</code>; <code>scrim-shot.mjs</code> shoots any wash strength.</td></tr>
+</table>
+
+<p class="lead" style="margin-top:28px">The four whole-film recordings on
+<a href="../2026-11-16-the-film/index.html">the film page</a> were made before this and still show the old
+overlay. If this is kept, they should be recorded again.</p>
+</div>
+</body>
+</html>

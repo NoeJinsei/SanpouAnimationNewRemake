@@ -186,6 +186,7 @@
     var idxEl = host.querySelector("#sjxIndex"), truckEl = null, idxW = 0, shown = -1;
     var noEl = host.querySelector("#hcNo"), scEl = host.querySelector("#hcScene"), ldEl = host.querySelector("#hcLead");
     if (idxEl) { truckEl = document.createElement("span"); truckEl.className = "sjx-truck"; truckEl.setAttribute("aria-hidden", "true"); truckEl.innerHTML = o.truckSvg || TRUCK_SVG; idxEl.appendChild(truckEl); }
+    var COPY_UNTIL = 0;   // the last scene that still shows the hero copy; same constant as hero-glue.js
     function controls(st) {
       var i = st.idx, frac = Math.min(1, st.tau / TL.STOPS[i].dwell);
       if (i !== shown) {
@@ -193,6 +194,7 @@
         items.forEach(function (b, k) { b.setAttribute("aria-current", k === i ? "true" : "false"); });
         host.classList.toggle("on-map", i === 3);
         host.classList.toggle("on-sign", i === 1 || i === 2);
+        host.classList.toggle("copy-out", i > COPY_UNTIL);   // matches hero-glue.js mark()
         var s = TL.STOPS[i];
         if (noEl) noEl.textContent = s.no; if (scEl) scEl.textContent = s.jp; if (ldEl) ldEl.textContent = s.lead;
       }

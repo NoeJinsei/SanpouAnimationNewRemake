@@ -29,7 +29,8 @@
       "schedule": {
         "holdAmbient02": true,
         "camEase": 1800
-      }
+      },
+      "css": "round2/css/hero-copy.css"
     },
     {
       "id": "before-round7",
@@ -212,7 +213,8 @@
       "schedule": {
         "holdAmbient02": true,
         "camEase": 1800
-      }
+      },
+      "css": "round2/css/hero-copy.css"
     },
     {
       "id": "trial2",
@@ -229,7 +231,8 @@
       "schedule": {
         "holdAmbient02": true,
         "camEase": 1800
-      }
+      },
+      "css": "round2/css/hero-copy.css"
     },
     {
       "id": "trial3",
@@ -246,7 +249,8 @@
       "schedule": {
         "holdAmbient02": true,
         "camEase": 1800
-      }
+      },
+      "css": "round2/css/hero-copy.css"
     }
   ]
 }
