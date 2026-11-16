@@ -411,14 +411,32 @@ not this project; nothing has been changed. **Do not touch the site; ask him bef
   has no stylesheet); `contrast-check.mjs` takes `--css=<file>` and `--static` (measure with the hero
   paused, so copy that is normally faded out is measured too); `scrim-shot.mjs` shoots the hero at any
   wash strength (`--states=before,after`).
-- **The wording.** He has never liked it: "doesnt sound like a text or phrase a person wrote it, doesnt
-  sound natural like what other websites for a logistics company uses it." The copy is
-  `original/site/hero-section.html` (H1 関東1都6県と新潟市方面へ、板橋からお届けします。, the tag and the
-  sub). Copy is HIS call and the facts are fixed (関東1都6県と新潟市方面, 昭和50年創業, 板橋・志木・入間の
-  3拠点, 32台, 輸送・保管・流通加工・3PL). He has not asked for a rewrite yet.
+- **The wording: three directions drawn for him on 2026-11-16, waiting for his pick. NOTHING IS CHANGED.**
+  He has never liked it: "doesnt sound like a text or phrase a person wrote it, doesnt sound natural like
+  what other websites for a logistics company uses it." The copy is `original/site/hero-section.html`
+  (read-only here) and **copy is HIS call**; the facts are fixed (関東1都6県と新潟市方面, 昭和50年創業,
+  板橋・志木・入間の3拠点, 32台, 輸送・保管・流通加工・3PL).
+  What is genuinely off, as against taste: the headline says where TO, then where FROM, then the verb,
+  which is backwards in Japanese; 「方面」 is timetable language; the sub is one 70-character sentence
+  carrying six facts. 「昭和50年」 is NOT a fault (it carries the age better than 1975 would) - it is only
+  said twice. The five scene captions were read and are fine.
+  The options and the words are in `copy/hero-copy-options.json`, the pictures and the reasoning in
+  `evidence/2026-11-16-opus-wording/`: **A** one word out and one sentence split; **B** (the reviewer's
+  pick) 「板橋から、関東と新潟市へ。／毎日の荷物を、確かに運ぶ。」; **C** half a century first, which
+  collides with scene 05's caption.
+  **The phone sets the shape:** `.hc-line` is `white-space: nowrap` at `clamp(21px, 6.6vw, 30px)`, so a
+  headline line has 358 px on a 390 px phone. The line as it stands uses 345. The polite ending
+  「確かに運びます。」 needs 394 and the spelled-out 「関東1都6県」 needs 423: both overflow.
+  `node tools/copy-shot.mjs <side> <sets.json> <outDir> [--framing=]` renders any wording in the real hero
+  and prints each line's width against that 358. It touches no file.
+  **Before any of it ships a native writer should read it**, and the owner must choose.
 - Also found while measuring, pre-existing and unrelated: `contrast-check` fails one row,
-  `track unfilled @desktop` 1.00 against the needed 3 at t=28000 - the site's own progress bar over the
-  finale's pale sky.
+  `track unfilled` 1.00 against the needed 3 - the site's own progress bar over a pale sky. It fails on
+  the `original` side too (1.05 on a phone), so it is the site's, not the remake's.
+- **「関東一円」 is CLOSED, and was never a problem.** It is in `hero-port-b.js` twice
+  (`CONTENT.brand.commitBody`, scene 03's `SceneCaption`) but both sit inside `SceneTitle` /
+  `SceneCaption`, which `return null` when `window.JX_CLEAN_HERO` is set, and `hero-flag.js` sets it.
+  Dead code; it never reaches the screen. Earlier notes called it an open copy question - it is not.
 - **The film is finished to the brief** (the reviewer, 2026-11-16): every drawing remade, both seams as
   camera moves, no pops, the route line through, and smoother than what it replaces. **Start nothing else.**
   The owner watches it end to end next; putting it into the site is a separate task that does not start

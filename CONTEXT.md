@@ -16,9 +16,13 @@ home page, the first thing a visitor sees.
 - **Live HTML text sits on top of it**, not inside the art: the Japanese headline
   「関東1都6県と新潟市方面へ、／板橋からお届けします。」, a sub-paragraph, two buttons
   (「事業内容を見る」「お問い合わせ」), and along the bottom the scene number, name and one-line description,
-  five scene buttons and a pause button. A pale wash covers the left ~60 % so the navy text stays readable;
-  a dark band along the bottom carries the white controls. **Nothing dark or busy may sit under the headline**,
-  and the art must never carry headline text of its own.
+  five scene buttons and a pause button. A pale wash covered the left ~60 % so the navy text stayed readable;
+  **since 2026-11-16 that wash, and the copy with it, clear once the film moves past the opening scene** and
+  come back when it is paused or reached by keyboard, so only scene 01 is washed (`round2/css/hero-copy.css`).
+  A dark band along the bottom carries the white controls. **Nothing dark or busy may sit under the headline
+  during scene 01**, and the art must never carry headline text of its own (`SceneTitle` and `SceneCaption`
+  return null under `JX_CLEAN_HERO`, which the site sets - which is why the 関東一円 strings still in
+  `hero-port-b.js` never reach the screen).
 - It plays by itself through five scenes and then holds on the last one. A visitor can jump between scenes,
   pause it, or tab through it with the keyboard. With reduced motion it shows one still frame and does not
   play at all.

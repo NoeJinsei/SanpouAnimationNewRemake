@@ -1,0 +1,30 @@
+[
+  {
+    "id": "now",
+    "label": "As it is",
+    "title": ["関東1都6県と新潟市方面へ、", "板橋からお届けします。"],
+    "tag": "<span class=\"nw\">昭和50年</span>創業　輸送・保管・流通加工・<span class=\"nw\">3PL</span>",
+    "sub": "<span class=\"nw\">昭和50年の</span>創業から半世紀、現在は<span class=\"nw\">板橋・志木・入間の</span><span class=\"nw\">3拠点</span>と<span class=\"nw\">32台の</span>自社車両で、輸送・配送から倉庫保管、流通加工、<span class=\"nw\">3PLまで</span><span class=\"nw\">お引き受けしています。</span>"
+  },
+  {
+    "id": "a",
+    "label": "A  one word out, one sentence split",
+    "title": ["関東1都6県と新潟市へ、", "板橋からお届けします。"],
+    "tag": "<span class=\"nw\">昭和50年</span>創業　輸送・保管・流通加工・<span class=\"nw\">3PL</span>",
+    "sub": "<span class=\"nw\">昭和50年の</span>創業から半世紀。<span class=\"nw\">板橋・志木・入間の</span><span class=\"nw\">3拠点</span>と<span class=\"nw\">32台の</span>自社車両で、輸送・配送から倉庫保管、流通加工、<span class=\"nw\">3PLまで</span><span class=\"nw\">承っています。</span>"
+  },
+  {
+    "id": "b",
+    "label": "B  where from, where to, then the promise",
+    "title": ["板橋から、関東と新潟市へ。", "毎日の荷物を、確かに運ぶ。"],
+    "tag": "<span class=\"nw\">昭和50年</span>創業　輸送・保管・流通加工・<span class=\"nw\">3PL</span>",
+    "sub": "<span class=\"nw\">昭和50年の</span>創業から半世紀。<span class=\"nw\">板橋・志木・入間の</span><span class=\"nw\">3拠点</span>と<span class=\"nw\">32台の</span>自社車両で、輸送・配送から倉庫保管、流通加工、<span class=\"nw\">3PLまで</span><span class=\"nw\">承っています。</span>"
+  },
+  {
+    "id": "c",
+    "label": "C  half a century first",
+    "title": ["<span class=\"nw\">昭和50年</span>から、板橋で。", "地域の物流を支えています。"],
+    "tag": "関東<span class=\"nw\">1都6県</span>と<span class=\"nw\">新潟市方面</span>へ　輸送・保管・流通加工・<span class=\"nw\">3PL</span>",
+    "sub": "<span class=\"nw\">板橋・志木・入間の</span><span class=\"nw\">3拠点</span>と<span class=\"nw\">32台の</span>自社車両で、関東<span class=\"nw\">1都6県</span>と<span class=\"nw\">新潟市方面</span>へ。輸送・配送から倉庫保管、流通加工、<span class=\"nw\">3PLまで</span><span class=\"nw\">承っています。</span>"
+  }
+]
