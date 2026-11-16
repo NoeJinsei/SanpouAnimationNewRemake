@@ -188,3 +188,34 @@ through it — where today that half is flat pale.
 
 Nothing here is wired into a side yet: these are proposals measured in the real hero, and the working copy is
 exactly as it was.
+
+---
+
+## He picked faint, and wiring it in found two more faults (2026-11-17)
+
+`patch-faint.css` is now live on the `round2` side (`sides.json` takes a LIST of stylesheets, loaded after
+`hero-copy.css`). Measuring the wired side across the whole film, rather than only the opening scene, turned
+up two things the first cut had wrong. Both are fixed in the file; the numbers above for the PLAYING state
+are unchanged.
+
+- **The copy needs two strengths.** While the film plays the copy is only up on the opening scene, where
+  faint is enough. But paused or keyboard-focused it comes back on whatever scene is on screen — and over
+  the expressway the headline measured **2.47 against the 3 it needs**. So `.is-static` and
+  `:has(.hc-content:focus-within)` now take the patch to full strength and let the second wash return.
+  Nothing is lost by that: the film is stopped, so there is no animation to keep visible.
+- **The site's own mask had to be kept.** The first cut cleared it (`mask-image: none`, copied from the
+  phone rule). That mask is opaque to 70% of the height and gone by 88%, and it is the only thing stopping a
+  pale wash reaching the dark band under the captions. With it cleared, the caption text measured **2.44 and
+  2.43 against the 4.5 it needs** when the film was paused on the finale. Kept now.
+
+**Where it stands, measured on the wired side:**
+
+| | worst copy row | worst caption row | other failures |
+|---|---|---|---|
+| whole film, playing | 4.84 (sub-copy, needs 4.5) | 4.84 (needs 4.5) | the 2 `track unfilled` rows only |
+| whole film, paused | 5.65 (tagline, needs 4.5) | 4.84 (needs 4.5) | the 2 `track unfilled` rows only |
+
+`check-copy` OK. `check-viewer` 0 console errors at all three framings. `original/` 7 of 7. The two
+`track unfilled` rows are the site's own progress bar over a pale sky and fail on the `original` side too.
+
+The whole-film recordings were made again, because the overlay changed: `evidence/2026-11-16-the-film/`.

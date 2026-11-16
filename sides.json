@@ -30,7 +30,10 @@
         "holdAmbient02": true,
         "camEase": 1800
       },
-      "css": "round2/css/hero-copy.css"
+      "css": [
+        "round2/css/hero-copy.css",
+        "round2/css/light/patch-faint.css"
+      ]
     },
     {
       "id": "before-round7",
@@ -214,7 +217,10 @@
         "holdAmbient02": true,
         "camEase": 1800
       },
-      "css": "round2/css/hero-copy.css"
+      "css": [
+        "round2/css/hero-copy.css",
+        "round2/css/light/patch-faint.css"
+      ]
     },
     {
       "id": "trial2",
@@ -232,7 +238,10 @@
         "holdAmbient02": true,
         "camEase": 1800
       },
-      "css": "round2/css/hero-copy.css"
+      "css": [
+        "round2/css/hero-copy.css",
+        "round2/css/light/patch-faint.css"
+      ]
     },
     {
       "id": "trial3",
@@ -250,7 +259,10 @@
         "holdAmbient02": true,
         "camEase": 1800
       },
-      "css": "round2/css/hero-copy.css"
+      "css": [
+        "round2/css/hero-copy.css",
+        "round2/css/light/patch-faint.css"
+      ]
     }
   ]
 }

@@ -1649,3 +1649,67 @@ where there are birds; scene 01 is level with the original, the other four ahead
 `evidence/2026-11-16-the-film/`: all four recordings made again (0 to 48000 ms, 60 fps, `--crf=18`), each
 48.0 s and 2880 frames with none dropped or repeated: `remake-desktop.mp4` 7.8 MB, `remake-phone.mp4`
 12.4 MB, `original-desktop.mp4` 5.3 MB, `original-phone.mp4` 9.8 MB.
+
+## 2026-11-17 — the phone rebuilt and the wash replaced by a patch (the owner picked "faint")
+
+His note: *"Not only the wordings, but the smartphone view of the page and its elements / formatting looks
+atrocious. For the desktop site view (and the app as well) if possible I would like the animation section to
+be able to be visible as much as possible with a hint of somekind of appropriate element for the text to be
+visible if appropriate (like the slight fade effect, or a fade effect with a smooth animation that is
+appropriate to the animation section)."* He was shown four strengths and **chose faint**.
+
+Live in `round2/css/light/patch-faint.css`, loaded by `sides.json` after `round2/css/hero-copy.css`.
+`viewer/frame.html` now takes `"css"` as one path **or a list**, in cascade order, so each decision keeps its
+own file. The stronger options he did not take are kept as the record: `patch-strong.css`, `patch-soft.css`,
+and `patch-whisper.css`, which is one notch fainter and fails.
+
+### The phone, measured before it was touched (`shots/diag-p1/`)
+The copy furniture took the top THIRD of a 390 px screen and the caption bar another sixth: a full-width pale
+band with a visible edge across the frame, a headline running gutter to gutter at 30 px, and two half-screen
+button slabs 48 px tall that were the heaviest objects on the screen. Now: the block starts at 18 px instead
+of 32, the headline is `clamp(20px, 5.9vw, 27px)` with a little line-height, the tag 13 px, and the slabs are
+two content-width buttons 44 px tall. Same copy, same two actions, same controls, about 110 px shorter — the
+whole supplier building, the conveyor, every parcel and the truck are visible where the building used to be
+cut.
+
+### The veil
+A soft elliptical patch behind the copy block (44% x 50% at 27% 46% on a desktop; 88% x 30% at 46% 12% on a
+phone) in place of a wash that paled half the desktop screen full height. When the copy clears after the
+opening the patch drifts up and left and swells 7% over 1.5 s on the site's own easing while the words rise
+10 px — the pace of the film's clouds, not a flat dissolve. It returns the same way on pause and on focus,
+and does not move at all under reduced motion.
+
+**Two strengths, because the copy has two lives.** While the film plays the copy is only up on the opening
+scene, and faint is enough there. Paused or focused it comes back on whatever scene is on screen, and faint
+is not enough over the expressway — measured, headline 2.47 at t=16000. So `.is-static` and
+`:has(.hc-content:focus-within)` take the patch to full strength and let the second wash return. Nothing is
+lost: the film is stopped, so there is no animation to keep visible.
+
+**The site's own mask is KEPT.** The first cut cleared it (`mask-image: none`, copied from the phone rule) and
+that cost the caption text its contrast when the film was paused on the finale: `caption name` 2.44 and
+`caption lead` 2.43 against the 4.5 they need. The mask (opaque to 70% of the height, gone by 88%) is what
+stops any pale wash reaching the dark band under the captions.
+
+### How faint it can go, measured over the opening scene
+Worst case, against what AA needs (headline 3, sub-copy 4.5):
+
+| | peak | headline desktop | sub-copy desktop | headline phone |
+|---|---|---|---|---|
+| the wash as it was | .86 over half the screen | 9.74 | 9.86 | 12.21 |
+| strong | .95 | 9.85 | 9.94 | 10.45 |
+| soft | .82 | 7.19 | 7.17 | 7.84 |
+| **faint (chosen)** | **.64** | **4.91** | **4.84** | **5.58** |
+| whisper | .46 | 3.30 | 3.29 FAIL | 4.04 |
+| nothing | — | 1.33 FAIL | 1.34 FAIL | 2.05 FAIL |
+
+Faint is the floor, and the limiting spot is where the headline crosses the supplier building's dark storey
+at t=0, which no narrowing avoids because it is the copy's own position.
+
+### Checks
+`contrast-check` whole film, playing: every copy row passes (4.91 / 4.84 / 5.48 / 4.98 the worst four).
+`contrast-check` whole film, `--static`: every copy row passes (8.00 / 12.24 / 12.37 / 5.65 the worst four),
+captions 5.32 and 4.84. The only failures left at either setting are the two `track unfilled` rows — the
+site's own progress bar over a pale sky, which fails on the `original` side too. `check-copy` OK (up on the
+opening, gone while it runs, back on pause, on focus and under reduced motion). `check-viewer` 0 console
+errors at all three framings. `original/` 7 of 7; the website folder untouched.
+`tools/record.mjs` now takes `--css=<file>`, the flag `contrast-check.mjs` already had.

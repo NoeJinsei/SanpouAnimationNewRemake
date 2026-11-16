@@ -399,8 +399,21 @@ not this project; nothing has been changed. **Do not touch the site; ask him bef
   first. `round2/css/hero-copy.css` (40 lines, ADDITIVE - the site itself is untouched); the class
   `copy-out` is set by `round2/js/hero-glue.js` `mark()` and `viewer/player.js` `controls()` on every
   scene after `COPY_UNTIL` (0 = the opening only; change that one constant to keep the copy up longer).
-  A side may now carry its own stylesheet (`sides.json` `"css"`, loaded by `viewer/frame.html` before the
-  side is ready); the `original` side has none, so it still shows the old behaviour for comparison.
+  A side may now carry its own stylesheets (`sides.json` `"css"`, one path **or a list** in cascade order,
+  loaded by `viewer/frame.html` before the side is ready); the `original` side has none, so it still shows
+  the old behaviour for comparison.
+  **The wash itself is now a PATCH, and the phone layout is rebuilt (2026-11-17, the owner picked "faint").**
+  `round2/css/light/patch-faint.css`, loaded after `hero-copy.css`. The half-screen wash is replaced by a soft
+  local ellipse behind the copy block; when the copy clears it drifts up and left and swells over 1.5 s while
+  the words rise 10 px. On a phone the copy block is ~110 px shorter (two content-width buttons in place of
+  two half-screen slabs, smaller headline and tag), so the film starts that much higher. Three rules that
+  cost real contrast when they were got wrong, all measured: **faint (.64 peak) is the FLOOR** - one notch
+  fainter and the desktop sub-copy is 3.29 against the 4.5 it needs; **the copy needs TWO strengths**, because
+  paused or focused it returns on a scene the faint patch was never sized for (headline 2.47 over the
+  expressway), so `.is-static` and `:has(.hc-content:focus-within)` go to full strength and let the second
+  wash back; and **the site's own mask must be KEPT** (opaque to 70% of the height, gone by 88%) - clearing it
+  let the pale patch reach the dark caption band and dropped the caption text to 2.43. The stronger options he
+  did not take are kept: `patch-strong.css`, `patch-soft.css`, `patch-whisper.css` (the one that fails).
   Pictures, clips and the check results: `evidence/2026-11-16-opus-copy-clears/index.html`.
   **The remake's two whole-film recordings were made again with it** (`evidence/2026-11-16-the-film/`,
   16 November 20:05): the remake now plays with the copy clearing, the original keeps the overlay the

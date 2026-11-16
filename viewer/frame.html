@@ -50,14 +50,17 @@
     var side = r[0].sides.filter(function (s) { return s.id === sideId; })[0];
     if (!side) throw new Error("no side \"" + sideId + "\" in sides.json");
     if (side.schedule) HeroTimeline.setSchedule(side.schedule);
-    // a side may carry its own stylesheet on top of the site's (sides.json "css"): the hero's overlay
-    // rules it proposes. It is loaded before the side is declared ready, so a still never catches it half on.
-    var cssReady = Promise.resolve();
-    if (side.css) cssReady = new Promise(function (ok) {
-      var l = document.createElement("link"); l.rel = "stylesheet"; l.href = "../" + side.css;
-      l.onload = ok; l.onerror = function () { ok(); };
-      document.head.appendChild(l);
-    });
+    // a side may carry its own stylesheets on top of the site's (sides.json "css", one path or a list in
+    // cascade order): the hero's overlay rules it proposes. They are loaded before the side is declared
+    // ready, so a still never catches one half on.
+    var sheets = side.css ? [].concat(side.css) : [];
+    var cssReady = Promise.all(sheets.map(function (href) {
+      return new Promise(function (ok) {
+        var l = document.createElement("link"); l.rel = "stylesheet"; l.href = "../" + href;
+        l.onload = ok; l.onerror = function () { ok(); };
+        document.head.appendChild(l);
+      });
+    }));
     // the hero section exactly as the site has it, without its script tags (loaded below, per side)
     document.getElementById("mount").innerHTML = r[1].replace(/<script[^>]*><\/script>\s*/g, "");
     var chain = cssReady;
