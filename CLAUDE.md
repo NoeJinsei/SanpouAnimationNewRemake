@@ -434,7 +434,8 @@ it; the whole history was pushed on 2026-11-16. **The repository is public: anyt
 anyone.** So:
 
 - Push with a plain `git push` (this machine is already signed in; never type a password or a token).
-- He has not said whether to push after every pass without asking. Ask once, then follow his answer.
+- **Push after every finished pass without asking** (his answer on 2026-11-16: "Yes, every pass"). A pass is
+  finished when it is committed with its evidence and its checks have run. Work in progress is not pushed.
 - Never add the ignored folders to git: `reference/motion-film/` and `reference/warehouse-ops/` hold other
   people's material, and the scratch sides and `shots/` are throwaway.
 - Before a push, look at what is new for anything private (an address, a key, a personal detail). The
