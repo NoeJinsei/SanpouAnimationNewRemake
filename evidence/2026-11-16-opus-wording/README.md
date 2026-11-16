@@ -134,3 +134,63 @@ It prints every line against that 358 and touches no file.
 
 **Still true:** nothing is changed, copy is the owner's call, and a native writer should read whichever he
 picks before it goes on a real company's home page.
+
+---
+
+# Measured against the industry, 2026-11-16
+
+The owner gave the live site (https://www.sanpou-unyu.com/), reminded us that **紙スリッター加工 is no
+longer done**, said the comma in both lines reads odd, and asked for the style to be checked against other
+Japanese logistics sites. Six were read; the links and the full conventions are in `REFERENCES.md`.
+
+## What the company's own site says today
+
+Its main heading is a service list — 「紙スリッター加工業・運送業・倉庫保管」 — and it **leads with the
+service the company has dropped**. It also names only two warehouses (板橋・志木, not 入間), gives the
+coverage as 関東 with no mention of 新潟, and carries no founding year, no vehicle count and no staff count
+anywhere. Whatever is decided here, that page is advertising work the company no longer takes.
+
+## The six conventions, and what each one costs the copy as it stands
+
+| | the convention | the new site's line |
+|---|---|---|
+| 1 | lines of 3 to 14 characters, most 6 to 12 | 14 and 11 — about twice the norm across both |
+| 2 | **the 、 marks the line break: end of line 1, nowhere else** | has it at the break, which is right |
+| 3 | one 。 at the very end, or none | has one 。 — right |
+| 4 | **plain form 常体 or 体言止め, not です・ます** | 「お届けします」 is polite AND 宅配 language |
+| 5 | a slogan or a stance, never a service list | it is a statement of delivery — close enough |
+| 6 | **the customer is not named in the headline** | it names no customer — right |
+
+Convention 6 kills the earlier recommendation. **「荷主企業」 in a headline is something no one in the
+industry does.** It was wrong and is withdrawn. 企業の is as far as a headline should go, and the sub
+carries the rest.
+
+Convention 4 is the other correction: 担います / 担っています were too polite. The industry uses the
+dictionary form — 担う.
+
+## The four, in the industry's own grammar
+
+Pictures: `industry-desktop.jpg`, `industry-phone.jpg`. Words: `copy/hero-copy-b2b.json`. All four are
+8–12 characters a line, one 、 at the break, one 。 at the end (or none), plain form, no customer named,
+and every fact kept in the sub.
+
+- **D1 「板橋から半世紀、／企業の物流を担う。」** (8 + 9) — **the pick.** Where they are, how long they
+  have been there, and that they take the whole job. 企業の sets the B2B footing without trade jargon.
+- **D2 「昭和50年から、／関東の物流を担う。」** (8 + 9) — the same shape with the ground instead of the
+  reader. Loses 新潟市方面 from the headline; the sub still has it.
+- **D3 「創業から半世紀、／物流をまるごと担う。」** (8 + 10) — まるごと says 一貫 and 3PL in a word anyone
+  reads. The warmest of the four.
+- **D4 「昭和50年から、／企業物流の一貫パートナー」** (8 + 12) — noun-ending, no full stop, the most
+  3PL-sounding. Also the most like everyone else's.
+
+The sub is unchanged from the B2B set: 「輸送・配送から倉庫保管、流通加工、3PLまで一貫して。板橋・志木・
+入間の3拠点と32台の自社車両で、関東1都6県と新潟市方面をカバーしています。」
+
+## Widths, measured as always
+
+A headline line has 358 px on a 390 px phone. D1 210/236, D2 189/236, D3 210/263, D4 189/315 — all four
+have room to spare, where the line as it stands uses 345 of 358. Shorter lines are not only the convention;
+they are what leaves the picture visible on a phone.
+
+**Still true:** nothing is changed, copy is the owner's call, and a native writer should read whichever he
+picks.

@@ -77,3 +77,40 @@ which are banned in this film; the work has to read as a working depot with no o
 (primary red/yellow/green, brown interiors) are not ours; everything is drawn in `DAY`. They carry in-art
 lettering and lorem ipsum; our art carries no titles or captions. And none of their vehicles or buildings
 belongs to anyone we can identify — no other company's branding goes into our version.
+
+---
+
+## The company's live site, and how Japanese logistics sites write their hero (2026-11-16)
+
+The owner gave the live site again when he asked for the wording, with one reminder:
+**they no longer do 紙スリッター加工.**
+
+| Link | What it is |
+|---|---|
+| https://www.sanpou-unyu.com/ | **The company's own site today** (Wix, © 2020, server-rendered). Its main heading is a SERVICE LIST: 「紙スリッター加工業・運送業・倉庫保管」 — which **leads with the service they have dropped**. Two warehouse sites named (板橋・志木, not 入間), coverage given as 関東, 13t wing/gate down to 軽トラック, ロールクランプ. No founding year, no vehicle count, no staff count anywhere on it. Representative since April 2025: 小松 幸恵. |
+
+**Read for how the industry writes a hero** (structure only; none of their copy is used or reproduced):
+
+| Link | |
+|---|---|
+| https://www.maruzenshowa.co.jp/ | 丸全昭和運輸 — 4 lines, 8–14 chars, no 、inside a line, plain + 体言止め |
+| https://www.konoike.net/ | 鴻池運輸 — kicker + 2 lines (10, 7), 、at the line break, plain form |
+| https://www.tonami.co.jp/ | トナミ運輸 — 3 lines, 6–9 chars, 、at the line break, one 。at the end, plain form |
+| https://www.hamakyorex.co.jp/ | ハマキョウレックス — 2 lines (11, 20), 、at the line break, polite (the company is the subject) |
+| https://www.trancom.co.jp/ | トランコム — 1 line, ~16 chars, plain form, dictionary-form verb |
+| https://www.suzuyo.co.jp/ | 鈴与 — 3 lines (3, 8, 3), no punctuation at all, elliptical |
+
+**The conventions they share**, which the new copy should follow:
+
+1. **Short lines: 3 to 14 characters**, most 6 to 12. The new site's are 14 and 11 — about twice as long
+   as the norm once you count both.
+2. **The 、 marks the LINE BREAK.** It sits at the end of line 1 and nowhere else. Four of the six do this;
+   none puts a 、 inside both lines. (The owner saw this himself on 2026-11-16: "the comma in between can
+   be a bit odd, at least for both lines.")
+3. **One 。 at the very end, or none at all.** Never one per line.
+4. **Plain form (常体) or 体言止め, not です・ます.** Four of six. Polite only where the company name is the
+   grammatical subject.
+5. **A slogan or a stance, never a list of services** in the headline itself. The services go in the
+   sub-copy. (The company's own live site is the exception, and that is the older SME convention.)
+6. **None of them names the customer** in the headline — no 荷主, no 荷主企業. That belongs in the sub.
+   An SME may say 企業の to make the B2B footing clear without the trade jargon.

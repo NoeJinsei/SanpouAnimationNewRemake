@@ -1,40 +1,50 @@
 [
   {
-    "id": "c1",
-    "label": "C1  the plainest",
+    "id": "now",
+    "label": "the new site as it stands",
     "title": [
-      "<span class=\"nw\">昭和50年</span>から、板橋で。",
-      "企業の物流を担っています。"
+      "関東1都6県と新潟市方面へ、",
+      "板橋からお届けします。"
     ],
     "tag": "関東<span class=\"nw\">1都6県</span>・<span class=\"nw\">新潟市方面</span>　輸送・保管・流通加工・<span class=\"nw\">3PL</span>",
     "sub": "輸送・配送から倉庫保管、流通加工、<span class=\"nw\">3PLまで</span><span class=\"nw\">一貫して。</span><span class=\"nw\">板橋・志木・入間の</span><span class=\"nw\">3拠点</span>と<span class=\"nw\">32台の</span>自社車両で、関東<span class=\"nw\">1都6県</span>と<span class=\"nw\">新潟市方面</span>を<span class=\"nw\">カバーしています。</span>"
   },
   {
-    "id": "c2",
-    "label": "C2  identity, customer, verb",
+    "id": "d1",
+    "label": "D1",
     "title": [
-      "半世紀、板橋の物流会社。",
-      "荷主企業の物流を担います。"
+      "板橋から半世紀、",
+      "企業の物流を担う。"
     ],
     "tag": "関東<span class=\"nw\">1都6県</span>・<span class=\"nw\">新潟市方面</span>　輸送・保管・流通加工・<span class=\"nw\">3PL</span>",
     "sub": "輸送・配送から倉庫保管、流通加工、<span class=\"nw\">3PLまで</span><span class=\"nw\">一貫して。</span><span class=\"nw\">板橋・志木・入間の</span><span class=\"nw\">3拠点</span>と<span class=\"nw\">32台の</span>自社車両で、関東<span class=\"nw\">1都6県</span>と<span class=\"nw\">新潟市方面</span>を<span class=\"nw\">カバーしています。</span>"
   },
   {
-    "id": "c2-50",
-    "label": "C2 with the 50-year badge",
+    "id": "d2",
+    "label": "D2",
     "title": [
-      "<span class=\"nw\">創業50年</span>、板橋の物流会社。",
-      "荷主企業の物流を担います。"
+      "<span class=\"nw\">昭和50年</span>から、",
+      "関東の物流を担う。"
     ],
     "tag": "関東<span class=\"nw\">1都6県</span>・<span class=\"nw\">新潟市方面</span>　輸送・保管・流通加工・<span class=\"nw\">3PL</span>",
     "sub": "輸送・配送から倉庫保管、流通加工、<span class=\"nw\">3PLまで</span><span class=\"nw\">一貫して。</span><span class=\"nw\">板橋・志木・入間の</span><span class=\"nw\">3拠点</span>と<span class=\"nw\">32台の</span>自社車両で、関東<span class=\"nw\">1都6県</span>と<span class=\"nw\">新潟市方面</span>を<span class=\"nw\">カバーしています。</span>"
   },
   {
-    "id": "c3",
-    "label": "C3  the bold promise",
+    "id": "d3",
+    "label": "D3",
     "title": [
-      "<span class=\"nw\">昭和50年</span>、板橋から。",
-      "止めない物流を、企業へ。"
+      "創業から半世紀、",
+      "物流をまるごと担う。"
+    ],
+    "tag": "関東<span class=\"nw\">1都6県</span>・<span class=\"nw\">新潟市方面</span>　輸送・保管・流通加工・<span class=\"nw\">3PL</span>",
+    "sub": "輸送・配送から倉庫保管、流通加工、<span class=\"nw\">3PLまで</span><span class=\"nw\">一貫して。</span><span class=\"nw\">板橋・志木・入間の</span><span class=\"nw\">3拠点</span>と<span class=\"nw\">32台の</span>自社車両で、関東<span class=\"nw\">1都6県</span>と<span class=\"nw\">新潟市方面</span>を<span class=\"nw\">カバーしています。</span>"
+  },
+  {
+    "id": "d4",
+    "label": "D4",
+    "title": [
+      "<span class=\"nw\">昭和50年</span>から、",
+      "企業物流の一貫パートナー"
     ],
     "tag": "関東<span class=\"nw\">1都6県</span>・<span class=\"nw\">新潟市方面</span>　輸送・保管・流通加工・<span class=\"nw\">3PL</span>",
     "sub": "輸送・配送から倉庫保管、流通加工、<span class=\"nw\">3PLまで</span><span class=\"nw\">一貫して。</span><span class=\"nw\">板橋・志木・入間の</span><span class=\"nw\">3拠点</span>と<span class=\"nw\">32台の</span>自社車両で、関東<span class=\"nw\">1都6県</span>と<span class=\"nw\">新潟市方面</span>を<span class=\"nw\">カバーしています。</span>"
