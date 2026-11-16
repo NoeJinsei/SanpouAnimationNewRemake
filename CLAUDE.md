@@ -428,8 +428,25 @@ not this project; nothing has been changed. **Do not touch the site; ask him bef
   impactful". So D1-D4 are dead and so is anything built on 創業 / 半世紀 / 昭和50年 or 企業.
   E1 「板橋から、／関東と新潟市へ。」, E2 「毎日の荷物を、／確かに運ぶ。」,
   E3 「関東と新潟市をつなぐ／毎日の物流」 (体言止め, no punctuation), E4 「荷物を、まっすぐ運ぶ。」 (one line).
-  **He then picked the SHAPES of E1 and E3 and asked for better words inside them** ("Either E1 or 3, but I
-  think it could worded better"). Round 4 (`copy/hero-copy-final.json`, `final-desktop.jpg`, `final-phone.jpg`,
+  **PLACE NAMES ARE OUT (2026-11-17), and that kills rounds A-F entirely.** His words on F1-F4: "None
+  really clicks with me, maybe because we are emphasizing the names of the location / city / prefecture too
+  much here, when that is not the main message we want to write on the hero section of our website." A
+  survey of 90 readable Japanese logistics heroes (`research/jp-hero-survey-2026-11-17.md`, every link in
+  it) backs him hard: 13 name a place, but seven of those are search-engine sentences on template sites,
+  **exactly ONE is a written place slogan**, and **not one of the 90 is built as "from X to Y"**. It also
+  found the other reason the drafts read wrong: **every hero that is a sentence puts the VERB LAST and what
+  it acts on FIRST**, and **no hero carries facts** (so the tag and sub below, which carry all of them,
+  stay). The live set is round 5, `copy/hero-copy-message.json` + `message-desktop.jpg` / `message-phone.jpg`:
+  **G2 「受け取る手で、送り出す。」** (the reviewer's pick: one house from intake to dispatch, their real
+  differentiator, said without naming a service), **G1 「角ひとつ、つぶさない。」** (the workflow's own pick;
+  a native ear must settle whether it reads as a depot safety slogan), G3 「同じ屋根の下に／棚と荷台」,
+  G4 「荷物を整える運び手」, G5 「また朝が来て、／また運ぶ。」. The three message types that fit are
+  PROMISE, ROLE and IDENTITY; SCOPE, CHANGE, CHALLENGE, BENEFIT and INVITATION are traps, with reasons in
+  the survey. Words already killed with their reasons, so the ground is not walked twice: 荷物 (scene 01's
+  caption shares the frame), 届く／届ける, 棚に並ぶ, 置いておく, 静かに, and any noun-ending line carrying
+  punctuation.
+  **Superseded, kept only as history:** he had picked the SHAPES of E1 and E3 and asked for better words
+  inside them ("Either E1 or 3, but I think it could worded better"). Round 4 (`copy/hero-copy-final.json`, `final-desktop.jpg`, `final-phone.jpg`,
   a workflow of 8 agents) is the live set: **F1 「板橋から、／関東と新潟市へ運ぶ。」** (the reviewer's pick:
   E1 plus the one verb it lacked), F2 「板橋から／関東と新潟市へ」 (no punctuation), F3 「板橋から関東と新潟市へ」
   (one line), F4 「関東と新潟市へ運ぶ／板橋の三豊運輸」 (the answer to E3). Nine of ten other finalists were

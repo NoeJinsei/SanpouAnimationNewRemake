@@ -324,3 +324,72 @@ A headline line has 358 px on a 390 px phone. F1 131/263, F2 105/184, F3 289, F4
 358 the line as it stands uses. All four have room at both framings.
 
 **Still true:** nothing is changed, copy is the owner's call, and a native writer should read whichever he picks.
+
+---
+
+# Round 5: off the place names altogether (2026-11-17)
+
+His verdict on F1-F4: *"None really clicks with me, maybe because we are emphasizing the names of the
+location / city / prefecture too much here, when that is not the main message we want to write on the hero
+section of our website."* And: check more Japanese logistics sites.
+
+## First the survey, because it changes the brief
+
+`research/jp-hero-survey-2026-11-17.md` — six readers, 123 companies, **90 heroes actually readable**,
+every one classified by what it SAYS. The findings that matter here:
+
+- **He was right about the places.** 13 of 90 contain a place name, but seven are search-engine sentences
+  pasted in as a headline on template sites. **Exactly one is a written place slogan** (a 612-staff carrier
+  whose claim IS its twelve prefectures), and **not one of the 90 is built as "from X to Y"** — the shape of
+  every draft he rejected.
+- **The verb goes last and what it acts on first.** Not one hero in 90 is built as "to X, from Y, we carry".
+  That is the second reason the drafts read wrong, independent of the place names.
+- **No hero carries facts** — no fleet, no year, no depots, no service list. So the tag and the sub under the
+  headline, which carry all of them, are exactly where the industry puts them and they stay.
+- **The three types that fit: PROMISE, ROLE, IDENTITY.** PROMISE is the largest group among small carriers
+  and the nationals barely touch it — "we are reliable" is defensive from a famous brand and necessary from
+  an unknown one. ROLE runs the other way, so a ROLE line from 32 trucks must stay the size of a street or a
+  morning, never a nation. SCOPE, CHANGE, CHALLENGE, BENEFIT and INVITATION are traps, with reasons.
+
+## Then the writing round
+
+Six writers, two per type from different angles, a ranking pass per type, then one adversarial pass across
+all three told to assume every finalist was bad. Options in `copy/hero-copy-message.json`,
+`message-desktop.jpg` and `message-phone.jpg`.
+
+- **G2 「受け取る手で、送り出す。」** (12, one line) — **the reviewer's pick.** It says the one thing that
+  separates this company from the carrier next door — the same house takes the goods in, keeps them, works
+  on them and sends them out — and it says it without naming a service. Two matched beats of six either side
+  of one 、, verb last, and its first half is literally on screen while it is read.
+- **G1 「角ひとつ、つぶさない。」** (5 + 6) — **the workflow's own pick**, and the disagreement is worth
+  showing rather than hiding. The most spoken line in the set and the most memorable: a crushed carton
+  corner is exactly what a shipper complains about, and only a firm that puts hands on the goods ever sees
+  them. It says care without 丁寧・確実・安全. Against it: 「〜ひとつ、〜ない」 is the shape of the safety
+  slogans that hang in depots, so a native reader has to confirm it lands as a person and not as a poster;
+   角 means boxes, so rolled paper falls outside the picture; and it is an absolute about damage.
+- **G3 「同じ屋根の下に／棚と荷台」** (7 + 4, no punctuation) — the most exclusive claim here: a
+  trucking-only firm cannot say it at all. Against it: ひとつ屋根の下 is a household idiom and a famous
+  drama title, and **the picture does not back it** — the headline plays over the supplier's door in scene
+  01, not over their own warehouse.
+- **G4 「荷物を整える運び手」** (9, one line) — the shortest, a clean formal profile. Against it: 整える
+  reads first as tidying luggage, and 運び手 is current trade-press vocabulary (運び手不足), so it is less
+  distinctive than it looks.
+- **G5 「また朝が来て、また運ぶ。」** (7 + 5) — the most human voice in the whole set; no template could
+  produce it. Against it: it owns nothing — any carrier could paste it — the doubled また can read as
+  weariness, and 運ぶ alone throws away the keeping and handling half of the business.
+
+**Killed, with the reason, so the same ground is not walked twice:** anything using 荷物 (scene 01's caption
+sits in the same frame and uses it), 届く／届ける (the most worked verb in Japanese delivery copy and
+parcel-to-a-household in register), 棚に並ぶ (a shop shelf, which narrows the cargo on the day he said the
+customer must not be narrowed), 置いておく (in freight, goods sitting is a failure, not a service),
+重い荷ほど静かに運ぶ (静かに lands first as low-noise night delivery), 同じ顔の運転手 (reads as a stone-faced
+driver), and every noun-ending line that carried punctuation.
+
+## Widths, measured as always
+
+A headline line has 358 px on a 390 px phone. G1 131/158, G2 315, G3 184/105, G4 236, G5 184/131 — against
+the 345 of 358 the line as it stands uses. The whole set is 11 to 12 characters, which is the industry's
+median, not a compromise forced by the phone.
+
+**Still true:** nothing is changed, copy is the owner's call, and a native writer should read whichever he
+picks — G1 especially, because the safety-slogan question can only be settled by a native ear.
