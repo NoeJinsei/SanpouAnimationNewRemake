@@ -537,6 +537,36 @@ it.** Nothing else in the film was touched.
 - **If the film changes again, record the four films again** (the commands are on the film page) and say
   so on that page.
 
+## WHERE IT STANDS WHEN YOU PICK THIS UP (2026-11-17, the owner logged off)
+
+Everything is committed and pushed; the working tree is clean. Two threads are live.
+
+**1. Fable 5.2 has the film.** `PROMPT-FOR-FABLE-LOOP.md` is its brief, handed over and approved by the
+owner ("Looks right"): make scene 05 a complete seamless loop (L = 52 s, two plane cycles and one bird
+cycle; position AND velocity continuous at the wrap; the five scene buttons must keep working), and chase
+the two different faults hiding under "jaggedness" - dropped frames, and motion that steps rather than
+flows. **File boundary: Fable owns `round2/js/` and `round2/parts/`; this session owns `round2/css/`,
+`copy/`, `sides.json`, `viewer/` and `tools/`.** Do not cross it without saying so.
+
+**2. This session has the copy and the overlay.** Settled and wired in: the **faint patch** he chose
+(`round2/css/light/patch-faint.css`, loaded after `hero-copy.css`) and the rebuilt phone layout. Open:
+the wording and the layout.
+
+**THE ONE THING TO RESOLVE FIRST, and do NOT guess it.** His last message was *"Probably something like 3,
+but pause and save the progress need to log off now so."* It was an answer to a two-part question (which
+headline, and which layout), and **"3" is ambiguous between two lists he had just been shown**:
+- **H3** `荷を預かる、荷を運ぶ。` - the wording in the film's own order (01 入荷, 02 積込, 03 輸送), from
+  `evidence/2026-11-17-round-h/`;
+- **layout 3, the VERTICAL RAIL** (`round2/css/layouts/tategaki-rail.css`), from
+  `evidence/2026-11-17-opus-layouts/final-*.jpg`.
+"something LIKE 3" also reads as a direction rather than a final pick. **Ask him which he meant, in one
+line, before building anything on it.** If he meant the rail, note it wants a SHORT headline: one column
+holds about seven Japanese characters at both framings, so H2 `荷を預かる物流` (7) fits one column and H1/H3
+(11) run to two.
+
+Everything either answer needs is already built, measured and on disk - no work is lost and nothing is
+half-done.
+
 ## GitHub (2026-11-16)
 
 `origin` is the owner's repository, https://github.com/NoeJinsei/SanpouAnimationNewRemake.git, and `main`
