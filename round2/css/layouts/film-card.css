@@ -1,0 +1,18 @@
+/* The film becomes a framed card on the right; the copy stands beside it on the page's own ground.
+   Nothing is laid over the picture, so both washes are deleted outright rather than tuned.
+   The stage refits itself: fitStage() reads .hc-stagebox and a ResizeObserver watches it. */
+#sanpou-journey { background: #eef4f8; }
+#sanpou-journey .hc-stagebox { inset: 28px 28px 28px auto; width: min(62%, 1040px); border-radius: 14px; }
+#sanpou-journey .hc-scrim, #sanpou-journey .hc-scrim-sign { display: none; }
+#sanpou-journey .hc-content { top: 40%; width: min(34%, 430px); right: auto; max-width: none; }
+#sanpou-journey .hc-title { font-size: clamp(30px, 3.0vw, 44px); }
+#sanpou-journey .hc-sub { max-width: none; margin-top: 20px; font-size: 15px; line-height: 1.85; }
+#sanpou-journey .hc-cta { margin-top: 26px; }
+#sanpou-journey .hc-cta .btn { min-width: 0; }
+/* the furniture leaves the picture too: caption and scene buttons go under the copy */
+#sanpou-journey .hc-bottom { right: auto; bottom: 36px; width: min(34%, 430px); flex-wrap: wrap; gap: 12px 18px; }
+#sanpou-journey .hc-no, #sanpou-journey .hc-scene { color: var(--navy-800); }
+#sanpou-journey .hc-lead { color: #46566e; }
+#sanpou-journey .sjx-index { width: 100%; }
+#sanpou-journey .sjx-index .tr { background: rgba(16, 31, 54, .14); outline: 0; }
+#sanpou-journey .hc-pause { border-color: rgba(16, 31, 54, .28); background: transparent; color: var(--navy-800); }

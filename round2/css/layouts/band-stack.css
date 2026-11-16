@@ -1,0 +1,10 @@
+/* Un-stack the hero: the copy is a block of type at the top on its own ground, the film a
+   full-bleed letterbox band beneath it. No overlay, no wash, no legibility negotiation at all.
+   The costly one: the fit covers, so a short wide box crops the film top and bottom. */
+#sanpou-journey { background: #eef4f8; }
+#sanpou-journey .hc-stagebox { top: 248px; }
+#sanpou-journey .hc-content { top: 52px; transform: none; max-width: 980px; }
+#sanpou-journey .hc-scrim::before { content: none; }
+#sanpou-journey .hc-scrim-sign { display: none; }
+#sanpou-journey .hc-scrim { top: 248px; background: linear-gradient(to top, rgba(8, 15, 22, .82) 0, rgba(8, 15, 22, .45) 90px, rgba(8, 15, 22, 0) 44%); -webkit-mask-image: none; mask-image: none; }
+#sanpou-journey .hc-sub { font-size: 16px; margin-top: 18px; }

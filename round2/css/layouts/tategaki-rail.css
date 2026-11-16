@@ -1,0 +1,17 @@
+/* The headline stands on its side in a rail down one edge. A column of Japanese type is one
+   character wide, so the copy costs a ribbon of the frame instead of a band across it, and it buys
+   height - the one thing a 390px phone has to spare. The film keeps the whole middle. */
+#sanpou-journey .hc-scrim::before { content: none; }
+#sanpou-journey .hc-scrim-sign { display: none; }
+#sanpou-journey .hc-content { inset: 0; left: 0; right: 0; top: 0; transform: none; max-width: none; pointer-events: none; }
+#sanpou-journey .hc-content > * { pointer-events: auto; }
+#sanpou-journey .hc-title { position: absolute; top: 56px; margin: 0;
+  right: max(var(--gutter), calc((100% - var(--container)) / 2));
+  writing-mode: vertical-rl; max-height: calc(100% - 210px);
+  font-size: clamp(26px, 3.2vw, 44px); letter-spacing: .14em; }
+#sanpou-journey .hc-tag { display: block; position: absolute; top: 56px; margin: 0;
+  right: calc(max(var(--gutter), (100% - var(--container)) / 2) + 92px);
+  writing-mode: vertical-rl; letter-spacing: .12em; color: #46566e; }
+#sanpou-journey .hc-sub { display: none; }
+#sanpou-journey .hc-cta { position: absolute; top: 56px; margin: 0;
+  left: max(var(--gutter), calc((100% - var(--container)) / 2)); }

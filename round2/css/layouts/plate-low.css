@@ -1,0 +1,13 @@
+/* The copy drops out of the middle and becomes a plate along the foot, sharing a baseline with the
+   caption and the scene buttons. The half-screen wash goes; the bottom gradient is no deeper than
+   the plate, so sky, sun, clouds, the Tower and the plane are never veiled. */
+#sanpou-journey .hc-scrim::before { content: none; }
+#sanpou-journey .hc-scrim-sign { display: none; }
+#sanpou-journey .hc-scrim { background: linear-gradient(to top, rgba(8, 15, 22, .88) 0, rgba(8, 15, 22, .62) 200px, rgba(8, 15, 22, 0) 48%); -webkit-mask-image: none; mask-image: none; }
+#sanpou-journey .hc-content { top: auto; bottom: 96px; transform: none; max-width: none;
+  display: grid; grid-template-columns: minmax(0, 520px) minmax(0, 440px); column-gap: 56px; align-items: end; }
+#sanpou-journey .hc-title { grid-column: 1; grid-row: 1; margin: 0; color: var(--on-dark); font-size: clamp(28px, 3.4vw, 44px); }
+#sanpou-journey .hc-sub { grid-column: 2; grid-row: 1; margin: 0; max-width: none; color: var(--on-dark-2); font-size: 15px; line-height: 1.8; }
+#sanpou-journey .hc-tag { display: none; }
+#sanpou-journey .hc-cta { grid-column: 2; grid-row: 2; margin-top: 18px; }
+#sanpou-journey .hc-link { color: var(--on-dark); border-color: rgba(255, 255, 255, .75); }

@@ -1,0 +1,9 @@
+/* Protect the words, not the picture. The wash is deleted and each headline line gets its own pale
+   card, exactly as wide as its own text. A full-width wash pales the whole frame to protect a
+   seventh of it; this protects exactly that seventh. */
+#sanpou-journey .hc-scrim::before { content: none; }
+#sanpou-journey .hc-scrim-sign { display: none; }
+#sanpou-journey .hc-line { display: table; padding: 6px 18px; margin-bottom: 10px;
+  background: rgba(247, 251, 253, .86); box-shadow: 0 0 0 1px rgba(13, 42, 74, .14); }
+#sanpou-journey .hc-sub { display: table; padding: 14px 18px; max-width: 26em;
+  background: rgba(247, 251, 253, .82); box-shadow: 0 0 0 1px rgba(13, 42, 74, .10); }
