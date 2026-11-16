@@ -71,3 +71,66 @@ prefectures each overflow a 390 px phone. That is also why the headline as it st
 I am not a native writer of Japanese business copy. The faults above are structural and I am confident
 about them; the replacements should still be read by a native speaker, and by the owner, before they go on
 a real company's home page.
+
+---
+
+# B2B: the owner's answer, 2026-11-16
+
+> "Probably something along the line of C, but more polished considering the context of our company
+> (our operation is close to B2B rather than to consumers directly so (Medium to Large companies))."
+
+That is a change of brief, and it names the fault better than "it sounds off" did.
+
+## The copy was written in consumer register
+
+「お届けします」 is parcel language — what a 宅配 company says to a householder. The reader this site is
+for is a 物流部長 or a 購買担当 at a mid-to-large manufacturer, choosing a partner. That reader does not
+want to hear that you will deliver something **to** them; they want to know you can take their logistics
+**off** them. Hence, through all four options below:
+
+| consumer word | B2B word used instead | why |
+|---|---|---|
+| お届けします | 担う / 一貫して | shouldering the job, not handing over a parcel |
+| 支える | 担う | 支える is CSR language, and it collides with scene 05's caption 「創業以来、地域の物流を支えてきました。」 |
+| 地域の | 企業の / 荷主企業の | says who the customer is, outright |
+| (services last) | services first in the sub | 輸送・保管・流通加工・3PL is what a buyer scans for; it used to be at the end of a 70-character sentence |
+
+The sub is the same in all four: 「輸送・配送から倉庫保管、流通加工、3PLまで一貫して。板橋・志木・入間の
+3拠点と32台の自社車両で、関東1都6県と新潟市方面をカバーしています。」 Two sentences: what you can hand
+over, then the capacity and the reach. Every fact kept.
+
+## The four
+
+Pictures: `b2b-desktop.jpg`, `b2b-phone.jpg`. Words: `copy/hero-copy-b2b.json`.
+
+- **C1** 「昭和50年から、板橋で。／企業の物流を担っています。」 The plainest: C's shape exactly, with 担う
+  for 支える. Safest, warmest, nothing to argue with.
+- **C2** 「半世紀、板橋の物流会社。／荷主企業の物流を担います。」 **The pick.** Line 1 is proof and a plain
+  self-description; line 2 names the customer in the customer's own word (荷主企業) and finishes the verb.
+  Identity, who it is for, what is done — in 25 characters.
+- **C2-50** the same with 「創業50年」 in front. The badge is louder; strictly the company is 51 years old
+  (founded 昭和50年 = 1975), so 50年 is the usual rounding rather than the fact. 「半世紀」 avoids that.
+- **C3** 「昭和50年、板橋から。／止めない物流を、企業へ。」 The boldest, and the most memorable. It is also
+  a promise with nothing on the page to back it up, and a hostage to the first bad day.
+
+## Again, the phone sets the shape — measured, not guessed
+
+A headline line has 358 px on a 390 px phone (`white-space: nowrap`, `clamp(21px, 6.6vw, 30px)`).
+All four fit. These did not, and that is why they are not on the list:
+
+| tried | widest line | |
+|---|---|---|
+| 創業半世紀、板橋の物流会社。 | 368px | over by 10 |
+| 昭和50年創業、板橋の物流会社。 | 399px | over by 41 |
+| 昭和50年から、板橋で。／**荷主企業の**物流を担っています。 | 394px | over by 36 |
+| 創業50余年、板橋の物流会社。 | 372px | over by 14 |
+| 荷主企業の物流を、一貫して。 (with the comma) | 368px | over by 10 |
+
+So C2 is the only shape that carries the half-century, the word 荷主企業 and a finished verb inside a
+phone's line. C1 drops 荷主企業 for 企業; C2-50 trades 半世紀 for the rounder badge.
+
+Re-run any wording: `node tools/copy-shot.mjs round2 copy/hero-copy-b2b.json <outDir> [--framing=phone]`.
+It prints every line against that 358 and touches no file.
+
+**Still true:** nothing is changed, copy is the owner's call, and a native writer should read whichever he
+picks before it goes on a real company's home page.
