@@ -1,5 +1,6 @@
 // Contrast of the site's live text over the real rendered picture, moment by moment (WCAG AA), plus the unfilled progress track.
 //   node tools/contrast-check.mjs <side> [--framings=desktop,phone] [--every=1000] [--from=0 --to=45800] [--json=<file>]
+//   --css=<file>  extra CSS injected before the measurement (to try a different copy wash; the file is not changed on disk)
 // Per moment: reads each visible text line box, hides all text (colour transparent, layout and backdrop untouched), screenshots,
 // and compares the text colour with every backdrop pixel under the line (2 CSS px grid). Fading copy (opacity < .95) is skipped.
 // Rows are per element and framing: worst ratio, 5th percentile, where the worst was, PASS/FAIL. Exit code 1 if any row fails.
@@ -50,6 +51,7 @@ for (const fr of framings) {
   await page.waitForFunction(() => window.heroFrame && (window.heroFrame.seek || window.heroFrame.error), null, { timeout: 30000 });
   if (await page.evaluate(() => !!window.heroFrame.error)) { console.log("side did not start:", await page.evaluate(() => window.heroFrame.error)); process.exit(1); }
   await page.evaluate(() => document.fonts.ready);
+  if (flags.css) await page.addStyleTag({ content: fs.readFileSync(String(flags.css), "utf8") });
   await page.addStyleTag({ content: ".cc-hide #sanpou-journey *, .cc-hide #sanpou-journey *::before, .cc-hide #sanpou-journey *::after { color: transparent !important; -webkit-text-fill-color: transparent !important; text-shadow: none !important; transition: none !important; caret-color: transparent !important; }" });
   const hero = await page.$("#sanpou-journey"), raf2 = () => page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
   for (let t = from; t <= to; t += every) {

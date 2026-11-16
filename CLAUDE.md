@@ -379,6 +379,30 @@ numbers are at the end of `CHANGES.md`. **Check the verdict before building on a
   - the bar it rides (`.hc-fill`), the dark band, the pale wash, the copy, the two buttons, the caption:
     the site's HTML and CSS (`original/site/`, `original/css/40-hero.css`), READ ONLY. For the integration
     task: beside the redrawn truck the bar's flat vermilion dashes read a little crude at 2x.
+
+## Two things the owner raised on 2026-11-16, both the WEBSITE, both still open
+
+He watched the film and said it "looks pretty good overall, for now". These are for the integration task,
+not this project; nothing has been changed. **Do not touch the site; ask him before acting on either.**
+
+- **The copy wash on the left** (`.hc-scrim::before`). He asked whether it should be there at all, "since
+  it blocks half the animation section". Measured, on a 1440 desktop: .86 opaque at x 0, .72 at x 720
+  (half the screen), .50 at 818, clear at 1040 - at least half-opaque over 57 % of the width and 70 % of
+  the height. On a phone it is a different rule, a wash across the TOP. He is right about the cost: most
+  of the warehouse pass sits behind it. But it cannot simply go: with it off the headline crosses the
+  supplier building's dark storey at t=0 and measures 1.33:1 against the 3 it needs. Four options, with
+  pictures and numbers, in `evidence/2026-11-16-opus-copy-wash/`; the reviewer's pick is to let the copy
+  and the wash clear after the opening and come back on pause or focus, which is what the site ALREADY
+  does on scene 04. `node tools/scrim-shot.mjs <side> <outDir>` shoots the hero at several wash strengths;
+  `contrast-check.mjs` now takes `--css=<file>` to measure one without changing anything on disk.
+- **The wording.** He has never liked it: "doesnt sound like a text or phrase a person wrote it, doesnt
+  sound natural like what other websites for a logistics company uses it." The copy is
+  `original/site/hero-section.html` (H1 関東1都6県と新潟市方面へ、板橋からお届けします。, the tag and the
+  sub). Copy is HIS call and the facts are fixed (関東1都6県と新潟市方面, 昭和50年創業, 板橋・志木・入間の
+  3拠点, 32台, 輸送・保管・流通加工・3PL). He has not asked for a rewrite yet.
+- Also found while measuring, pre-existing and unrelated: `contrast-check` fails one row,
+  `track unfilled @desktop` 1.00 against the needed 3 at t=28000 - the site's own progress bar over the
+  finale's pale sky.
 - **The film is finished to the brief** (the reviewer, 2026-11-16): every drawing remade, both seams as
   camera moves, no pops, the route line through, and smoother than what it replaces. **Start nothing else.**
   The owner watches it end to end next; putting it into the site is a separate task that does not start
