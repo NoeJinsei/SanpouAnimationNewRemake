@@ -585,11 +585,16 @@ rules it leaves are in `STYLE.md` §5. **Check his verdict before building on it
   for work of this size.
 - **Left, with reasons** (end of `CHANGES.md`): exhaust puffs flicker behind a truck at full speed; the
   first truck's parking bounce begins abruptly; scenes 01 and 02's tiny handover steps.
-- **Not ours, for the session that owns `tools/` and the overlay:** `check-player-vs-glue` fails on some
-  runs at a scene 02 or 03 moment and did so before this round (the copy's patch is still clearing in the
-  clock player when the picture is taken; on a desktop the live player starts a tenth of a second behind
-  the wall clock, which scene 03's scroll shows). A still or a recording made right after a jump to another
-  scene can catch the patch half cleared: give it 3 s. `check-viewer`'s occasional "1 problem" is
+- **`check-player-vs-glue` fails on some runs at a scene 02 or 03 moment, and it is TIMER JITTER, not the
+  overlay.** Round 11 attributed it to the copy's patch still clearing in the clock player and handed it to
+  the session that owns `tools/`; **that attribution was checked on 2026-11-17 and does not hold**
+  (`evidence/2026-11-17-opus-round11-check/`). Measured with the overlay stylesheet OFF the scene 03 figure
+  is 7.85 %, with it ON 7.32 %, and on a later clean run 4.99 % — **removing the overlay makes it worse, not
+  better.** The tolerance is `pct < 8` and its own comment says why it sits there: "the expressway scrolls
+  270 px a second, so 20 ms of timer noise already moves every edge there." It is noise on the fastest
+  scrolling scene, it is nobody's defect, and it should not be chased. Round 11 was right that it failed the
+  same way before its changes. (Still true and worth keeping: a still or a recording made right after a jump
+  to another scene can catch the patch half cleared, so give it 3 s.) `check-viewer`'s occasional "1 problem" is
   `net::ERR_NO_BUFFER_SPACE` from the local server when many test browsers have been run in a short time.
 - Recording is slow (about 4 frames a second for one recorder): run several `tools/record.mjs` side by side.
 - The four whole-film recordings and `films/remake-2.mp4` were made again at the end of this round.
