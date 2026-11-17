@@ -223,6 +223,20 @@
     mapIn: [0, 26], prefs: [4, 56], routesDraw: [34, 78], pinPop: 60,
     mapRecede: [86, 112], logo: [96, 126], tagline: [116, 140], stats: [128, 174], holdFrom: 174,
   };
+  /* The player's two paces (round 11). hero-glue.js plays every entrance ENTER_RATE (1.2) times as fast as a
+     hold, and a scene's clock was simply its frame: so a scene ran a fifth faster while it entered and
+     dropped to its own speed in the one frame its hold began. Where fast things are moving at that moment
+     it showed as a lurch: in scene 03 the whole road went from 324 to 270 px/s in one frame, in scene 05
+     the trucks from 72 to 60 and the plane, rolling out, from 100 to 78.
+     (`node evidence/2026-11-17-finale-loop/check/handover-check.mjs round2` measures every scene's.)
+     ENTER_PACE is the player's ENTER_RATE: keep the two the same.
+     holdSettle: a hold's clock that sets off at the entrance's pace and settles to its own over n frames
+     (hold = the frame the hold begins at). After that it is the frame plus a constant. */
+  var ENTER_PACE = 1.2;
+  function holdSettle(frame, hold, n) {
+    var x = frame - hold; if (x <= 0) return frame;
+    var u = x / n; return frame + (ENTER_PACE - 1) * (u < 1 ? x - n * (u * u * u - u * u * u * u / 2) : n / 2);
+  }
   var easeOutCubic = function (t) { return 1 - Math.pow(1 - t, 3); };
   var easeInOutCubic = function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
   var clamp01 = function (v) { return Math.max(0, Math.min(1, v)); };
@@ -4516,6 +4530,10 @@
     return _expArt = A;
   }
   function sceneTransit(frame) {
+    // (round 11) The hold begins at this scene's frame 55 (the player's entrance ends at master frame 475, and this
+    // scene starts at 420). It sets off at the entrance's pace and settles to its own in a second and a half, so
+    // the road, the skyline, the wheels and the sky no longer lose a sixth of their speed in one frame.
+    frame = holdSettle(frame, 55, 45);
     var fps = FPS, time = frame / fps;
     // the seam from scene 02: `ahead` is how far the camera still has to come before it rides with the convoy.
     // The road's scroll is that much short of its steady 9 px a frame, so once the camera has landed the
@@ -5388,12 +5406,27 @@
     var prefK = clamp01((frame - T_NETWORK.prefs[0]) / (T_NETWORK.prefs[1] - T_NETWORK.prefs[0]));
     var routeK = clamp01((frame - T_NETWORK.routesDraw[0]) / (T_NETWORK.routesDraw[1] - T_NETWORK.routesDraw[0]));
     var pinK = clamp01((frame - T_NETWORK.pinPop) / 18);
-    // the finale's sky clock: it stands still under the map's panel and runs, at its own even pace, from the
-    // frame the map starts to draw back. From then on it is the scene's clock, so every cloud is where it was composed.
-    var skyT = frame > T_NETWORK.mapRecede[0] ? time : T_NETWORK.mapRecede[0] / fps;
-    // (round 11) the clouds stand where they were composed (the sky's clock at rest, sky0) less how far they
-    // have gone out on the loop's one sine: at rest when the map draws back, at rest again when they are home
-    var sky0 = T_NETWORK.mapRecede[0] / fps, skyOut = (1 - Math.cos(2 * Math.PI * (skyT - sky0) / LOOP)) / 2;
+    // (round 11) `now`, the finale's own clock: one second a second. It stands still under the map (the finale
+    // cannot be seen then, so nothing in it is worked out again while the map is up) and starts with the frame
+    // the map begins to draw back. Through the rest of the entrance, which the player plays 1.2 times as fast as
+    // a hold, it counts back from the hold's first frame at that pace, so the finale's world moves at its own
+    // speed from the moment it is seen and nothing in it slows in one frame as the hold begins. From the hold's
+    // first frame on it is the frame, as it always was: the hold and its loop are untouched.
+    var HOLD = T_NETWORK.holdFrom, seen = Math.max(frame, T_NETWORK.mapRecede[0]);
+    // ... and the map's clock, mapT (its water, its dashes, its trucks). The map's hold (frame 80, with its own
+    // clock tOverride) sets off at the entrance's pace and settles to its own in a second and a half, so the
+    // trucks, arriving just then, no longer lose two fifths of their speed in one frame. That leaves the clock
+    // 0.15 s ahead; the finale's entrance (frame 80 on, no clock of its own) goes on from there at the hold's
+    // pace, one second a second, so the water, the dashes and any truck still on its road go on unbroken and
+    // at the same speed while the map draws back (the frame alone would run them a fifth faster from 27.8 s).
+    var MAP_HOLD = T_NETWORK.pinPop + 20, MAP_SETTLE = 1.5;
+    var mapT = tOverride != null ? holdSettle(time, MAP_HOLD / fps, MAP_SETTLE) : frame >= MAP_HOLD ? MAP_HOLD / fps + (ENTER_PACE - 1) * MAP_SETTLE / 2 + (frame - MAP_HOLD) / (fps * ENTER_PACE) : time;
+    var now = seen >= HOLD ? seen / fps : HOLD / fps - (HOLD - seen) / (fps * ENTER_PACE);
+    // the sky runs on that clock (skyStart = the clock at the frame the map begins to go). The clouds stand where
+    // they were composed (sky0, the moment the sky was composed at) less how far they have gone out on the
+    // loop's one sine: at rest when the map begins to draw back, at rest again when they are home
+    var skyT = now, skyStart = HOLD / fps - (HOLD - T_NETWORK.mapRecede[0]) / (fps * ENTER_PACE);
+    var sky0 = T_NETWORK.mapRecede[0] / fps, skyOut = (1 - Math.cos(2 * Math.PI * (skyT - skyStart) / LOOP)) / 2;
     var recede = interpolate(frame, [T_NETWORK.mapRecede[0], T_NETWORK.mapRecede[1]], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: function (u) { return landEase(u, 0.35); } });
     var basesEnter = spring({ frame: frame - 14, fps: fps, config: { damping: 13, mass: 0.9 } });
     var overviewEnter = spring({ frame: frame - 26, fps: fps, config: { damping: 13, mass: 0.9 } });
@@ -5430,20 +5463,20 @@
           h("ellipse", { cx: 960, cy: 1000, rx: 1150, ry: 150, fill: "url(#nHalo)" }),
           CloudField(SKY_FINALE.landFar, 0, sky0, SKY_SWAY[0] * skyOut),
           CloudField(SKY_FINALE.landNear, 1, sky0, SKY_SWAY[1] * skyOut),
-          recede > 0 ? DayBirds({ set: "n", time: time }) : DayBirdsNone(),
+          recede > 0 ? DayBirds({ set: "n", time: now }) : DayBirdsNone(),
           FujiMountain({ cx: 380, baseY: 1008, w: 2020, ht: 706, capT: 0.3 }),
           MountainRange({ x: -60, baseY: 1008, s: 0.78 }),
           CityRow(city.far, 0),
           CityHaze("nHazeFar", 1008, 0),
 
-          TokyoTower({ cx: 1360, baseY: 1008, h: 840, time: time, opacity: 0.97, loop: LOOP }),
-          CityRow(city.back, 0), CityCranes(city.back, time, 0, 0, LOOP), CityRow(city.front, 0), CityLights(city.lights, time, 0, 0, LOOP),
+          TokyoTower({ cx: 1360, baseY: 1008, h: 840, time: now, opacity: 0.97, loop: LOOP }),
+          CityRow(city.back, 0), CityCranes(city.back, now, 0, 0, LOOP), CityRow(city.front, 0), CityLights(city.lights, now, 0, 0, LOOP),
           CityHaze("nHazeNear", 1010, 1),
           h("circle", { cx: 1652, cy: 136, r: 980, fill: "url(#nSun)", opacity: 0.13 }),
-          Airport(time),
-          FinaleDepot(time),
-          FinaleRoad(time),
-          AirportPlane(time)
+          Airport(now),
+          FinaleDepot(now),
+          FinaleRoad(now),
+          AirportPlane(now)
         )
       ),
       // Scene 04's panel: the sea, over the sky and everything in it while the map is up. It fades on the
@@ -5451,10 +5484,10 @@
       // In it, one object that arrives and leaves as the map always did: the water, the land, the map.
       h("div", { style: { position: "absolute", left: 0, top: 0, width: 1920, height: 1080, overflow: "hidden", background: DAY.map.sea, opacity: (1 - recede).toFixed(3), display: recede < 1 ? "block" : "none" } },
         h("div", { style: { position: "absolute", left: MAP_BOX[0], top: MAP_BOX[1], width: MAP_BOX[2], height: MAP_BOX[3], opacity: mapIn.toFixed(3), transform: "scale(" + ((0.95 + 0.05 * mapIn) * (1 - recede * 0.08)) + ") translate(" + (recede * -36) + "px, " + ((1 - mapIn) * 34) + "px)", transformOrigin: "46% 46%" } },
-          MapSwell(recede < 1 ? time : T_NETWORK.mapRecede[1] / fps),             // (round 11) once the map has gone its water is not worked out again
+          MapSwell(recede < 1 ? mapT : T_NETWORK.mapRecede[1] / fps),             // (round 11) once the map has gone its water is not worked out again
           mapLayer(mapShore().land, { willChange: "transform" }),
           h("div", { style: { position: "absolute", left: 0, top: 0, width: "100%", height: "100%" } },
-            CoverageMap({ prefProgress: prefK, routeProgress: routeK, pinProgress: pinK, depotFrame: frame, flowTime: recede < 1 ? time : 0, mapIn: mapIn })))),
+            CoverageMap({ prefProgress: prefK, routeProgress: routeK, pinProgress: pinK, depotFrame: frame, flowTime: recede < 1 ? mapT : 0, mapIn: mapIn })))),
       recede < 0.96 ? h("div", { style: { opacity: 1 - recede, transform: "translateX(" + (recede * 60) + "px)" } },
         KpiCard({
           x: 1290, y: 140, width: 540, title: "主要拠点", eyebrow: "OUR BASES", enter: basesEnter, bob: Math.sin(time * 1.1) * 5,

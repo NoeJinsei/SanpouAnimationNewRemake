@@ -1,0 +1,63 @@
+### the original
+scene 01: the hold begins at 5139 ms: 4 numbers change speed by 6 a second or more in that frame; the largest: 75 px/s
+       -75.2 ->      0.0 px/s   (-100 %)  …/2:svg/9:g/25:g/5:g/21:g/0:rect[#1C2840] [width]
+       -39.8 ->      0.0 px/s   (-100 %)  …/2:svg/9:g/25:g/5:g/21:g/4:rect[#16243C] [width]
+         3.1 ->     -9.4 px/s   (-405 %)  world/2:svg/5:g/7:g/3:g/0:path [d #3]
+scene 02: the hold begins at 12722 ms: 21 numbers change speed by 6 a second or more in that frame; the largest: 118 px/s
+       118.1 ->      0.0 px/s   (-100 %)  …/2:svg/9:g/23:g/5:g/21:g/0:rect[#1C2840] [x]
+       118.1 ->      0.0 px/s   (-100 %)  …/2:svg/9:g/24:g/5:g/21:g/0:rect[#1C2840] [x]
+       118.1 ->      0.0 px/s   (-100 %)  …/2:svg/9:g/25:g/5:g/21:g/0:rect[#1C2840] [x]
+scene 03: the hold begins at 16933 ms: 73 numbers change speed by 6 a second or more in that frame; the largest: 68 px/s
+       981.2 ->    817.6 deg/s  (-17 %)  transit/2:svg/63:g/6:g/3:g [transform]
+       981.2 ->    817.6 deg/s  (-17 %)  transit/2:svg/63:g/7:g/3:g [transform]
+       981.2 ->    817.6 deg/s  (-17 %)  transit/2:svg/63:g/8:g/3:g [transform]
+scene 04: the hold begins at 24022 ms: 0 numbers change speed by 6 a second or more in that frame
+scene 05: the hold begins at 30411 ms: 19 numbers change speed by 6 a second or more in that frame; the largest: 21 px/s
+       802.1 ->    668.4 deg/s  (-17 %)  network/1:svg/33:g/80:g/0:g/2:g [transform #2]
+       802.1 ->    668.4 deg/s  (-17 %)  network/1:svg/33:g/80:g/0:g/3:g [transform #2]
+       802.1 ->    668.4 deg/s  (-17 %)  network/1:svg/33:g/80:g/0:g/4:g [transform #2]
+
+SPEED STEPS: something changes speed by 118 px/s in one frame
+
+### the remake before round 11 (HEAD 37d9144)
+scene 01: the hold begins at 5139 ms: 9 numbers change speed by 6 a second or more in that frame; the largest: 18 px/s
+        72.0 ->     54.0 px/s   (-25 %)  world/3:svg/0:g/2:g/2:g [transform, along its path]
+        57.0 ->     45.0 px/s   (-21 %)  world/3:svg/0:g/1:g/0:path[#ffffff] [d #18]
+        54.0 ->     45.0 px/s   (-17 %)  world/3:svg/0:g/1:g/0:path[#ffffff] [d #10]
+        45.0 ->     39.0 px/s   (-13 %)  world/3:svg/0:g/1:g/0:path[#ffffff] [d #13]
+scene 02: the hold begins at 12722 ms: 3 numbers change speed by 6 a second or more in that frame; the largest: 21 px/s
+       363.0 ->    426.0 deg/s  (17 %)  …/2:g/2:g/2:g(clip url(#wSupDoor))/1:g/2:g/2:g [transform]
+       291.0 ->    339.0 deg/s  (16 %)  …/2:g/2:g/2:g(clip url(#wSupDoor))/1:g/1:g/2:g [transform]
+         0.0 ->     21.0 px/s   (Infinity %)  world/3:svg/0:g/2:g/1:polygon[#ffffff] [points #0]
+scene 03: the hold begins at 16933 ms: 45 numbers change speed by 6 a second or more in that frame; the largest: 54 px/s
+       981.0 ->    817.8 deg/s  (-17 %)  transit/1:svg/33:g/3:g/6:g [transform]
+       981.0 ->    817.8 deg/s  (-17 %)  transit/1:svg/33:g/4:g/4:g [transform]
+       937.5 ->    781.2 deg/s  (-17 %)  transit/1:svg/30:g/3:g/6:g [transform]
+       937.5 ->    781.2 deg/s  (-17 %)  transit/1:svg/30:g/4:g/4:g [transform]
+scene 04: the hold begins at 24022 ms: 2 numbers change speed by 6 a second or more in that frame; the largest: 23 px/s
+       118.9 ->     95.9 px/s   (-19 %)  …/0:div/6:div/0:svg/1:g/23:g/3:g [transform, along its path]
+        42.4 ->     24.3 px/s   (-43 %)  …/0:div/6:div/0:svg/1:g/23:g/0:g [transform, along its path]
+scene 05: the hold begins at 30411 ms: 12 numbers change speed by 6 a second or more in that frame; the largest: 21 px/s
+        99.9 ->     79.0 px/s   (-21 %)  network/1:svg/6:g/18:g/4:g [transform, along its path]
+        99.3 ->     78.9 px/s   (-21 %)  network/1:svg/6:g/18:g/1:g(clip url(#nPlaneRunway))/0:path[#0a1424] [transform, along its path]
+        81.0 ->     66.0 px/s   (-19 %)  network/1:svg/6:g/8:g/2:g [transform, along its path]
+        79.2 ->     66.0 px/s   (-17 %)  network/1:svg/6:g/17:g/5:g [transform, along its path]
+
+SPEED STEPS: something changes speed by 54 px/s in one frame
+
+### the remake now
+scene 01: the hold begins at 5139 ms: 9 numbers change speed by 6 a second or more in that frame; the largest: 18 px/s
+        72.0 ->     54.0 px/s   (-25 %)  world/3:svg/0:g/2:g/2:g [transform, along its path]
+        57.0 ->     45.0 px/s   (-21 %)  world/3:svg/0:g/1:g/0:path[#ffffff] [d #18]
+        54.0 ->     45.0 px/s   (-17 %)  world/3:svg/0:g/1:g/0:path[#ffffff] [d #10]
+        45.0 ->     39.0 px/s   (-13 %)  world/3:svg/0:g/1:g/0:path[#ffffff] [d #13]
+scene 02: the hold begins at 12722 ms: 3 numbers change speed by 6 a second or more in that frame; the largest: 21 px/s
+       363.0 ->    426.0 deg/s  (17 %)  …/2:g/2:g/2:g(clip url(#wSupDoor))/1:g/2:g/2:g [transform]
+       291.0 ->    339.0 deg/s  (16 %)  …/2:g/2:g/2:g(clip url(#wSupDoor))/1:g/1:g/2:g [transform]
+         0.0 ->     21.0 px/s   (Infinity %)  world/3:svg/0:g/2:g/1:polygon[#ffffff] [points #0]
+scene 03: the hold begins at 16933 ms: 0 numbers change speed by 6 a second or more in that frame
+scene 04: the hold begins at 24022 ms: 1 numbers change speed by 6 a second or more in that frame; the largest: 15 px/s
+        42.4 ->     27.7 px/s   (-35 %)  …/0:div/6:div/0:svg/1:g/23:g/0:g [transform, along its path]
+scene 05: the hold begins at 30411 ms: 0 numbers change speed by 6 a second or more in that frame
+
+no place changes speed by more than 25 px/s at any handover (the largest: 21 px/s)
