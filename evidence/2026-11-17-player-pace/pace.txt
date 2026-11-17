@@ -1,0 +1,204 @@
+The real player (round2/js/hero-glue.js) on simulated screens. NOW = round 11; HEAD or BEFORE = the player before it (commit 37d9144).
+A test browser only has a 60 Hz screen, so the page's animation-frame clock is replaced by one the script steps.
+
+## every screen rate, and the longest stall after input: BEFORE
+trial3: the site's real player on screens of different refresh rates (5 s of scene 01 each)
+  screen     drawn      gaps between drawings      longest gap after a wheel turn / key / tap / scroll
+   60 Hz    60.0 a second   16.7..16.7 ms      167 ms / 167 ms / 167 ms / 133 ms
+   72 Hz    36.0 a second   27.8..27.8 ms      167 ms / 181 ms / 181 ms / 125 ms   BELOW 60
+   75 Hz    37.5 a second   26.7..26.7 ms      173 ms / 187 ms / 187 ms / 133 ms   BELOW 60
+   90 Hz    45.0 a second   22.2..22.2 ms      178 ms / 167 ms / 167 ms / 133 ms   BELOW 60
+  100 Hz    50.0 a second   20.0..20.0 ms      170 ms / 160 ms / 160 ms / 130 ms   BELOW 60
+  119 Hz    59.5 a second   16.8..16.8 ms      168 ms / 168 ms / 168 ms / 134 ms
+  120 Hz    60.0 a second   16.7..16.7 ms      175 ms / 167 ms / 167 ms / 125 ms
+  144 Hz    48.0 a second   20.8..20.8 ms      167 ms / 174 ms / 174 ms / 132 ms   BELOW 60
+  165 Hz    55.0 a second   18.2..18.2 ms      176 ms / 176 ms / 176 ms / 121 ms   BELOW 60
+  240 Hz    60.0 a second   16.7..16.7 ms      175 ms / 167 ms / 167 ms / 121 ms
+exit 1
+
+## the same, NOW
+round2: the site's real player on screens of different refresh rates (5 s of scene 01 each)
+  screen     drawn      gaps between drawings      longest gap after a wheel turn / key / tap / scroll
+   60 Hz    60.0 a second   16.7..16.7 ms      17 ms / 17 ms / 17 ms / 17 ms
+   72 Hz    72.0 a second   13.9..13.9 ms      14 ms / 14 ms / 14 ms / 14 ms
+   75 Hz    75.0 a second   13.3..13.3 ms      13 ms / 13 ms / 13 ms / 13 ms
+   90 Hz    90.0 a second   11.1..11.1 ms      11 ms / 11 ms / 11 ms / 11 ms
+  100 Hz   100.0 a second   10.0..10.0 ms      10 ms / 10 ms / 10 ms / 10 ms
+  119 Hz    59.5 a second   16.8..16.8 ms      17 ms / 17 ms / 17 ms / 17 ms
+  120 Hz    60.0 a second   16.7..16.7 ms      17 ms / 17 ms / 17 ms / 17 ms
+  144 Hz    72.0 a second   13.9..13.9 ms      14 ms / 14 ms / 14 ms / 14 ms
+  165 Hz    82.5 a second   12.1..12.1 ms      12 ms / 12 ms / 12 ms / 12 ms
+  240 Hz    80.0 a second   12.5..12.5 ms      13 ms / 13 ms / 13 ms / 13 ms
+exit 0
+
+## a slow device (every drawing takes 6 ms): input still comes first
+round2: the site's real player on screens of different refresh rates (5 s of scene 01 each), every drawing taking 6 ms
+  screen     drawn      gaps between drawings      longest gap after a wheel turn / key / tap / scroll
+   60 Hz    60.0 a second   16.7..16.7 ms      167 ms / 167 ms / 167 ms / 133 ms
+   90 Hz    90.0 a second   11.1..11.1 ms      167 ms / 167 ms / 167 ms / 133 ms
+  120 Hz    60.0 a second   16.7..16.7 ms      175 ms / 167 ms / 167 ms / 133 ms
+
+## a 60 Hz device whose drawing misses frames: an even 30, as before
+NOW  60 Hz, a drawing takes 20 ms:
+   s0: 31 drawn, gaps 33.3ms x30
+   s1: 30 drawn, gaps 33.3ms x29
+   s2: 31 drawn, gaps 33.3ms x30
+   s3: 31 drawn, gaps 33.3ms x30
+   s4: 30 drawn, gaps 33.3ms x29
+   s5: 30 drawn, gaps 33.3ms x29
+NOW  60 Hz, a drawing takes 12 ms:
+   s0: 30 drawn, gaps 33.3ms x28, 16.7ms x1
+   s1: 30 drawn, gaps 33.3ms x29
+   s2: 31 drawn, gaps 33.3ms x30
+   s3: 30 drawn, gaps 33.3ms x29
+   s4: 31 drawn, gaps 33.3ms x30
+   s5: 30 drawn, gaps 33.3ms x29
+HEAD 60 Hz, a drawing takes 20 ms:
+   s0: 31 drawn, gaps 33.3ms x30
+   s1: 30 drawn, gaps 33.3ms x29
+   s2: 31 drawn, gaps 33.3ms x30
+   s3: 31 drawn, gaps 33.3ms x30
+   s4: 30 drawn, gaps 33.3ms x29
+   s5: 30 drawn, gaps 33.3ms x29
+HEAD 60 Hz, a drawing takes 12 ms:
+   s0: 30 drawn, gaps 33.3ms x28, 16.7ms x1
+   s1: 30 drawn, gaps 33.3ms x29
+   s2: 31 drawn, gaps 33.3ms x30
+   s3: 30 drawn, gaps 33.3ms x29
+   s4: 31 drawn, gaps 33.3ms x30
+   s5: 30 drawn, gaps 33.3ms x29
+
+## the frame a hold begins in (the road's speed frame by frame)
+NOW  frame time 16.40 ms: road speed px/s, frame by frame, round the entrance -> hold handover (frame 1055)
+   320 320 320 319 319 [318] 317 316 316 315 315 314 313 313
+NOW  frame time 16.90 ms: road speed px/s, frame by frame, round the entrance -> hold handover (frame 1025)
+   320 320 319 318 318 [317] 317 316 315 315 314 313 312 312
+NOW  frame time 16.67 ms: road speed px/s, frame by frame, round the entrance -> hold handover (frame 1039)
+   320 320 319 319 318 [317] 317 316 316 315 314 313 313 312
+HEAD  frame time 16.40 ms: road speed px/s, frame by frame, round the entrance -> hold handover (frame 1036)
+   324 324 324 324 324 [90] 270 270 270 270 270 270 270 270
+HEAD  frame time 16.90 ms: road speed px/s, frame by frame, round the entrance -> hold handover (frame 1006)
+   324 324 324 324 324 [22] 270 270 270 270 270 270 270 270
+HEAD  frame time 16.67 ms: road speed px/s, frame by frame, round the entrance -> hold handover (frame 1020)
+   325 324 324 324 324 [0] 270 270 270 270 270 270 270 270
+
+## a click on to 04 in the last moments of 03's entrance
+NOW: road speed (px/s) frame by frame; | = the click on 04 during 03's entrance
+   327 326 325 324 325 | 324 324 324 324 324 324 324 323 324 323 323 323 322 323 322 322 321 321 320 320 319 319 318 317 317 316 316 315 314 313 313 312 311 310 310
+HEAD: road speed (px/s) frame by frame; | = the click on 04 during 03's entrance
+   327 326 325 324 325 | 324 270 270 270 270 270 270 270 270 270 270 270 270 270 270 270 270 270 270 270 270 270 270 270 270 270 270 270 270 270 270 270 270 270 270
+
+## drawings longer than a screen frame; a 90 Hz phone that cannot fill its screen; a screen that changes rate; a jittery 120 Hz
+
+===== NOW player
+  144 Hz, a drawing takes 10 ms (more than one screen frame, less than two)
+    144 Hz s0:  72 drawn, gaps 13.9ms x71
+      (… 7 more seconds the same)
+  165 Hz, a drawing takes 9 ms
+    165 Hz s0:  83 drawn, gaps 12.1ms x82
+    165 Hz s1:  82 drawn, gaps 12.1ms x81
+    165 Hz s2:  83 drawn, gaps 12.1ms x82
+    165 Hz s3:  82 drawn, gaps 12.1ms x81
+    165 Hz s4:  83 drawn, gaps 12.1ms x82
+    165 Hz s5:  82 drawn, gaps 12.1ms x81
+    165 Hz s6:  83 drawn, gaps 12.1ms x82
+    165 Hz s7:  82 drawn, gaps 12.1ms x81
+  144 Hz, a drawing takes 3 ms (a fast machine)
+    144 Hz s0:  72 drawn, gaps 13.9ms x71
+      (… 5 more seconds the same)
+  90 Hz, a drawing takes 12 ms (a phone that cannot fill its screen)
+    90 Hz s0:  45 drawn, gaps 22.2ms x44
+      (… 9 more seconds the same)
+  90 Hz -> 60 Hz -> 90 Hz, a drawing takes 4 ms (adaptive screen)
+    90 Hz s0:  90 drawn, gaps 11.1ms x89
+      (… 1 more seconds the same)
+    90 Hz s2:  89 drawn, gaps 11.1ms x88
+    90 Hz s3:  90 drawn, gaps 11.1ms x89
+    60 Hz s0:  59 drawn, gaps 16.7ms x58
+    60 Hz s1:  60 drawn, gaps 16.7ms x59
+      (… 1 more seconds the same)
+    90 Hz s0:  89 drawn, gaps 11.1ms x88
+    90 Hz s1:  90 drawn, gaps 11.1ms x89
+      (… 2 more seconds the same)
+  120 Hz, frame times rounded to 1 ms with a random lean, a drawing takes 3 ms
+    120 Hz s0:  60 drawn, gaps 16.7ms x59
+      (… 6 more seconds the same)
+    120 Hz s7:  61 drawn, gaps 8.3ms x1, 16.7ms x59
+
+===== HEAD player
+  144 Hz, a drawing takes 10 ms (more than one screen frame, less than two)
+    144 Hz s0:  48 drawn, gaps 20.8ms x47
+      (… 6 more seconds the same)
+    144 Hz s7:  49 drawn, gaps 13.9ms x2, 20.8ms x46
+  165 Hz, a drawing takes 9 ms
+    165 Hz s0:  55 drawn, gaps 18.2ms x54
+      (… 6 more seconds the same)
+    165 Hz s7:  56 drawn, gaps 12.1ms x2, 18.2ms x53
+  144 Hz, a drawing takes 3 ms (a fast machine)
+    144 Hz s0:  48 drawn, gaps 20.8ms x47
+      (… 5 more seconds the same)
+  90 Hz, a drawing takes 12 ms (a phone that cannot fill its screen)
+    90 Hz s0:  45 drawn, gaps 22.2ms x44
+    90 Hz s1:  32 drawn, gaps 22.2ms x5, 33.3ms x26
+    90 Hz s2:  39 drawn, gaps 33.3ms x11, 22.2ms x27
+    90 Hz s3:  38 drawn, gaps 22.2ms x23, 33.3ms x14
+    90 Hz s4:  33 drawn, gaps 33.3ms x23, 22.2ms x9
+    90 Hz s5:  44 drawn, gaps 22.2ms x41, 33.3ms x2
+    90 Hz s6:  30 drawn, gaps 33.3ms x29
+    90 Hz s7:  42 drawn, gaps 22.2ms x36, 33.3ms x5
+    90 Hz s8:  35 drawn, gaps 22.2ms x14, 33.3ms x20
+    90 Hz s9:  36 drawn, gaps 33.3ms x17, 22.2ms x18
+  90 Hz -> 60 Hz -> 90 Hz, a drawing takes 4 ms (adaptive screen)
+    90 Hz s0:  45 drawn, gaps 22.2ms x44
+      (… 3 more seconds the same)
+    60 Hz s0:  59 drawn, gaps 16.7ms x58
+    60 Hz s1:  60 drawn, gaps 16.7ms x59
+      (… 1 more seconds the same)
+    90 Hz s0:  45 drawn, gaps 11.1ms x1, 22.2ms x43
+    90 Hz s1:  45 drawn, gaps 22.2ms x44
+      (… 2 more seconds the same)
+  120 Hz, frame times rounded to 1 ms with a random lean, a drawing takes 3 ms
+    120 Hz s0:  60 drawn, gaps 16.7ms x59
+      (… 6 more seconds the same)
+    120 Hz s7:  61 drawn, gaps 8.3ms x2, 16.7ms x58
+
+
+===== NOW player
+  144 Hz: 3 s where a drawing takes 3 ms (a light scene), then 5 s where it takes 10 ms (a heavy one)
+    144 Hz s0:  72 drawn, gaps 13.9ms x71
+      (… 7 more seconds the same)
+  165 Hz: 3 s at 3 ms a drawing, then 5 s at 9 ms
+    165 Hz s0:  83 drawn, gaps 12.1ms x82
+    165 Hz s1:  82 drawn, gaps 12.1ms x81
+    165 Hz s2:  83 drawn, gaps 12.1ms x82
+    165 Hz s0:  82 drawn, gaps 12.1ms x81
+    165 Hz s1:  83 drawn, gaps 12.1ms x82
+    165 Hz s2:  82 drawn, gaps 12.1ms x81
+    165 Hz s3:  83 drawn, gaps 12.1ms x82
+    165 Hz s4:  82 drawn, gaps 12.1ms x81
+  240 Hz, a drawing takes 6 ms
+    240 Hz s0:  80 drawn, gaps 12.5ms x79
+      (… 5 more seconds the same)
+  90 Hz, 4 ms a drawing: 3 s, the tab hidden for 3 s, 3 s more
+    90 Hz s0:  90 drawn, gaps 11.1ms x89
+      (… 1 more seconds the same)
+    90 Hz s2:  89 drawn, gaps 11.1ms x88
+      (… 1 more seconds the same)
+    90 Hz s1:  90 drawn, gaps 11.1ms x89
+      (… 1 more seconds the same)
+
+===== HEAD player
+  144 Hz: 3 s where a drawing takes 3 ms (a light scene), then 5 s where it takes 10 ms (a heavy one)
+    144 Hz s0:  48 drawn, gaps 20.8ms x47
+      (… 6 more seconds the same)
+    144 Hz s4:  49 drawn, gaps 13.9ms x2, 20.8ms x46
+  165 Hz: 3 s at 3 ms a drawing, then 5 s at 9 ms
+    165 Hz s0:  55 drawn, gaps 18.2ms x54
+      (… 6 more seconds the same)
+    165 Hz s4:  56 drawn, gaps 12.1ms x2, 18.2ms x53
+  240 Hz, a drawing takes 6 ms
+    240 Hz s0:  60 drawn, gaps 16.7ms x59
+      (… 5 more seconds the same)
+  90 Hz, 4 ms a drawing: 3 s, the tab hidden for 3 s, 3 s more
+    90 Hz s0:  45 drawn, gaps 22.2ms x44
+      (… 5 more seconds the same)

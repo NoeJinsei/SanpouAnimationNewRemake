@@ -52,7 +52,10 @@
   var outT=null;
   function enter04(f){ var r=(outT!=null&&JP.seam34)?JP.seam34(f):null;
     if(!r) return one('n',S.network(f));
-    return { t:{s:BASE+r.t,c:S.transit(outT+f/ENTER_RATE)}, n:{s:BASE+r.n,c:S.network(f)} }; }
+    // (round 11) a rise begun while 03 was still entering (outT under the frame 03's hold begins at): the expressway
+    // keeps the entrance's pace up to that frame and takes the hold's from there, so it changes speed nowhere
+    var f0=Math.max(0,STOPS[2].iStart-outT), tf=f<f0?outT+f:outT+f0+(f-f0)/ENTER_RATE;
+    return { t:{s:BASE+r.t,c:S.transit(tf)}, n:{s:BASE+r.n,c:S.network(f)} }; }
   // the move can start from 03's hold, or from 03's entrance once the expressway is the only picture
   function canRise(i){ return i===3 && idx===2 && !!JP.seam34 && (mode==='idle' || clk>=JP.SCENES[2]); }
   var STOPS=[
@@ -68,14 +71,39 @@
   // frame pacing (§8.4): heavy = render on a 30fps grid. Entered by a slow rAF average (fEMA) or by
   // the measured render cost (rCost), left after a long run of fast frames.
   var rCost=8, heavyR=false, heavyF=false, heavy=false, fEMA=1000/60, slowN=0, fastN=0;
+  // Round 11: never below 60 drawings a second on a screen that can show 60. The loop used to wait 14.7 ms (one
+  // 60 Hz frame less 2 ms) before it drew again. On a 60 Hz screen that is every frame and at 120 Hz every second
+  // one, 60 a second both; but on a 72, 75, 90 or 100 Hz screen it was every second frame too (36 to 50 a
+  // second), and at 144 and 165 Hz every third (48 and 55). Now it waits PACE ms: every frame up to 100 Hz and
+  // every second one from 120 to 180 Hz, so 60 to 100 a second on every screen
+  // (evidence/2026-11-17-finale-loop/check/pace-check.mjs plays the player on simulated screens).
+  //   iv    the screen's own frame time: the running average of the gaps between animation frames, late ones
+  //         left out. A run of gaps that are not a whole number of the screen's frames means the screen itself
+  //         has changed its rate (a phone going from 90 to 60 Hz, a window moved to another monitor): iv is
+  //         then learned again and the pace tried again.
+  //   late  the running share of DRAWINGS that came a screen frame or more after the one the pace asked for
+  //         (a drawing that takes longer than a frame on a fast screen is not late if the pace was every second
+  //         frame anyway). Over a fifth: the device cannot fill this screen at this pace, and the loop goes
+  //         back to the old wait (half), which is a steady pace of its own.
+  // A slow device still goes to the 30 fps grid, but its threshold now stands clear of a 90 Hz screen's
+  // every-second-frame pace (22.2 ms): that sat right on the old threshold of 22 ms, so a 90 Hz phone that
+  // could not fill its screen flipped between 45 and 30 a second about once a second. It is 23.5 ms now (26 on
+  // a screen known to be faster than 72 Hz), and such a phone holds an even 45.
+  var PACE=9.5, iv=1000/60, ivOff=0, late=0, half=false, frames=0, lastDraw=0;
   var autoOn=true, dwellMs=0, AUTO_DWELL=[7000,7600,7200,6000,18000], ENTER_RATE=1.2, nextR=0, metaT=null;
   // Input first (r12 functional-001): for a moment after a tap, a key, a wheel turn or a scroll the loop draws
   // nothing and its clocks stand still, so the browser can answer the input at once on a slow phone; the motion
   // then goes on from where it stopped (no jump).
-  var holdUntil=0;
-  (function(){ var hold=function(){ holdUntil=performance.now()+160; }, o={capture:true,passive:true};
+  // Round 11: only where drawing is slow. On a machine that draws the scene in a millisecond or two the pause
+  // buys nothing, and it showed: the film stood still for 0.16 s at every click, key and turn of the wheel, and
+  // for as long as the page was being scrolled. slowDraw(): the scene's own drawing takes more than HOLD_COST ms
+  // (rCost, a running average that starts high, so the first moments after loading still give way to input),
+  // or the player is already on its 30 fps grid.
+  var holdUntil=0, HOLD_COST=4;
+  function slowDraw(){ return heavy || rCost>HOLD_COST; }
+  (function(){ var hold=function(){ if(slowDraw()) holdUntil=performance.now()+160; }, o={capture:true,passive:true};
     ['pointerdown','touchstart','keydown','wheel'].forEach(function(t){ document.addEventListener(t,hold,o); });
-    window.addEventListener('scroll',function(){ holdUntil=Math.max(holdUntil,performance.now()+120); },{passive:true}); })();
+    window.addEventListener('scroll',function(){ if(slowDraw()) holdUntil=Math.max(holdUntil,performance.now()+120); },{passive:true}); })();
   // Pre-building (r12 functional-002): the first frame of what the next seam shows is built ahead into a slot at
   // opacity 0 (laid out, not painted), in idle time and in chunks of about PRE_N nodes, one chunk per frame (each
   // chunk mounts a longer depth-first prefix of the target tree, so the patcher only appends), so the frame that
@@ -220,20 +248,31 @@
       if(RMOT){ apply(); }
       else if(metaWant===metaShown){ metaBox.classList.remove('is-swapping'); }
       else { metaBox.classList.add('is-swapping'); metaT=setTimeout(function(){ metaT=null; apply(); },300); } } }
-  function kick(){ if(!raf&&visible&&playing&&!covered){ prevTs=0; nextR=0; raf=requestAnimationFrame(loop); } }
+  function kick(){ if(!raf&&visible&&playing&&!covered){ prevTs=0; nextR=0; lastDraw=0; raf=requestAnimationFrame(loop); } }
   function loop(ts){ raf=null; var dt0=prevTs?ts-prevTs:0; prevTs=ts; var dt=dt0>200?1000/FPS:dt0;
     var held=ts<holdUntil;
-    if(dt0>0 && dt0<=200 && !held){ fEMA=fEMA*0.9+dt0*0.1;
-      if(fEMA>22){ fastN=0; if(++slowN>=20) heavyF=true; }
-      else if(fEMA<18){ slowN=0; if(++fastN>=60) heavyF=false; }
+    if(dt0>0 && dt0<=200 && !held){ fEMA=fEMA*0.9+dt0*0.1; frames++;
+      var m=dt0/iv, q=m-Math.floor(m);
+      if(dt0>3 && m<1.4){ iv=iv*0.9+dt0*0.1; ivOff=0; }
+      else if(q>0.25 && q<0.75){ if(++ivOff>=30){ iv=Math.min(dt0,1000/30); ivOff=0; late=0; half=false; } }
+      else ivOff=0;
+      var hOn=iv<14?26:23.5, hOff=iv<14?20:18;
+      if(fEMA>hOn){ fastN=0; if(++slowN>=20) heavyF=true; }
+      else if(fEMA<hOff){ slowN=0; if(++fastN>=60) heavyF=false; }
       else { slowN=0; fastN=0; } }
     if(playing && !held){ var st=STOPS[idx];
-      if(mode==='enter'){ clk+=dt/1000*FPS*ENTER_RATE; if(clk>=st.eTo){ clk=st.eTo; mode='idle'; idleClk=st.iStart; } }
+      // (round 11) the hold begins where the entrance ended, to the fraction of a frame: what the clock ran past the
+      // entrance's last frame goes into the hold (it used to be dropped, so the frame in which a hold began moved the
+      // scene by anything from a full step to nothing: on a 60 Hz screen the expressway stood still for that frame)
+      if(mode==='enter'){ clk+=dt/1000*FPS*ENTER_RATE; if(clk>=st.eTo){ var over=(clk-st.eTo)/(FPS*ENTER_RATE); clk=st.eTo; mode='idle'; idleClk=st.iStart+(st.sec?over:over*FPS); } }
       else { idleClk += st.sec ? dt/1000 : dt/1000*FPS; }
     }
     var drew=false;
     if(ts>=nextR && !navPending && !held){ drew=true; var rT0=performance.now(); render(); var rc=performance.now()-rT0; rCost=rCost*0.88+rc*0.12;
-      heavyR = heavyR ? rCost>9 : rCost>15; heavy = heavyF||heavyR; nextR=ts+(heavy?1000/30:1000/60)-2; }
+      heavyR = heavyR ? rCost>9 : rCost>15; heavy = heavyF||heavyR;
+      // was this drawing on time for the pace? (want = the gap the pace asks for on this screen)
+      if(lastDraw && frames>120 && !heavy && !half){ var want=Math.ceil((PACE-0.5)/iv)*iv; late=late*0.96+(ts-lastDraw>want+0.6*iv?0.04:0); if(late>0.2) half=true; }
+      lastDraw=ts; nextR=ts+(heavy?1000/30-2:half?1000/60-2:PACE); }
     if(autoOn&&playing&&visible&&!navPending&&!held){ dwellMs+=dt;
       // the progress bar moves on the frames that draw the scene (30fps in heavy mode)
       var fl=fills[idx]; if(fl&&drew){ fl.style.width=Math.min(100, dwellMs/AUTO_DWELL[idx]*100)+'%'; placeTruck(idx, Math.min(1, dwellMs/AUTO_DWELL[idx])); }
