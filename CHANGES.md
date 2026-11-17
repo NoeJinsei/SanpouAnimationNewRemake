@@ -1713,3 +1713,231 @@ site's own progress bar over a pale sky, which fails on the `original` side too.
 opening, gone while it runs, back on pause, on focus and under reduced motion). `check-viewer` 0 console
 errors at all three framings. `original/` 7 of 7; the website folder untouched.
 `tools/record.mjs` now takes `--css=<file>`, the flag `contrast-check.mjs` already had.
+
+## Round 11 (2026-11-17): the finale is a loop, and five things that were not smooth
+
+The owner asked for two things: "make sure the last scene is a complete seamless loop (the user can switch
+back to other scenes by clicking on the bar that we have on the hero section so)" and "I want the animation
+scenes to look 60 fps like (smooth without any jaggedness or issues)". Brief: `PROMPT-FOR-FABLE-LOOP.md`.
+Four passes, one commit each: the loop (parts `r11-loop-sky`, `-birds`, `-city`, `-ground`), the handovers
+(`r11-handover`), the film's first frames and the doors (`r11-first-frames`), the player
+(`round2/js/hero-glue.js`, edited directly). Shown together on
+`evidence/2026-11-17-round11-review/index.html`. **Waiting for the owner's verdict.**
+
+Three reviewers then went over the uncommitted work independently, each told to break it (one on the loop,
+one on everything outside it and the player, one on what still did not move smoothly). What they found is
+marked (review) below; what was left is at the end.
+
+### 1. The finale is the same picture every 52 s
+
+Nothing brought the finale back to its start. It simply ran on, and after a minute it was in states nobody
+had composed: the clouds drift one way, so 52 s on the big cloud was half out of the picture, after three
+minutes the middle of the sky was empty, and the next cloud only came in on the right after five
+(`evidence/2026-11-17-finale-loop/without-the-loop.jpg`). Nothing else repeated either: the road ran on a
+38 s timetable beside the plane's 26 s, the baggage train on 19 s, the kite on 15 s.
+
+Now every moving thing in the finale goes round a whole number of times in 52 s (`LOOP`), so the picture
+52 s from now is this picture. Nothing is reset to make it so: there is no seam and no special frame. 52 s
+because the two longest cycles already agreed on it (the plane's 26 s, the flocks' 52 s).
+
+| what moves | before | now (turns in 52 s) |
+|---|---|---|
+| the plane | 26 s | 26 s (2). Its climb's slight weave and its lamp are read on its own cycle now, so every flight is the same flight |
+| the two flocks | 52 s | 52 s (1 each). Their wander, heading and beats: the nearest whole numbers of turns |
+| the kite | 15.0 s a circle | 13 s (4): the same place at both of the plane's passes, on the far side of the plane's line (review) |
+| the clouds | one way for ever: round again in 8.6 minutes (near) and 18.8 (far) | out and home once: 116 px (near) and 53 px (far), see below |
+| the light shafts, the sun | 21.7, 48.3, 27.3, 15.3 s; 12.6 s | 26, 52, 26, 17.3 s; 13 s |
+| Tokyo Tower's lift | 20 s | 26 s: it rides at the pace it had, 7 s each way, and waits 6 s at each end, not 3 |
+| ... its glass reflection, its lamp | 9 s, 2.99 s | 8.67 s, 3.06 s |
+| the cranes (slew, trolley, hook) | 57, 76, 65 s | 52 s each, on their own phases |
+| window sheen, glints, warm rooms | 20 s, each pane's own, 31 s | 17.3 s, the nearest that fits, 26 s |
+| the radar, the tower's lamp | 4.333 s, 2.73 s | 4.333 s (it was within a hair of 12 turns already), 2.74 s |
+| the baggage train | a crossing every 19 s | a crossing every 26 s: 19 s edge to edge at the pace it had, then it waits behind the depot (review) |
+| the windsock | 10.1, 3.70, 0.885 s | 10.4, 3.71, 0.881 s |
+| the depot's trucks and shutter | a truck leaves every 38 s | every 52 s. The dock stands empty 18 s as before; a truck then stands there 34 s (was 20) |
+| the through truck, the near lane's two | once in 38 s | once in 52 s |
+
+**The first round is the one in the approved film.** The first truck leaves at 14.2 s on the finale's clock,
+the next stands there 18 s later, the through truck is where it was, the plane's first flight is the flight
+it always was, the baggage train comes in when it did. The near lane's second truck is the one that came in
+at the right edge 41.8 s into the film, on its way into a phone's view (review: it had been left on a phase
+that lost it). The road's traffic is a quarter thinner from then on (the same trucks on a longer round); no
+truck was added.
+
+**The clouds: the one thing that could not simply be re-timed.** A cloud that drifts one way for ever cannot
+be in a loop. It comes back only by leaving the picture and coming in on the other side, and at a cloud's
+pace (7 px/s) that takes 8.6 minutes; to do it in 52 s it would have to cross at 70 px/s. So in the finale
+the clouds go out and come home: from where they were composed they drift left with the wind, at the pace
+they always had at their fastest (7 and 3.2 px/s), slow to a stop after 26 s, and drift back, starting and
+landing at rest (one sine a loop, `SKY_SWAY`). For the first 20 s, which is all of the finale anyone had
+watched, they move as they did. They never leave the stretch of sky the film had already shown, so the sun
+stays clear and every cloud stays above its roofs for good (250 px or more at the far end). **What it
+costs: for half of every loop the clouds move back, against the wind the windsock shows.** That is for the
+owner to see and judge: the review page shows one whole loop of the sky beside the option kept as a part,
+`r11-loop-opt-gentle` (they go less than half as far, so they are slower all the way and the turn is less
+to see). The other way out, a loop long enough for the clouds to come round (520 s or more), was not built:
+it leaves the sky empty for minutes, as before.
+
+**The baggage train and the plane (review).** Left on a round of its own (19 s, or a third of the loop) the
+train drove along under the plane all through every second landing. It now comes in once in each of the
+plane's cycles, always just after the touchdown and well behind the plane, as in the approved film.
+
+**The kite and the plane (review).** The plane's wheels climb straight through the middle of the kite's
+circle. With three turns a loop the kite was at opposite ends of its circle on the two passes, and at the
+left end the plane's body went over it. With four it is at the right-hand end on both, on the empty side of
+the plane's line, 58 px or more clear.
+
+**Other scenes are untouched by this pass.** The parts that scenes 01 to 03 share (shafts, sun, birds,
+Tower, cranes, window light) take the loop as an argument (`loop`, `loopW`, `loopT`); without it they work
+as they did, to the last digit.
+
+**The two depot trucks** take turns, so each is on a round of two loops; they are the same drawing, so the
+picture repeats every loop. Their two slots swap trucks 20 s after each departure, when one is off the
+picture and the other stands at the dock, so every node is the same one loop later too.
+
+Proof (`evidence/2026-11-17-finale-loop/`):
+- `check/loop-check.mjs round2 --from=30420 --step=16.6667 --turns=2`: the scene code run without a browser,
+  the picture at each of 6,240 moments (every 60th of a second for two loops) compared node by node with the
+  picture 52 s later: every node the same.
+- `loop-proof.jpg`: four pairs of photographs one loop apart on the bare stage, 0 of 2,073,600 pixels differ
+  in each; the same at the desktop and the phone framing.
+- `check/loop-buttons-check.mjs`: the site's real player on a stepped clock, left on the finale for four
+  loops (208 s): the same picture one loop later and four loops later; all five scene buttons work from
+  there; a jump back to 05 lands on the loop. Desktop and phone.
+- `tools/motion-check.mjs` over the film and a further whole loop (0 to 84 s): 0 frozen steps, 0 pops.
+- Clips through two loops, desktop and phone, with nothing marking the join.
+
+The loop starts where the finale's hold starts, 30.4 s into the film. On a phone the camera is still moving
+across the finale until its 18 s dwell is over (45.8 s), as it always did; from then on a phone's picture
+repeats too.
+
+### 2. Nothing loses a sixth of its speed in one frame when a hold begins (part `r11-handover`)
+
+The player plays every entrance 1.2 times as fast as a hold (`ENTER_RATE`, the site's own), and a scene's
+clock was simply its frame. So everything in a scene ran a fifth faster while it entered and dropped to its
+own speed in the single frame the hold began. Where fast things were moving at that moment it showed as a
+lurch:
+
+| | before | now |
+|---|---|---|
+| scene 03, 16.93 s: the road, the skyline, the wheels | 324 -> 270 px/s in one frame (45 numbers) | none |
+| scene 04, 24.02 s: a map truck at its cruise | 118 -> 97 map units a second | 118 -> 116 -> 115 |
+| scene 05, 30.41 s: the plane rolling out; the trucks | 99 -> 79 px/s; 72 -> 60 px/s (12 numbers) | none |
+
+- **Scene 03** and **scene 04**: the hold sets off at the entrance's pace and settles to its own over a
+  second and a half (`holdSettle`). After that the scene is 0.15 s ahead of where it was, and nothing else
+  changes. Scene 04's clock keeps the hold's pace through the finale's entrance (review: on the frame alone
+  it would have jumped to 1.2 times at 27.8 s, with the map still up), so the water, the dashes and any
+  truck still on its road go on unbroken while the map draws back.
+- **Scene 05**: the finale has its own clock (`now`), one second a second from the frame the map begins to
+  draw back, through the entrance too. So the first landing is the same landing as every later one (it used
+  to play a fifth too fast and brake in mid roll). The hold itself is untouched. While the map is up the
+  finale's clock stands still, so nothing under the map is worked out again in scene 04.
+- **Scenes 01 and 02 are left as they are**: at their handovers only small things change speed (the Tower's
+  lift, a few px across, by 18 px/s; a corner of a glass reflection that begins its own sweep just then,
+  21 px/s), and settling scene 01's hold would have to be carried through the pan into scene 02.
+- The original has the same fault and worse: 75, 118, 68 and 21 px/s in scenes 01, 02, 03 and 05.
+
+`check/handover-check.mjs <side>` measures every scene's. This is not something a frame-rate figure or the
+pop check sees: the film was "0 frozen steps, 0 pops" with it.
+
+### 3. The film's first frames, and the rear doors (part `r11-first-frames`) (review)
+
+Both are in scenes 01 and 02, both were there before the remake, and both are a thing stopping or starting
+dead:
+
+- **The first truck.** For the film's first 0.22 s the truck stood still with its cab inside the left edge
+  of a desktop's picture, and then set off at 2,260 px/s in one frame. It now comes in already driving: at
+  frame 0 it is off the picture, and from frame 8 on nothing has changed.
+- **The rear doors.** The doors' closing ran three and two frames past the frame each scene holds on, so
+  every hold stopped them a sixth open: a sliver of door stood ajar on the truck for the whole of scene
+  01's hold and on all three trucks for scene 02's, and shut as they drove off. They are shut by the hold
+  now: `doorClose [169, 185]` (was `[172, 188]`), `doorsClose2 [380, 391]` (was `[382, 393]`). **This moves
+  two beats of the choreography by 0.1 s and under.**
+
+Nothing else in scenes 01 and 02 differs from before, node for node (`check/same-check.mjs`).
+
+### 4. The player (`round2/js/hero-glue.js`)
+
+All four are the site's own player's habits, carried into the remake's.
+
+- **Frame pacing.** The loop waited 14.7 ms before drawing again. That is 60 a second on a 60 Hz and a
+  120 Hz screen, but 36, 37.5, 45 and 50 on a 72, 75, 90 and 100 Hz screen, and 48 and 55 at 144 and
+  165 Hz. Now it waits 9.5 ms (`PACE`): 60 to 100 a second on every screen. A device that cannot fill a
+  fast screen at that pace goes back to the old wait, which is steady (`half`); it is judged by whether its
+  drawings come when the pace asked for them (review: judged by every late frame, a 144 Hz screen whose
+  drawing took 10 ms fell back to 48 though it was holding an even 72). The screen's own frame time is
+  learned again when the screen changes its rate (review).
+- **The 30 fps grid on a 90 Hz phone (review).** A 90 Hz phone that cannot fill its screen draws on every
+  second frame, 22.2 ms, which sat right on the grid's threshold of 22 ms: it flipped between 45 and 30 a
+  second about once a second. The threshold is 23.5 ms now and such a phone holds an even 45. A 60 Hz
+  device that misses frames still goes to an even 30, as before.
+- **The pause on input.** For 160 ms after every tap, key and turn of the wheel, and for as long as the
+  page was being scrolled, the film stood still, on every device. It is kept only where drawing is slow
+  (`slowDraw`: the scene's own drawing over 4 ms on a running average, or the 30 fps mode), which is where
+  it was needed.
+- **The frame a hold begins in (review).** What the clock had run past the entrance's last frame was
+  dropped, so that one frame moved the scene by anything from a full step to nothing: on a 60 Hz screen the
+  expressway stood still for a frame. It goes into the hold now, as the viewer's clock always did.
+- **A click on to 04 in the last moments of 03's entrance (review)** used to drop the road from 324 to
+  270 px/s in one frame. The expressway keeps the entrance's pace up to the frame its hold begins at.
+
+`check/pace-check.mjs` plays the real player on simulated screens (a test browser only has 60 Hz):
+
+| screen | drawn a second, before | now |
+|---|---|---|
+| 60 Hz | 60 | 60 |
+| 72 / 75 Hz | 36 / 37.5 | 72 / 75 |
+| 90 / 100 Hz | 45 / 50 | 90 / 100 |
+| 119 / 120 Hz | 59.5 / 60 | 59.5 / 60 |
+| 144 / 165 Hz | 48 / 55 | 72 / 82.5 |
+| 240 Hz | 60 | 80 |
+
+Longest stall after a wheel turn, a key or a tap: 167 ms before, none now (133 ms on a scroll, none now);
+with drawing made slow (6 ms a frame) the 167 ms pause is still there, as intended.
+
+### What was measured and found sound
+
+- **No number moves in steps.** `check/step-check.mjs` follows every number the scene code writes through
+  the whole film at 60 steps a second: nothing is rounded coarsely enough to stand still and then move by a
+  visible amount. A reviewer's scan at 240 a second over the film and two loops found no other place that
+  changes speed in one frame than those fixed or listed here.
+- **The browser moves slow things smoothly.** `check/edge-track.mjs` measures a drifting cloud's place to a
+  small fraction of a pixel in photographs, with the real GPU: it glides 0.09 to 0.11 px a frame with no
+  frame in which it stands still. The cached layers of round 7 are not snapped to whole pixels.
+- **Frames are not dropped.** Phone framing, CPU 4x slower, median of 3 runs, one sitting; frame median and
+  share of frames over 16.7 ms:
+
+  | scene | original | before this round | after the loop pass |
+  |---|---|---|---|
+  | 01 | 10.7 ms, 0.5 % | 9.9 ms, 0.4 % | 10.4 ms, 0.4 % |
+  | 02 | 10.3 ms, 3.9 % | 10.1 ms, 0.4 % | 9.7 ms, 0.5 % |
+  | 03 | 10.5 ms, 3.5 % | 9.8 ms, 2.7 % | 9.8 ms, 2.7 % |
+  | 04 | 11.3 ms, 3.5 % | 8.9 ms, 1.4 % | 8.8 ms, 1.2 % |
+  | 05 | 9.5 ms, 0.4 % | 8.7 ms, 0.6 % | 8.3 ms, 0.7 % |
+
+  (Other things were running on the machine, so every figure is higher than round 10's sitting. Compare
+  across a row, not with earlier tables.)
+
+### Left as it is, and why
+
+- **The clouds come home against the wind** (above): the owner's to judge.
+- **Exhaust puffs flicker behind a truck at speed** (review). A driving puff lives for 90 px of road; above
+  about 900 px/s that is under six frames. They are 14 px across and pale, and everything is moving fast
+  then (the truck leaving scene 01, the chase into scene 03).
+- **Scene 01's truck: its body's bounce as it parks begins at full slope** (review): 71 to 10 px/s in one
+  frame on a bounce 6 px high. It reads as part of the stop.
+- **Scenes 01 and 02 at their handovers**: the Tower's lift and a reflection, 18 and 21 px/s (above).
+
+### Found, not ours, left for the session that owns them
+
+- `check-player-vs-glue` fails on some runs at a scene 02 or 03 moment, and did so at HEAD before any of
+  this (8.6 to 12.8 % against its 8 % limit). Two causes, neither in the film: the pale patch behind the
+  copy is still clearing in the clock player when the picture is taken (it clears on the real clock), and
+  scene 03 scrolls 270 px/s, so a tenth of a second of start-up lag moves every edge. The finale's moment
+  passes every time (0.2 to 0.7 %).
+- For the same reason a still or a recording made with the clock player right after a jump to another scene
+  can catch the copy's patch half cleared: give it 3 s, or step it by the film's clock.
+- `check-viewer` once reported one problem: `net::ERR_NO_BUFFER_SPACE` from the local server while other
+  browsers were loading from it. It is the machine, not the film (it explains the one unexplained
+  "1 problem" of round 10 as well); the runs after it were clean.

@@ -156,6 +156,21 @@ fantasy silhouettes.
 - The world is never fully frozen: every ambient element (clouds, birds, flags, fans, glints, exhaust, the
   Tower's beacon) has its own slow phase. Ambient motion is small and never competes with the action.
 - Scene changes read as one camera move.
+- **The finale is a loop** (round 11). The picture 52 s from now is this picture, for as long as a visitor
+  stays. Nothing is reset to make it so: every moving thing in the finale goes round a whole number of
+  times in 52 s (`LOOP`), so there is no seam and no special frame. A thing that travels one way for ever
+  cannot be part of it (the clouds go out and come home). Two things on different rounds meet in a
+  different place every time, so give things that share a patch of sky or ground rounds that fit each
+  other (the baggage train comes once in each of the plane's flights, the kite turns twice in each).
+  Anything new that moves in the finale must pass `evidence/2026-11-17-finale-loop/check/loop-check.mjs`.
+- **Nothing changes speed, starts or stops in one frame**, and that includes the frame a hold begins in.
+  The player plays an entrance 1.2 times as fast as a hold: a scene whose clock is simply its frame loses
+  a sixth of its speed in that one frame. A hold sets off at the entrance's pace and settles
+  (`holdSettle`), or the scene keeps a clock of its own through the entrance (the finale's `now`). A
+  motion that is still under way on the frame a scene holds on stops dead there and stays half done for
+  the whole hold (the trucks' doors did): end it on or before that frame. A thing that is in the picture
+  on the film's first frame starts from where it stands; a thing that arrives comes from outside it.
+  `check/handover-check.mjs` measures the handovers; a frame-rate figure and the pop check see none of this.
 
 ## 9. Pitfalls
 

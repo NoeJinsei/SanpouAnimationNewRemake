@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>三豊運輸 hero remake: the finale loops, and what was not smooth</title>
+<style>
+  :root { --ink: #13263f; --soft: #51627c; --line: #d5dde8; --bg: #f4f7fb; --card: #ffffff; --verm: #e16347; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.6 "Noto Sans JP", "Segoe UI", system-ui, sans-serif; }
+  main { max-width: 1280px; margin: 0 auto; padding: 32px 16px 80px; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 21px; margin: 56px 0 6px; padding-top: 18px; border-top: 3px solid var(--ink); }
+  h3 { font-size: 16px; margin: 28px 0 6px; }
+  p { margin: 6px 0 12px; max-width: 76ch; }
+  .lead { color: var(--soft); }
+  figure { margin: 14px 0 26px; background: var(--card); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+  figure img, figure video { display: block; width: 100%; height: auto; background: #0e1826; }
+  figcaption { padding: 10px 14px; font-size: 14px; color: var(--soft); border-top: 1px solid var(--line); }
+  figcaption b { color: var(--ink); }
+  nav { display: flex; flex-wrap: wrap; gap: 8px 14px; margin: 18px 0 0; font-size: 14px; }
+  a { color: var(--ink); }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+  .two figure { margin: 8px 0 18px; }
+  .two.phone { grid-template-columns: repeat(2, minmax(0, 300px)); }
+  .one.phone { max-width: 320px; }
+  @media (max-width: 760px) { .two { grid-template-columns: 1fr; } }
+  .bar { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 0; }
+  button { font: inherit; font-weight: 600; min-height: 44px; padding: 8px 18px; border-radius: 6px; border: 1px solid var(--ink); cursor: pointer; }
+  button.go { background: var(--ink); color: #fff; }
+  button.stop { background: var(--card); color: var(--ink); }
+  button:hover { filter: brightness(1.12); }
+  button:focus-visible, a:focus-visible { outline: 3px solid var(--verm); outline-offset: 2px; }
+  table { border-collapse: collapse; width: 100%; background: var(--card); font-size: 14px; }
+  .scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; margin: 10px 0 18px; max-width: 900px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  th { background: #e9eff6; }
+  td.n { white-space: nowrap; font-variant-numeric: tabular-nums; }
+  ul { margin: 6px 0 14px; padding-left: 22px; max-width: 76ch; }
+  li { margin: 3px 0; }
+  code { font-size: 13px; }
+  .note { background: #fff7e8; border: 1px solid #ecd9ae; border-radius: 6px; padding: 10px 14px; margin: 12px 0 18px; max-width: 76ch; }
+  .ask { background: #eaf3ff; border: 1px solid #b9d0ee; border-radius: 6px; padding: 12px 16px; margin: 14px 0 20px; max-width: 76ch; }
+</style>
+</head>
+<body>
+<main>
+<h1>三豊運輸 hero remake: the finale loops, and what was not smooth</h1>
+<p>Two things were asked for: the last scene should be a complete seamless loop, with the scene buttons still working, and the film should look 60 fps with no jaggedness. This page shows what was found and changed for each.</p>
+<p class="lead">Every clip can be dragged to any second. The whole film, recorded again with all of this in it, is on <a href="../2026-11-16-the-film/index.html">the film page</a>.</p>
+<nav><a href="#loop">1 The loop</a><a href="#clouds">The clouds: one thing to decide</a><a href="#smooth">2 Smoothness</a><a href="#handover">A lurch as each hold began</a><a href="#first">The first truck, and the doors</a><a href="#player">The player</a><a href="#checks">Checks</a><a href="#left">Left as it is</a></nav>
+
+<h2 id="loop">1. The last scene is a loop</h2>
+<p><b>What was there.</b> Nothing brought the last scene back to its start. It simply ran on. A visitor who stayed saw the clouds slide away to the left and nothing come to replace them for five minutes; the road, the baggage train and the kite each kept a round of their own, so the picture never came back to one anybody had looked at.</p>
+<figure><img src="../2026-11-17-finale-loop/without-the-loop.jpg" alt="The last scene before and now, at the start and after one, three and five loops"><figcaption><b>Left: before. Right: now.</b> The same four moments: 31 s into the film, then 52 s, 156 s and 260 s later. Before, the sky empties. Now it is the same picture each time.</figcaption></figure>
+<p><b>Now.</b> Every 52 seconds the last scene is back at exactly the same picture, and goes on from there, for as long as anyone stays. Nothing jumps back to make that happen: every moving thing simply goes round a whole number of times in 52 seconds. So there is no join to see.</p>
+<div data-pair>
+  <div class="bar"><button type="button" class="go" data-play>Play both together</button><button type="button" class="stop" data-pause>Pause both</button></div>
+  <div class="two" style="grid-template-columns: 2.6fr 1fr">
+    <figure><video src="../2026-11-17-finale-loop/clips/loop-desktop.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Desktop, two loops through</b> (107 s, from the moment the map draws back). The join is in here twice; nothing marks it.</figcaption></figure>
+    <figure><video src="../2026-11-17-finale-loop/clips/loop-phone.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Phone, the same two loops.</b></figcaption></figure>
+  </div>
+</div>
+<h3>The proof</h3>
+<figure><img src="../2026-11-17-finale-loop/loop-proof.jpg" alt="Four pairs of photographs one loop apart"><figcaption><b>Four pairs of photographs, each pair 52 s apart.</b> In every pair, 0 of 2,073,600 pixels differ. The same holds at the desktop and the phone framing.</figcaption></figure>
+<ul>
+  <li><b>Every frame of two loops, compared piece by piece:</b> at each of 6,240 moments (every 60th of a second for 104 s) every one of the picture's parts is the same as 52 s later.</li>
+  <li><b>The site's real player, left on the last scene for four loops (208 s):</b> the same picture one loop later and four loops later.</li>
+  <li><b>The five scene buttons after those four loops:</b> each one works; going away and coming back lands on the loop. Desktop and phone.</li>
+  <li><b>No pops:</b> the whole film and a further whole loop, 0 frozen steps and 0 pops.</li>
+</ul>
+<h3>What had to change to make it loop</h3>
+<div class="scroll"><table>
+<tr><th>What moves</th><th>Before</th><th>Now</th></tr>
+<tr><td>The plane</td><td class="n">every 26 s</td><td>Unchanged: two flights a loop. Its path past Tokyo Tower and its speed are as approved.</td></tr>
+<tr><td>The two flocks</td><td class="n">every 52 s</td><td>Unchanged.</td></tr>
+<tr><td>The clouds</td><td>drifted one way for ever</td><td>Go out and come home once a loop. <a href="#clouds">See below: this one is for you to judge.</a></td></tr>
+<tr><td>The road's trucks, the depot's shutter</td><td class="n">a round of 38 s</td><td>A round of 52 s. The first round, the one in the film you watched, is the same as it was. After it the road is a quarter less busy (the same trucks on a longer round).</td></tr>
+<tr><td>The baggage train</td><td class="n">every 19 s</td><td>Once in each of the plane's flights, at the pace it had. It then waits out of sight behind the depot.</td></tr>
+<tr><td>The kite</td><td class="n">15 s a circle</td><td>13 s a circle, so it is in the same place each time the plane passes.</td></tr>
+<tr><td>Tokyo Tower's lift</td><td class="n">a round trip in 20 s</td><td>26 s: the same ride, a longer wait at each end.</td></tr>
+<tr><td>Everything small (lamps, glints, cranes, radar, windsock, light shafts)</td><td>each on a round of its own</td><td>Each moved to the nearest round that fits 52 s. None is more than a few per cent faster or slower.</td></tr>
+</table></div>
+<h3>Two things that used to meet</h3>
+<p>Looping the scene would have made two accidents permanent, so both were removed.</p>
+<figure><img src="../2026-11-17-finale-loop/met.jpg" alt="The baggage train under the plane, and the kite behind the plane, before and now"><figcaption><b>Top: the baggage train.</b> On its own round it drove along under the plane all through every second landing (left). It now comes in just after each touchdown, well behind the plane (right). <b>Bottom: the kite.</b> The plane climbs straight through the kite's circle; on one pass in two its body went over the kite (left). The kite is now on the far side of its circle at every pass (right).</figcaption></figure>
+
+<h2 id="clouds">The clouds: one thing for you to decide</h2>
+<p>A cloud that drifts one way for ever cannot be part of a loop. It can only come back by leaving the picture and coming in again on the other side, and at a cloud's pace that takes almost nine minutes. To do it in 52 seconds it would have to cross the sky ten times faster.</p>
+<p>So in the last scene the clouds now <b>go out and come home</b>: they drift left as they always did, at the pace they always had, slow to a stop after 26 seconds, and drift back to where they started. For the first 20 seconds, which is all of the last scene you had watched, they move as before.</p>
+<div class="note"><b>What it costs:</b> for half of every loop the clouds move back to the right, against the wind the windsock shows. It is slow and there is no jolt, but it is not what real clouds do.</div>
+<div data-pair>
+  <div class="bar"><button type="button" class="go" data-play>Play both together</button><button type="button" class="stop" data-pause>Pause both</button></div>
+  <div class="two">
+    <figure><video src="../2026-11-17-finale-loop/clips/clouds-pick.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>As built: one whole loop.</b> The big clouds go 116 px left and come back; the far ones 53 px. Watch the big cloud top left between 0:26 and 0:52.</figcaption></figure>
+    <figure><video src="../2026-11-17-finale-loop/clips/clouds-gentle.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>The option: less than half as far</b> (52 px and 24 px). Slower all the way, so the turn is harder to see, but the sky is stiller than in the other scenes.</figcaption></figure>
+  </div>
+</div>
+<div class="ask"><b>The question:</b> keep the clouds as built, take the gentler option, or would you rather they hardly moved at all in the last scene? Everything else on this page stands whichever you choose.</div>
+
+<h2 id="smooth">2. Smoothness</h2>
+<p>"Not smooth" can mean two different things, so both were hunted: frames that are missing, and motion that is not even although every frame is there. A frame-rate number only sees the first.</p>
+<h3>What was measured and is sound</h3>
+<ul>
+  <li><b>Frames are not being dropped.</b> On a slowed-down phone the remake draws a frame as fast as the original or faster in all five scenes, measured in one sitting (the table is under <a href="#checks">Checks</a>).</li>
+  <li><b>Nothing moves in steps.</b> Every number the film writes was followed through the whole film, 60 times a second. None is rounded so coarsely that a thing stands still and then hops.</li>
+  <li><b>The browser moves slow things smoothly.</b> A drifting cloud was measured in photographs to a small fraction of a pixel: it glides a tenth of a pixel a frame, never standing still.</li>
+</ul>
+<p>What was left were five places where something <b>changed speed, stopped or started in a single frame</b>. They are below.</p>
+
+<h2 id="handover">A lurch as each hold began</h2>
+<p>Each scene comes in and then holds. The player plays the coming-in 1.2 times as fast as the hold, so everything in a scene ran a fifth faster while it came in and dropped to its own speed in the single frame the hold began. In scene 03 the whole road lost a sixth of its speed in one frame; in the last scene the plane did, in the middle of its landing roll.</p>
+<div class="scroll"><table>
+<tr><th>Where</th><th>Before</th><th>Now</th></tr>
+<tr><td>Scene 03, 16.9 s: the road, the skyline, the wheels</td><td class="n">324 to 270 px/s in one frame</td><td>No step: it eases to 270 over a second and a half</td></tr>
+<tr><td>Scene 04, 24.0 s: a truck on the map</td><td class="n">118 to 97 in one frame</td><td class="n">118, 116, 115 …</td></tr>
+<tr><td>Scene 05, 30.4 s: the plane rolling out; the trucks</td><td class="n">99 to 79 px/s; 72 to 60 px/s</td><td>No step. The first landing is now the same landing as every later one</td></tr>
+</table></div>
+<div data-pair>
+  <div class="bar"><button type="button" class="go" data-play>Play both together</button><button type="button" class="stop" data-pause>Pause both</button></div>
+  <div class="two">
+    <figure><video src="../2026-11-17-handover/clips/scene-03-before.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Scene 03, before</b> (15.6 to 19.6 s). The road slows in one frame 1.3 s in.</figcaption></figure>
+    <figure><video src="../2026-11-17-handover/clips/scene-03-after.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Scene 03, now.</b> New: how the road, the skyline and the wheels come down to their speed. Nothing else.</figcaption></figure>
+  </div>
+</div>
+<div data-pair>
+  <div class="bar"><button type="button" class="go" data-play>Play both together</button><button type="button" class="stop" data-pause>Pause both</button></div>
+  <div class="two">
+    <figure><video src="../2026-11-17-handover/clips/scene-05-before.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>The last scene coming in, before</b> (27.8 to 33.8 s). The landing plays a fifth too fast and the plane brakes in one frame 2.6 s in.</figcaption></figure>
+    <figure><video src="../2026-11-17-handover/clips/scene-05-after.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Now.</b> New: the plane, the trucks, the birds and the baggage train move at their own speed from the moment the map draws back.</figcaption></figure>
+  </div>
+</div>
+<p class="lead">Scenes 01 and 02 keep two very small ones (the lift inside Tokyo Tower, and one glint on its glass), listed under <a href="#left">Left as it is</a>. The original film has the same fault, larger, in four of its five scenes.</p>
+
+<h2 id="first">The film's first truck, and the rear doors</h2>
+<p>Both are in scenes 01 and 02 and both were there before the remake.</p>
+<figure><img src="../2026-11-17-first-frames/first-truck.jpg" alt="The first quarter second of the film, before and now"><figcaption><b>The film's first quarter second, desktop.</b> Before (left): the truck stands still with its cab already inside the left edge, then sets off at full speed in one frame. Now (right): it drives in from outside the picture. From 0.22 s on the two are the same.</figcaption></figure>
+<figure><img src="../2026-11-17-first-frames/doors.jpg" alt="The trucks' rear doors while scenes 01 and 02 hold, before and now"><figcaption><b>The rear doors while a scene holds.</b> Before: each door stopped a sixth open when the scene came to rest, stood ajar for the whole hold, and shut as the truck drove off. Now: they are shut by the time the scene rests. This moves the doors' closing 0.1 s earlier.</figcaption></figure>
+<div data-pair>
+  <div class="bar"><button type="button" class="go" data-play>Play both together</button><button type="button" class="stop" data-pause>Pause both</button></div>
+  <div class="two">
+    <figure><video src="../2026-11-17-first-frames/clips/first-seconds-before.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>The first 2.5 s, before.</b></figcaption></figure>
+    <figure><video src="../2026-11-17-first-frames/clips/first-seconds-after.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Now.</b> New: the truck's first quarter second. Nothing else.</figcaption></figure>
+  </div>
+</div>
+
+<h2 id="player">The player</h2>
+<p>The player is the small program on the page that runs the film. These habits came with it from the site's own player, so the original has them too.</p>
+<h3>Below 60 a second on some screens</h3>
+<p>It drew 60 pictures a second on a 60 Hz and a 120 Hz screen, but fewer on several common ones, because of how it decided when to draw. It now draws 60 or more on every screen.</p>
+<div class="scroll"><table>
+<tr><th>Screen</th><th>Pictures a second, before</th><th>Now</th></tr>
+<tr><td class="n">60 Hz</td><td class="n">60</td><td class="n">60</td></tr>
+<tr><td class="n">72 / 75 Hz</td><td class="n">36 / 37.5</td><td class="n">72 / 75</td></tr>
+<tr><td class="n">90 Hz (many Android phones)</td><td class="n">45</td><td class="n">90</td></tr>
+<tr><td class="n">100 Hz</td><td class="n">50</td><td class="n">100</td></tr>
+<tr><td class="n">120 Hz (your screen runs at 119)</td><td class="n">60</td><td class="n">60</td></tr>
+<tr><td class="n">144 / 165 Hz</td><td class="n">48 / 55</td><td class="n">72 / 82.5</td></tr>
+<tr><td class="n">240 Hz</td><td class="n">60</td><td class="n">80</td></tr>
+</table></div>
+<p class="lead">A test browser only has a 60 Hz screen, so these were measured by running the real player on a simulated screen of each rate. A phone that cannot keep up with its own fast screen drops back to a steady slower pace (and no longer flips between two, as a 90 Hz phone could).</p>
+<h3>The film stood still whenever the page was touched</h3>
+<p>For a sixth of a second after every click, key press and turn of the mouse wheel, and for as long as the page was being scrolled, the film stopped. That was put in so slow phones answer a tap at once. It is now kept only where drawing really is slow.</p>
+<div class="scroll"><table>
+<tr><th></th><th>Before</th><th>Now, a fast device</th><th>Now, a slow device</th></tr>
+<tr><td>Longest stop after a click, a key or a wheel turn</td><td class="n">167 ms</td><td class="n">none</td><td class="n">167 ms, as intended</td></tr>
+<tr><td>While scrolling</td><td class="n">stopped throughout</td><td class="n">keeps playing</td><td class="n">stopped, as intended</td></tr>
+</table></div>
+<h3>Two smaller ones</h3>
+<ul>
+  <li><b>One frame was lost each time a hold began.</b> On a 60 Hz screen the expressway stood still for one frame at 16.9 s. Gone.</li>
+  <li><b>A click on scene 04 in the last moments of scene 03 coming in</b> dropped the road's speed in one frame. Gone.</li>
+</ul>
+
+<h2 id="checks">Checks</h2>
+<ul>
+  <li>The original's files are intact (7 of 7) and the website was not touched.</li>
+  <li>Scenes 01 and 02 are the same as before in every part and at every 60th of a second, except the first truck's first quarter second and the doors.</li>
+  <li>The scene changes still play as camera moves, on a desktop and on a phone.</li>
+  <li>Clouds: every cloud's underside clears the roofs, also at the far end of its travel; no cloud jumps or outruns its drift.</li>
+  <li>Text contrast: every line of copy passes. The two rows for the unfilled progress track fail, as they do on the original (it is the site's bar).</li>
+  <li>No part was added to any scene's picture (the number of drawn elements is unchanged).</li>
+</ul>
+<div class="scroll"><table>
+<tr><th>Time to draw a frame on a slowed-down phone<br>(middle value; share of frames slower than 60 a second)</th><th>Original</th><th>Before this round</th><th>Now</th></tr>
+<tr><td>Scene 01</td><td class="n">10.7 ms, 0.5 %</td><td class="n">9.9 ms, 0.4 %</td><td class="n">10.4 ms, 0.4 %</td></tr>
+<tr><td>Scene 02</td><td class="n">10.3 ms, 3.9 %</td><td class="n">10.1 ms, 0.4 %</td><td class="n">9.7 ms, 0.5 %</td></tr>
+<tr><td>Scene 03</td><td class="n">10.5 ms, 3.5 %</td><td class="n">9.8 ms, 2.7 %</td><td class="n">9.8 ms, 2.7 %</td></tr>
+<tr><td>Scene 04</td><td class="n">11.3 ms, 3.5 %</td><td class="n">8.9 ms, 1.4 %</td><td class="n">8.8 ms, 1.2 %</td></tr>
+<tr><td>Scene 05</td><td class="n">9.5 ms, 0.4 %</td><td class="n">8.7 ms, 0.6 %</td><td class="n">8.3 ms, 0.7 %</td></tr>
+</table></div>
+<p class="lead">One sitting, the phone framing, the processor slowed four times. Other work was running on the machine, so all three columns are slower than the tables of earlier rounds; compare across a row.</p>
+<p>After the work was done, three reviewers went over it independently, each told to find faults: one on the loop, one on everything outside it and the player, one on what still did not move smoothly. The baggage train, the kite, the first truck, the doors and four of the player's points on this page came from them.</p>
+
+<h2 id="left">Left as it is</h2>
+<ul>
+  <li><b>The clouds coming home</b>: yours to judge, <a href="#clouds">above</a>.</li>
+  <li><b>Exhaust puffs flicker behind a truck at full speed</b> (the truck leaving scene 01, the chase into scene 03). They are small and pale and everything is moving fast then.</li>
+  <li><b>The first truck's body bounces as it parks</b>, and the bounce begins abruptly. It is 6 px high and reads as part of the stop.</li>
+  <li><b>Scenes 01 and 02, as their holds begin</b>: the lift inside Tokyo Tower and one glint on its glass change speed a little (18 and 21 px/s). Neither can be seen on a phone.</li>
+  <li><b>Not the film, noted for the other session:</b> the check that compares the real player with the viewer's player fails on some runs at a scene 02 or 03 moment, and did before this work. The pale patch behind the copy is still clearing when its picture is taken.</li>
+</ul>
+</main>
+<script>
+// The viewer's server cannot send part of a file, so a video played straight from it cannot be dragged.
+// Each clip is fetched whole and played from memory.
+(function () {
+  var vids = Array.prototype.slice.call(document.querySelectorAll("video"));
+  vids.forEach(function (v) {
+    var src = v.getAttribute("src"); v.removeAttribute("src");
+    fetch(src).then(function (r) { return r.blob(); }).then(function (b) { v.src = URL.createObjectURL(b); }).catch(function () { v.src = src; });
+  });
+  Array.prototype.slice.call(document.querySelectorAll("[data-pair]")).forEach(function (pair) {
+    var vs = Array.prototype.slice.call(pair.querySelectorAll("video"));
+    pair.querySelector("[data-play]").addEventListener("click", function () { vs.forEach(function (v) { v.currentTime = 0; }); vs.forEach(function (v) { v.play(); }); });
+    pair.querySelector("[data-pause]").addEventListener("click", function () { vs.forEach(function (v) { v.pause(); }); });
+  });
+})();
+</script>
+</body>
+</html>

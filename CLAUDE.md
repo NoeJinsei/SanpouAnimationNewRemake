@@ -537,11 +537,70 @@ it.** Nothing else in the film was touched.
 - **If the film changes again, record the four films again** (the commands are on the film page) and say
   so on that page.
 
+## Round 11 (2026-11-17): the finale loops, and five things that were not smooth. Waiting for the owner's verdict
+
+Brief `PROMPT-FOR-FABLE-LOOP.md` (his words: the last scene "a complete seamless loop", and the film to
+"look 60 fps like (smooth without any jaggedness or issues)"). Four passes, one commit each; shown on
+`evidence/2026-11-17-round11-review/index.html`; details and every number at the end of `CHANGES.md`; the
+rules it leaves are in `STYLE.md` §5. **Check his verdict before building on it.**
+
+- **The finale is the same picture every 52 s** (parts `r11-loop-sky`, `-birds`, `-city`, `-ground`).
+  Every moving thing in it goes round a whole number of times in 52 s (`LOOP`, `loopW`, `loopT`, `loopN`);
+  nothing is reset, so there is no seam. The loop starts with the finale's hold (30.4 s into the film).
+  Parts other scenes share take the loop as an argument and are unchanged without it.
+  **Anything new that moves in the finale must pass**
+  `node evidence/2026-11-17-finale-loop/check/loop-check.mjs round2 --from=30420 --step=16.6667 --turns=2`.
+  - **Open for him: the clouds.** A cloud that drifts one way cannot loop in 52 s, so in the finale they go
+    out and come home on one sine (`SKY_SWAY = [53, 116]` px): for half of every loop they move back
+    against the wind. The option `r11-loop-opt-gentle` (`[24, 52]`) is on the review page. He has not chosen.
+  - Things that share a patch of the picture are on rounds that fit each other: the plane 26 s, the baggage
+    train once in each of the plane's flights (19 s crossing, then it waits behind the depot), the kite four
+    turns a loop (at the right-hand end of its circle whenever the plane passes: `turns: 4, turn0: 2.984`),
+    a flock across Tokyo Tower nine seconds before each plane. **Change one and check the others.**
+  - The road runs on 52 s (it was 38): `MINI.C`, `MINI.GAP`. The two depot trucks swap drawing slots 20 s
+    after each departure, unseen, so every node repeats.
+- **Nothing loses a sixth of its speed when a hold begins** (`r11-handover`). The player plays an entrance
+  1.2 times as fast as a hold. Scenes 03 and 04: the hold sets off at the entrance's pace and settles
+  (`holdSettle`; the scene is 0.15 s ahead afterwards). Scene 05 has its own clock (`now`), one second a
+  second from the frame the map draws back; the map's is `mapT`. `ENTER_PACE` in the scene file must stay
+  equal to the player's `ENTER_RATE`. Scenes 01 and 02 keep two tiny steps (the Tower's lift, a glint).
+  `check/handover-check.mjs <side>` measures them.
+- **Scene 01's first truck and the rear doors** (`r11-first-frames`): the truck drives in from outside the
+  picture (it stood at the left edge for 0.22 s and then jumped to full speed); the doors are shut by the
+  frame each scene holds on (`doorClose [169, 185]`, `doorsClose2 [380, 391]`: two beats moved by 0.1 s
+  and less, said to the owner on the review page).
+- **The player** (`round2/js/hero-glue.js`): 60 to 100 drawings a second on every screen (`PACE` 9.5 ms; it
+  was 36 to 55 on 72, 75, 90, 100, 144 and 165 Hz screens); the 160 ms pause on input only where drawing is
+  slow (`slowDraw`); what the clock ran past an entrance goes into the hold; a click on 04 during 03's
+  entrance no longer drops the road's speed. `check/pace-check.mjs` and
+  `evidence/2026-11-17-player-pace/check/` play the real player on simulated screens (a test browser has
+  only 60 Hz). **The viewer's clock player and the recordings do not use this file**: its faults and fixes
+  show only in the real player.
+- **How it was checked.** `evidence/2026-11-17-finale-loop/check/scene-lab.mjs` runs the scene code in Node
+  with the viewer's clock, with no browser: every node of every frame can be compared (`loop-check`,
+  `same-check` against a folder holding the code as it was, `step-check`, `handover-check`). Use it before
+  the browser tools; it takes seconds. Three reviewers then went over the uncommitted work with one lens
+  each (the loop, everything outside it, what still was not smooth) and found the train under the plane, the
+  kite behind the plane, the first truck, the doors and four faults in the player's first fix. Do that again
+  for work of this size.
+- **Left, with reasons** (end of `CHANGES.md`): exhaust puffs flicker behind a truck at full speed; the
+  first truck's parking bounce begins abruptly; scenes 01 and 02's tiny handover steps.
+- **Not ours, for the session that owns `tools/` and the overlay:** `check-player-vs-glue` fails on some
+  runs at a scene 02 or 03 moment and did so before this round (the copy's patch is still clearing in the
+  clock player when the picture is taken; on a desktop the live player starts a tenth of a second behind
+  the wall clock, which scene 03's scroll shows). A still or a recording made right after a jump to another
+  scene can catch the patch half cleared: give it 3 s. `check-viewer`'s occasional "1 problem" is
+  `net::ERR_NO_BUFFER_SPACE` from the local server when many test browsers have been run in a short time.
+- Recording is slow (about 4 frames a second for one recorder): run several `tools/record.mjs` side by side.
+- The four whole-film recordings and `films/remake-2.mp4` were made again at the end of this round.
+
 ## WHERE IT STANDS WHEN YOU PICK THIS UP (2026-11-17, the owner logged off)
 
 Everything is committed and pushed; the working tree is clean. Two threads are live.
 
-**1. Fable 5.2 has the film.** `PROMPT-FOR-FABLE-LOOP.md` is its brief, handed over and approved by the
+**1. Fable 5.2 had the film, and is done: see "Round 11" above. It waits for the owner's verdict, and for
+his choice about the clouds.** What follows is the brief as it was handed over.
+`PROMPT-FOR-FABLE-LOOP.md` is its brief, handed over and approved by the
 owner ("Looks right"): make scene 05 a complete seamless loop (L = 52 s, two plane cycles and one bird
 cycle; position AND velocity continuous at the wrap; the five scene buttons must keep working), and chase
 the two different faults hiding under "jaggedness" - dropped frames, and motion that steps rather than
