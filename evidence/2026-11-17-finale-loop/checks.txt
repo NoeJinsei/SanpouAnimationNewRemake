@@ -1,0 +1,256 @@
+Round 11, the checks on the final working copy (2026-11-17)
+
+## the originals' files
+js/hero-flag.js: OK
+js/hero-glue.js: OK
+js/hero-port-a.js: OK
+js/hero-port-b.js: OK
+css/40-hero.css: OK
+site/site.css: OK
+site/hero-section.html: OK
+exit 0
+
+## the loop: every node of the picture against the same node 52 s later, every 60th of a second for two loops
+round2: the finale at t and at t + 52 s, 6240 moments from 30420 ms, a step of 16.67 ms
+  moments where the picture differs: 0   (moments where any node differs, hidden ones included: 0)
+A LOOP: every node is the same one turn later
+
+## the loop in photographs (pixels that differ between t and t + 52 s)
+bare stage: 31000, 45011, 57000, 70000 ms: 0 of 2073600 pixels differ in each
+desktop framing: 47000, 60000 ms: 0 of 1036800
+phone framing: 47000, 60000 ms: 0 of 1060800
+
+## the real player left on the finale for four loops, then the five buttons: desktop
+ok   the film reaches the finale and holds (scene 05)
+ok   one loop later (52 s) the player shows the same picture: 0 px differ
+ok   4 loops later (208 s) it still does: 0 px differ
+ok   button 1: scene 01, drawings on the stage: w
+ok   button 2: scene 02, drawings on the stage: w
+ok   button 3: scene 03, drawings on the stage: t
+ok   button 4: scene 04, drawings on the stage: tn
+ok   button 5: scene 05, drawings on the stage: n
+ok   button 3: scene 03, drawings on the stage: t
+ok   button 5: scene 05, drawings on the stage: n
+ok   after the jump back to 05, the picture one loop later is the same: 0 px differ
+ok   console errors: 0
+
+the finale loops in the real player, and the scene buttons work after 4 loops (round2, desktop)
+exit 0
+
+## the same on a phone
+ok   the film reaches the finale and holds (scene 05)
+ok   one loop later (52 s) the player shows the same picture: 0 px differ
+ok   4 loops later (208 s) it still does: 0 px differ
+ok   button 1: scene 01, drawings on the stage: w
+ok   button 2: scene 02, drawings on the stage: w
+ok   button 3: scene 03, drawings on the stage: t
+ok   button 4: scene 04, drawings on the stage: tn
+ok   button 5: scene 05, drawings on the stage: n
+ok   button 3: scene 03, drawings on the stage: t
+ok   button 5: scene 05, drawings on the stage: n
+ok   after the jump back to 05, the picture one loop later is the same: 0 px differ
+ok   console errors: 0
+
+the finale loops in the real player, and the scene buttons work after 4 loops (round2, phone)
+exit 0
+
+## scenes 01 and 02 against the film before round 11 (the first truck's first frames and the doors are the only differences)
+round2: before and after, 877 moments from 0 to 14600 ms
+  moments where the picture differs: 288   (moments where any node differs, undisplayed ones included: 288)
+    274  world/7:svg/2:g/7:g/5:g/25:g  [transform]
+    273  world/7:svg/2:g/7:g/5:g/24:rect[#16243C]  [fill-opacity]
+    237  world/7:svg/2:g/7:g/5:g/25:g  [opacity]
+    131  world/7:svg/2:g/5:g/5:g/24:rect[#16243C]  [fill-opacity]
+    131  world/7:svg/2:g/5:g/5:g/25:g  [transform]
+    131  world/7:svg/2:g/6:g/5:g/24:rect[#16243C]  [fill-opacity]
+    131  world/7:svg/2:g/6:g/5:g/25:g  [transform]
+    116  world/7:svg/2:g/5:g/5:g/25:g  [opacity]
+    116  world/7:svg/2:g/6:g/5:g/25:g  [opacity]
+     14  world/1:svg/0:defs/1:clipPath(clipT1)/0:rect  [x]
+     14  world/7:svg/2:g/7:g  [transform]
+     14  world/7:svg/2:g/7:g/1:g/0:circle[#edf2f8]  [cx]
+     14  world/7:svg/2:g/7:g/1:g/0:circle[#edf2f8]  [cy]
+     14  world/7:svg/2:g/7:g/1:g/0:circle[#edf2f8]  [r]
+     14  world/7:svg/2:g/7:g/1:g/0:circle[#edf2f8]  [fill-opacity]
+     14  world/7:svg/2:g/7:g/1:g/1:circle[#edf2f8]  [cx]
+     14  world/7:svg/2:g/7:g/1:g/1:circle[#edf2f8]  [cy]
+     14  world/7:svg/2:g/7:g/1:g/1:circle[#edf2f8]  [r]
+     14  world/7:svg/2:g/7:g/1:g/1:circle[#edf2f8]  [fill-opacity]
+     14  world/7:svg/2:g/7:g/3:g/6:g  [transform]
+     14  world/7:svg/2:g/7:g/4:g/4:g  [transform]
+THE PICTURE CHANGED
+
+## scene 03's entrance against the film before round 11 (the doors' last two frames, 14.60 to 14.65 s, are the only difference)
+round2: before and after, 140 moments from 14600 to 16930 ms
+  moments where the picture differs: 4   (moments where any node differs, undisplayed ones included: 4)
+      4  world/7:svg/2:g/5:g/5:g/24:rect[#16243C]  [fill-opacity]
+      4  world/7:svg/2:g/5:g/5:g/25:g  [transform]
+      4  world/7:svg/2:g/5:g/5:g/25:g  [opacity]
+      4  world/7:svg/2:g/6:g/5:g/24:rect[#16243C]  [fill-opacity]
+      4  world/7:svg/2:g/6:g/5:g/25:g  [transform]
+      4  world/7:svg/2:g/6:g/5:g/25:g  [opacity]
+      4  world/7:svg/2:g/7:g/5:g/24:rect[#16243C]  [fill-opacity]
+      4  world/7:svg/2:g/7:g/5:g/25:g  [transform]
+      4  world/7:svg/2:g/7:g/5:g/25:g  [opacity]
+THE PICTURE CHANGED
+
+## elements on the stage (original / before round 11 / now)
+moment               original         trial3         round2
+01 at 3500               1337           1483           1483
+02 at 10500              1372           1494           1494
+03 at 18000              1254            943            943
+04 at 24500               778            945            945
+05 at 32000               777            944            944
+05 at 40000               776            944            944
+total                    6294           6753           6753
+exit 0
+
+## check-viewer
+full: 22 moments, picture 1920px x 1080px, largest difference round2 vs remake: 1900913 px (at t=22200), draw 1.79 / 1.56 ms
+desktop: 22 moments, picture 1440px x 720px, largest difference round2 vs remake: 929275 px (at t=22600), draw 1.95 / 1.57 ms
+phone: 22 moments, picture 390px x 680px, largest difference round2 vs remake: 240806 px (at t=22200), draw 1.92 / 1.60 ms
+
+viewer OK: 0 console errors
+exit 0
+
+## check-seams, phone and desktop
+
+the real player plays both seams as camera moves (round2, phone)
+exit 0
+
+the real player plays both seams as camera moves (round2, desktop)
+exit 0
+
+## check-player-vs-glue, phone and desktop (the desktop run's scene 03 moment fails before this round too: see CHANGES.md)
+ok   at 6411 ms: live scene 01, clock scene 01, 1.25 % of pixels differ
+ok   at 13914 ms: live scene 02, clock scene 02, 7.04 % of pixels differ
+ok   at 21001 ms: live scene 03, clock scene 03, 0.24 % of pixels differ
+ok   at 27211 ms: live scene 04, clock scene 04, 0.26 % of pixels differ
+ok   at 33003 ms: live scene 05, clock scene 05, 0.24 % of pixels differ
+
+clock player matches the site's player in every hold (phone)
+exit 0
+ok   at 6405 ms: live scene 01, clock scene 01, 0.21 % of pixels differ
+ok   at 13913 ms: live scene 02, clock scene 02, 0.23 % of pixels differ
+FAIL at 21008 ms: live scene 03, clock scene 03, 11.99 % of pixels differ
+ok   at 27215 ms: live scene 04, clock scene 04, 0.25 % of pixels differ
+ok   at 33013 ms: live scene 05, clock scene 05, 0.10 % of pixels differ
+
+1 moment(s) differ
+exit 1
+
+## check-copy
+
+copy check OK
+exit 0
+
+## cloud-check
+scene 01: 15 moments, 0 clouds below a roof
+scene 02: 12 moments, 0 clouds below a roof
+scene 03: 15 moments, 0 clouds below a roof
+scene 05: 37 moments, 0 clouds below a roof
+clouds OK: every cloud's base clears the roofs under it
+exit 0
+
+## clouds against the roofs at the far end of their travel (53967 ms)
+round2 at 53967 ms: 5 clouds, 21 buildings in view
+  n-far:0 cloud3-3|700|1  x -22..678  top 342  underside 392  highest roof under it 675 (airport at x -4..760)  clear by 283
+  n-far:1 cloud3-4|480|1  x 978..1458  top 126  underside 150  highest roof under it 684 (G at x 1168..1250)  clear by 534
+  n-near:0 cloud3-0|480|0  x -22..451  top 72  underside 245  highest roof under it 675 (airport at x -4..760)  clear by 430
+  n-near:1 cloud3-1|500|0  x 690..1182  top 260  underside 425  highest roof under it 675 (airport at x -4..760)  clear by 250
+  n-near:2 cloud3-6|96|0  x 1436..1528  top 236  underside 268  highest roof under it 529 (S at x 1473..1593)  clear by 261
+
+## sky-motion, 0 to 135 s
+
+  0/8100
+  300/8100
+  600/8100
+  900/8100
+  1200/8100
+  1500/8100
+  1800/8100
+  2100/8100
+  2400/8100
+  2700/8100
+  3000/8100
+  3300/8100
+  3600/8100
+  3900/8100
+  4200/8100
+  4500/8100
+  4800/8100
+  5100/8100
+  5400/8100
+  5700/8100
+  6000/8100
+  6300/8100
+  6600/8100
+  6900/8100
+  7200/8100
+  7500/8100
+  7800/8100
+  8100/8100
+                    
+round2, stage 1920x1080, 0 to 135000 ms at 60 fps: 14 clouds followed
+  n-far#0         22.23-135.00s  scene 04+05    drift   2.4 px/s  hardest change 16236 px/s2 at 22.25s  APPEARS at once (1.00)
+      faster than its drift: 22.23-22.65s up to 2819 px/s, 0 px
+  n-far#1         22.35-135.00s  scene 04+05    drift   2.4 px/s  hardest change  9504 px/s2 at 22.37s  APPEARS at once (1.00)
+      faster than its drift: 22.35-22.65s up to 1277 px/s, 0 px
+  n-near#0        22.30-135.00s  scene 04+05    drift   4.8 px/s  hardest change 12168 px/s2 at 22.32s  APPEARS at once (1.00)
+      faster than its drift: 22.30-22.65s up to 1840 px/s, 0 px
+  n-near#1        22.23-135.00s  scene 04+05    drift   4.8 px/s  hardest change 16236 px/s2 at 22.25s  APPEARS at once (1.00)
+      faster than its drift: 22.23-22.65s up to 2819 px/s, 0 px
+  n-near#2        22.28-135.00s  scene 04+05    drift   4.8 px/s  hardest change 13176 px/s2 at 22.30s  APPEARS at once (1.00)
+      faster than its drift: 22.28-22.65s up to 2060 px/s, 0 px
+  t-far#0         15.58-22.28s  scene 03+04    drift   6.6 px/s  hardest change 19764 px/s2 at 22.15s  GOES at once (1.00)
+      faster than its drift: 15.58-16.12s up to 58 px/s, 21 px; 21.83-22.28s up to 3938 px/s, 3 px
+  t-far#1         15.58-22.38s  scene 03+04    drift   6.6 px/s  hardest change 19764 px/s2 at 22.15s  GOES at once (1.00)
+      faster than its drift: 15.58-16.12s up to 58 px/s, 21 px; 21.83-22.38s up to 3938 px/s, 4 px
+  t-near#0        15.58-22.30s  scene 03+04    drift  16.8 px/s  hardest change 19764 px/s2 at 22.15s  GOES at once (1.00)
+      faster than its drift: 15.58-16.17s up to 167 px/s, 62 px; 21.83-22.30s up to 3938 px/s, 8 px
+  t-near#1        15.58-22.35s  scene 03+04    drift  16.8 px/s  hardest change 19764 px/s2 at 22.15s  GOES at once (1.00)
+      faster than its drift: 15.58-16.17s up to 167 px/s, 62 px; 21.83-22.35s up to 3938 px/s, 9 px
+  t-near#2        15.58-22.35s  scene 03+04    drift  16.8 px/s  hardest change 19764 px/s2 at 22.15s  GOES at once (1.00)
+      faster than its drift: 15.58-16.17s up to 167 px/s, 62 px; 21.83-22.35s up to 3938 px/s, 9 px
+  w-far#0          0.00-15.73s  scene 01+02+03 drift   3.6 px/s  hardest change   978 px/s2 at 8.07s  GOES at once (1.00)
+      faster than its drift: 7.57-8.75s up to 342 px/s, 169 px; 15.03-15.73s up to 340 px/s, 117 px
+  w-near#0         0.00- 8.38s  scene 01+02    drift   8.4 px/s  hardest change  3869 px/s2 at 8.08s  GOES at once (1.00)
+      faster than its drift: 7.50-8.38s up to 1365 px/s, 575 px
+  w-near#1         0.00-15.60s  scene 01+02+03 drift   7.2 px/s  hardest change  3869 px/s2 at 8.08s  GOES at once (1.00)
+      faster than its drift: 7.48-8.90s up to 1365 px/s, 679 px; 14.93-15.60s up to 1161 px/s, 300 px
+  w-near#2         0.00-15.73s  scene 01+02+03 drift   7.9 px/s  hardest change  3869 px/s2 at 8.08s  GOES at once (1.00)
+      faster than its drift: 7.50-8.90s up to 1365 px/s, 679 px; 14.93-15.73s up to 1353 px/s, 468 px
+no jumps
+exit 0
+
+## contrast-check
+element                      px need  worst     p5 where                      
+headline @desktop            52    3   4.91   8.72 desktop t=0                PASS
+sub-copy @desktop            18  4.5   4.84   8.66 desktop t=0                PASS
+button (filled) @desktop     16  4.5   6.65   6.65 desktop t=0                PASS
+button (outline) @desktop    16  4.5   7.43   9.29 desktop t=7000             PASS
+caption number @desktop      22    3   4.91   8.09 desktop t=29000            PASS
+caption name @desktop        15  4.5   5.32   7.93 desktop t=30000            PASS
+caption lead @desktop        14  4.5   5.06   6.42 desktop t=30000            PASS
+track unfilled @desktop       6    3   1.00   3.90 desktop t=28000 seg 5      FAIL
+headline @phone            23.01    3   5.48  10.55 phone t=2000               PASS
+tagline @phone               13  4.5   4.98   5.25 phone t=2000               PASS
+button (filled) @phone       14  4.5   6.65   6.65 phone t=0                  PASS
+button (outline) @phone      14  4.5   6.66  12.62 phone t=14000              PASS
+caption number @phone        20    3   5.71   9.41 phone t=36000              PASS
+caption name @phone          15  4.5   6.15   9.24 phone t=34000              PASS
+track unfilled @phone         6    3   1.00   2.87 phone t=21000 seg 4        FAIL
+contrast FAIL: 2 element(s) below AA
+exit 1
+
+## motion-check, the film (0 to 48 s) and a further loop (48 to 84 s)
+round2 0..48000 ms, crop full: 2880 steps at 60/s
+frozen steps: 0, longest frozen run: 0 steps
+change per step: median 0.1746, largest 31.4245 at 22083 ms
+pops (> 3x both neighbours): 0
+exit 0
+round2 48000..84000 ms, crop full: 2160 steps at 60/s
+frozen steps: 0, longest frozen run: 0 steps
+change per step: median 0.1235, largest 0.2056 at 53950 ms
+pops (> 3x both neighbours): 0
+exit 0

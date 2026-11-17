@@ -1490,7 +1490,9 @@
   }
   // where something at x in a tier stands when the tier has moved by off; on a loop of length tile, its nearest copy
   function cityAt(x, off, tile) { x += off || 0; return tile ? ((x + 960) % tile + tile) % tile - 960 : x; }
-  function CityCranes(row, time, off, tile) {
+  // (round 11) L = the loop the scene runs on, if it has one: the slewing, the trolley and the hook then each
+  // go round a whole number of times in it (in the finale: once each, on their own phases)
+  function CityCranes(row, time, off, tile, L) {
     if (!row.cranes) {
       row.cranes = [];
       row.items.forEach(function (it, i) {
@@ -1500,10 +1502,11 @@
         row.cranes.push({ x: k[0], y: k[1], u: k[2], dir: (k[3] >> 1) % 2 ? -1 : 1, ph: i * 1.7 + it.x * 0.003, pal: pal, mast: cityCraneMast(k[2], pal, k[4]), arm: cityArm(k[2], pal), head: cityCraneHead(k[2], pal) });
       });
     }
+    var wSlew = loopW(0.11, L), wTrolley = loopW(0.083, L), wHook = loopW(0.097, L);
     return h("g", null, row.cranes.map(function (k) {
-      var u = k.u, t = Math.max(3, 3.6 * u), s = (0.76 + 0.2 * Math.sin(time * 0.11 + k.ph)) * k.dir;
-      var tr = (0.36 + 0.3 * (0.5 + 0.5 * Math.sin(time * 0.083 + k.ph * 2.1))) * CITY_JIB * u * s;
-      var drop = (44 + 22 * Math.sin(time * 0.097 + k.ph * 1.3)) * u;
+      var u = k.u, t = Math.max(3, 3.6 * u), s = (0.76 + 0.2 * Math.sin(time * wSlew + k.ph)) * k.dir;
+      var tr = (0.36 + 0.3 * (0.5 + 0.5 * Math.sin(time * wTrolley + k.ph * 2.1))) * CITY_JIB * u * s;
+      var drop = (44 + 22 * Math.sin(time * wHook + k.ph * 1.3)) * u;
       return h("g", { transform: "translate(" + cityAt(k.x, off, tile).toFixed(1) + "," + k.y + ")" },
         k.mast,
         h("g", { transform: "scale(" + s.toFixed(4) + ",1)" }, k.arm),
@@ -1549,11 +1552,14 @@
     (def.warm || []).forEach(function (s) { var p = near(s[0] + dx, s[1], false, true); if (p) L.warm.push({ r: p, ph: s[2] }); });
     return L;
   }
-  function CityLights(L, time, off, tile) {
+  // (round 11) loop = the loop the scene runs on, if it has one: the sheen's round, every glint's period and the
+  // lamps' slow breath then each go into it a whole number of times
+  function CityLights(L, time, off, tile, loop) {
+    var sheenT = loopT(20, loop), warmT = loopT(31, loop), turn = loop ? 2 * Math.PI : 6.2832;
     return h("g", null,
       // the sheen: two bands of sky sliding down the glass on the light's diagonal, 11 s of travel in every 20
       L.sheen.map(function (s) {
-        var g = s.g, p = ((((time + s.ph) % 20) + 20) % 20) / 11;
+        var g = s.g, p = ((((time + s.ph) % sheenT) + sheenT) % sheenT) / 11;
         if (p >= 1) return h("path", { d: "M0,0", fill: DAY.cityWhite, opacity: 0 });
         var xl = cityAt(g[0], off, tile), xr = xl + g[2], sl = g[2] * 0.85, yr = g[1] - 130 - sl + (g[3] + sl + 150) * p;
         var band = function (a, b) { return _polyD(_clipPoly([[xr, yr + a], [xr, yr + b], [xl, yr + b + sl], [xl, yr + a + sl]], xl, g[1], xr, g[1] + g[3])); };
@@ -1561,18 +1567,17 @@
       }),
       // single panes that catch the sun and let it go, each on its own slow phase
       L.glint.map(function (s) {
-        var k = Math.max(0, Math.sin(time * 6.2832 / s.T + s.ph));
+        var k = Math.max(0, Math.sin(time * turn / loopT(s.T, loop) + s.ph));
         return h("rect", { x: cityAt(s.r[0], off, tile).toFixed(1), y: s.r[1], width: s.r[2], height: s.r[3], fill: DAY.lit, opacity: (0.92 * k * k * k).toFixed(3) });
       }),
       // a room with its lamp on: always warm, brightening and settling very slowly
       L.warm.map(function (s) {
-        var k = 0.5 - 0.5 * Math.cos(time * 6.2832 / 31 + s.ph), wx = cityAt(s.r[0], off, tile).toFixed(1);
+        var k = 0.5 - 0.5 * Math.cos(time * turn / warmT + s.ph), wx = cityAt(s.r[0], off, tile).toFixed(1);
         return h("g", null,
           h("rect", { x: wx, y: s.r[1], width: s.r[2], height: s.r[3], fill: DAY.warm }),
           h("rect", { x: wx, y: s.r[1], width: s.r[2], height: s.r[3], fill: DAY.cityWarmLit, opacity: (0.8 * k).toFixed(3) }));
       }));
   }
-
   /* ---- scenes 01 and 02: the street's skyline, three tiers. Composed in scene 01's screen coordinates
      (scene 02 shows the same rows 1092 px further on for the near tier, 672 for the far, 378 for the deep).
      The tallest and strongest stand right of x 1150; left of it nothing rises into the headline; round
@@ -1922,14 +1927,19 @@
     }
     var n1 = function (v) { return String(Math.round(v * 10) / 10); };
     // the lift, inside the lattice: twenty seconds a round trip, long soft starts and landings, a wait at each end
-    var lt = ((time % 20) + 20) % 20, lk = lt < 2 ? 1 : lt < 9 ? 1 - (lt - 2) / 7 : lt < 12 ? 0 : lt < 19 ? (lt - 12) / 7 : 1;
+    // (round 11: where the scene runs on a loop, p.loop, the round trip is half of it: the lift rides at the pace
+    // it always had, seven seconds each way, and waits longer at each end; the reflection's round and the lamp's
+    // swell go into the loop a whole number of times)
+    var liftT = p.loop ? p.loop / 2 : 20, liftWait = (liftT - 14) / 2;
+    var lt = ((time % liftT) + liftT) % liftT, lk = lt < 2 ? 1 : lt < 9 ? 1 - (lt - 2) / 7 : lt < 9 + liftWait ? 0 : lt < 16 + liftWait ? (lt - 9 - liftWait) / 7 : 1;
     lk = lk * lk * lk * (lk * (6 * lk - 15) + 10);
     var ly = m.liftY0 + (m.liftY1 - m.liftY0) * lk;
     // the sky's reflection crossing the main deck's upper glazing, then a pause
-    var g = m.glass, sk = (((time - 3.5) % 9) + 9) % 9 / 5, sx = g[0] - 26 * u + (g[2] - g[0] + 52 * u) * sk;
+    var skyT9 = loopT(9, p.loop);
+    var g = m.glass, sk = (((time - 3.5) % skyT9) + skyT9) % skyT9 / 5, sx = g[0] - 26 * u + (g[2] - g[0] + 52 * u) * sk;
     var cl = function (v) { return n1(Math.max(g[0], Math.min(g[2], v))); };
     // the aviation lamp at the tip: a slow swell, never a blink
-    var lamp = 0.5 - 0.5 * Math.cos(time * 2.1); lamp *= lamp;
+    var lamp = 0.5 - 0.5 * Math.cos(time * loopW(2.1, p.loop)); lamp *= lamp;
     return h("g", { opacity: p.opacity == null ? 1 : p.opacity },
       m.back,
       h("polygon", { points: cl(sx + 6 * u) + "," + n1(g[1]) + " " + cl(sx + 22 * u) + "," + n1(g[1]) + " " + cl(sx + 16 * u) + "," + n1(g[1] + g[3]) + " " + cl(sx) + "," + n1(g[1] + g[3]), fill: "#ffffff", opacity: 0.34 }),
@@ -1959,6 +1969,20 @@
   /* ---- round 3 sky set: one sun, one fan of shafts, one cloud field, one flock and one mountain range,
      used by every scene ---- */
   DAY.shaft = "#ffffff"; DAY.sunHalo = "#ffedb2";
+  /* ---- The finale's loop (round 11, 2026-11-17) ----
+     The finale is what a visitor sits and watches, so it is one loop: the picture LOOP seconds from now is
+     this same picture, for as long as anybody stays. Nothing is reset to make that so, so there is no seam
+     and no special frame: every moving thing in the finale simply goes round a whole number of times in
+     LOOP seconds. The plane's cycle is 26 s and the flocks come round every 52 s, so LOOP is 52.
+     A part that other scenes use too is told the loop (`loop`); without it, it moves exactly as it always
+     did, so scenes 01 to 04 are untouched.
+       loopW  a rate (radians a second), moved to the nearest one that turns a whole number of times in L s
+       loopT  a period (seconds), moved to the nearest one that goes into L s a whole number of times
+     `node evidence/2026-11-17-finale-loop/check/loop-check.mjs round2` compares every node of the picture
+     with the same node one loop later. Anything new that moves in the finale must pass it. */
+  var LOOP = 52;
+  function loopW(w, L) { return L ? 2 * Math.PI * Math.max(1, Math.round(w * L / (2 * Math.PI))) / L : w; }
+  function loopT(T, L) { return L ? L / Math.max(1, Math.round(L / T)) : T; }
   var SUN_R = 42;                         // the sun's disc: the same size and finish in every scene
   /* Four shafts of light that fan from the sun itself (the sun is drawn over the point where they meet):
      clearly unequal widths, uneven gaps, steep to shallow. [start angle, width (radians), strength, phase].
@@ -1966,17 +1990,18 @@
      `k` (0..1) scales that motion (the map scene holds its sky still). */
   var SHAFTS = [[1.84, 0.12, 0.115, 0], [2.15, 0.27, 0.098, 1.9], [2.49, 0.13, 0.09, 3.7], [2.79, 0.2, 0.084, 5.2]];
   function LightShafts(p) {
-    var ox = p.cx, oy = p.cy, time = p.time, k = p.k == null ? 1 : p.k, far = 2600;
-    var sway = (Math.sin(time * 0.29) * 0.012 + Math.sin(time * 0.13 + 1.1) * 0.008) * k;
+    var ox = p.cx, oy = p.cy, time = p.time, k = p.k == null ? 1 : p.k, far = 2600, L = p.loop;
+    var sway = (Math.sin(time * loopW(0.29, L)) * 0.012 + Math.sin(time * loopW(0.13, L) + 1.1) * 0.008) * k;
+    var wWide = loopW(0.23, L), wFaint = loopW(0.41, L);
     return h("g", null, SHAFTS.map(function (s, i) {
-      var a0 = s[0] + sway * (1 + i * 0.22), a1 = a0 + s[1] * (1 + 0.07 * k * Math.sin(time * 0.23 + s[3]));
-      var o = s[2] * (1 - 0.16 * k * (0.5 + 0.5 * Math.sin(time * 0.41 + s[3] * 1.7)));
+      var a0 = s[0] + sway * (1 + i * 0.22), a1 = a0 + s[1] * (1 + 0.07 * k * Math.sin(time * wWide + s[3]));
+      var o = s[2] * (1 - 0.16 * k * (0.5 + 0.5 * Math.sin(time * wFaint + s[3] * 1.7)));
       return h("polygon", { points: ox + "," + oy + " " + (ox + Math.cos(a0) * far).toFixed(1) + "," + (oy + Math.sin(a0) * far).toFixed(1) + " " + (ox + Math.cos(a1) * far).toFixed(1) + "," + (oy + Math.sin(a1) * far).toFixed(1), fill: DAY.shaft, opacity: o.toFixed(3) });
     }));
   }
   /* The sun: a bloom that bleeds into the sky, one flat halo, the disc and a lighter core. */
   function SkySun(p) {
-    var cx = p.cx, cy = p.cy, r = SUN_R, pulse = Math.sin(p.time * 0.5);
+    var cx = p.cx, cy = p.cy, r = SUN_R, pulse = Math.sin(p.time * loopW(0.5, p.loop));
     return h("g", null,
       h("circle", { cx: cx, cy: cy, r: (r * 7.4 + pulse * 7).toFixed(1), fill: "url(#" + p.gid + ")" }),
       h("circle", { cx: cx, cy: cy, r: (r * 1.34 + pulse * 1.2).toFixed(1), fill: DAY.sunHalo, opacity: 0.78 }),
@@ -2159,6 +2184,15 @@
     landFar: [],
     landNear: []
   };
+  /* The finale's clouds (round 11). A cloud that drifts one way for ever cannot be part of a loop: it only
+     comes back by leaving the picture and coming in again at the other side, which at a cloud's pace takes
+     ten minutes (and long before that the sky the owner approved has slid away: the near clouds have left
+     by the left edge and nothing has come to take their place). So in the finale the clouds go out and
+     come home: from where they were composed they drift left with the wind, as they always did and at
+     the pace they always had, slow to a stop half a loop later and drift back, starting and landing at
+     rest. One sine a loop, both planes together, the near plane further than the far one.
+     SKY_SWAY = how far each plane goes (px): its fastest moment is the old steady drift (3.2 and 7 px/s). */
+  var SKY_SWAY = [53, 116];
   // each list knows its own name (w-far, t-near, n-landFar ...), which CloudField writes on its group for the check
   [["w", SKY_WORLD], ["t", SKY_TRANSIT], ["n", SKY_FINALE]].forEach(function (e) { for (var k in e[1]) e[1][k].id = e[0] + "-" + k; });
   /* Birds (round 10, 2026-11-16). The owner's verdict on the round 3 birds: "the way the birds are flying is
@@ -2255,34 +2289,47 @@
      y 264 down, so a group keeps above that while it is left of 1075; the finale's two come down a little
      as they go, to pass under the sun's ring as well. `span` is the width a group flies before it comes round again
      (the finale's is two of the plane's cycles at the birds' speed, so a group always crosses Tokyo Tower
-     nine seconds before the plane passes it, and they never meet). */
+     nine seconds before the plane passes it, and they never meet).
+     Round 11: a set with `loop` is the same picture every `loop` seconds: its groups' span is their speed
+     times the loop, every rate its birds wander and beat at goes round a whole number of times in it, and
+     its kite goes round `turns` times, standing at angle `turn0` when the set's clock is 0. The finale's
+     kite turns four times a loop, twice in each of the plane's cycles, so it is in the same place at
+     both of the plane's passes: the plane's wheels climb straight through the middle of the kite's
+     circle 20.4 s into each cycle, with its body and its fin on the upper left of that line, and at that
+     moment the kite is at the right-hand end of its circle, on the other side of the line and 59 px from
+     it. (With an odd number of turns it is at opposite ends on the two passes, and at the left end the
+     plane's body goes over it; before the loop the two simply met now and then.) */
   var BIRD_FORM = [[0, 0], [-40, -14], [-48, 17], [-84, -27], [-98, 29], [0, 0], [-42, 16], [-56, -13]];
   var BIRD_SETS = {
     w: { groups: [[985, 126, 40, 5, 0]], kite: [1730, 290, 76, 1.15] },
     t: { groups: [[1150, 250, 44, 5, 0]], kite: [900, 214, 70, 1.15] },
-    n: { groups: [[744, 212, 52, 5, 0, 0.06], [-608, 212, 52, 3, 5, 0.06]], kite: [1250, 432, 84, 1.15], span: 52 * 52 }
+    n: { groups: [[744, 212, 52, 5, 0, 0.06], [-608, 212, 52, 3, 5, 0.06]], kite: [1250, 432, 84, 1.15], span: 52 * LOOP, loop: LOOP, turns: 4, turn0: 2.984 }
   };
   function DayBirds(p) {
-    var set = BIRD_SETS[p.set], kt = set.kite, time = p.time, back = p.back || 0, span = set.span || 2920, d = "";
+    var set = BIRD_SETS[p.set], kt = set.kite, time = p.time, back = p.back || 0, span = set.span || 2920, d = "", L = set.loop;
     function wrap(x) { return ((((x - (p.shift || 0) + 500) % span) + span) % span) - 500 + back; }
-    var G = BIRD_KIND.gull, B = G.beat, lift = Math.sin(time * 0.27 + 1), liftV = 0.27 * Math.cos(time * 0.27 + 1);
+    // the rates of the group's slow rise and fall, each bird's wander across and up and down, its heading, its
+    // bank, and the kite's rise and fall (in a set that loops, each goes round a whole number of times a loop)
+    var wLift = loopW(0.27, L), wX = loopW(0.43, L), wY = loopW(0.31, L), wHead = loopW(0.21, L), wBank = loopW(0.37, L), wKite = loopW(0.19, L);
+    var G = BIRD_KIND.gull, B = G.beat, lift = Math.sin(time * wLift + 1), liftV = wLift * Math.cos(time * wLift + 1);
     set.groups.forEach(function (g) {
       var dir = g[2] < 0 ? -1 : 1, gx = wrap(g[0] + g[2] * time), v = Math.abs(g[2]), fall = g[5] || 0, gy = g[1] + fall * (gx - 1000);
       for (var i = 0; i < g[3]; i++) {
         var r = random(p.set + "-ba" + (g[4] + i)), r2 = random(p.set + "-bb" + (g[4] + i)), f = BIRD_FORM[g[4] + i];
-        var every = B.every + r * 0.9, m = birdBeat(time / every + r2 * 5, B), climb = B.climb + r2 * 3;
+        var every = loopT(B.every + r * 0.9, L), m = birdBeat(time / every + r2 * 5, B), climb = B.climb + r2 * 3;
         // its own way up and down: the group's slow rise and fall, its own wander, and the climb of its beats
-        var vy = fall * g[2] - 9 * liftV - 5 * 0.31 * Math.cos(time * 0.31 + r2 * 9) - climb * m[3] / every;
-        d += birdD(G, gx + dir * f[0] + Math.sin(time * 0.43 + r * 9) * 7,
-          gy + f[1] - lift * 9 - Math.sin(time * 0.31 + r2 * 9) * 5 - climb * m[2],
-          0.95 + r * 0.35, (dir < 0 ? Math.PI : 0) + 0.07 * Math.sin(time * 0.21 + r * 7),
-          0.07 * Math.sin(time * 0.37 + r2 * 5), Math.atan2(-vy, v) * 0.9, m[0], m[1]);
+        var vy = fall * g[2] - 9 * liftV - 5 * wY * Math.cos(time * wY + r2 * 9) - climb * m[3] / every;
+        d += birdD(G, gx + dir * f[0] + Math.sin(time * wX + r * 9) * 7,
+          gy + f[1] - lift * 9 - Math.sin(time * wY + r2 * 9) * 5 - climb * m[2],
+          0.95 + r * 0.35, (dir < 0 ? Math.PI : 0) + 0.07 * Math.sin(time * wHead + r * 7),
+          0.07 * Math.sin(time * wBank + r2 * 5), Math.atan2(-vy, v) * 0.9, m[0], m[1]);
       }
     });
     // the kite: round a level circle, seen from below, so the circle is a flat oval and the far side of it lies lower
-    var Kk = BIRD_KIND.kite, a = time * 0.42 + 0.8, far = Math.sin(a), km = birdBeat(time / Kk.beat.every + 0.3, Kk.beat);
-    d += birdD(Kk, wrap(kt[0]) + Math.cos(a) * kt[2], kt[1] + far * kt[2] * Math.sin(Kk.look) + Math.sin(time * 0.19) * 5,
-      kt[3] * (1 - 0.07 * far), a + Math.PI / 2, -0.44 - 0.05 * Math.sin(a * 2 + 1), 0.03 * Math.sin(time * 0.19 + 1.4), km[0], km[1]);
+    var Kk = BIRD_KIND.kite, a = L ? time * 2 * Math.PI * set.turns / L + set.turn0 : time * 0.42 + 0.8, far = Math.sin(a);
+    var km = birdBeat(time / loopT(Kk.beat.every, L) + 0.3, Kk.beat);
+    d += birdD(Kk, wrap(kt[0]) + Math.cos(a) * kt[2], kt[1] + far * kt[2] * Math.sin(Kk.look) + Math.sin(time * wKite) * 5,
+      kt[3] * (1 - 0.07 * far), a + Math.PI / 2, -0.44 - 0.05 * Math.sin(a * 2 + 1), 0.03 * Math.sin(time * wKite + 1.4), km[0], km[1]);
     return h("path", { d: d, fill: DAY.bird });
   }
   // the same one node with nothing in it, for a moment when a scene's birds cannot be seen (the finale's,
@@ -4842,7 +4889,10 @@
       // the path up (slowly enough that the tail stays 18 px clear of the runway, as it did), overshoots a
       // little and settles on the climb angle. After lift-off it is read by the place (se), not the clock.
       var se = s < P.LIFT ? s : P.LIFT + planeOldS(q.x) - planeOldS(P.LIFT_X);
-      q.rot = -0.45 * ss(0.1, 0.7, s) - 9.6 * ss(1.2, 2.25, se) - (P.CLIMB - 8.65) * ss(2.05, P.ROT, se) + 1.4 * ss(P.ROT, P.ROT + 1.1, se) + 0.3 * Math.sin(time * 0.9) * ss(4.3, 5.4, se);
+      // (round 11: the climb's slight weave and the lamp below are read on the plane's own cycle, t, like the rest
+      // of its flight, so every cycle is the same flight and the finale is a loop; they used to be read on the
+      // scene's clock, which made each cycle a little different from the last)
+      q.rot = -0.45 * ss(0.1, 0.7, s) - 9.6 * ss(1.2, 2.25, se) - (P.CLIMB - 8.65) * ss(2.05, P.ROT, se) + 1.4 * ss(P.ROT, P.ROT + 1.1, se) + 0.3 * Math.sin(t * 0.9) * ss(4.3, 5.4, se);
       if (s < P.LIFT) {
         z = P.HANG * ss(1.2, 2, s);
         q.ext = z; q.tilt = 0; q.y = P.GY - z;
@@ -4857,7 +4907,7 @@
       q.noseFold = ss(2.4, 3.4, s); q.mainFold = ss(2.55, 3.7, s); q.door = 1 - ss(3.3, 3.75, s);       // positive climb: gear up
       q.flap = 0.45 * (1 - ss(4.3, 6.4, s));
     } else q = PLANE_AWAY;
-    if (q.on) q.lamp = Math.pow(Math.max(0, Math.sin(time * 5.2)), 8);
+    if (q.on) q.lamp = Math.pow(Math.max(0, Math.sin(t * 5.2)), 8);
     _planeAt.time = time; _planeAt.q = q;
     return q;
   }
@@ -4920,20 +4970,28 @@
   DAY.airGseShade = "#c9d4e4";
   DAY.airGseDark = "#40506c";      // their chassis
 
-  /* the little trucks' timetable (seconds on the finale's clock, stage px):
+  /* the little trucks' timetable (seconds on the finale's clock, stage px), on the finale's loop (round 11):
      far lane, running right at V px/s; near lane, running left at VN. A truck stands at the depot's second
      dock (its rear at X1), pulls out at T0 and joins the far lane; the next one comes in along the far lane
-     and stops there 56 s later. Two trucks take turns, each on a 76 s round, 38 s apart. One through truck
-     runs between them on a 38 s round: 450 px behind the one that left, 450 px ahead of the one coming. */
-  var MINI = { V: 60, VN: 66, X0: 812, X1: 946, YS: 1011, SS: 0.82, YL: 1029, SL: 0.86, YN: 1050, T0: 14.2, P: 76 };
+     and stops there GAP s later, and pulls out in its turn one loop (C s) after the first. Two trucks take
+     turns, each on a round of two loops. One through truck runs between them, once a loop: 450 px behind
+     the one that left, 450 px ahead of the one coming. The near lane's two trucks come round once a loop.
+     (Until round 11 the timetable ran on 38 s, which does not go into the loop's 52. The first round, the
+     one in the film as it was approved, is the same as it was: the first truck leaves at T0, the next
+     stands there 18 s later, and the through truck and the near lane's first truck are where they were.
+     The near lane's second truck is the one that came in at the right edge 41.8 s into the film, on its
+     way into a phone's view: it is on that phase now. For the finale's first six seconds it used to be
+     another lap of the same truck, down at the left under the caption's dark band and outside a phone's
+     view; that lap is gone.) */
+  var MINI = { V: 60, VN: 66, X0: 812, X1: 946, YS: 1011, SS: 0.82, YL: 1029, SL: 0.86, YN: 1050, T0: 14.2, C: LOOP, GAP: 18 };
   function miniRamp(w) { var k = Math.min(1, w / 3); return w < 3 ? MINI.V * 3 * (k * k * k - k * k * k * k / 2) : MINI.V * (w - 1.5); }   // px covered w seconds after a standing start
   function depotTruckAt(time, k) {
-    var M = MINI, u = (((time - M.T0 - 38 * k) % M.P) + M.P) % M.P, d = 0, x = M.X1, pitch = 0, q;
+    var M = MINI, P = 2 * M.C, u = (((time - M.T0 - M.C * k) % P) + P) % P, d = 0, x = M.X1, pitch = 0, q;
     if (u < 20) {                                   // away: it squats as it pulls out, joins the lane and leaves by the right edge
       d = miniRamp(u); x = M.X1 + d;
       if (u < 3) { q = u / 3; pitch = -1.1 * 4 * q * (1 - q); }
     } else {
-      var w = 56 - u;                               // seconds until it stands at the dock again
+      var w = M.C + M.GAP - u;                      // seconds until it stands at the dock again
       if (w > 19) { d = 2000; x = -400; }           // waiting off the picture
       else if (w > 0) { d = miniRamp(w); x = M.X1 - d; if (w < 3) { q = w / 3; pitch = 0.9 * 4 * q * (1 - q); } }
       else pitch = -0.3 * Math.exp(3.2 * w) * Math.sin(-9 * w);   // it rocks back once and is still
@@ -4943,8 +5001,8 @@
   }
   // the shutter of the second dock: open while a truck stands there, down before it leaves
   function depotShutterAt(time) {
-    var u = (((time - MINI.T0) % 38) + 38) % 38, S = function (a, b) { var k = clamp01((u - a) / (b - a)); return k * k * k * (k * (6 * k - 15) + 10); };
-    return S(19, 21.2) - S(35, 37.2);               // u 19..21.2: it goes up for the truck that has come in; u 35..37.2: it comes down, 3 s before that truck leaves
+    var C = MINI.C, G = MINI.GAP, u = (((time - MINI.T0) % C) + C) % C, S = function (a, b) { var k = clamp01((u - a) / (b - a)); return k * k * k * (k * (6 * k - 15) + 10); };
+    return S(G + 1, G + 3.2) - S(C - 3, C - 0.8);   // it goes up a second after the truck that has come in stands there, and comes down 3 s before that truck leaves
   }
 
   var _fgArt = null;
@@ -5222,17 +5280,19 @@
     var T = finaleGroundArt().truck;
     return h("g", { transform: "translate(" + x.toFixed(2) + "," + y.toFixed(2) + ") scale(" + (dir * s).toFixed(4) + "," + s.toFixed(4) + ") translate(0,-40)" },
       T.shadow, T.wheels,
-      h("g", { transform: "rotate(" + (pitch || 0).toFixed(3) + " 17 34)" }, T.body));
+      h("g", { transform: "rotate(" + (Math.round((pitch || 0) * 1000) / 1000 || 0).toFixed(3) + " 17 34)" }, T.body));   // (never "-0.000": that is a write for nothing)
   }
 
   // the windsock: five rings of cloth from the mast's hoop at 727,949, streaming left (the plane takes off
   // into the wind). The wind's strength lifts it or lets it hang; a wave runs down it from the hoop to the tip
+  // n turns in one loop of the finale, as a rate (radians a second): everything at the airport moves at such a rate
+  function loopN(n) { return 2 * Math.PI * n / LOOP; }
   function windsockD(time) {
-    var w = 0.74 + 0.16 * Math.sin(time * 0.62 + 0.4) + 0.08 * Math.sin(time * 1.7 + 2);
+    var w = 0.74 + 0.16 * Math.sin(time * loopN(5) + 0.4) + 0.08 * Math.sin(time * loopN(14) + 2);
     var droop = (1 - w) * 64, x = 727, y = 949, seg = 7.4, red = "", white = "", top = [], bot = [], i;
     var r = function (v) { return Math.round(v * 10) / 10; };
     for (i = 0; i <= 5; i++) {
-      var ang = (droop * (0.5 + 0.12 * i) + (0.8 + 2.3 * i) * (0.45 + 0.55 * w) * Math.sin(time * 7.1 - i * 0.95)) * Math.PI / 180;
+      var ang = (droop * (0.5 + 0.12 * i) + (0.8 + 2.3 * i) * (0.45 + 0.55 * w) * Math.sin(time * loopN(59) - i * 0.95)) * Math.PI / 180;
       var ca = Math.cos(ang), sa = Math.sin(ang), hw = 6.4 - 0.62 * i;
       if (i) { x -= seg * ca; y += seg * sa; }
       top.push([x - hw * sa, y - hw * ca]); bot.push([x + hw * sa, y + hw * ca]);
@@ -5245,10 +5305,15 @@
   }
   function Airport(time) {
     var A = finaleGroundArt(), f = function (v) { return String(Math.round(v * 100) / 100); };
-    var rw = 5 + 19 * Math.abs(Math.cos(time * 1.45));                           // the radar turns: its width is what we see of it
-    var lamp = Math.pow(0.5 + 0.5 * Math.sin(time * 2.3 + 1), 3);
-    var tx = -90 + (((48.4 * time + 643) % 919.6) + 919.6) % 919.6;              // the baggage train: 19 s from edge to edge
-    var blink = 0.25 + 0.75 * Math.pow(0.5 + 0.5 * Math.sin(time * 5.5), 2);
+    var rw = 5 + 19 * Math.abs(Math.cos(time * loopN(12)));                      // the radar turns: its width is what we see of it
+    var lamp = Math.pow(0.5 + 0.5 * Math.sin(time * loopN(19) + 1), 3);
+    // the baggage train: 19 s from edge to edge at the pace it always had, then it waits behind the depot, so it
+    // comes in once in each of the plane's cycles and always at the same moment of the flight: just after the
+    // touchdown, well behind the plane, as in the film as it was approved. (Left on a round of its own, 19 s
+    // or a third of the loop, it drove along under the plane all through every second landing.)
+    var trainRound = 48.4 * LOOP / 2, went = (((48.4 * time - 276.6) % trainRound) + trainRound) % trainRound;   // px since it last came in at the left edge
+    var tx = -90 + Math.min(919.6, went);
+    var blink = 0.25 + 0.75 * Math.pow(0.5 + 0.5 * Math.sin(time * loopN(46)), 2);
     var sock = windsockD(time);
     return h("g", null,
       A.airport,
@@ -5272,9 +5337,15 @@
     );
   }
   function FinaleRoad(time) {
-    var A = finaleGroundArt(), M = MINI, a = depotTruckAt(time, 0), b = depotTruckAt(time, 1);
-    var through = ((((M.V * time - 247) % 2280) + 2280) % 2280) - 200;
-    var n0 = 2140 - ((((M.VN * time + 300) % 2508) + 2508) % 2508), n1 = 2140 - ((((M.VN * time + 1500) % 2508) + 2508) % 2508);
+    // (round 11) the two depot trucks take turns, so each is on a round of two loops; but they are the same
+    // drawing, so the picture is the same every loop. The two slots below swap trucks 20 s after each departure,
+    // when the one that left is off the picture and the other stands at the dock: the first slot always holds
+    // the truck that leaves next. Nothing is seen of the swap, and every node is then the same one loop later.
+    var A = finaleGroundArt(), M = MINI, odd = ((Math.floor((time - M.T0 - 20) / M.C) % 2) + 2) % 2;
+    var a = depotTruckAt(time, 1 - odd), b = depotTruckAt(time, odd);
+    var far = M.V * M.C, near = M.VN * M.C;         // how far each lane's traffic runs in one loop (3120 and 3432 px): every truck comes round once a loop
+    var through = ((((M.V * time - 247) % far) + far) % far) - 200;
+    var n0 = 2140 - ((((M.VN * time + 300) % near) + near) % near), n1 = 2140 - ((((M.VN * time - 1008) % near) + near) % near);
     return h("g", null,
       A.road,
       MiniRoadTruck(M.X0, M.YS, M.SS, 1, 0),
@@ -5320,6 +5391,9 @@
     // the finale's sky clock: it stands still under the map's panel and runs, at its own even pace, from the
     // frame the map starts to draw back. From then on it is the scene's clock, so every cloud is where it was composed.
     var skyT = frame > T_NETWORK.mapRecede[0] ? time : T_NETWORK.mapRecede[0] / fps;
+    // (round 11) the clouds stand where they were composed (the sky's clock at rest, sky0) less how far they
+    // have gone out on the loop's one sine: at rest when the map draws back, at rest again when they are home
+    var sky0 = T_NETWORK.mapRecede[0] / fps, skyOut = (1 - Math.cos(2 * Math.PI * (skyT - sky0) / LOOP)) / 2;
     var recede = interpolate(frame, [T_NETWORK.mapRecede[0], T_NETWORK.mapRecede[1]], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: function (u) { return landEase(u, 0.35); } });
     var basesEnter = spring({ frame: frame - 14, fps: fps, config: { damping: 13, mass: 0.9 } });
     var overviewEnter = spring({ frame: frame - 26, fps: fps, config: { damping: 13, mass: 0.9 } });
@@ -5343,10 +5417,10 @@
         // times how far the map had drawn back, so as the map left, the clouds ran through three seconds of
         // drift in well under one (23 px in 0.4 s) and the shafts swung into place.
         h("g", { opacity: clamp01((frame - 24) / 12).toFixed(3) },
-          LightShafts({ cx: 1652, cy: 136, time: skyT }),
-          SkySun({ cx: 1652, cy: 136, time: skyT, gid: "nSun" })),
-        CloudField(SKY_FINALE.far, 0, skyT, 0),
-        CloudField(SKY_FINALE.near, 1, skyT, 0),
+          LightShafts({ cx: 1652, cy: 136, time: skyT, loop: LOOP }),
+          SkySun({ cx: 1652, cy: 136, time: skyT, gid: "nSun", loop: LOOP })),
+        CloudField(SKY_FINALE.far, 0, sky0, SKY_SWAY[0] * skyOut),
+        CloudField(SKY_FINALE.near, 1, sky0, SKY_SWAY[1] * skyOut),
         // (30 circles that were never seen stood here: gone, round 7)
         FloatingParticles({ seed: "network", x: 80, y: 120, width: 1760, height: 840, time: time, count: 28, baseOpacity: 0.4 }),
         // the finale stands finished under the map's opaque panel and is seen as the panel goes; while the
@@ -5354,16 +5428,16 @@
         h("g", { display: recede > 0 ? "inline" : "none" },
           // (26 more unseen circles and a block that drew nothing stood here: gone, round 7)
           h("ellipse", { cx: 960, cy: 1000, rx: 1150, ry: 150, fill: "url(#nHalo)" }),
-          CloudField(SKY_FINALE.landFar, 0, skyT, 0),
-          CloudField(SKY_FINALE.landNear, 1, skyT, 0),
+          CloudField(SKY_FINALE.landFar, 0, sky0, SKY_SWAY[0] * skyOut),
+          CloudField(SKY_FINALE.landNear, 1, sky0, SKY_SWAY[1] * skyOut),
           recede > 0 ? DayBirds({ set: "n", time: time }) : DayBirdsNone(),
           FujiMountain({ cx: 380, baseY: 1008, w: 2020, ht: 706, capT: 0.3 }),
           MountainRange({ x: -60, baseY: 1008, s: 0.78 }),
           CityRow(city.far, 0),
           CityHaze("nHazeFar", 1008, 0),
 
-          TokyoTower({ cx: 1360, baseY: 1008, h: 840, time: time, opacity: 0.97 }),
-          CityRow(city.back, 0), CityCranes(city.back, time), CityRow(city.front, 0), CityLights(city.lights, time),
+          TokyoTower({ cx: 1360, baseY: 1008, h: 840, time: time, opacity: 0.97, loop: LOOP }),
+          CityRow(city.back, 0), CityCranes(city.back, time, 0, 0, LOOP), CityRow(city.front, 0), CityLights(city.lights, time, 0, 0, LOOP),
           CityHaze("nHazeNear", 1010, 1),
           h("circle", { cx: 1652, cy: 136, r: 980, fill: "url(#nSun)", opacity: 0.13 }),
           Airport(time),
@@ -5377,7 +5451,7 @@
       // In it, one object that arrives and leaves as the map always did: the water, the land, the map.
       h("div", { style: { position: "absolute", left: 0, top: 0, width: 1920, height: 1080, overflow: "hidden", background: DAY.map.sea, opacity: (1 - recede).toFixed(3), display: recede < 1 ? "block" : "none" } },
         h("div", { style: { position: "absolute", left: MAP_BOX[0], top: MAP_BOX[1], width: MAP_BOX[2], height: MAP_BOX[3], opacity: mapIn.toFixed(3), transform: "scale(" + ((0.95 + 0.05 * mapIn) * (1 - recede * 0.08)) + ") translate(" + (recede * -36) + "px, " + ((1 - mapIn) * 34) + "px)", transformOrigin: "46% 46%" } },
-          MapSwell(time),
+          MapSwell(recede < 1 ? time : T_NETWORK.mapRecede[1] / fps),             // (round 11) once the map has gone its water is not worked out again
           mapLayer(mapShore().land, { willChange: "transform" }),
           h("div", { style: { position: "absolute", left: 0, top: 0, width: "100%", height: "100%" } },
             CoverageMap({ prefProgress: prefK, routeProgress: routeK, pinProgress: pinK, depotFrame: frame, flowTime: recede < 1 ? time : 0, mapIn: mapIn })))),
