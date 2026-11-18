@@ -168,3 +168,27 @@ Scale and money. Almost everything ranked below is editing text or moving blocks
 rather than a missing fact. `receiving.html` had the real rule; `terms.html` and `network.html` printed a
 break every weekday. Both now carry the sentence `receiving.html` already used. Committed in the site
 repository as `73d2d06`.
+
+## Worked down, 2026-11-19
+
+| item | state |
+|---|---|
+| 1 warehouse lunch hour | **done** — `73d2d06`, a contradiction rather than a missing fact |
+| 6 two missed "this page is about…" leads | **done** — `8ab1b0d` |
+| 7 応募資格 moved under 仕事内容 in both job tables | **done** — `8ab1b0d` |
+| 9 four service sections get a way to ask about that service | **done** — `8ab1b0d`, proved in a browser |
+| 2 the enquiry form becomes a business form | **not started** — four files must move together or the confirmation screen and the notification mail stop matching the form |
+| 3 quote questions shown only to the enquiry types they fit | **not started** — needs about ten lines of JS, the twin of a rule the code already has |
+| 4 what the warehouses are, on the pages where a customer decides | **blocked** — the figures are client question C-3 |
+| 5 give every fact one owner | **not started** — medium; several blocks move, no sentence is rewritten |
+| 8 the recruitment route | **not started** |
+
+**Two things worth recording about how these went.** The site wraps phrases in `<span class="nw">` to stop
+them breaking, so a plain-text search for a sentence usually fails — both of the item 6 leads were invisible
+to `grep` and only turned up by rendering the text. And the files are CRLF: an anchor containing `\n` matches
+nothing. Both traps cost a failed run each, and both times the script's assertions stopped it before it
+wrote anything.
+
+**Item 9 was verified rather than assumed.** `form.js` reads `?type=` and matches it against the
+`data-preset` aliases on the radios; loading `contact.html?type=processing#form` in a browser preselects
+流通加工. The four values used — `transport`, `warehouse`, `processing`, `3pl` — are all in those alias lists.
