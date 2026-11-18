@@ -158,3 +158,21 @@ served.
 What the owner still has to supply: the policy date; this business year's period and its four targets; last
 year's period, four targets, four results and whether each was met; two years of accident statistics; the
 publication date; and the 受動喫煙対策 line plus a last-updated date for the two job adverts.
+
+### Resolved, and two launch blockers found while checking (2026-11-19)
+
+The owner confirmed the penalty block was **sample data**, and it is **deleted** — one self-contained hidden
+div, 1012 characters, with all four of its specifics asserted before the removal so it could not have taken
+anything else. No mention of 行政処分 remains on the page.
+
+Checking whether the same sample data had been typed anywhere else turned up two things that would have
+shipped by accident. Both are recorded in the site's own working file rather than changed, because both
+need the owner:
+
+- **`{{DOMAIN}}` is still unfilled in 60 places across 20 pages** — every canonical link, `og:url` and
+  `og:image`. Live as it is, every canonical URL points at a host that does not exist and nothing shared on
+  social media or a chat app shows a preview image. **One answer fixes all 60.**
+- **All 21 pages carry `robots: noindex`.** Correct for a build that is not live, fatal if it ships that
+  way. A launch-day reminder, not a job for now.
+
+14 fields remain on the safety page and 3 on the job adverts.
