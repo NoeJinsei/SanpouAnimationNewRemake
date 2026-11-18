@@ -176,3 +176,24 @@ need the owner:
   way. A launch-day reminder, not a job for now.
 
 14 fields remain on the safety page and 3 on the job adverts.
+
+### The domain filled, and a correction to what I said about it (2026-11-19)
+
+The owner gave the domain as `sanpou-unyu.com`. **Checked before writing it:** that host 301s to
+`www.sanpou-unyu.com`, and the site's own `docs/DEPLOY-ja.md` §9 expects the www host with the bare domain
+redirecting to it. So every canonical, social tag and sitemap entry names **www.sanpou-unyu.com** — the host
+that serves, not the one that redirects.
+
+**84 placeholders filled**: 60 across 20 HTML pages, 21 in `sitemap.xml`, 3 in `robots.txt`.
+
+Two left deliberately. **`.htaccess`** holds its `{{DOMAIN}}` inside commented-out `RewriteCond` /
+`RewriteRule` lines that the deploy document says to uncomment at launch — filling in an untestable redirect
+rule, in the one file that can take a site down, is not worth the convenience. **`.well-known/security.txt`**
+has its domain now but still has `{{SECURITY_EMAIL}}`, so the served file advertises a `mailto:` that does
+not resolve; nobody has given an address.
+
+**A correction.** I reported the unfilled domain and the site-wide `noindex` as things I had found. They were
+already written down as launch steps — in `docs/DEPLOY-ja.md` §9 and in the comment block at the top of
+`robots.txt`, which explains at length why crawling is deliberately left open so the `noindex` can be read.
+The findings were real and still outstanding, but the build team documented them first and I should have
+looked for a deploy document before claiming them.
