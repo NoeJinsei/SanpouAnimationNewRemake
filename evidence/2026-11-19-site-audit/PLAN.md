@@ -108,6 +108,7 @@ template sites.
 | 3 | the two false claims | **done** — `d73a789`, `132fa77` |
 | 1 | the announcement sentences | **done** — `7b8b433`: 11 cut, 2 trimmed, 13-line diff, 0 left in visible copy |
 | 4 | the home page | **done** - d2fbc9a: 9 bands to 7, news moved off position 2, page 12% shorter |
+| 9 | the english labels | **done** - 5f6ba73: 103 labels in 62 words down to 56 in 24 |
 | 2 | the soft verbs | **partly done** — `2383c4f`: 3 of 11 flattened; 8 kept on purpose |
 
 **Why item 2 is only partly done, and it is not laziness.** The recommendation was "replace the soft verb
