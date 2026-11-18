@@ -137,3 +137,24 @@ Each fact turns one soft sentence into a hard one. Without them, the honest move
    been 2. Reverted with `git checkout --`, and the script now reads *and* writes with `newline=""`.
    **Any future script that edits this site must do the same**, or the diff becomes unreadable and the real
    change is invisible inside it.
+
+## Item 5, the safety page: a form, not a change (2026-11-19)
+
+`safety.html` carries four blocks a carrier normally publishes. The policy is **visible** and needs only
+its date; the targets, the accident statistics and the administrative-penalty block are all **`hidden`**, so
+nothing unfinished shows to a visitor — and nothing is published either.
+
+**One of the three is not an empty template.** The penalty block already carries a specific date, a named
+depot, a specific suspension and the article breached, with only the two "measures" rows blank. That is
+either real — in which case it is hidden when it would normally be published — or it is sample data typed in
+while the page was built, in which case it must be **deleted** rather than filled, because unhidden by
+accident it would publish a penalty that never happened against a named depot on a named date.
+
+**Nothing was touched.** The specifics are deliberately NOT repeated here: this repository is public, and
+that information is the company's and is currently unpublished. The full form, with every field and those
+details, is in the site's own repository at `SAFETY-FIGURES-NEEDED.md`, outside `public_html` so it is never
+served.
+
+What the owner still has to supply: the policy date; this business year's period and its four targets; last
+year's period, four targets, four results and whether each was met; two years of accident statistics; the
+publication date; and the 受動喫煙対策 line plus a last-updated date for the two job adverts.
