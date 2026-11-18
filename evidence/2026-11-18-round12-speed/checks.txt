@@ -1,0 +1,168 @@
+Round 12, the checks on the final working copy (2026-11-18)
+
+## the originals' files
+js/hero-flag.js: OK
+js/hero-glue.js: OK
+js/hero-port-a.js: OK
+js/hero-port-b.js: OK
+css/40-hero.css: OK
+site/site.css: OK
+site/hero-section.html: OK
+exit 0
+
+## the loop in photographs: tools/what-moves.mjs round2 32000 84000
+round2: 32000 ms -> 84000 ms: 0.00 % of the stage changed, in 0 region(s)
+(the same tool at half a loop, 32000 58000, as a control:)
+round2: 32000 ms -> 58000 ms: 6.32 % of the stage changed, in 13 region(s)
+
+## the loop, every node against the same node 52 s later, every 60th of a second for two loops
+round2: the finale at t and at t + 52 s, 6240 moments from 30420 ms, a step of 16.67 ms
+  moments where the picture differs: 0   (moments where any node differs, hidden ones included: 0)
+A LOOP: every node is the same one turn later
+
+## scenes 01 to 04 against the film before this round (every node, every 60th of a second)
+round2: before and after, 1668 moments from 0 to 27790 ms
+  moments where the picture differs: 0   (moments where any node differs, undisplayed ones included: 0)
+the picture is the same at every moment
+
+## handover-check
+scene 01: the hold begins at 5139 ms: 9 numbers change speed by 6 a second or more in that frame; the largest: 18 px/s
+        72.0 ->     54.0 px/s   (-25 %)  world/3:svg/0:g/2:g/2:g [transform, along its path]
+        57.0 ->     45.0 px/s   (-21 %)  world/3:svg/0:g/1:g/0:path[#ffffff] [d #18]
+scene 02: the hold begins at 12722 ms: 3 numbers change speed by 6 a second or more in that frame; the largest: 21 px/s
+       363.0 ->    426.0 deg/s  (17 %)  …/2:g/2:g/2:g(clip url(#wSupDoor))/1:g/2:g/2:g [transform]
+       291.0 ->    339.0 deg/s  (16 %)  …/2:g/2:g/2:g(clip url(#wSupDoor))/1:g/1:g/2:g [transform]
+scene 03: the hold begins at 16933 ms: 0 numbers change speed by 6 a second or more in that frame
+scene 04: the hold begins at 24022 ms: 1 numbers change speed by 6 a second or more in that frame; the largest: 15 px/s
+        42.4 ->     27.7 px/s   (-35 %)  …/0:div/6:div/0:svg/1:g/23:g/0:g [transform, along its path]
+scene 05: the hold begins at 30411 ms: 0 numbers change speed by 6 a second or more in that frame
+
+no place changes speed by more than 25 px/s at any handover (the largest: 21 px/s)
+
+## the plane in a phone's open sky: before
+round2 (phone): the plane seen in open sky, below the buttons (screen y 176)
+  at least 80 % of it: 3.3 s  (42500 .. 45700 ms)
+  at least half of it: 4.7 s  (35000 .. 46100 ms)
+  at least a quarter:  5.4 s  (35000 .. 46300 ms)
+
+## and now
+round2 (phone): the plane seen in open sky, below the buttons (screen y 176)
+  at least 80 % of it: 1.9 s  (43900 .. 45700 ms)
+  at least half of it: 3.0 s  (35000 .. 46100 ms)
+  at least a quarter:  3.6 s  (35000 .. 46300 ms)
+
+## the plane through one cycle: before
+wheels leave (x 554): 11.53 s into the cycle, 95 px/s over the ground, y 963
+x 950 (nose into a phone's sky): 16.57 s into the cycle, 74 px/s over the ground, y 683
+x 1250 (the kite's circle): 20.62 s into the cycle, 75 px/s over the ground, y 408
+x 1306 (under a phone's buttons): 21.28 s into the cycle, 101 px/s over the ground, y 355
+x 1360 (Tokyo Tower's mast): 21.75 s into the cycle, 130 px/s over the ground, y 305
+x 1860 (gone): 24.18 s into the cycle, 281 px/s over the ground, y -157
+## and now
+wheels leave (x 554): 14.42 s into the cycle, 85 px/s over the ground, y 963
+x 950 (nose into a phone's sky): 18.38 s into the cycle, 112 px/s over the ground, y 683
+x 1250 (the kite's circle): 20.90 s into the cycle, 127 px/s over the ground, y 407
+x 1306 (under a phone's buttons): 21.33 s into the cycle, 129 px/s over the ground, y 356
+x 1360 (Tokyo Tower's mast): 21.75 s into the cycle, 131 px/s over the ground, y 306
+x 1860 (gone): 24.73 s into the cycle, 227 px/s over the ground, y -155
+
+## clouds against the roofs through the loop (cloud-check --at, every 2 s from 30411 ms)
+rows 135, least clearance 184 px
+56411:   n-far:0 cloud3-3|700|1  x -43..657  top 342  underside 392  highest roof under it 675 (airport at x -4..760)  clear by 283
+56411:   n-far:1 cloud3-4|480|1  x 957..1437  top 126  underside 150  highest roof under it 684 (G at x 1168..1250)  clear by 534
+56411:   n-near:0 cloud3-0|480|0  x -68..405  top 72  underside 245  highest roof under it 675 (airport at x -4..760)  clear by 430
+56411:   n-near:1 cloud3-1|500|0  x 645..1136  top 260  underside 425  highest roof under it 675 (airport at x -4..760)  clear by 250
+56411:   n-near:2 cloud3-6|96|0  x 1390..1483  top 236  underside 268  highest roof under it 529 (S at x 1473..1593)  clear by 261
+
+## cloud-check
+scene 01: 15 moments, 0 clouds below a roof
+scene 02: 12 moments, 0 clouds below a roof
+scene 03: 15 moments, 0 clouds below a roof
+scene 05: 37 moments, 0 clouds below a roof
+clouds OK: every cloud's base clears the roofs under it
+
+## sky-motion, 0 to 135 s (the finale's clouds and the summary)
+  n-far#0         22.23-135.00s  scene 04+05    drift   3.0 px/s  hardest change 16236 px/s2 at 22.25s  APPEARS at once (1.00)
+      faster than its drift: 22.23-22.65s up to 2819 px/s, 0 px
+  n-far#1         22.35-135.00s  scene 04+05    drift   3.0 px/s  hardest change  9504 px/s2 at 22.37s  APPEARS at once (1.00)
+      faster than its drift: 22.35-22.65s up to 1277 px/s, 0 px
+  n-near#0        22.30-135.00s  scene 04+05    drift   6.6 px/s  hardest change 12168 px/s2 at 22.32s  APPEARS at once (1.00)
+      faster than its drift: 22.30-22.65s up to 1840 px/s, 0 px
+  n-near#1        22.23-135.00s  scene 04+05    drift   6.6 px/s  hardest change 16236 px/s2 at 22.25s  APPEARS at once (1.00)
+      faster than its drift: 22.23-22.65s up to 2819 px/s, 0 px
+  n-near#2        22.28-135.00s  scene 04+05    drift   6.6 px/s  hardest change 13176 px/s2 at 22.30s  APPEARS at once (1.00)
+      faster than its drift: 22.28-22.65s up to 2060 px/s, 0 px
+no jumps
+exit 0
+
+## elements on the stage (original / before this round / now)
+moment               original         trial3         round2
+01 at 3500               1337           1483           1483
+02 at 10500              1372           1494           1494
+03 at 18000              1254            943            943
+04 at 24500               778            945            945
+05 at 32000               777            944            944
+05 at 40000               776            944            944
+total                    6294           6753           6753
+exit 0
+
+## check-viewer
+full: 22 moments, picture 1920px x 1080px, largest difference round2 vs remake: 1900913 px (at t=22200), draw 2.06 / 1.77 ms
+desktop: 22 moments, picture 1440px x 720px, largest difference round2 vs remake: 929275 px (at t=22600), draw 2.23 / 1.83 ms
+phone: 22 moments, picture 390px x 680px, largest difference round2 vs remake: 240806 px (at t=22200), draw 1.99 / 1.71 ms
+
+viewer OK: 0 console errors
+exit 0
+
+## check-seams
+
+the real player plays both seams as camera moves (round2, phone)
+exit 0
+
+the real player plays both seams as camera moves (round2, desktop)
+exit 0
+
+## the real player left on the finale for two loops, then the five buttons: desktop (a first run logged net::ERR_NO_BUFFER_SPACE from the local server and nothing else; this is the run after it)
+ok   the film reaches the finale and holds (scene 05)
+ok   one loop later (52 s) the player shows the same picture: 0 px differ
+ok   2 loops later (104 s) it still does: 0 px differ
+ok   button 1: scene 01, drawings on the stage: w
+ok   button 2: scene 02, drawings on the stage: w
+ok   button 3: scene 03, drawings on the stage: t
+ok   button 4: scene 04, drawings on the stage: tn
+ok   button 5: scene 05, drawings on the stage: n
+ok   button 3: scene 03, drawings on the stage: t
+ok   button 5: scene 05, drawings on the stage: n
+ok   after the jump back to 05, the picture one loop later is the same: 0 px differ
+ok   console errors: 0
+
+the finale loops in the real player, and the scene buttons work after 2 loops (round2, desktop)
+
+## the same on a phone
+ok   the film reaches the finale and holds (scene 05)
+ok   one loop later (52 s) the player shows the same picture: 0 px differ
+ok   2 loops later (104 s) it still does: 0 px differ
+ok   button 1: scene 01, drawings on the stage: w
+ok   button 2: scene 02, drawings on the stage: w
+ok   button 3: scene 03, drawings on the stage: t
+ok   button 4: scene 04, drawings on the stage: tn
+ok   button 5: scene 05, drawings on the stage: n
+ok   button 3: scene 03, drawings on the stage: t
+ok   button 5: scene 05, drawings on the stage: n
+ok   after the jump back to 05, the picture one loop later is the same: 0 px differ
+ok   console errors: 0
+
+the finale loops in the real player, and the scene buttons work after 2 loops (round2, phone)
+exit 0
+
+## motion-check, the film and a further loop
+round2 0..48000 ms, crop full: 2880 steps at 60/s
+frozen steps: 0, longest frozen run: 0 steps
+change per step: median 0.1914, largest 31.4245 at 22083 ms
+pops (> 3x both neighbours): 0
+exit 0
+round2 48000..84000 ms, crop full: 2160 steps at 60/s
+frozen steps: 0, longest frozen run: 0 steps
+change per step: median 0.1137, largest 0.227 at 48050 ms
+pops (> 3x both neighbours): 0
+exit 0

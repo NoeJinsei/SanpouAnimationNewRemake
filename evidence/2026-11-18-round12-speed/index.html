@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>三豊運輸 hero remake: faster clouds, and a plane that builds speed</title>
+<style>
+  :root { --ink: #13263f; --soft: #51627c; --line: #d5dde8; --bg: #f4f7fb; --card: #ffffff; --verm: #e16347; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.6 "Noto Sans JP", "Segoe UI", system-ui, sans-serif; }
+  main { max-width: 1280px; margin: 0 auto; padding: 32px 16px 80px; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 21px; margin: 56px 0 6px; padding-top: 18px; border-top: 3px solid var(--ink); }
+  h3 { font-size: 16px; margin: 28px 0 6px; }
+  p { margin: 6px 0 12px; max-width: 76ch; }
+  .lead { color: var(--soft); }
+  figure { margin: 14px 0 26px; background: var(--card); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+  figure img, figure video { display: block; width: 100%; height: auto; background: #0e1826; }
+  figcaption { padding: 10px 14px; font-size: 14px; color: var(--soft); border-top: 1px solid var(--line); }
+  figcaption b { color: var(--ink); }
+  nav { display: flex; flex-wrap: wrap; gap: 8px 14px; margin: 18px 0 0; font-size: 14px; }
+  a { color: var(--ink); }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+  .two figure { margin: 8px 0 18px; }
+  .two.phone { grid-template-columns: repeat(2, minmax(0, 320px)); }
+  @media (max-width: 760px) { .two { grid-template-columns: 1fr; } }
+  .bar { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 0; }
+  button { font: inherit; font-weight: 600; min-height: 44px; padding: 8px 18px; border-radius: 6px; border: 1px solid var(--ink); cursor: pointer; }
+  button.go { background: var(--ink); color: #fff; }
+  button.stop { background: var(--card); color: var(--ink); }
+  button:hover { filter: brightness(1.12); }
+  button:focus-visible, a:focus-visible { outline: 3px solid var(--verm); outline-offset: 2px; }
+  table { border-collapse: collapse; width: 100%; background: var(--card); font-size: 14px; }
+  .scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; margin: 10px 0 18px; max-width: 900px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  th { background: #e9eff6; }
+  td.n { white-space: nowrap; font-variant-numeric: tabular-nums; }
+  ul { margin: 6px 0 14px; padding-left: 22px; max-width: 76ch; }
+  li { margin: 3px 0; }
+  code { font-size: 13px; }
+  .note { background: #fff7e8; border: 1px solid #ecd9ae; border-radius: 6px; padding: 10px 14px; margin: 12px 0 18px; max-width: 76ch; }
+</style>
+</head>
+<body>
+<main>
+<h1>三豊運輸 hero remake: faster clouds, and a plane that builds speed</h1>
+<p>Two things in the last scene were to be quicker: the clouds, a bit; and the plane as it leaves the runway, gathering speed the way a real one does. Nothing else in the last scene changed, and the 52-second loop is intact.</p>
+<p class="lead">Every clip can be dragged to any second. "Play both together" starts a pair from the beginning at the same moment. The whole film, recorded again, is on <a href="../2026-11-16-the-film/index.html">the film page</a>.</p>
+<nav><a href="#clouds">1 The clouds</a><a href="#plane">2 The plane</a><a href="#phone">What it costs on a phone</a><a href="#checks">Checks</a></nav>
+
+<h2 id="clouds">1. The clouds, a bit faster</h2>
+<p>The clouds still go out and come home once every 52 seconds. They now go further in that time, so they are faster all the way: 1.4 times as fast.</p>
+<div class="scroll"><table>
+<tr><th></th><th>Before</th><th>Now</th></tr>
+<tr><td>The big, near clouds: how far they go, and their top speed</td><td class="n">116 px, 7.0 px/s</td><td class="n">165 px, 10.0 px/s</td></tr>
+<tr><td>The thin, far clouds</td><td class="n">53 px, 3.2 px/s</td><td class="n">75 px, 4.5 px/s</td></tr>
+</table></div>
+<div data-pair>
+  <div class="bar"><button type="button" class="go" data-play>Play both together</button><button type="button" class="stop" data-pause>Pause both</button></div>
+  <div class="two">
+    <figure><video src="clips/clouds-before.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Before: one whole loop of the last scene</b> (56 s, from the moment the map draws back).</figcaption></figure>
+    <figure><video src="clips/clouds-after.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Now.</b> New: how far and how fast the clouds go, and the plane (below). Everything else is as it was.</figcaption></figure>
+  </div>
+</div>
+<ul>
+  <li><b>At the far end of their travel</b> (26 s in) the big cloud on the left stands 71 px over the picture's edge (it was 22 px), and the small cloud comes to rest 20 px to the right of Tokyo Tower's top deck (it was 65 px) without touching it. Every cloud is still at least 184 px above the roofs under it at every second of the loop, and all of them move away from the sun, so it stays clear.</li>
+  <li><b>The other way to make them faster</b> was to keep the distance and have them go out and back twice in a loop. I did not take it: they would turn back twice as often, and turning back is the one thing about them that is not real. Going further is the better price.</li>
+</ul>
+
+<h2 id="plane">2. The plane builds speed from the start of its roll</h2>
+<p><b>What it did.</b> It reached 95 px/s on the runway, then <b>slowed</b> to 74 as it left the ground and held that for nearly nine seconds, and only gathered speed near the top of the picture. That steady crawl up the sky is what looked wrong.</p>
+<p><b>What it does now.</b> On the runway itself it is as quick as it was (the roll is short and was already a strong push). The gain is in the climb. Its speed only ever rises, from the moment the brakes come off until it leaves the picture: a strong push down the runway, easing as the nose comes up, still building all the way up the climb, and building fastest once it is past Tokyo Tower.</p>
+<div class="scroll"><table>
+<tr><th>Where the plane is</th><th>Speed over the ground, before</th><th>Now</th></tr>
+<tr><td>Its wheels leave the runway</td><td class="n">95 px/s</td><td class="n">85 px/s</td></tr>
+<tr><td>A third of the way up the climb</td><td class="n">74 px/s</td><td class="n">112 px/s</td></tr>
+<tr><td>Two thirds of the way up</td><td class="n">75 px/s</td><td class="n">127 px/s</td></tr>
+<tr><td>In front of Tokyo Tower's mast</td><td class="n">130 px/s</td><td class="n">131 px/s</td></tr>
+<tr><td>Leaving the picture</td><td class="n">281 px/s</td><td class="n">227 px/s</td></tr>
+</table></div>
+<div data-pair>
+  <div class="bar"><button type="button" class="go" data-play>Play both together</button><button type="button" class="stop" data-pause>Pause both</button></div>
+  <div class="two">
+    <figure><video src="clips/plane-desktop-before.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Before, desktop</b> (33.5 to 49.5 s of the film). It rolls 0.6 s in, slows as it lifts, crawls, then surges at the end.</figcaption></figure>
+    <figure><video src="clips/plane-desktop-after.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Now.</b> It stands lined up a little longer, rolls 3.5 s in, and gathers speed all the way up. New: the plane's speed, and the clouds. It passes Tokyo Tower at the same moment in both clips.</figcaption></figure>
+  </div>
+</div>
+<h3>What did not change</h3>
+<ul>
+  <li><b>Its path.</b> It climbs the same line and passes in front of the thin mast above Tokyo Tower's top deck, exactly where it did.</li>
+  <li><b>Its 26-second round, and when it passes the Tower.</b> The quicker climb saves 2.8 s; the plane spends them standing lined up on the runway before it rolls (4.2 s, it was 1.4 s). So a flock still crosses the Tower nine seconds ahead of it, and the kite is still at the far end of its circle when it comes by.</li>
+  <li><b>The landing</b>, the stop and everything on the ground.</li>
+  <li><b>No sudden change of speed anywhere:</b> the push eases and builds smoothly.</li>
+</ul>
+
+<h2 id="phone">What it costs on a phone</h2>
+<p>A phone only sees a narrow strip of the last scene, and its only open sky is the patch between the two buttons and the roofs, left of Tokyo Tower. Round 6 slowed the plane on purpose so that it would be seen there for longer. A faster plane is seen there for less time.</p>
+<div class="scroll"><table>
+<tr><th>The plane in a phone's open sky</th><th>Before</th><th>Now</th></tr>
+<tr><td>At least half of it is seen for</td><td class="n">4.7 s</td><td class="n">3.0 s</td></tr>
+<tr><td>Nearly all of it (80 %) is seen for</td><td class="n">3.3 s</td><td class="n">1.9 s</td></tr>
+</table></div>
+<p>That is why the fastest part of the climb comes only after the plane has crossed that patch (it is passing Tokyo Tower, above the buttons, by then). Had it kept the runway's push all the way up, as it did before round 6, a phone would see it for about one second.</p>
+<div data-pair>
+  <div class="bar"><button type="button" class="go" data-play>Play both together</button><button type="button" class="stop" data-pause>Pause both</button></div>
+  <div class="two phone">
+    <figure><video src="clips/plane-phone-before.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Before, phone</b> (33.5 to 49.5 s).</figcaption></figure>
+    <figure><video src="clips/plane-phone-after.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Now, phone.</b> New: the plane's speed, and the clouds.</figcaption></figure>
+  </div>
+</div>
+<div class="note">If 3 s feels too short on a phone, the climb can be made a little gentler through that patch without giving up the build-up: say so and I will show it.</div>
+
+<h2 id="checks">Checks</h2>
+<ul id="checklist">
+  <li><b>The loop is intact.</b> Photographs 52 s apart (32 s and 84 s into the film): 0.00 % of the picture differs. Every part of the picture at every 60th of a second for two loops is the same 52 s later.</li>
+  <li><b>Scenes 01 to 04 are untouched:</b> every part of the picture is the same as before at every 60th of a second.</li>
+  <li><b>Clouds:</b> above every roof at each second of the loop (the closest any comes is 184 px); no cloud jumps or outruns its drift; the sun stays clear.</li>
+  <li><b>No part was added</b> to any scene's picture.</li>
+  <li><b>The real player:</b> left on the last scene for two loops it shows the same picture, and all five scene buttons work from there, on a desktop and on a phone. The scene changes still play as camera moves. No pops and no frozen frames through the film and a further loop.</li>
+  <li><b>One independent review</b> of the work before it was recorded found that the baggage train, on its old time, now came up close behind the tail of the plane standing longer on the runway. It is back to 150 px behind.</li>
+  <li>The original's files are intact (7 of 7) and the website was not touched.</li>
+</ul>
+</main>
+<script>
+// The viewer's server cannot send part of a file, so a video played straight from it cannot be dragged.
+// Each clip is fetched whole and played from memory.
+(function () {
+  var vids = Array.prototype.slice.call(document.querySelectorAll("video"));
+  vids.forEach(function (v) {
+    var src = v.getAttribute("src"); v.removeAttribute("src");
+    fetch(src).then(function (r) { return r.blob(); }).then(function (b) { v.src = URL.createObjectURL(b); }).catch(function () { v.src = src; });
+  });
+  Array.prototype.slice.call(document.querySelectorAll("[data-pair]")).forEach(function (pair) {
+    var vs = Array.prototype.slice.call(pair.querySelectorAll("video"));
+    pair.querySelector("[data-play]").addEventListener("click", function () { vs.forEach(function (v) { v.currentTime = 0; }); vs.forEach(function (v) { v.play(); }); });
+    pair.querySelector("[data-pause]").addEventListener("click", function () { vs.forEach(function (v) { v.pause(); }); });
+  });
+})();
+</script>
+</body>
+</html>

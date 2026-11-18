@@ -537,7 +537,7 @@ it.** Nothing else in the film was touched.
 - **If the film changes again, record the four films again** (the commands are on the film page) and say
   so on that page.
 
-## Round 11 (2026-11-17): the finale loops, and five things that were not smooth. Waiting for the owner's verdict
+## Round 11 (2026-11-17): the finale loops, and five things that were not smooth. ACCEPTED (round 12 below changed three of its numbers)
 
 Brief `PROMPT-FOR-FABLE-LOOP.md` (his words: the last scene "a complete seamless loop", and the film to
 "look 60 fps like (smooth without any jaggedness or issues)"). Four passes, one commit each; shown on
@@ -550,12 +550,12 @@ rules it leaves are in `STYLE.md` §5. **Check his verdict before building on it
   Parts other scenes share take the loop as an argument and are unchanged without it.
   **Anything new that moves in the finale must pass**
   `node evidence/2026-11-17-finale-loop/check/loop-check.mjs round2 --from=30420 --step=16.6667 --turns=2`.
-  - **Open for him: the clouds.** A cloud that drifts one way cannot loop in 52 s, so in the finale they go
-    out and come home on one sine (`SKY_SWAY = [53, 116]` px): for half of every loop they move back
-    against the wind. The option `r11-loop-opt-gentle` (`[24, 52]`) is on the review page. He has not chosen.
+  - **The clouds.** A cloud that drifts one way cannot loop in 52 s, so in the finale they go out and come
+    home on one sine: for half of every loop they move back against the wind. He accepted that, and asked
+    for them a bit faster (round 12: `SKY_SWAY = [75, 165]` px; it was `[53, 116]`).
   - Things that share a patch of the picture are on rounds that fit each other: the plane 26 s, the baggage
     train once in each of the plane's flights (19 s crossing, then it waits behind the depot), the kite four
-    turns a loop (at the right-hand end of its circle whenever the plane passes: `turns: 4, turn0: 2.984`),
+    turns a loop (at the right-hand end of its circle whenever the plane passes: `turns: 4, turn0: 2.747` since round 12),
     a flock across Tokyo Tower nine seconds before each plane. **Change one and check the others.**
   - The road runs on 52 s (it was 38): `MINI.C`, `MINI.GAP`. The two depot trucks swap drawing slots 20 s
     after each departure, unseen, so every node repeats.
@@ -599,12 +599,38 @@ rules it leaves are in `STYLE.md` §5. **Check his verdict before building on it
 - Recording is slow (about 4 frames a second for one recorder): run several `tools/record.mjs` side by side.
 - The four whole-film recordings and `films/remake-2.mp4` were made again at the end of this round.
 
+## Round 12 (2026-11-18): the clouds a bit faster, the plane builds speed from its roll. Waiting for the owner's verdict
+
+Brief `PROMPT-FOR-FABLE-SPEED.md` (his words: the cloud "a bit faster"; the plane "sped up based on its
+acceleration when it is departing from the runway, kind of like an actual plane flying"). Parts
+`r12-clouds-faster`, `r12-plane-accel`; shown with before/after clips on
+`evidence/2026-11-18-round12-speed/index.html`; numbers at the end of `CHANGES.md`. **Check his verdict
+before building on it.** The 52 s loop is intact (`what-moves round2 32000 84000` 0.00 %, `loop-check`).
+
+- **Clouds:** `SKY_SWAY = [75, 165]` px, one sine a loop still (4.5 and 10 px/s at their fastest, 1.4 times
+  what it was). Two sines a loop was rejected: they would turn back twice as often. At the far end the big
+  left cloud is 71 px over the edge and the small one rests 20 px beside Tokyo Tower's top deck: more
+  travel than this needs a look at both.
+- **The plane's speed only ever rises** (`planeRun`, `planeGain`): the roll as it was, the push easing to
+  `CLIMB_A` 6 px/s2 from `EASE_AT`, rising to `SURGE_A` 45 from `SURGE_AT`, which is when it is in front of
+  the Tower and above a phone's buttons. 85 px/s as the wheels leave, 112 to 129 across a phone's sky, 131
+  at the Tower, 227 leaving. The path, the 26 s cycle and the moment it passes the Tower are unchanged
+  (`PLANE.HOLD` is 4.24 s: it stands lined up for the time the quicker climb saves).
+- **A phone sees it for less:** half or more of the plane in a phone's open sky for 3.0 s (4.7 before),
+  80 % for 1.9 s (3.3). That is the price of the speed and it is on the page for him; a gentler climb
+  through that patch is the lever (`CLIMB_A`, `EASE_AT`), and `node tools/plane-visible.mjs round2` measures it.
+- **Everything timed to the plane hangs on three numbers.** Change `PLANE.HOLD` or the speed and check:
+  the kite's `turn0` (it must be at the right-hand end of its circle when the gear is at x 1250), the
+  baggage train (tied to `PLANE.HOLD` in `Airport`: it once came up to 12 px behind the tail), the flock
+  nine seconds ahead at the Tower. The pitch and the body's height are read by the place (`planeRollS` on
+  the runway, `planeOldS` in the air), so the speed can change without moving the path.
+- `films/remake-3.mp4` is the film after this round; remake-1 and remake-2 are untouched.
+
 ## WHERE IT STANDS WHEN YOU PICK THIS UP (2026-11-17, the owner logged off)
 
 Everything is committed and pushed; the working tree is clean. Two threads are live.
 
-**1. Fable 5.2 had the film, and is done: see "Round 11" above. It waits for the owner's verdict, and for
-his choice about the clouds.** What follows is the brief as it was handed over.
+**1. Fable 5.2 had the film: round 11 is accepted and round 12 (above) waits for the owner's verdict.** What follows is the brief as it was handed over.
 `PROMPT-FOR-FABLE-LOOP.md` is its brief, handed over and approved by the
 owner ("Looks right"): make scene 05 a complete seamless loop (L = 52 s, two plane cycles and one bird
 cycle; position AND velocity continuous at the wrap; the five scene buttons must keep working), and chase

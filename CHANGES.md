@@ -1941,3 +1941,96 @@ with drawing made slow (6 ms a frame) the 167 ms pause is still there, as intend
 - `check-viewer` once reported one problem: `net::ERR_NO_BUFFER_SPACE` from the local server while other
   browsers were loading from it. It is the machine, not the film (it explains the one unexplained
   "1 problem" of round 10 as well); the runs after it were clean.
+
+## Round 12 (2026-11-18): the clouds a bit faster, and the plane builds speed from its roll
+
+Round 11 is accepted: the owner checked the loop himself. Two things he wanted quicker, his words: "for the
+cloud and the plane's departing animation, I think those could be moving a bit more faster. Cloud, a bit
+faster. For the plane, it should be sped up based on its acceleration when it is departing from the runway,
+kind of like an actual plane flying." Brief: `PROMPT-FOR-FABLE-SPEED.md`. Parts `r12-clouds-faster` and
+`r12-plane-accel`; shown with before/after clips on `evidence/2026-11-18-round12-speed/index.html`.
+**Waiting for the owner's verdict.** Nothing else in the finale changed, and the loop is intact.
+
+### 1. The clouds: 1.4 times as fast
+
+`SKY_SWAY` is `[75, 165]` px (it was `[53, 116]`): still one sine a loop, so their top speed is 4.5 and
+10.0 px/s (it was 3.2 and 7.0). Two sines a loop with the old travel would also have been faster, but the
+clouds would turn back twice as often, and the turn is the one thing about them that is not real: further
+is the better price. `SKY_WIND` is untouched.
+
+At the far end of their travel (26 s in): the big left cloud is 71 px over the picture's edge (22 before),
+which is 15 % of it; the small cloud comes to rest 20 px to the right of Tokyo Tower's top deck (65 before)
+and touches nothing; every cloud is 184 px or more above the roofs under it through the loop
+(`cloud-check --at`, 27 moments through the loop); no cloud's outline comes nearer the sun's centre than
+111 px (its ring is 56), and they all move away from it. On a phone the low cumulus is mostly out of the
+strip at the far end (142 px of it are seen; 191 before).
+
+### 2. The plane: its speed only ever rises
+
+It reached 95 px/s on the runway, then SLOWED to 74 over the ground as it left it (round 6 did that for a
+phone's sake), held 74 for nearly nine seconds and only then surged. Now, from the brakes coming off:
+the roll's thrust (62 px/s2, as it was); from 1.2 s (the nose is coming up) the acceleration over the
+ground eases over 1.4 s to 6 px/s2 and stays there up the climb; from 9.4 s (it is in front of Tokyo Tower)
+it rises to 45 px/s2 over 2 s. `PLANE`: `EASE_AT`, `EASE_IN`, `CLIMB_A`, `SURGE_AT`, `SURGE_IN`, `SURGE_A`
+(`CLIMB_V`, `EASE`, `LAG`, `ACC_AT`, `ACC_IN` are gone).
+
+| where its gear is | before | now |
+|---|---|---|
+| wheels leave (x 554) | 95 px/s, 11.53 s into the cycle | 85 px/s, 14.40 s |
+| x 950, its nose coming into a phone's sky | 74 px/s, 16.57 s | 112 px/s, 18.38 s |
+| x 1250, the kite's circle | 75 px/s, 20.62 s | 127 px/s, 20.90 s |
+| x 1360, Tokyo Tower's mast | 130 px/s, 21.75 s | 131 px/s, 21.75 s |
+| leaving the picture | 281 px/s | 227 px/s |
+
+What is closed stayed closed:
+- **The cycle is 26 s.** The departure is 2.84 s shorter up to the Tower; `PLANE.HOLD` is 4.24 s (it was
+  1.4): the plane stands lined up for that long before it rolls.
+- **The path did not move.** At the same gear x the body's height and the pitch are what they were, to
+  the last digit, on the runway (7,028 places) and in the air (41,445 places); only the slight weave
+  differs, which round 11 put on the clock. On the runway the pitch's clock is read by the place too now
+  (`planeRollS`). It passes in front of the mast above the Tower's top deck at the same moment of the cycle
+  (21.74 s; its box is over the mast for 1.57 s, it was 1.52).
+- **No one-frame changes.** The ground speed never falls at any of 2,998 steps at 240 a second (it fell in
+  296 before), and there is no speed step at any join (the ease, lift-off, the surge).
+- **The loop.** `loop-check`: every node the same 52 s later at 6,240 moments; `what-moves 32000 84000`:
+  0.00 %, 0 regions.
+
+What is tied to the plane was moved with it:
+- a flock still crosses the Tower 9.9 s ahead of it in both cycles (unchanged, because the pass is);
+- the kite is at the far end of its circle when it comes by (`turn0` 2.747; 68 px clear on both passes);
+- the baggage train comes in 4.3 s before the brakes come off, as it did (`Airport`, tied to `PLANE.HOLD`).
+  A reviewer caught this: on its old time the train came up to 12 px behind the tail of the plane standing
+  longer. It is 150 px again.
+
+**On the runway itself it is no quicker**: the roll is 80 px long and was already the strongest push
+(2.06 s, it was 2.03; it leaves at 85 px/s, it was 95, because the push starts easing as the nose comes
+up). The gain is all in the climb. Said on the page.
+
+### What it costs on a phone (measured, `tools/plane-visible.mjs round2`)
+
+| the plane in a phone's open sky | before | now |
+|---|---|---|
+| at least half of it | 4.7 s | 3.0 s |
+| at least 80 % of it | 3.3 s | 1.9 s |
+| at least a quarter | 5.4 s | 3.6 s |
+
+(The "before" is 4.7 s where round 6 measured 4.1 s: the phone's copy block has been shortened since, so
+the patch of open sky is taller.) The surge is placed after that patch on purpose. With the roll's thrust
+kept all the way up it would be about a second, as before round 6. The page offers a gentler climb through
+the patch if 3 s is too short.
+
+### Checks on the final working copy
+
+`original/` 7 of 7, the website untouched. Scenes 01 to 04: every node the same as before at every 60th of
+a second (`same-check`, 1,668 moments, undisplayed nodes included). `handover-check` passes (the largest
+21 px/s, the two small ones in scenes 01 and 02 as before). No element added (1483 / 1494 / 943 / 945 /
+944). `check-viewer`, `check-seams` (both framings), `loop-buttons-check` (both), `cloud-check`,
+`sky-motion`, `motion-check` over the film and a further loop: see
+`evidence/2026-11-18-round12-speed/checks.txt`.
+
+One reviewer went over the uncommitted work (scene code only). Found and fixed: the train behind the
+plane's tail; the pitch on the runway read off a scaled clock (0.28 degrees off the old path at the same
+place, and a 9 % step in its rate at lift-off); three wrong numbers in comments. Found and left, said on
+the page: the runway is no quicker; the small cloud beside the Tower at the far end.
+
+The remake's two whole-film recordings were made again, and `films/remake-3.mp4` (bare stage, 60 fps).
