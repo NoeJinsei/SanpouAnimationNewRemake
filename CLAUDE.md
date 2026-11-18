@@ -617,7 +617,9 @@ before building on it.** The 52 s loop is intact (`what-moves round2 32000 84000
   at the Tower, 227 leaving. The path, the 26 s cycle and the moment it passes the Tower are unchanged
   (`PLANE.HOLD` is 4.24 s: it stands lined up for the time the quicker climb saves).
 - **A phone sees it for less:** half or more of the plane in a phone's open sky for 3.0 s (4.7 before),
-  80 % for 1.9 s (3.3). That is the price of the speed and it is on the page for him; a gentler climb
+  80 % for 1.9 s (3.3). **He accepted that on 2026-11-18 ("Yes, keep it"): it is closed, do not reopen
+  it.** (His answer was to that one question; his verdict on the rest of round 12 is still to come.) If the
+  plane's speed is ever changed again, measure this again and say both numbers; a gentler climb
   through that patch is the lever (`CLIMB_A`, `EASE_AT`), and `node tools/plane-visible.mjs round2` measures it.
 - **Everything timed to the plane hangs on three numbers.** Change `PLANE.HOLD` or the speed and check:
   the kite's `turn0` (it must be at the right-hand end of its circle when the gear is at x 1250), the
