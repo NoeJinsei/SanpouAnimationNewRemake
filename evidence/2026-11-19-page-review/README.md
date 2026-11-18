@@ -177,7 +177,7 @@ repository as `73d2d06`.
 | 6 two missed "this page is about…" leads | **done** — `8ab1b0d` |
 | 7 応募資格 moved under 仕事内容 in both job tables | **done** — `8ab1b0d` |
 | 9 four service sections get a way to ask about that service | **done** — `8ab1b0d`, proved in a browser |
-| 2 the enquiry form becomes a business form | **not started** — four files must move together or the confirmation screen and the notification mail stop matching the form |
+| 2 the enquiry form becomes a business form | **done** — : the partial and the server spec moved together, sync.py regenerated the page, the confirmation screen followed on its own, and all three behaviours were tested in a browser |
 | 3 quote questions shown only to the enquiry types they fit | **not started** — needs about ten lines of JS, the twin of a rule the code already has |
 | 4 what the warehouses are, on the pages where a customer decides | **blocked** — the figures are client question C-3 |
 | 5 give every fact one owner | **not started** — medium; several blocks move, no sentence is rewritten |
