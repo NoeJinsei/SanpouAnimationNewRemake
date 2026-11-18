@@ -192,3 +192,53 @@ wrote anything.
 **Item 9 was verified rather than assumed.** `form.js` reads `?type=` and matches it against the
 `data-preset` aliases on the radios; loading `contact.html?type=processing#form` in a browser preselects
 流通加工. The four values used — `transport`, `warehouse`, `processing`, `3pl` — are all in those alias lists.
+
+## The rest of the list, and what three reviews found in it (2026-11-19)
+
+**Done:** convention 1, 2, 3, 6, 7, 8, 9 and the relocation half of character 2. **Proposed rather than
+applied** (they need new writing or remove facts, which `COPY-STYLE-ja.md` §0 sends to the client
+questions): the FAQ restore, 選ばれる理由 POINT 03, the recruit page opening, and convention 5. They are
+written up in the site's own `PROPOSALS-NOT-YET-APPLIED.md`.
+
+Three reviewers then went over the whole day's diff with one lens each — regressions, the site's own rules,
+and edge cases. **They found six real faults in my work.** All six are fixed.
+
+### The one that mattered
+
+**I deleted a legally required disclosure.** The owner said the 行政処分 block was sample data, and I took
+it. The repository said otherwise and I did not look: `CLIENT-QUESTIONS-ja.md` question 6 records that the
+four facts were read from **the ministry's own 事業者の行政処分情報検索 on 2026-11-01**, citing the row; that
+**貨物自動車運送事業輸送安全規則 第2条の8 第2項** requires the penalty and the measures to be published
+without delay; that this must happen **without waiting for the new site**; and that it is a condition of
+launching at all. `BUILD-REPORT.md` repeats the facts and `DEPLOY-ja.md` A-1.6 is a launch gate that
+rewrites two rows of that exact element.
+
+**The block is restored byte for byte.** The owner's answer needs re-checking against the ministry record.
+
+### The other five
+
+- **The domain fill was reverted**, 86 occurrences across 23 files. Three faults in one change: the deploy
+  doc does that fill **in the publication copy, not the repo**; it pairs the fill with removing the
+  `noindex` tags, so doing half left the site in a state the `links` QA gate **rejects in both of its
+  modes**; and replacing blindly rewrote the instruction *comments* in `robots.txt`, `sitemap.xml` and
+  `security.txt` — all publicly served — so each told its reader to replace the real domain with the real
+  domain.
+- **The quote fieldset now shows for all four business types.** My own new links sent people to the form
+  with 倉庫保管 or 流通加工 preselected, and the block was hidden for exactly those, so a storage enquiry
+  could not state 荷物の種類 or 数量・頻度. 採用 and その他 still hide it.
+- **`docs/FORMS.md` is updated.** It is the normative contract of the three files, and it still said
+  furigana was required, still listed the old order, and said nothing about the conditional display. The
+  contract test reads the partial and `app.php` only, so nothing would have caught the drift.
+- **The paper line on `business.html` is marked `data-draft="案3 …"`.** It is pending client approval like
+  the rest of 案3, and unmarked it would have survived a decision that removed the others.
+- **`sync.py` rewrote `partials/page-template.html` from LF to CRLF** — a 257-line whitespace diff with two
+  real lines in it. Restored and the two lines reapplied with the endings untouched. Worth knowing before
+  anyone runs the build step on Windows.
+
+**Still flagged, not balanced away:** the `案5` fleet-lineup block I deleted in the home-page restructure is
+still gone. The count is 65 against 65 only because a new `案3` marker was added.
+
+**Final state:** 16 commits, working tree clean, `check_copy` at its 33 pre-existing hits throughout, no
+same-day or emergency claim anywhere, the placeholders back in 24 files, and the form verified in a browser
+— four business types show the quote block, 採用 and その他 hide it, the company is asked before the person,
+and フリガナ is optional.
