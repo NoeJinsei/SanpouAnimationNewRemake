@@ -98,3 +98,40 @@ template sites.
   not zero it still has to be published.
 - **受動喫煙対策** at each base, for the job adverts. Legally required wording, so it needs the fact.
 - **Will the vacancy page be maintained?**
+
+---
+
+## Done so far (2026-11-19), and what each cost
+
+| # | item | result |
+|---|---|---|
+| 3 | the two false claims | **done** — `d73a789`, `132fa77` |
+| 1 | the announcement sentences | **done** — `7b8b433`: 11 cut, 2 trimmed, 13-line diff, 0 left in visible copy |
+| 2 | the soft verbs | **partly done** — `2383c4f`: 3 of 11 flattened; 8 kept on purpose |
+
+**Why item 2 is only partly done, and it is not laziness.** The recommendation was "replace the soft verb
+with the plain verb **and the named tool**". The second half is not available: the company's own fact list
+rules out claiming digital tachographs or dashcams, and no other equipment is documented anywhere in the
+project. So softness could be removed; specifics could not be added. Eight of the eleven were kept, each
+for a reason:
+
+- **privacy.html ×2 and the sitepolicy disclaimer** — statutory and standard legal wording. A compliance
+  reader checks these against the model text.
+- **safety.html ×3** — inside the transport-safety policy the law requires to be published. Not editable.
+- **company.html ×2** — both in the president's greeting, where 努めてまいります is the correct register
+  and not a dodge. The survey's complaint was about service-page promises, not a 代表挨拶.
+
+**What would finish item 2:** a list from the owner of what is actually fitted and actually done — the
+equipment in the cabs, who runs the safety training and how often, whether ride-along coaching happens.
+Each fact turns one soft sentence into a hard one. Without them, the honest move was to stop at three.
+
+## Two mistakes of mine on this pass, recorded so they are not repeated
+
+1. **A substring that the site's own `nw` spans split in two.** The site wraps phrases in
+   `<span class="nw">` to stop them breaking, so a plain-text substring often does not exist in the markup.
+   The script's uniqueness guard caught this four separate times and wrote nothing each time.
+2. **CRLF converted to LF.** Reading with Python's default text mode translated the line endings, so the
+   first successful run rewrote **every line of eight files** — 3,119 insertions where there should have
+   been 2. Reverted with `git checkout --`, and the script now reads *and* writes with `newline=""`.
+   **Any future script that edits this site must do the same**, or the diff becomes unreadable and the real
+   change is invisible inside it.
