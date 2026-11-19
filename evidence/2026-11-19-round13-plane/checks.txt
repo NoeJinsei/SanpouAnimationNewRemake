@@ -1,0 +1,286 @@
+Round 13, the checks on the final working copy (2026-11-19)
+
+The scene file was recorded and checked in the browser with two comments worded differently; the file as
+
+committed differs from that copy in those comment lines only (diff below), and the scene-code checks
+
+(the loop, scenes 01 to 04) were run again on it.
+
+
+
+## the originals' files
+js/hero-flag.js: OK
+js/hero-glue.js: OK
+js/hero-port-a.js: OK
+js/hero-port-b.js: OK
+css/40-hero.css: OK
+site/site.css: OK
+site/hero-section.html: OK
+exit 0
+
+## the loop in photographs: tools/what-moves.mjs round2 32000 84000
+round2: 32000 ms -> 84000 ms: 0.00 % of the stage changed, in 0 region(s)
+exit 0
+
+## the loop, every node against the same node 52 s later, every 60th of a second for two loops
+round2: the finale at t and at t + 52 s, 6240 moments from 30420 ms, a step of 16.67 ms
+  moments where the picture differs: 0   (moments where any node differs, hidden ones included: 0)
+A LOOP: every node is the same one turn later
+
+## scenes 01 to 04 against the film before this round (every node, every 60th of a second)
+round2: before and after, 1668 moments from 0 to 27790 ms
+  moments where the picture differs: 0   (moments where any node differs, undisplayed ones included: 0)
+the picture is the same at every moment
+
+## handover-check
+scene 01: the hold begins at 5139 ms: 9 numbers change speed by 6 a second or more in that frame; the largest: 18 px/s
+        72.0 ->     54.0 px/s   (-25 %)  world/3:svg/0:g/2:g/2:g [transform, along its path]
+        57.0 ->     45.0 px/s   (-21 %)  world/3:svg/0:g/1:g/0:path[#ffffff] [d #18]
+        54.0 ->     45.0 px/s   (-17 %)  world/3:svg/0:g/1:g/0:path[#ffffff] [d #10]
+        45.0 ->     39.0 px/s   (-13 %)  world/3:svg/0:g/1:g/0:path[#ffffff] [d #13]
+        45.0 ->     39.0 px/s   (-13 %)  world/3:svg/0:g/1:g/0:path[#ffffff] [d #15]
+        42.0 ->     36.0 px/s   (-14 %)  world/3:svg/0:g/2:g/1:polygon[#ffffff] [points #0]
+scene 02: the hold begins at 12722 ms: 3 numbers change speed by 6 a second or more in that frame; the largest: 21 px/s
+       363.0 ->    426.0 deg/s  (17 %)  …/2:g/2:g/2:g(clip url(#wSupDoor))/1:g/2:g/2:g [transform]
+       291.0 ->    339.0 deg/s  (16 %)  …/2:g/2:g/2:g(clip url(#wSupDoor))/1:g/1:g/2:g [transform]
+         0.0 ->     21.0 px/s   (Infinity %)  world/3:svg/0:g/2:g/1:polygon[#ffffff] [points #0]
+scene 03: the hold begins at 16933 ms: 0 numbers change speed by 6 a second or more in that frame
+scene 04: the hold begins at 24022 ms: 1 numbers change speed by 6 a second or more in that frame; the largest: 15 px/s
+        42.4 ->     27.7 px/s   (-35 %)  …/0:div/6:div/0:svg/1:g/23:g/0:g [transform, along its path]
+scene 05: the hold begins at 30411 ms: 0 numbers change speed by 6 a second or more in that frame
+
+no place changes speed by more than 25 px/s at any handover (the largest: 21 px/s)
+
+## the plane in a phone's open sky: before (round 12, the side trial3 holds it), same run
+trial3 (phone): the plane seen in open sky, below the buttons (screen y 176)
+  at least 80 % of it: 1.9 s  (43900 .. 45700 ms)
+  at least half of it: 3.0 s  (35000 .. 46100 ms)
+  at least a quarter:  3.6 s  (35000 .. 46300 ms)
+exit 0
+
+## and now
+round2 (phone): the plane seen in open sky, below the buttons (screen y 176)
+  at least 80 % of it: 1.6 s  (44300 .. 45800 ms)
+  at least half of it: 2.4 s  (43800 .. 46100 ms)
+  at least a quarter:  3.1 s  (35000 .. 46300 ms)
+exit 0
+
+## the plane through one cycle: before (round 12)
+wheels leave (x 554): 14.42 s into the cycle, 85 px/s over the ground, y 963
+x 950 (nose into a phone's sky): 18.38 s into the cycle, 112 px/s over the ground, y 683
+x 1250 (the kite's circle): 20.90 s into the cycle, 127 px/s over the ground, y 407
+x 1306 (under a phone's buttons): 21.33 s into the cycle, 129 px/s over the ground, y 356
+x 1360 (Tokyo Tower's mast): 21.75 s into the cycle, 131 px/s over the ground, y 306
+x 1860 (gone): 24.73 s into the cycle, 227 px/s over the ground, y -155
+
+## and now
+wheels leave (x 554): 15.50 s into the cycle, 92 px/s over the ground, y 963
+x 950 (nose into a phone's sky): 18.88 s into the cycle, 131 px/s over the ground, y 683
+x 1250 (the kite's circle): 21.03 s into the cycle, 148 px/s over the ground, y 406
+x 1306 (under a phone's buttons): 21.40 s into the cycle, 151 px/s over the ground, y 355
+x 1360 (Tokyo Tower's mast): 21.75 s into the cycle, 154 px/s over the ground, y 306
+x 1860 (gone): 24.42 s into the cycle, 245 px/s over the ground, y -156
+
+## the committed scene file against the recorded copy (comments only)
+4863,4864c4863,4865
+<        acceleration rises to PLANE.SURGE_A px/s2 over PLANE.SURGE_IN s and it climbs away, 250 px/s
+<        as it leaves the picture.
+---
+>        acceleration rises to PLANE.SURGE_A px/s2 over PLANE.SURGE_IN s and it climbs away: 220 px/s
+>        as the last of it leaves the picture (23.9 s into the cycle), 252 when it is switched off, well
+>        above the top edge.
+5361c5362
+<     // touchdown, 4.3 s before the brakes come off for the take-off, so it runs along well behind the plane as
+---
+>     // touchdown, 3.8 s before the brakes come off for the take-off, so it runs along well behind the plane as
+
+## check-viewer
+full: 22 moments, picture 1920px x 1080px, largest difference round2 vs remake: 1900913 px (at t=22200), draw 2.45 / 2.06 ms
+desktop: 22 moments, picture 1440px x 720px, largest difference round2 vs remake: 929275 px (at t=22600), draw 2.56 / 2.21 ms
+phone: 22 moments, picture 390px x 680px, largest difference round2 vs remake: 240806 px (at t=22200), draw 2.55 / 2.24 ms
+
+viewer OK: 0 console errors
+exit 0
+
+## check-seams, phone
+ok   02 holds (street only; the expressway may be built ahead, unseen, at opacity 0): {"w":"shown","t":"0","n":"-","fading":0,"scene":"02"}
+ok   02 -> 03, the change of picture (street and expressway together): {"w":"shown","t":"0","n":"-","fading":0,"scene":"03"}
+ok   03 after the change (expressway only): {"w":"-","t":"shown","n":"-","fading":0,"scene":"03"}
+ok   03 -> 04, the rise (road going down, map coming down, one stage): {"w":"-","t":"95.93px","n":"-984.07px","fading":0,"scene":"04"}
+ok   04 after the rise (map only): {"w":"-","t":"-","n":"shown","fading":0,"scene":"04"}
+ok   click back to 03: a dissolve: {"w":"-","t":"shown","n":"-","fading":1,"scene":"03"}
+ok   click on to 04 from 03's hold: the rise: {"w":"-","t":"349.03px","n":"-730.97px","fading":0,"scene":"04"}
+ok   04 after it: {"w":"-","t":"-","n":"shown","fading":0,"scene":"04"}
+
+the real player plays both seams as camera moves (round2, phone)
+exit 0
+
+## check-seams, desktop
+ok   02 holds (street only; the expressway may be built ahead, unseen, at opacity 0): {"w":"shown","t":"0","n":"-","fading":0,"scene":"02"}
+ok   02 -> 03, the change of picture (street and expressway together): {"w":"shown","t":"0","n":"-","fading":0,"scene":"03"}
+ok   03 after the change (expressway only): {"w":"-","t":"shown","n":"-","fading":0,"scene":"03"}
+ok   03 -> 04, the rise (road going down, map coming down, one stage): {"w":"-","t":"14.94px","n":"-1065.06px","fading":0,"scene":"04"}
+ok   04 after the rise (map only): {"w":"-","t":"-","n":"shown","fading":0,"scene":"04"}
+ok   click back to 03: a dissolve: {"w":"-","t":"shown","n":"-","fading":1,"scene":"03"}
+ok   click on to 04 from 03's hold: the rise: {"w":"-","t":"58.15px","n":"-1021.85px","fading":0,"scene":"04"}
+ok   04 after it: {"w":"-","t":"-","n":"shown","fading":0,"scene":"04"}
+
+the real player plays both seams as camera moves (round2, desktop)
+exit 0
+
+## the loop and the five buttons in the real player, desktop
+ok   the film reaches the finale and holds (scene 05)
+ok   one loop later (52 s) the player shows the same picture: 0 px differ
+ok   2 loops later (104 s) it still does: 0 px differ
+ok   button 1: scene 01, drawings on the stage: w
+ok   button 2: scene 02, drawings on the stage: w
+ok   button 3: scene 03, drawings on the stage: t
+ok   button 4: scene 04, drawings on the stage: tn
+ok   button 5: scene 05, drawings on the stage: n
+ok   button 3: scene 03, drawings on the stage: t
+ok   button 5: scene 05, drawings on the stage: n
+ok   after the jump back to 05, the picture one loop later is the same: 0 px differ
+ok   console errors: 0
+
+the finale loops in the real player, and the scene buttons work after 2 loops (round2, desktop)
+exit 0
+
+## and on a phone
+ok   the film reaches the finale and holds (scene 05)
+ok   one loop later (52 s) the player shows the same picture: 0 px differ
+ok   2 loops later (104 s) it still does: 0 px differ
+ok   button 1: scene 01, drawings on the stage: w
+ok   button 2: scene 02, drawings on the stage: w
+ok   button 3: scene 03, drawings on the stage: t
+ok   button 4: scene 04, drawings on the stage: tn
+ok   button 5: scene 05, drawings on the stage: n
+ok   button 3: scene 03, drawings on the stage: t
+ok   button 5: scene 05, drawings on the stage: n
+ok   after the jump back to 05, the picture one loop later is the same: 0 px differ
+ok   console errors: 0
+
+the finale loops in the real player, and the scene buttons work after 2 loops (round2, phone)
+exit 0
+
+## cloud-check
+scene 01: 15 moments, 0 clouds below a roof
+scene 02: 12 moments, 0 clouds below a roof
+scene 03: 15 moments, 0 clouds below a roof
+scene 05: 37 moments, 0 clouds below a roof
+clouds OK: every cloud's base clears the roofs under it
+exit 0
+
+## sky-motion (its last lines; the fast moves it lists in scenes 01 to 03 are the camera, as before)
+  w-near#0         0.00- 8.38s  scene 01+02    drift   8.4 px/s  hardest change  3869 px/s2 at 8.08s  GOES at once (1.00)
+      faster than its drift: 7.50-8.38s up to 1365 px/s, 575 px
+  w-near#1         0.00-15.60s  scene 01+02+03 drift   7.2 px/s  hardest change  3869 px/s2 at 8.08s  GOES at once (1.00)
+      faster than its drift: 7.48-8.90s up to 1365 px/s, 679 px; 14.93-15.60s up to 1161 px/s, 300 px
+  w-near#2         0.00-15.73s  scene 01+02+03 drift   7.9 px/s  hardest change  3869 px/s2 at 8.08s  GOES at once (1.00)
+      faster than its drift: 7.50-8.90s up to 1365 px/s, 679 px; 14.93-15.73s up to 1353 px/s, 468 px
+no jumps
+exit 0
+
+## node-count: original / before this round / now
+moment               original         trial3         round2
+01 at 3500               1337           1483           1483
+02 at 10500              1372           1494           1494
+03 at 18000              1254            943            943
+04 at 24500               778            945            945
+05 at 32000               777            944            944
+05 at 40000               776            944            944
+total                    6294           6753           6753
+exit 0
+
+## motion-check, the film
+round2 0..48000 ms, crop full: 2880 steps at 60/s
+frozen steps: 0, longest frozen run: 0 steps
+change per step: median 0.1983, largest 31.4245 at 22083 ms
+pops (> 3x both neighbours): 0
+exit 0
+
+## motion-check, a further loop
+round2 48000..84000 ms, crop full: 2160 steps at 60/s
+frozen steps: 0, longest frozen run: 0 steps
+change per step: median 0.0934, largest 0.2187 at 71050 ms
+pops (> 3x both neighbours): 0
+exit 0
+
+## the recordings
+shots/r13/after/desktop.mp4
+  picture 1440 x 720, rate 60/1, 2880 frames, 48.000000 s, 9.0 MB
+  repeated frames: 0        frames off the beat: 0
+  frame count matches the length at 60 a second
+shots/r13/after/phone.mp4
+  picture 780 x 1360, rate 60/1, 2880 frames, 48.000000 s, 15.9 MB
+  repeated frames: 0        frames off the beat: 0
+  frame count matches the length at 60 a second
+films/remake-4.mp4
+  picture 1920 x 1080, rate 60/1, 2880 frames, 48.000000 s, 13.9 MB
+  repeated frames: 0        frames off the beat: 0
+  frame count matches the length at 60 a second
+evidence/2026-11-19-round13-plane/clips/plane-desktop-before.mp4
+  picture 1440 x 720, rate 60/1, 960 frames, 16.000000 s, 1.4 MB
+  repeated frames: 0        frames off the beat: 0
+  frame count matches the length at 60 a second
+evidence/2026-11-19-round13-plane/clips/plane-desktop-after.mp4
+  picture 1440 x 720, rate 60/1, 960 frames, 16.000000 s, 1.4 MB
+  repeated frames: 0        frames off the beat: 0
+  frame count matches the length at 60 a second
+evidence/2026-11-19-round13-plane/clips/plane-phone-before.mp4
+  picture 780 x 1360, rate 60/1, 960 frames, 16.000000 s, 2.8 MB
+  repeated frames: 0        frames off the beat: 0
+  frame count matches the length at 60 a second
+evidence/2026-11-19-round13-plane/clips/plane-phone-after.mp4
+  picture 780 x 1360, rate 60/1, 960 frames, 16.000000 s, 2.8 MB
+  repeated frames: 0        frames off the beat: 0
+  frame count matches the length at 60 a second
+
+## the independent verifier (one agent, Node only, changed nothing): what it found
+FOUND (4):
+
+- [medium] A phone sees the plane for less again, and the review page's two rows for it are still blanks
+  where: evidence/2026-11-19-round13-plane/index.html (the table under "On a phone": {{HALF_BEFORE}} {{HALF_AFTER}} {{MOST_BEFORE}} {{MOST_AFTER}}, and {{CHECKS}}); cause in round2/js/hero-port-b.js line 4880 (CLIMB_A 8, EASE_AT 1.5)
+  what: Most of this round's gain falls inside the patch of sky a phone sees, so the plane crosses it about 14 % quicker than in round 12. CLAUDE.md closes round 12 at 3.0 s (half) and 1.9 s (80 %) and says both numbers must be measured and said again if the speed changes. They are not in the list of things already measured, and the page still shows placeholders. I could not run tools/plane-visible.mjs (it opens a browser).
+  evidence: Rough count in Node on one yardstick (share of the plane's outline inside x 955..1360, y 356 down; shots/review13/all.mjs g): half or more for 2.22 s now, 2.59 s in round 12, 4.18 s in round 11; 80 % or more for 1.48 / 1.73 / 2.83 s. The real tool read 3.0 and 1.9 s (round 12) and 4.7 and 3.3 s (round 11), 1.1 to 1.17 times this count, so expect about 2.5 s and 1.7 s. Speed by place, now against HEAD: wheels leaving 92.3 / 84.6 (+9 %), gear x 950 131.2 / 111.6 (+18 %), x 1250 148.4 / 126.7 (+17 %), mast 154.2 / 131.8 (+17 %), x 1553 176.0 / 156.7 (+12 %), x 1860 245.0 / 227.0 (+8 %).
+  fix: When the recordings are done run `node tools/plane-visible.mjs round2`, fill the four cells, and say the drop in plain words on the page. If he wants the time back, CLIMB_A (and EASE_AT) is the lever: put the gain in the surge past the Tower instead.
+
+- [low] "250 px/s as it leaves the picture" (comment) and "Leaving the picture 227 -> 245" (page) are speeds after it is out of sight
+  where: round2/js/hero-port-b.js lines 4863-4864 ("it climbs away, 250 px/s as it leaves the picture"), same text in round2/parts/r13-plane-quicker.js; evidence/2026-11-19-round13-plane/index.html, table row "Leaving the picture"
+  what: The last of the plane's drawing leaves the stage at cycle 23.90 s at 219.7 px/s. 250 is its speed at the switch-off 0.65 s later (252.2), and the page's 245 is the speed with the gear at x 1860, where the whole plane has been above the top edge since gear x 1742. Off by 25 to 30 px/s. Round 12's 230 / 227 had the same slack (202.5 when last seen).
+  evidence: shots/review13/all.mjs a: "first crosses the top edge at cycle 23.067 (180.8 px/s); wholly off the stage from cycle 23.900 (219.7 px/s, gear x 1742.5); speed at the switch-off 252.2 px/s"; gear at x 1860 at cycle 24.406, 245.0 px/s. HEAD: off the stage from 24.178 at 202.5 px/s, 227.0 at x 1860, 232.3 at the switch-off.
+  fix: Comment: "220 px/s as the last of it leaves the picture". Page row: "202 -> 220", or rename the row to say it is past the top edge.
+
+- [low] The page says "about a sixth faster at every point of the climb" and "all the way from its roll"; the roll is the same and both ends of the climb gain half that
+  where: evidence/2026-11-19-round13-plane/index.html, the lead paragraph and the first paragraph under "The plane, before and now"
+  what: The thrust on the runway (PLANE.ACC 62) was not touched. The first 1.2 s of the roll are HEAD's to the pixel and the wheels leave 0.026 s sooner. A sixth faster holds only from about gear x 950 to the Tower; it is 9 % at the wheels leaving and 8 % at the top, as the page's own table shows (85 -> 92, 227 -> 245).
+  evidence: shots/review13/z.mjs: brakes off to wheels off 2.035 s now, 2.061 s HEAD; gear within 0.0 px of HEAD's for the first 1.2 s, 0.05 px ahead at 1.5 s, 1.89 px at 2.0 s. Wheels off to the mast 6.26 s against 7.34 s. Speed ratio by place: 1.09 at lift-off, 1.18 at x 950, 1.17 at x 1250 and at the mast, 1.12 at x 1553, 1.08 at x 1860.
+  fix: Say "about a sixth faster through the middle of the climb" and "the roll on the runway is the same; it leaves the ground 9 % faster". Only matters if he was looking at the runway when he asked.
+
+- [low] The train's comment says "4.3 s before the brakes come off"; it is 3.8 s (not from this change)
+  where: round2/js/hero-port-b.js lines 5360-5362 (the comment above trainRound in Airport)
+  what: The train comes in at cycle 4.3149 + PLANE.HOLD = 9.665 s and the brakes come off at 13.45 s: 3.785 s before, not 4.3. It was 3.785 s in HEAD too (8.555 against 12.34). The line is outside the changed blocks but describes the one thing tied to PLANE.HOLD.
+  evidence: shots/review13/all.mjs e: "now train: comes in at cycle 9.665 (3.785 s before the brakes come off, 4.56 s after the touchdown)"; HEAD "8.555 (3.785 s before ..., 3.45 s after the touchdown)".
+  fix: Change "4.3 s" to "3.8 s" when the round is written up.
+
+What was done about them: the phone figures were measured in the browser after the recordings (see above) and are on the page; the page says a sixth faster through the middle of the climb and gives the speed as the last of the plane leaves the picture (202 -> 220 px/s); the two comments are corrected in the part file.
+
+LOOKED AT AND FOUND SOUND:
+- The diff: only the six PLANE numbers, the kite's turn0 and comment text changed; the part's 5 blocks are each found once in the working copy and its 5 'from' anchors once in HEAD; shots/pre13/js is HEAD by sha256 (all four files).
+- (a) Ground speed, brakes off to the last drawn frame: 0 falls in 2,663 steps at 240 a second and 665 at 60; the formula's acceleration is never below 0, least 7.81 px/s2 once the thrust is on (s 2.90), most 59.0; largest change of ground speed in one frame 0.98 px/s (HEAD 0.95). Speed along the path: 0 falls.
+- (a) The joins, speed just before | after: brakes off 0 | 0; EASE_AT 63.543 | 63.544; wheels leaving 92.286 | 92.287; SURGE_AT 154.200 | 154.200; end of the surge 212.199 | 212.201 px/s. No step.
+- (a) Other parts: the only one-frame changes of rate are the nose leg reaching full stretch (24.7 px/s to 0 at cycle 14.95; HEAD 24.4 at the same place) and the pitch rate at lift-off (-8.79 to -8.86 deg/s; HEAD -8.06 to -8.12). Both are in HEAD, neither is new.
+- (a) Upward speed is continuous; the upward push steps 0 to 43 px/s2 as the wheels leave and 76 to 7 where the bend ends (HEAD 36, and 55 to 5.5): the same path, flown faster. The nose comes up fastest at 25.9 deg/s at gear x 634 (HEAD 21.9, same place).
+- (a) As drawn (rounded to 0.01 px), 666 frames at 60 a second: no frame's step along x is shorter than the one before.
+- (b) The switch-off at cycle 24.55: the drawing is x 1756..1960, y -295..-141, its lowest point 141 px above the top edge (137 px a frame earlier). Last moment any of it is on the stage 23.896 s; it never comes back; drawn off the stage for 0.65 s (HEAD 0.67). Shadow gone by cycle 17.5, smoke and streak at 0.
+- (b) The next approach's first frame: drawing x -396..-165, 165 px left of the edge; first on the stage at cycle 1.375; identical to HEAD.
+- (c) The plane's whole slot is node for node HEAD's at 1,944 moments (0 to 8.1 s) and at 2,962 (0 to 12.34 s), 240 a second.
+- (c) The stand: flaps set by 9.33 s, then only the fin's strobe changes (one fill-opacity) until 13.45 s: 4.12 s still (HEAD 3.01 s). At the join only the hidden tyre streak's transform changes (opacity 0). The roll starts from rest: 0.0001, 0.0008, 0.0025 px in its first three frames, as in HEAD.
+- (d) One whole loop, 3,120 moments (30420 to 82420 ms), HEAD against now: the finale's clock is equal; the only differences are the plane's slot (the plane, its gear, flaps and pitch-following parts, its shadow, the hidden streak) at cycle 12.3 to 24.9 and nowhere else, the baggage train's transform (cycle 8.5 to 26 and 0 to 2.7), and the birds' one path.
+- (d) The birds' path: at all 3,120 moments everything but the kite's own outline is the same in both. The finale's entrance (27800 to 30420 ms, 158 moments): only the birds' path differs (148 moments).
+- By place (same gear x, 706 places): body height differs by 0.0000 px, pitch by at most 0.086 deg (the weave on the cycle clock), the drawing's lowest point by at most 0.71 px (the gear is folded at x 742, was 713).
+- (e) Flocks: the lead bird is at x 1360 9.90 s before the plane's gear in both plane cycles (HEAD 9.90). The gear is at the mast at 21.747 s (HEAD 21.744); the plane's box is over the mast 21.30 to 22.65 s.
+- (e) Kite: least gap to the plane's drawing 67.7 px on both passes (HEAD 67.6), no frame nearer than 20 px; its points lie 56.7 to 78.4 px on the empty side of the wheels' line; its angle with the gear at x 1250 is 15.9 deg (HEAD 16.0).
+- (e) Train: never nearer than 149.9 px to the plane's drawing (HEAD 149.9); it stops behind the depot at cycle 2.665 with the next plane still left of x 38.
+- (f) Timetable comment against the code: hold to 13.45 (13.450); wheels leave 15.49 (15.485) at 92 (92.3); gear folds 15.9 to 17.2 (15.88 to 17.20); flaps 17.8 to 19.9 (17.82 to 19.86); 131 to 151 at 18.9 to 21.4 (131.4, 151.4); 154 at the mast, 21.7 (154.2 at 21.747); off the picture at 23.9 (23.900); kite comment 21.0 (21.020). Round 12's bracketed 85, 112 to 129, 131 are 84.6, 111.8 to 129.2, 131.8. All within 0.1 s and 3 px/s except the 250 reported above.
+- The review page's other numbers: 6.3 and 7.3 s wheels off to the Tower (6.26, 7.34); the roll starts 3.5 and 4.6 s into the clips (3.45, 4.56); Tower 12.9 s in (12.85, 12.86); a third more and a ninth more push (6 to 8, 45 to 50); standing 5.4 against 4.2 s (5.35, 4.24). All hold.
+- Scratch files only, all under shots/review13/ (all.mjs, x.mjs, y.mjs, z.mjs). Node only; no browser, no git change.

@@ -2034,3 +2034,88 @@ place, and a 9 % step in its rate at lift-off); three wrong numbers in comments.
 the page: the runway is no quicker; the small cloud beside the Tower at the far end.
 
 The remake's two whole-film recordings were made again, and `films/remake-3.mp4` (bare stage, 60 fps).
+
+## Round 13 (2026-11-19): the plane accelerates a bit faster
+
+The owner on round 12: "I think the clouds are fine, but the plane could accelerate just a bit faster than
+what we have." So **round 12's clouds are accepted** (`SKY_SWAY = [75, 165]` stays), and the plane's
+departure was turned up a little. Part `r13-plane-quicker`; shown with before/after clips on
+`evidence/2026-11-19-round13-plane/index.html`. **Waiting for the owner's verdict.** Nothing else in the
+film changed, and the loop is intact.
+
+Only numbers changed, no code: `PLANE.EASE_AT` 1.5 (it was 1.2), `CLIMB_A` 8 (6), `SURGE_A` 50 (45),
+`SURGE_AT` 8.3 (9.4), `HOLD` 5.35 (4.24), `OUT` 11.1 (12.5), and the kite's `turn0` 2.684 (2.747).
+The push still eases as the nose comes up, a little later and to a third more than before; it still rises
+again in front of Tokyo Tower, to a ninth more.
+
+| where its gear is | round 12 | now |
+|---|---|---|
+| wheels leave (x 554) | 85 px/s, 14.40 s into the cycle | 92 px/s, 15.49 s |
+| x 950, its nose coming into a phone's sky | 112 px/s, 18.38 s | 131 px/s, 18.88 s |
+| x 1250, the kite's circle | 127 px/s, 20.90 s | 148 px/s, 21.03 s |
+| x 1360, Tokyo Tower's mast | 131 px/s, 21.75 s | 154 px/s, 21.75 s |
+| the last of it leaves the picture | 202 px/s, 24.18 s | 220 px/s, 23.90 s |
+
+From the wheels leaving to the Tower: 6.26 s (7.34). From the brakes coming off to the Tower: 8.30 s (9.41).
+It is 17 to 18 % faster through the middle of the climb and 8 to 9 % at both ends. **The roll itself is the
+same push** (`PLANE.ACC` 62 untouched; the first 1.2 s are the same to the pixel, and the wheels leave
+0.03 s sooner): the gain begins as the nose comes up.
+
+What is closed stayed closed:
+- **The cycle is 26 s.** The 1.11 s the quicker departure saves are spent standing lined up (`PLANE.HOLD`):
+  flaps set, then still but for the fin's strobe for 4.1 s (3.0 before).
+- **The path did not move.** At the same gear x (706 places) the body's height differs by 0.0000 px and
+  the pitch by at most 0.09 degrees (the slight weave, which is on the clock). It is in front of the mast
+  above the Tower's top deck at the same moment of the cycle (21.75 s).
+- **No one-frame changes.** The ground speed never falls at any of 2,663 steps at 240 a second; the least
+  acceleration once the thrust is on is 7.8 px/s2; no step at any join (the ease, lift-off, the surge and
+  its end).
+- **The loop.** `loop-check`: every node the same 52 s later at 6,240 moments; `what-moves 32000 84000`:
+  0.00 %, 0 regions. Scenes 01 to 04 are the same node for node (1,668 moments).
+
+What is tied to the plane, checked again: a flock crosses the Tower 9.90 s ahead of it in both cycles (as
+before, because the pass did not move); the kite is 68 px clear on both passes (`turn0` 2.684); the
+baggage train is never nearer than 150 px to the plane (its entry follows `PLANE.HOLD`). At the
+switch-off (`PLANE.OUT`) the plane's drawing is 141 px above the top edge; the last of it leaves the
+picture 0.65 s earlier.
+
+### What it costs on a phone (measured, `tools/plane-visible.mjs`, both on the same run)
+
+| the plane in a phone's open sky | round 12 | now |
+|---|---|---|
+| at least half of it | 3.0 s | 2.4 s |
+| at least 80 % of it | 1.9 s | 1.6 s |
+| at least a quarter | 3.6 s | 3.1 s |
+
+He accepted 3.0 s after round 12 ("Yes, keep it"); both numbers are said to him again here, as that note
+asks. Most of this round's gain falls inside that patch of sky (it is the climb), so a faster climb and a
+longer look on a phone pull against each other. The lever, if he wants the time back: `CLIMB_A` and
+`EASE_AT` (the climb through the patch), leaving `SURGE_A` (past the Tower) as it is.
+
+How the numbers that follow the speed are set, whenever it changes: `PLANE.HOLD` = 21.744 minus the time
+from the brakes coming off to the gear at x 1360, minus 8.1 (so the pass at the Tower stays at 21.74 s of
+the cycle); `SURGE_AT` = that same time (the surge begins in front of the Tower); `PLANE.OUT` = a little
+after the last of the drawing has left the stage (it is 141 px above the top edge at the switch-off now);
+the kite's `turn0` so that `2 pi * 4 * t / 52 + turn0` is 0.278 (mod 2 pi) at the cycle time `t` when the
+gear is at x 1250.
+
+### Checks
+
+`what-moves round2 32000 84000` 0.00 %, 0 regions; `loop-check` 6,240 moments, every node the same;
+`same-check` scenes 01 to 04, 1,668 moments, the same; `handover-check` passes (largest 21 px/s, as
+before); `check-viewer` 0 console errors at the three framings; `check-seams` on a phone and a desktop;
+the loop and the five buttons in the real player on both; `cloud-check` 0 clouds below a roof;
+`sky-motion` no jumps; `motion-check` 0 frozen steps and 0 pops through the film and a further loop;
+`node-count` unchanged in every scene (no element added); the seven recordings whole, none repeated,
+none off the beat; `sha256sum -c` 7 of 7. Every result is in
+`evidence/2026-11-19-round13-plane/checks.txt`.
+
+One independent verifier went over the uncommitted work in the scene code (Node only) and found nothing
+wrong with the motion. It corrected four statements: the page said "a sixth faster at every point" (it is
+a sixth through the middle and half that at both ends) and gave the speed "leaving the picture" at a place
+where the plane is already out of sight (220 px/s is right, not 245); a comment said the same with 250;
+and the baggage train's comment said it comes in 4.3 s before the brakes come off (it is 3.8 s, and was
+before this round). All four are corrected.
+
+The remake's two whole-film recordings were made again and `films/remake-4.mp4` is the film after this
+round; remake-1, remake-2 and remake-3 are untouched.

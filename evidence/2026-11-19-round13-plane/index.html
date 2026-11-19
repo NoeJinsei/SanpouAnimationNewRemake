@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>三豊運輸 hero remake: the plane accelerates a bit faster</title>
+<style>
+  :root { --ink: #13263f; --soft: #51627c; --line: #d5dde8; --bg: #f4f7fb; --card: #ffffff; --verm: #e16347; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.6 "Noto Sans JP", "Segoe UI", system-ui, sans-serif; }
+  main { max-width: 1280px; margin: 0 auto; padding: 32px 16px 80px; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 21px; margin: 56px 0 6px; padding-top: 18px; border-top: 3px solid var(--ink); }
+  h3 { font-size: 16px; margin: 28px 0 6px; }
+  p { margin: 6px 0 12px; max-width: 76ch; }
+  .lead { color: var(--soft); }
+  figure { margin: 14px 0 26px; background: var(--card); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+  figure img, figure video { display: block; width: 100%; height: auto; background: #0e1826; }
+  figcaption { padding: 10px 14px; font-size: 14px; color: var(--soft); border-top: 1px solid var(--line); }
+  figcaption b { color: var(--ink); }
+  nav { display: flex; flex-wrap: wrap; gap: 8px 14px; margin: 18px 0 0; font-size: 14px; }
+  a { color: var(--ink); }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+  .two figure { margin: 8px 0 18px; }
+  .two.phone { grid-template-columns: repeat(2, minmax(0, 320px)); }
+  @media (max-width: 760px) { .two { grid-template-columns: 1fr; } }
+  .bar { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 0; }
+  button { font: inherit; font-weight: 600; min-height: 44px; padding: 8px 18px; border-radius: 6px; border: 1px solid var(--ink); cursor: pointer; }
+  button.go { background: var(--ink); color: #fff; }
+  button.stop { background: var(--card); color: var(--ink); }
+  button:hover { filter: brightness(1.12); }
+  button:focus-visible, a:focus-visible { outline: 3px solid var(--verm); outline-offset: 2px; }
+  table { border-collapse: collapse; width: 100%; background: var(--card); font-size: 14px; }
+  .scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; margin: 10px 0 18px; max-width: 900px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  th { background: #e9eff6; }
+  td.n { white-space: nowrap; font-variant-numeric: tabular-nums; }
+  ul { margin: 6px 0 14px; padding-left: 22px; max-width: 76ch; }
+  li { margin: 3px 0; }
+  code { font-size: 13px; }
+  .note { background: #fff7e8; border: 1px solid #ecd9ae; border-radius: 6px; padding: 10px 14px; margin: 12px 0 18px; max-width: 76ch; }
+</style>
+</head>
+<body>
+<main>
+<h1>三豊運輸 hero remake: the plane accelerates a bit faster</h1>
+<p>"I think the clouds are fine, but the plane could accelerate just a bit faster than what we have." The clouds are left exactly as they are. The plane now gathers speed a bit faster: it leaves the ground faster and climbs faster, most of all through the middle of the climb. Nothing else in the film changed, and the 52-second loop is intact.</p>
+<p class="lead">Every clip can be dragged to any second. "Play both together" starts a pair from the beginning at the same moment. The whole film, recorded again, is on <a href="../2026-11-16-the-film/index.html">the film page</a>.</p>
+<nav><a href="#plane">The plane</a><a href="#phone">On a phone</a><a href="#same">What did not change</a><a href="#checks">Checks</a></nav>
+
+<h2 id="plane">The plane, before and now</h2>
+<p>From the moment its wheels leave the runway to the moment it passes Tokyo Tower it now takes <b>6.3 seconds; it took 7.3</b>. It is about a sixth faster through the middle of the climb and a little under a tenth faster at both ends, and its speed still only ever rises. The push along the runway itself is the same as before; the gain begins as the nose comes up.</p>
+<div class="scroll"><table>
+<tr><th>Where the plane is</th><th>Speed over the ground, before</th><th>Now</th></tr>
+<tr><td>Its wheels leave the runway</td><td class="n">85 px/s</td><td class="n">92 px/s</td></tr>
+<tr><td>A third of the way up the climb</td><td class="n">112 px/s</td><td class="n">131 px/s</td></tr>
+<tr><td>Two thirds of the way up</td><td class="n">127 px/s</td><td class="n">148 px/s</td></tr>
+<tr><td>In front of Tokyo Tower's mast</td><td class="n">131 px/s</td><td class="n">154 px/s</td></tr>
+<tr><td>As the last of it leaves the picture</td><td class="n">202 px/s</td><td class="n">220 px/s</td></tr>
+</table></div>
+<div data-pair>
+  <div class="bar"><button type="button" class="go" data-play>Play both together</button><button type="button" class="stop" data-pause>Pause both</button></div>
+  <div class="two">
+    <figure><video src="clips/plane-desktop-before.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Before, desktop</b> (33.5 to 49.5 s of the film). It starts its roll 3.5 s in.</figcaption></figure>
+    <figure><video src="clips/plane-desktop-after.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Now.</b> New: only the plane's speed. It starts its roll 4.6 s in, a second later, and catches up: it passes Tokyo Tower at the same moment in both clips (12.9 s in).</figcaption></figure>
+  </div>
+</div>
+<p><b>How it was done.</b> Two things were turned up, both a little: how hard it still pushes once its nose is up (a third more), and how hard it pushes away past the Tower (a ninth more). The push also starts easing a little later on the runway, so it leaves the ground faster.</p>
+
+<h2 id="phone">On a phone</h2>
+<p>A phone's only open sky in the last scene is the patch between the two buttons and the roofs, left of Tokyo Tower. A faster plane crosses it in less time. You accepted 3.0 s there after round 12; here are both numbers again, as agreed. <b>It is now 2.4 s.</b></p>
+<div class="scroll"><table>
+<tr><th>The plane in a phone's open sky</th><th>Before</th><th>Now</th></tr>
+<tr><td>At least half of it is seen for</td><td class="n">3.0 s</td><td class="n">2.4 s</td></tr>
+<tr><td>Nearly all of it (80 %) is seen for</td><td class="n">1.9 s</td><td class="n">1.6 s</td></tr>
+</table></div>
+<div data-pair>
+  <div class="bar"><button type="button" class="go" data-play>Play both together</button><button type="button" class="stop" data-pause>Pause both</button></div>
+  <div class="two phone">
+    <figure><video src="clips/plane-phone-before.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Before, phone</b> (33.5 to 49.5 s).</figcaption></figure>
+    <figure><video src="clips/plane-phone-after.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Now, phone.</b> New: only the plane's speed.</figcaption></figure>
+  </div>
+</div>
+
+<div class="note">If 2.4 s is too short on a phone, the climb through that patch can go back to what it was, keeping the faster start and the faster finish: say so and I will show it.</div>
+
+<h2 id="same">What did not change</h2>
+<ul>
+  <li><b>The clouds.</b> They are as you saw them.</li>
+  <li><b>The plane's path.</b> It climbs the same line and passes in front of the thin mast above Tokyo Tower's top deck, exactly where it did.</li>
+  <li><b>Its 26-second round, and when it passes the Tower.</b> The quicker climb saves 1.1 s; the plane spends it standing lined up on the runway before it rolls (5.4 s, it was 4.2 s). So a flock still crosses the Tower ten seconds ahead of it, and the kite is still at the far end of its circle when it comes by.</li>
+  <li><b>The landing</b>, the stop and everything on the ground.</li>
+  <li><b>No sudden change of speed anywhere:</b> the push eases and builds smoothly, as before.</li>
+</ul>
+
+<h2 id="checks">Checks</h2>
+<ul id="checklist">
+  <li><b>The loop is intact.</b> Photographs 52 s apart (32 s and 84 s into the film): 0.00 % of the picture differs. Every part of the picture at every 60th of a second for two loops is the same 52 s later.</li>
+  <li><b>Scenes 01 to 04 are untouched:</b> every part of the picture is the same as before at every 60th of a second. The clouds of the last scene are untouched too.</li>
+  <li><b>The plane's speed never falls</b> from the moment the brakes come off until it is out of the picture (looked at 240 times a second), and it never changes suddenly.</li>
+  <li><b>Its path is the same:</b> at every place along it the plane is at the same height as before, to the last digit.</li>
+  <li><b>What is timed to the plane still fits:</b> the flock crosses Tokyo Tower ten seconds ahead of it on both of its rounds; the kite is 68 px clear of it both times it comes by; the baggage train stays 150 px behind its tail.</li>
+  <li><b>No part was added</b> to any scene's picture.</li>
+  <li><b>The real player:</b> left on the last scene for two loops it shows the same picture, and all five scene buttons work from there, on a desktop and on a phone. The scene changes still play as camera moves. No pops and no frozen frames through the film and a further loop. No errors.</li>
+  <li><b>The recordings</b> on this page and the film page are whole: no frame missing, repeated or off the beat.</li>
+  <li><b>One independent check</b> of the work before it was recorded found nothing wrong with the motion. It corrected two statements on this page (how much faster, and the speed as the plane leaves the picture) and two notes in the code.</li>
+  <li>The original's files are intact (7 of 7) and the website was not touched.</li>
+</ul>
+</main>
+<script>
+// The viewer's server cannot send part of a file, so a video played straight from it cannot be dragged.
+// Each clip is fetched whole and played from memory.
+(function () {
+  var vids = Array.prototype.slice.call(document.querySelectorAll("video"));
+  vids.forEach(function (v) {
+    var src = v.getAttribute("src"); v.removeAttribute("src");
+    fetch(src).then(function (r) { return r.blob(); }).then(function (b) { v.src = URL.createObjectURL(b); }).catch(function () { v.src = src; });
+  });
+  Array.prototype.slice.call(document.querySelectorAll("[data-pair]")).forEach(function (pair) {
+    var vs = Array.prototype.slice.call(pair.querySelectorAll("video"));
+    pair.querySelector("[data-play]").addEventListener("click", function () { vs.forEach(function (v) { v.currentTime = 0; }); vs.forEach(function (v) { v.play(); }); });
+    pair.querySelector("[data-pause]").addEventListener("click", function () { vs.forEach(function (v) { v.pause(); }); });
+  });
+})();
+</script>
+</body>
+</html>

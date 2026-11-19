@@ -555,7 +555,7 @@ rules it leaves are in `STYLE.md` §5. **Check his verdict before building on it
     for them a bit faster (round 12: `SKY_SWAY = [75, 165]` px; it was `[53, 116]`).
   - Things that share a patch of the picture are on rounds that fit each other: the plane 26 s, the baggage
     train once in each of the plane's flights (19 s crossing, then it waits behind the depot), the kite four
-    turns a loop (at the right-hand end of its circle whenever the plane passes: `turns: 4, turn0: 2.747` since round 12),
+    turns a loop (at the right-hand end of its circle whenever the plane passes: `turns: 4, turn0: 2.684` since round 13),
     a flock across Tokyo Tower nine seconds before each plane. **Change one and check the others.**
   - The road runs on 52 s (it was 38): `MINI.C`, `MINI.GAP`. The two depot trucks swap drawing slots 20 s
     after each departure, unseen, so every node repeats.
@@ -599,13 +599,15 @@ rules it leaves are in `STYLE.md` §5. **Check his verdict before building on it
 - Recording is slow (about 4 frames a second for one recorder): run several `tools/record.mjs` side by side.
 - The four whole-film recordings and `films/remake-2.mp4` were made again at the end of this round.
 
-## Round 12 (2026-11-18): the clouds a bit faster, the plane builds speed from its roll. Waiting for the owner's verdict
+## Round 12 (2026-11-18): the clouds a bit faster, the plane builds speed from its roll. The clouds ACCEPTED; the plane turned up again in round 13
 
 Brief `PROMPT-FOR-FABLE-SPEED.md` (his words: the cloud "a bit faster"; the plane "sped up based on its
 acceleration when it is departing from the runway, kind of like an actual plane flying"). Parts
 `r12-clouds-faster`, `r12-plane-accel`; shown with before/after clips on
-`evidence/2026-11-18-round12-speed/index.html`; numbers at the end of `CHANGES.md`. **Check his verdict
-before building on it.** The 52 s loop is intact (`what-moves round2 32000 84000` 0.00 %, `loop-check`).
+`evidence/2026-11-18-round12-speed/index.html`; numbers at the end of `CHANGES.md`. **His verdict
+(2026-11-19): "I think the clouds are fine, but the plane could accelerate just a bit faster than what we
+have."** So the clouds are closed, and the plane's numbers below were turned up in round 13 (next section:
+read the plane's numbers there, not here). The 52 s loop is intact (`what-moves round2 32000 84000` 0.00 %, `loop-check`).
 
 - **Clouds:** `SKY_SWAY = [75, 165]` px, one sine a loop still (4.5 and 10 px/s at their fastest, 1.4 times
   what it was). Two sines a loop was rejected: they would turn back twice as often. At the far end the big
@@ -628,11 +630,39 @@ before building on it.** The 52 s loop is intact (`what-moves round2 32000 84000
   the runway, `planeOldS` in the air), so the speed can change without moving the path.
 - `films/remake-3.mp4` is the film after this round; remake-1 and remake-2 are untouched.
 
+## Round 13 (2026-11-19): the plane accelerates a bit faster. Waiting for the owner's verdict
+
+His words on round 12: "I think the clouds are fine, but the plane could accelerate just a bit faster than
+what we have." Part `r13-plane-quicker` (numbers only, no code); shown with before/after clips on
+`evidence/2026-11-19-round13-plane/index.html`; numbers at the end of `CHANGES.md`. **Check his verdict
+before building on it.** The clouds were not touched. The loop is intact (`what-moves round2 32000 84000`
+0.00 %, `loop-check`); scenes 01 to 04 are the same node for node; no node added.
+
+- **`PLANE` now:** `EASE_AT` 1.5 (1.2 in round 12), `CLIMB_A` 8 (6), `SURGE_A` 50 (45), `SURGE_AT` 8.3
+  (9.4), `HOLD` 5.35 (4.24), `OUT` 11.1 (12.5); the kite's `turn0` 2.684 (2.747). 92 px/s as the wheels
+  leave (85), 131 to 151 across a phone's sky (112 to 129), 154 at the Tower (131), 220 as the last of it
+  leaves the picture (202). Wheels off to the Tower: 6.3 s (7.3). The push along the runway itself
+  (`PLANE.ACC`) is the same: the gain begins as the nose comes up. The path, the 26 s cycle and the moment
+  it passes the Tower (21.75 s into the cycle) are unchanged; it stands lined up 1.1 s longer.
+- **A phone sees it for less again: half or more of the plane for 2.4 s (3.0 in round 12, which he had
+  accepted), 80 % for 1.6 s (1.9).** Both numbers were said to him with this round; **his word on 2.4 s is
+  still to come.** A faster climb and a longer look on a phone pull against each other, because a phone's
+  open sky IS the climb. If he wants the time back: put `CLIMB_A` and `EASE_AT` back (6 and 1.2), keep
+  `SURGE_A`, and set `HOLD`, `OUT` and `turn0` again (`shots/` is not in git; the method is in `CHANGES.md`:
+  `HOLD` = 21.744 minus the time from the brakes coming off to the gear at x 1360, minus 8.1).
+- What is timed to the plane was checked again: the flock 9.9 s ahead at the Tower on both rounds, the
+  kite 68 px clear on both passes, the baggage train 150 px behind the tail.
+- One verifier (Node only, one agent) went over the work before it was committed: nothing wrong with the
+  motion, four statements corrected. **A speed quoted "as it leaves the picture" must be the speed when
+  the last of the drawing leaves the stage, not when the gear passes x 1860** (it is out of sight by then).
+- `films/remake-4.mp4` is the film after this round; remake-1, remake-2 and remake-3 are untouched. The
+  remake's two recordings on the film page were made again.
+
 ## WHERE IT STANDS WHEN YOU PICK THIS UP (2026-11-17, the owner logged off)
 
 Everything is committed and pushed; the working tree is clean. Two threads are live.
 
-**1. Fable 5.2 had the film: round 11 is accepted and round 12 (above) waits for the owner's verdict.** What follows is the brief as it was handed over.
+**1. Fable 5.2 had the film: rounds 11 and 12 are accepted (round 12's clouds in so many words) and round 13 (above) waits for the owner's verdict.** What follows is the brief as it was handed over.
 `PROMPT-FOR-FABLE-LOOP.md` is its brief, handed over and approved by the
 owner ("Looks right"): make scene 05 a complete seamless loop (L = 52 s, two plane cycles and one bird
 cycle; position AND velocity continuous at the wrap; the five scene buttons must keep working), and chase
