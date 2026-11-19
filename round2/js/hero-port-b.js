@@ -2319,7 +2319,7 @@
      its kite goes round `turns` times, standing at angle `turn0` when the set's clock is 0. The finale's
      kite turns four times a loop, twice in each of the plane's cycles, so it is in the same place at
      both of the plane's passes: the plane's wheels climb straight through the middle of the kite's
-     circle 20.9 s into each cycle, with its body and its fin on the upper left of that line, and at that
+     circle 21.0 s into each cycle, with its body and its fin on the upper left of that line, and at that
      moment the kite is at the right-hand end of its circle, on the other side of the line and 59 px from
      it. (With an odd number of turns it is at opposite ends on the two passes, and at the left end the
      plane's body goes over it; before the loop the two simply met now and then.) */
@@ -2327,7 +2327,7 @@
   var BIRD_SETS = {
     w: { groups: [[985, 126, 40, 5, 0]], kite: [1730, 290, 76, 1.15] },
     t: { groups: [[1150, 250, 44, 5, 0]], kite: [900, 214, 70, 1.15] },
-    n: { groups: [[744, 212, 52, 5, 0, 0.06], [-608, 212, 52, 3, 5, 0.06]], kite: [1250, 432, 84, 1.15], span: 52 * LOOP, loop: LOOP, turns: 4, turn0: 2.747 }
+    n: { groups: [[744, 212, 52, 5, 0, 0.06], [-608, 212, 52, 3, 5, 0.06]], kite: [1250, 432, 84, 1.15], span: 52 * LOOP, loop: LOOP, turns: 4, turn0: 2.684 }
   };
   function DayBirds(p) {
     var set = BIRD_SETS[p.set], kt = set.kite, time = p.time, back = p.back || 0, span = set.span || 2920, d = "", L = set.loop;
@@ -4816,18 +4816,18 @@
        5.1            the main wheels touch at x 330 (aft pair first): the bogie levels, the legs squat past
                       their resting length and come back; the nose is lowered, not dropped
        5.1   .. 8.1   rollout to the stand at x 474: spoilers up, a long soft stop, the nose dips on the brakes
-       8.1   .. 12.34 the hold: flaps come up to the take-off setting, then it stands lined up (round 12:
-                      the time the quicker departure saves is spent here, so the cycle is still 26 s and
-                      the plane is in front of Tokyo Tower at the moment of the cycle it always was)
-       12.34 .. 14.4  the take-off roll: the nose rises, the legs stretch as the wing takes the weight
-       14.40          the wheels leave the runway at x 554; the path bends up over PLANE.BLEND px into a
+       8.1   .. 13.45 the hold: flaps come up to the take-off setting, then it stands lined up (rounds 12
+                      and 13: the time the quicker departure saves is spent here, so the cycle is still
+                      26 s and the plane is in front of Tokyo Tower at the moment of the cycle it always was)
+       13.45 .. 15.5  the take-off roll: the nose rises, the legs stretch as the wing takes the weight
+       15.49          the wheels leave the runway at x 554; the path bends up over PLANE.BLEND px into a
                       straight climb of slope PLANE.SLOPE (42.6 degrees), the pitch leading it a little
-       14.8  .. 16.1  the gear folds away; 16.7 .. 18.8 the flaps run in
-       14.4  .. 24.8  the climb, gathering speed all the way (see below): 85 px/s over the ground as the
-                      wheels leave, 112 to 129 across a phone's open sky (18.4 .. 21.3), 132 in front of
+       15.9  .. 17.2  the gear folds away; 17.8 .. 19.9 the flaps run in
+       15.5  .. 23.9  the climb, gathering speed all the way (see below): 92 px/s over the ground as the
+                      wheels leave, 131 to 151 across a phone's open sky (18.9 .. 21.4), 154 in front of
                       Tokyo Tower's mast (x 1360, 21.7), and away: out by the top edge, up and to the
-                      left of the sun, at 24.2
-       24.2  .. 26    off the picture
+                      left of the sun, at 23.9
+       23.9  .. 26    off the picture
      x is where the main gear stands; y is the body's origin (see planeArt).
 
      The path, round 5 (2026-11-15), unchanged. The plane used to climb at slope 0.56, which took it across
@@ -4858,22 +4858,27 @@
        the roll: the thrust of PLANE.ACC px/s2 comes on over half a second, as it always did;
        from PLANE.EASE_AT s on (the nose is coming up) more and more of the push goes into height: over
        PLANE.EASE_IN s the acceleration over the ground eases to PLANE.CLIMB_A px/s2 and stays there
-       up the climb, so the wheels leave at 85 px/s and it crosses a phone's sky at 112 to 129;
+       up the climb, so the wheels leave at 92 px/s and it crosses a phone's sky at 131 to 151;
        from PLANE.SURGE_AT s on (it is in front of Tokyo Tower by then, above a phone's buttons) the
-       acceleration rises to PLANE.SURGE_A px/s2 over PLANE.SURGE_IN s and it climbs away, 230 px/s
-       as it leaves the picture.
+       acceleration rises to PLANE.SURGE_A px/s2 over PLANE.SURGE_IN s and it climbs away: 220 px/s
+       as the last of it leaves the picture (23.9 s into the cycle), 252 when it is switched off, well
+       above the top edge.
+     Round 13 (2026-11-19), the owner on round 12: "the plane could accelerate just a bit faster than what
+     we have". The push now eases a little later (EASE_AT 1.5, it was 1.2) and to more (CLIMB_A 8, it was
+     6; SURGE_A 50, it was 45): 92 px/s as the wheels leave (85 in round 12), 131 to 151 across a phone's
+     sky (112 to 129), 154 at the Tower (131).
      The fast part comes after a phone's band on purpose (`node tools/plane-visible.mjs round2` says how
-     long the plane is seen there). The departure is 2.2 s shorter than it was, and PLANE.HOLD is 2.84 s
-     longer (the plane stands lined up): the cycle is 26 s as before and the plane passes the Tower at the
-     same moment of it, so a flock still crosses nine seconds ahead of it and the kite is at the far end
-     of its circle when it comes by (BIRD_SETS.n.turn0).
+     long the plane is seen there). The quicker the departure, the longer PLANE.HOLD (the plane stands
+     lined up): the cycle is 26 s as before and the plane passes the Tower at the same moment of it, so a
+     flock still crosses nine seconds ahead of it and the kite is at the far end of its circle when it
+     comes by (BIRD_SETS.n.turn0).
      The pitch belongs to the place, not to the clock: it is read at the moment of the old climb at
      which the plane stood at this x (planeOldS), so the nose rises over the same stretch of runway and
      sky as before, the tail is as clear of the runway as it was, and ROT keeps its meaning. */
   // (LIFT is the old clock's lift-off, 2.03 s into the roll with its thrust held: it fixes where the wheels leave,
   // PLANE.LIFT_X, and the pitch's clock. The wheels now leave PLANE.LIFT_T s after the brakes come off.)
-  var PLANE = { T: 26, TD: 5.1, ROLL: 3, HOLD: 4.24, LIFT: 2.03, OUT: 12.5, GY: 968, TDX: 330, STAND: 474, SLOPE: 0.92, BLEND: 185, ROT: 3.6, HANG: 5, NOSE_X: 82,
-    ACC: 62, EASE_AT: 1.2, EASE_IN: 1.4, CLIMB_A: 6, SURGE_AT: 9.4, SURGE_IN: 2, SURGE_A: 45 };
+  var PLANE = { T: 26, TD: 5.1, ROLL: 3, HOLD: 5.35, LIFT: 2.03, OUT: 11.1, GY: 968, TDX: 330, STAND: 474, SLOPE: 0.92, BLEND: 185, ROT: 3.6, HANG: 5, NOSE_X: 82,
+    ACC: 62, EASE_AT: 1.5, EASE_IN: 1.4, CLIMB_A: 8, SURGE_AT: 8.3, SURGE_IN: 2, SURGE_A: 50 };
   PLANE.CLIMB = Math.atan(PLANE.SLOPE) * 180 / Math.PI;                                             // the climb angle, degrees
   function planeSS(a, b, v) { var t = clamp01((v - a) / (b - a)); return t * t * (3 - 2 * t); }
   function planeRoll(s) { return PLANE.STAND + 62 * (s * s / 2 - 0.5 * s + 0.25 * (1 - Math.exp(-2 * s))); }   // thrust comes on over half a second, then holds
@@ -5354,7 +5359,7 @@
     var lamp = Math.pow(0.5 + 0.5 * Math.sin(time * loopN(19) + 1), 3);
     // the baggage train: 19 s from edge to edge at the pace it always had, then it waits behind the depot, so it
     // comes in once in each of the plane's cycles and always at the same moment of the flight: after the
-    // touchdown, 4.3 s before the brakes come off for the take-off, so it runs along well behind the plane as
+    // touchdown, 3.8 s before the brakes come off for the take-off, so it runs along well behind the plane as
     // the plane rolls away (150 px or more from its tail). It is tied to PLANE.HOLD: when round 12 made the
     // plane stand longer, a train on its old time came up to 12 px behind the tail. (Left on a round of its
     // own, 19 s or a third of the loop, it drove along under the plane all through every second landing.)
