@@ -246,42 +246,85 @@ and フリガナ is optional.
 
 ## Second pass, 2026-11-19: conventions 11 to 17 and character 11
 
-Commit `4158405` and the one after it. **Done whole:** 11 (company.html's search description
-puts its facts before its table of contents), 15 (トップページ is a row of its own at the top of
-the sitemap) and all six parts of 16 (the home news band dressed as a section again, the two
-missing home links, the 本社 access link, the duplicated お知らせ一覧, the two sequences both
-numbered "Step", and the 紙スリッター加工 enquiry type still in `FORMS.md` and `SPEC.md`).
+Commits `4158405`, `e300be8` and the fix commit after them. **Done whole:** 11
+(company.html's search description puts its facts before its table of contents), 15
+(トップページ is a row of its own at the top of the sitemap) and all six parts of 16 (the
+home news band dressed as a section again, the two missing home links, the 本社 access
+link, the duplicated お知らせ一覧, the two sequences both numbered "Step", and the
+紙スリッター加工 enquiry type still in `FORMS.md` and `SPEC.md`).
 
 **Done in part**, with the other half written up in the site's `PROPOSALS-NOT-YET-APPLIED.md`
 rather than guessed at:
 
 | item | done | left, and why |
 |---|---|---|
-| 12 receiving | 所在地 moved to second place; the page index, the sitemap and the band alternation follow | the duplicated hours: every table there is `data-draft 案4`, so deleting rows changes what the client is being asked to confirm |
-| 13 coverage map | the 拠点 row no longer vanishes for the six areas with no depot of their own — it falls back to the page's own 板橋・志木・入間 | 「上記エリア外…」 cannot move: 上記 points at the list directly above it |
-| 14 site policy | the browser list, the phone row and the Ctrl＋＋ instruction are gone; the JavaScript row stays, because it is the only place the site says what breaks without it | the font block (legally free to go — both fonts are OFL and the licence files are served — but crediting other people's work is the owner's call) and the security paragraph (rewriting) |
-| 17 fleet | `.fl-total`, a near word-for-word repeat of the page lead AND of the count figure's own total thirty pixels below it | the home 車両・設備 band's missing half: new writing, and the roll clamps are inside 案3 |
-| character 11 | the three borrowed photographs lost their thumbnails; every credit line survives word for word, 国道254号's CC BY-SA attribution included | the block disappears when their own photographs arrive |
+| 12 receiving | 所在地 moved to second place; the page index, the sitemap and the band alternation follow. 371 lines before and after, identical when sorted | the duplicated hours: the page is the client's 案4 content, so deleting rows changes what they are being asked to confirm |
+| 13 coverage map | the 拠点 row no longer vanishes for the six areas with no depot of their own — it falls back to the page's own 板橋・志木・入間 | 「上記エリア外…」 cannot move: 上記 points at the list directly above it. And the fallback's wording goes to the client as a question |
+| 17 fleet | `.fl-total`, a near word-for-word repeat of the page lead five lines above it | the home 車両・設備 band's missing half: new writing, and the roll clamps are inside 案3 |
+| character 11 | the three borrowed photographs lost their thumbnails; every credit line survives word for word, 国道254号's CC BY-SA attribution included | the finding asked for ONE-LINE credits; each is still five lines, and shrinking them collides with keeping every line |
 
-**Not done at all:** character 6, because the item's own deliverable is a list of photographs
-for the owner to take, and pulling the pictures now leaves holes until he does. The list of six
-slots is in the proposals file.
+**Attempted and reverted: convention 14.** See below.
 
-**Two traps this pass hit, both caught by a check rather than by reading:**
-`public_html/assets/css/site.css` is GENERATED from `css-src/*.css` — the first attempt edited
-the generated file and `sync.py --check` caught it. And `css-src/*.css` are **LF** while the
-files under `public_html` are **CRLF**, with `sync.py` converting on the way out; anchors are
-built from each file's own ending now. The links gate also caught a real accessibility fault
-that reading had missed: the new sitemap row was an `h3` directly under the `h1`.
+**Not done at all:** character 6, because the item's own deliverable is a list of
+photographs for the owner to take, and pulling the pictures now leaves holes until he does.
+The list of six slots is in the proposals file.
 
-**The `案5` finding from the first review was wrong and is closed.** The fleet-lineup block
-deleted from the home page is still on `fleet.html` with its marker and more detail; the home
-page held a second copy. Nothing left the site and the draft now has one owner, which is
-convention 5's own argument.
+### Two reviews went over it, and found thirteen things
 
-**Checks:** `sync.py --check` up to date; `check_copy` at its 33 pre-existing hits throughout;
-`links` PASS on 21 pages; axe-core (wcag2a/aa, 2.1, 2.2, best-practice) 0 violations on every
-changed page; each change looked at in a browser at 1440. `check_verbatim` cannot run on this
-machine (it needs the finished site at a path that does not exist here) and the Playwright
-gates `axe`, `csp`, `lineprobe` and `func` shell out to `python3`, which Windows does not
-provide — axe was run instead by loading axe-core into the served page.
+One lens on regressions and this repository's own rules, one on whether the work matched
+its claims. **The serious one, and it is the same fault as this morning's:**
+
+**Convention 14 removed facts from a page while the same commit cited the rule against
+doing that.** Three rows went out of sitepolicy.html's 推奨環境 table — the four-browser
+list, the phone row, and 「文字の大きさ」 with its Ctrl／command instruction. Six browser
+名称, two platform 名称 and two 条件, all inside `COPY-STYLE-ja.md` §0's list, and after the
+deletion reachable nowhere on the site. `docs/research/inventory.json` records that table
+as the client's carried-over content with no pending draft, where §0 permits only
+誤字・文法・表記ゆれ・法令上の問題. **Restored byte for byte**, which also un-orphaned the
+lead sentence that was left recommending an environment the table no longer named.
+
+Five more were real faults in the work:
+
+- **a dead CSS rule** the deletion left behind — `.fl-intro > div > p + p` matched nothing
+  once `.fl-total` went, on the only page `.fl-intro` appears. The commit said three rules
+  went with it; there were four.
+- **the `#reasons` rule was not page-scoped**, in a file whose own first line says to scope
+  anything that could leak, with `id="reasons"` on two pages. Latent, now `.page-home`-scoped.
+- **`docs/SPEC.md` §5.1 still said sitepolicy carries the three road photos "as thumbnails"**
+  — in a commit that edited SPEC.md. Updated.
+- **`docs/SPEC.md` §5 item 7 still listed receiving.html with 所在地 last.** The page's own
+  index and the sitemap were updated and SPEC was not. Updated.
+- **`docs/FORMS.md` still cited `slitting.html`** in a preset example, a page deleted on
+  2026-11-10 — in the commit that claimed to clear the slitter out of that file.
+
+And the redirect tolerance in `check_headers.py` was **too wide**: granted to all ten old
+URLs it would silently accept a future `^info(\.html)?/?$` shadowing a real page. Narrowed
+to the one name that needs it, and negative-tested by perturbing `.htaccess` (the gate
+failed as it should, and the file was restored byte for byte).
+
+The rest were wrong statements in the commit messages and the proposals file — "every
+table", "word for word", "thirty pixels", "the only place the site says what stops working
+without JavaScript", a wrong SPEC section number, and a preamble that gave one reason for
+five different decisions. A commit message cannot be corrected without rewriting history,
+so every correction is marked **CORRECTION** in `PROPOSALS-NOT-YET-APPLIED.md`.
+
+**The `案5` finding from the first review is closed: it was wrong.** The fleet-lineup block
+deleted from the home page is still on `fleet.html` with the identical marker and figcaption
+and more detail; the home page held a second copy.
+
+**Two traps this pass hit, both caught by a check rather than by reading.**
+`public_html/assets/css/site.css` is GENERATED from `css-src/*.css` — the first attempt
+edited the generated file and `sync.py --check` caught it. And `css-src/*.css` are **LF**
+while the files under `public_html` are **CRLF**, with `sync.py` converting on the way out;
+`docs/SPEC.md` is MIXED. Anchors are built from each file's own ending now. The links gate
+also caught an accessibility fault reading had missed: the new sitemap row was an `h3`
+directly under the `h1`.
+
+**Checks, after the fixes:** `sync.py --check` up to date; `check_headers` all 103 passed
+(it was 1 mismatch before any of today's work, for an unrelated reason now fixed);
+`check_hero` PASS; `check_copy` at its 33 pre-existing hits throughout; `links` PASS on 21
+pages; axe-core (wcag2a/aa, 2.1, 2.2, best-practice) 0 violations on all seven pages
+touched; every change looked at in a browser at 1440 and at 375. `check_verbatim` cannot
+run on this machine (it needs the finished site at a path that does not exist here) and the
+Playwright gates `axe`, `csp`, `lineprobe` and `func` shell out to `python3`, which Windows
+does not provide — axe was run instead by loading axe-core into the served page.

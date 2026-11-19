@@ -1,0 +1,6 @@
+<tbody>
+<tr><th scope="row">パソコン</th><td>Google Chrome、Microsoft Edge、Safari、Mozilla Firefoxの<span class="nw">各最新版</span></td></tr>
+<tr><th scope="row"><span class="nw">スマートフォン・</span><wbr><span class="nw">タブレット</span></th><td>iOS、Androidの<span class="nw">標準ブラウザの</span><span class="nw">最新版</span></td></tr>
+<tr><th scope="row"><span lang="en">JavaScript</span></th><td>有効にしてご覧ください。無効の場合、フォームの送信、トップページのアニメーション、拠点・配送エリアの地図の操作などの<span class="nw">機能をご利用</span><span class="nw">いただけません。</span>また、メニューボタンを押すと、メニューの代わりにサイトマップのページが<span class="nw">開きます。</span></td></tr>
+<tr><th scope="row">文字の大きさ</th><td>ブラウザの拡大・縮小機能で変更できます。WindowsはCtrlキー、Macはcommandキーを押しながら、「＋」または「－」キーを<span class="nw">押してください。</span></td></tr>
+</tbody>
