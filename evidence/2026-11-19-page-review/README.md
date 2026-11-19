@@ -328,3 +328,34 @@ touched; every change looked at in a browser at 1440 and at 375. `check_verbatim
 run on this machine (it needs the finished site at a path that does not exist here) and the
 Playwright gates `axe`, `csp`, `lineprobe` and `func` shell out to `python3`, which Windows
 does not provide — axe was run instead by loading axe-core into the served page.
+
+
+### A fourth pass found what three reviewers had missed
+
+Four reviewers under one workflow — the restore, the fixes, the gates, the write-ups — each
+finding then handed to a skeptic told to refute it. Seven findings verified, **three survived
+and four were refuted**, which is the point of the second stage.
+
+**The survivor that matters: `templates/news-detail.html` had drifted from the three pages it
+builds, twice in one day.** It is the file the client copies to make each new article. This
+morning's roman-kicker pass (`5f6ba73`) cut 「Contents」 from the three pages and left it in
+the template; convention 16 (`4158405`) cut the duplicated 「お知らせ一覧」 link from the three
+pages, re-tuned the panel's padding for its absence, and left the paragraph in the template.
+The next article built from it would have carried both back. Fixed in `3ba52be`.
+
+Nothing caught it and nothing could: `sync.py` only replaces blocks inside `shared:` markers
+and the news aside is outside them, `links.mjs` runs on the 21 public pages, and while
+`check_copy` and `sync` read `templates/`, nothing compares a template with the pages built
+from it. A class-parity check is proposed in the site's `PROPOSALS-NOT-YET-APPLIED.md` §10,
+with its three correct-by-construction exceptions, rather than written at the end of a long
+pass.
+
+The other two were wrong sentences in the write-up again: "#hours carries no fact that is not
+already somewhere above it" (true only with JavaScript off — `receiving.js` hides `#rcPlain`,
+so 休業日 appears once on the page, and that was the sentence carrying the decision), and "the
+only mention anywhere is SPEC §1" for the OFL licences (they are named in five places; the
+conclusion that no page credit is required still holds).
+
+**Four reviews, four rounds of real findings.** The pattern across all of them: the code
+changes were mostly sound, and what kept being wrong was what I SAID about them — and twice,
+removing something on one side of a pair.
